@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { InventoryRoutingModule } from './inventory-routing.module';
 import { ProductComponent } from './product/product.component';
+import { CategoryComponent } from './category/category.component';
 
 @NgModule({
-  declarations: [ProductComponent],
+  declarations: [ProductComponent, CategoryComponent],
   imports: [CommonModule, InventoryRoutingModule],
 })
 export class InventoryModule {}

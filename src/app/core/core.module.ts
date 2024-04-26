@@ -8,6 +8,7 @@ import { AdminPageHeaderComponent } from './admin-page-header/admin-page-header.
 import { AdminPageFooterComponent } from './admin-page-footer/admin-page-footer.component';
 import { AdminPageTogglerComponent } from './admin-page-header/admin-page-toggler.component';
 import { LayoutService } from './services/layout.service';
+import { AdminSidebarMenuItemComponent } from './admin-sidebar-menu-item/admin-sidebar-menu-item.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { LayoutService } from './services/layout.service';
     AdminPageHeaderComponent,
     AdminPageFooterComponent,
     AdminPageTogglerComponent,
+    AdminSidebarMenuItemComponent,
   ],
   imports: [CommonModule, RouterModule],
   providers: [LayoutService],
