@@ -1,23 +1,34 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { v4 as uuidv4 } from 'uuid';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { LayoutService } from '../services/layout.service';
 
 @Component({
   selector: 'gpa-admin-sidebar-menu-item',
   templateUrl: './admin-sidebar-menu-item.component.html',
   styleUrl: './admin-sidebar-menu-item.component.css',
 })
-export class AdminSidebarMenuItemComponent implements OnInit {
+export class AdminSidebarMenuItemComponent {
   @Input() menu: string = '';
-  @Input() selectedMenu: string = '';
   @Output() onMenuSelected = new EventEmitter<string>();
 
-  ngOnInit(): void {}
+  constructor(private layoutService: LayoutService) {}
 
   isMenuActive() {
-    return this.menu == this.selectedMenu;
+    return this.menu == this.layoutService.selectedMenu;
   }
 
   handleMenuSelected() {
-    this.onMenuSelected.emit(this.menu);
+    if (this.menu == this.layoutService.selectedMenu) {
+      this.layoutService.setSelectedMenu('');
+    } else {
+      this.layoutService.setSelectedMenu(this.menu);
+    }
   }
 }

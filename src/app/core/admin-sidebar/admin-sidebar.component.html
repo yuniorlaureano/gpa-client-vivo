@@ -14,11 +14,7 @@
   <div class="sidebar-menu">
     <div class="sidebarMenuScroll">
       <ul>
-        <gpa-admin-sidebar-menu-item
-          (onMenuSelected)="handleMenuSelected($event)"
-          menu="inventory"
-          [selectedMenu]="selectedMenu"
-        >
+        <gpa-admin-sidebar-menu-item menu="inventory">
           <ng-container header>
             <i class="bi bi-house"></i>
             <span class="menu-text">Inventario</span>
@@ -27,7 +23,7 @@
             <ul>
               <li>
                 <a
-                  routerLink="inventory/product"
+                  routerLink="/inventory/product"
                   routerLinkActive="current-page"
                   class="current-page"
                   >Productos</a
@@ -35,7 +31,7 @@
               </li>
               <li>
                 <a
-                  routerLink="inventory/category"
+                  routerLink="/inventory/category"
                   routerLinkActive="current-page"
                   >Category</a
                 >
@@ -43,29 +39,23 @@
             </ul>
           </ng-container>
         </gpa-admin-sidebar-menu-item>
-        <gpa-admin-sidebar-menu-item
-          (onMenuSelected)="handleMenuSelected($event)"
-          menu="invoice"
-          [selectedMenu]="selectedMenu"
-        >
+        <gpa-admin-sidebar-menu-item menu="invoice">
           <ng-container header>
             <i class="bi bi-house"></i>
-            <span class="menu-text">Factura</span>
+            <span class="menu-text">Facturación</span>
           </ng-container>
           <ng-container items>
             <ul>
               <li>
-                <a
-                  [routerLink]="['invoice/sale']"
-                  routerLinkActive="current-page"
-                  >Productos</a
+                <a routerLink="/invoice/sale" routerLinkActive="current-page"
+                  >Venta</a
                 >
               </li>
               <li>
                 <a
-                  [routerLink]="['invoice/purchase']"
+                  routerLink="/invoice/purchase"
                   routerLinkActive="current-page"
-                  >Productos</a
+                  >Compra</a
                 >
               </li>
             </ul>

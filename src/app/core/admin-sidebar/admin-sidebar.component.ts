@@ -8,7 +8,6 @@ declare let jQuery: any;
   styleUrl: './admin-sidebar.component.css',
 })
 export class AdminSidebarComponent implements OnInit {
-  selectedMenu: string = '';
   ngOnInit(): void {
     jQuery('.sidebarMenuScroll').overlayScrollbars({
       scrollbars: {
@@ -21,10 +20,5 @@ export class AdminSidebarComponent implements OnInit {
         snapHandle: false,
       },
     });
-  }
-
-  handleMenuSelected(selectedMenu: string) {
-    console.log(selectedMenu);
-    this.selectedMenu = selectedMenu;
   }
 }
