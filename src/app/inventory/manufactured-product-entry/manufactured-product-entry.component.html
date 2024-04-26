@@ -57,7 +57,7 @@
       </div>
       <div class="card-body">
         <!-- Row start -->
-        <div class="row">
+        <form class="row row-cols-sm-auto">
           <div class="col-12 col-sm-4">
             <div class="mb-3">
               <label for="inputName" class="form-label">Motivo</label>
@@ -83,10 +83,18 @@
             <div class="mb-3">
               <label for="inputEmail" class="form-label">Fecha</label>
               <div class="input-group">
-                <span class="input-group-text">
-                  <i class="bi bi-calendar4"></i>
-                </span>
-                <input type="text" class="form-control datepicker-time" />
+                <input
+                  class="form-control"
+                  placeholder="yyyy-mm-dd"
+                  name="dp"
+                  ngbDatepicker
+                  #d="ngbDatepicker"
+                />
+                <button
+                  class="btn btn-outline-secondary bi bi-calendar3"
+                  (click)="d.toggle()"
+                  type="button"
+                ></button>
               </div>
             </div>
           </div>
@@ -96,18 +104,12 @@
               <input type="file" class="form-control" />
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-12 col-sm-12">
             <div class="form-section-title">Productos</div>
           </div>
+
           <div class="col-xl-3 col-sm-4 col-12">
             <div class="mb-3">
-              <button
-                class="btn btn-outline-primary"
-                type="button"
-                (click)="handleShowProductCatalog(true)"
-              >
-                <i class="bi bi-plus-lg"></i> Agregar producto
-              </button>
               <div class="custom-btn-group">
                 <button
                   type="button"
@@ -130,9 +132,16 @@
                   >
                 </button>
               </div>
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                (click)="handleShowProductCatalog(true)"
+              >
+                <i class="bi bi-plus-lg"></i> Agregar producto
+              </button>
             </div>
           </div>
-        </div>
+        </form>
         <div class="row">
           <div class="col-12">
             <div class="table-responsive">
@@ -193,27 +202,6 @@
                           />
                         </svg>
                       </button>
-                      <button
-                        type="button"
-                        class="btn btn-outline-warning btn-rounded"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-pencil-square"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-                          />
-                          <path
-                            fill-rule="evenodd"
-                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-                          />
-                        </svg>
-                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -229,7 +217,7 @@
           <input
             type="text"
             class="form-control"
-            placeholder="Username"
+            placeholder="Buscar productos"
             style="margin-right: 20px"
           />
           <button
