@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { InvoiceRoutingModule } from './invoice-routing.module';
 import { SaleComponent } from './sale/sale.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [SaleComponent],

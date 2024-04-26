@@ -1,0 +1,11 @@
+<li class="sidebar-dropdown" [class.active]="isMenuActive()">
+  <a href="#" (click)="handleMenuSelected()">
+    <ng-content select="[header]"></ng-content>
+  </a>
+  <div
+    class="sidebar-submenu"
+    [style.display]="isMenuActive() ? 'block' : 'none'"
+  >
+    <ng-content select="[items]"></ng-content>
+  </div>
+</li>
