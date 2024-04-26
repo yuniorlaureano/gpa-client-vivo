@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProductComponent } from './product/product.component';
 import { AdminTemplateComponent } from '../core/admin-template/admin-template.component';
 import { CategoryComponent } from './category/category.component';
+import { ManufacturedProductEntryComponent } from './manufactured-product-entry/manufactured-product-entry.component';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
     children: [
       { path: 'product', component: ProductComponent },
       { path: 'category', component: CategoryComponent },
+      {
+        path: 'manufactured-product-entry',
+        component: ManufacturedProductEntryComponent,
+      },
     ],
   },
 ];

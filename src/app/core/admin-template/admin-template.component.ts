@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from '../services/layout.service';
-
 declare let jQuery: any;
 
 @Component({
@@ -10,17 +9,5 @@ declare let jQuery: any;
 })
 export class AdminTemplateComponent implements OnInit {
   constructor(public layoutService: LayoutService) {}
-  ngOnInit(): void {
-    jQuery('.content-wrapper-scroll').overlayScrollbars({
-      scrollbars: {
-        visibility: 'auto',
-        autoHide: 'scroll',
-        autoHideDelay: 200,
-        dragScrolling: true,
-        clickScrolling: false,
-        touchSupport: true,
-        snapHandle: false,
-      },
-    });
-  }
+  ngOnInit(): void {}
 }

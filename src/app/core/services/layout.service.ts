@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
-import { NavigationEnd, Route, Router } from '@angular/router';
 
 @Injectable()
 export class LayoutService {
+  menus: any = {
+    inventory: 'Inventario',
+    invoice: 'Facturación',
+    report: 'Reportes',
+    configuration: 'Configuración',
+    security: 'Seguridad',
+  };
   toggle: boolean = false;
   selectedMenu: string = '';
-
-  constructor(private router: Router) {
-    router.events.subscribe((e) => {
-      if (e instanceof NavigationEnd) {
-        console.log(router);
-      }
-    });
-  }
 
   handleToggle() {
     this.toggle = !this.toggle;
@@ -20,5 +18,9 @@ export class LayoutService {
 
   setSelectedMenu(menu: string) {
     this.selectedMenu = menu;
+  }
+
+  getMenuHeader() {
+    return this.menus[this.selectedMenu];
   }
 }

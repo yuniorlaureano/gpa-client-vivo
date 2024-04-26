@@ -16,7 +16,7 @@
       <ul>
         <gpa-admin-sidebar-menu-item menu="inventory">
           <ng-container header>
-            <i class="bi bi-house"></i>
+            <i class="bi bi-list-check"></i>
             <span class="menu-text">Inventario</span>
           </ng-container>
           <ng-container items>
@@ -36,12 +36,19 @@
                   >Category</a
                 >
               </li>
+              <li>
+                <a
+                  routerLink="/inventory/manufactured-product-entry"
+                  routerLinkActive="current-page"
+                  >Entrada</a
+                >
+              </li>
             </ul>
           </ng-container>
         </gpa-admin-sidebar-menu-item>
         <gpa-admin-sidebar-menu-item menu="invoice">
           <ng-container header>
-            <i class="bi bi-house"></i>
+            <i class="bi bi-cash-coin"></i>
             <span class="menu-text">Facturación</span>
           </ng-container>
           <ng-container items>
@@ -57,6 +64,54 @@
                   routerLinkActive="current-page"
                   >Compra</a
                 >
+              </li>
+            </ul>
+          </ng-container>
+        </gpa-admin-sidebar-menu-item>
+        <gpa-admin-sidebar-menu-item menu="report">
+          <ng-container header>
+            <i class="bi bi-file-earmark-bar-graph"></i>
+            <span class="menu-text">Reportes</span>
+          </ng-container>
+          <ng-container items>
+            <ul>
+              <li>
+                <a href="#" routerLinkActive="current-page">Venta</a>
+              </li>
+              <li>
+                <a href="#" routerLinkActive="current-page">Compra</a>
+              </li>
+            </ul>
+          </ng-container>
+        </gpa-admin-sidebar-menu-item>
+        <gpa-admin-sidebar-menu-item menu="configuration">
+          <ng-container header>
+            <i class="bi bi-gear"></i>
+            <span class="menu-text">Configuraciones</span>
+          </ng-container>
+          <ng-container items>
+            <ul>
+              <li>
+                <a href="#" routerLinkActive="current-page">Venta</a>
+              </li>
+              <li>
+                <a href="#" routerLinkActive="current-page">Compra</a>
+              </li>
+            </ul>
+          </ng-container>
+        </gpa-admin-sidebar-menu-item>
+        <gpa-admin-sidebar-menu-item menu="security">
+          <ng-container header>
+            <i class="bi bi-shield-lock"></i>
+            <span class="menu-text">Seguridad</span>
+          </ng-container>
+          <ng-container items>
+            <ul>
+              <li>
+                <a href="#" routerLinkActive="current-page">Venta</a>
+              </li>
+              <li>
+                <a href="#" routerLinkActive="current-page">Compra</a>
               </li>
             </ul>
           </ng-container>
