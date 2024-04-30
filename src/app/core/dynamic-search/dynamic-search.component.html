@@ -1,0 +1,39 @@
+<div class="dynamic-list">
+  <input
+    type="text"
+    class="form-control dynamic-list-search"
+    placeholder="Buscar"
+    (input)="handleSearch($event)"
+    (focus)="handleListFocus()"
+  />
+  <i
+    class="far fa-times-circle btn-close-dynamic-list"
+    (click)="handleCloseDynamiList()"
+  ></i>
+  <div class="dynamic-list-boundary" [id]="dynamiclistIdentifier">
+    <button
+      type="button"
+      class="btn btn-block"
+      (click)="handlePrevious()"
+      *ngIf="showPreviousButton()"
+    >
+      <i class="fas fa-caret-up"></i>
+    </button>
+    <button
+      type="button"
+      class="btn dynamic-list-item"
+      *ngFor="let item of items"
+      (click)="handleSelectItem(item)"
+    >
+      {{ item.text }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-block"
+      (click)="handleNext()"
+      *ngIf="showNextButton()"
+    >
+      <i class="fas fa-caret-down"></i>
+    </button>
+  </div>
+</div>

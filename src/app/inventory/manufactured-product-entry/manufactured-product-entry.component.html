@@ -60,25 +60,24 @@
         <form class="row row-cols-sm-auto">
           <div class="col-12 col-sm-4">
             <div class="mb-3">
-              <label for="inputName" class="form-label">Motivo</label>
-              <select name="" class="form-select">
+              <label for="reason" class="form-label">Motivo</label>
+              <select name="reason" class="form-select">
                 <option value="1"></option>
-                <option value="2">Movidos de almacen</option>
-                <option value="3">Manufacturado</option>
-                <option value="3">Compra</option>
-                <option value="3">Devolución</option>
+                <option
+                  *ngFor="let reason of reasons$ | async"
+                  value="{{ reason.id }}"
+                >
+                  {{ reason.name }}
+                </option>
               </select>
             </div>
           </div>
           <div class="col-12 col-sm-4">
             <div class="mb-3">
               <label for="inputNumber" class="form-label">Provedor</label>
-              <select name="" class="form-select">
-                <option value="1"></option>
-                <option value="2">Pedro INC</option>
-                <option value="3">Juan SRL</option>
-                <option value="3">Maria SRL</option>
-              </select>
+              <gpa-provider-dynamic-search
+                [onSelectedItem]="handleSelectedClient"
+              />
             </div>
           </div>
           <div class="col-12 col-sm-4">
@@ -116,11 +115,12 @@
                 <button
                   type="button"
                   class="btn btn-outline-success btn-icon position-relative"
+                  style="margin-right: 50px"
                 >
                   <i class="bi bi-cart-check"></i>
                   <span
                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill shade-green"
-                    >$10</span
+                    >${{ productCatalogAggregate.totalPrice }}</span
                   >
                 </button>
                 <button
@@ -130,7 +130,7 @@
                   <i class="bi bi-bag-check-fill"></i>
                   <span
                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill shade-green"
-                    >10+</span
+                    >{{ productCatalogAggregate.totalQuantity }} +</span
                   >
                 </button>
               </div>
@@ -152,57 +152,35 @@
                   <tr>
                     <th>Código</th>
                     <th>Nombre</th>
+                    <th>Existencia</th>
                     <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Ubicación</th>
+                    <th>Precio Unitario</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>RP-01</td>
-                    <td>Botellita</td>
+                  <tr *ngFor="let product of products">
+                    <td>{{ product.productCode }}</td>
+                    <td>{{ product.productName }}</td>
+                    <td>{{ product.quantity }}</td>
                     <td>
                       <input
                         type="number"
+                        value="{{ 1 }}"
                         class="form-control"
-                        style="margin: 0; padding: 0"
+                        (input)="
+                          handleQuantityChange(product.productId, $event.target)
+                        "
                       />
                     </td>
-                    <td>
-                      <input
-                        type="number"
-                        class="form-control"
-                        style="margin: 0; padding: 0"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        class="form-control"
-                        style="margin: 0; padding: 0"
-                      />
-                    </td>
+                    <td>$ {{ product.price }}</td>
                     <td>
                       <button
                         type="button"
                         class="btn btn-outline-danger btn-rounded"
+                        (click)="removeProductFromCatalog(product.productId)"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-trash"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
-                          />
-                          <path
-                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
-                          />
-                        </svg>
+                        <i class="bi bi-trash-fill"></i>
                       </button>
                     </td>
                   </tr>
@@ -213,83 +191,11 @@
         </div>
         <!-- Row end -->
       </div>
-      <div class="product-catalog" *ngIf="isProductCatalogVisible">
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-search"></i></span>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Buscar productos"
-            style="margin-right: 20px"
-          />
-          <button
-            class="btn btn-outline-danger btn-rounded"
-            (click)="handleShowProductCatalog(false)"
-          >
-            <i class="bi bi-x"></i>
-          </button>
-        </div>
-        <div>
-          <ul>
-            <li><i class="bi bi-cart4"></i></li>
-            <li>Cantidad: 2</li>
-            <li>Total: $54</li>
-          </ul>
-        </div>
-        <hr />
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <td>Código</td>
-                <td>Nombre</td>
-                <td>Pecio</td>
-                <td>Cantidad</td>
-                <td>Ubicación</td>
-                <td></td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let product of products">
-                <td>{{ product.code }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.price }}</td>
-                <td>{{ 45 }}</td>
-                <td>{{ "loc-39" }}</td>
-                <td>
-                  <button class="btn btn-outline-primary">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <nav aria-label="Page Navigation">
-            <ul class="pagination justify-content-end">
-              <li class="page-item" style="margin-right: 6px">
-                <button
-                  class="btn btn-outline-info"
-                  (click)="handleBackwardPage()"
-                >
-                  <span aria-hidden="true">
-                    <i class="bi bi-arrow-left"></i>
-                  </span>
-                </button>
-              </li>
-              <li class="page-item">
-                <button
-                  class="btn btn-outline-info"
-                  (click)="handleForwardPage()"
-                >
-                  <span aria-hidden="true">
-                    <i class="bi bi-arrow-right"></i>
-                  </span>
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
+
+      <gpa-stock-product-catalog
+        [(visible)]="isProductCatalogVisible"
+        (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
+      ></gpa-stock-product-catalog>
     </div>
     <!-- Card end -->
   </div>

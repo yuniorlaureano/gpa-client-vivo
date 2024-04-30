@@ -13,12 +13,16 @@ import {
 import { JwtAuthInterceptor } from './core/interceptor/jwt-auth.interceptor';
 import { TokenService } from './core/service/token.service';
 import { AuthService } from './security/service/auth..service';
+import { StockService } from './inventory/service/stock.service';
+import { ProviderService } from './inventory/service/provider.service';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, AppRoutingModule, CoreModule, HttpClientModule],
   providers: [
     ProductService,
+    StockService,
+    ProviderService,
     TokenService,
     AuthService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),

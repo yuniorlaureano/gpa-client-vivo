@@ -8,18 +8,24 @@ import { ManufacturedProductEntryComponent } from './manufactured-product-entry/
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { StockProductCatalogComponent } from '../core/stock-product-catalog/stock-product-catalog.component';
+import { DynamicSelectComponent } from '../core/dynamic-search/dynamic-search.component';
+import { ProviderDynamicSearchComponent } from './provider-dynamic-search/provider-dynamic-search.component';
 
 @NgModule({
   declarations: [
     ProductComponent,
     CategoryComponent,
     ManufacturedProductEntryComponent,
+    StockProductCatalogComponent,
+    ProviderDynamicSearchComponent,
   ],
   imports: [
     CommonModule,
     InventoryRoutingModule,
     NgbDatepickerModule,
     FormsModule,
+    DynamicSelectComponent,
   ],
 })
 export class InventoryModule {}

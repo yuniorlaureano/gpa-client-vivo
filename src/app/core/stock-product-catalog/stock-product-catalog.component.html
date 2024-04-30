@@ -1,0 +1,66 @@
+<div class="product-catalog" *ngIf="visible">
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar productos"
+      style="margin-right: 20px"
+    />
+    <button
+      class="btn btn-outline-danger btn-rounded"
+      (click)="handleShowProductCatalog(false)"
+    >
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+  <div>
+    <ul>
+      <li><i class="bi bi-cart4"></i></li>
+      <li>Cantidad: 2</li>
+      <li>Total: $54</li>
+    </ul>
+  </div>
+  <hr />
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <td>Código</td>
+          <td>Nombre</td>
+          <td>Cantidad</td>
+          <td>Precio Unitario</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let product of products"
+          (click)="handleSelectedProductFromCatalog(product)"
+        >
+          <td>{{ product.productCode }}</td>
+          <td>{{ product.productCode }}</td>
+          <td>{{ product.quantity }}</td>
+          <td>$ {{ product.price }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <nav aria-label="Page Navigation">
+      <ul class="pagination justify-content-end">
+        <li class="page-item" style="margin-right: 6px">
+          <button class="btn btn-outline-info" (click)="handleBackwardPage()">
+            <span aria-hidden="true">
+              <i class="bi bi-arrow-left"></i>
+            </span>
+          </button>
+        </li>
+        <li class="page-item">
+          <button class="btn btn-outline-info" (click)="handleForwardPage()">
+            <span aria-hidden="true">
+              <i class="bi bi-arrow-right"></i>
+            </span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
