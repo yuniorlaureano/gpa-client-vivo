@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Route, Router } from '@angular/router';
-import { LayoutService } from '../services/layout.service';
+import { LayoutService } from '../service/layout.service';
 
 @Component({
   selector: 'gpa-admin-page-header',

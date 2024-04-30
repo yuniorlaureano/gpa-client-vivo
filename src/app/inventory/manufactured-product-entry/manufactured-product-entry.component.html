@@ -250,12 +250,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>PROD-1</td>
-                <td>Botellon</td>
-                <td>$34</td>
-                <td>4</td>
-                <td>LOC-3</td>
+              <tr *ngFor="let product of products">
+                <td>{{ product.code }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ 45 }}</td>
+                <td>{{ "loc-39" }}</td>
                 <td>
                   <button class="btn btn-outline-primary">
                     <i class="bi bi-cart-plus"></i>
@@ -264,6 +264,30 @@
               </tr>
             </tbody>
           </table>
+          <nav aria-label="Page Navigation">
+            <ul class="pagination justify-content-end">
+              <li class="page-item" style="margin-right: 6px">
+                <button
+                  class="btn btn-outline-info"
+                  (click)="handleBackwardPage()"
+                >
+                  <span aria-hidden="true">
+                    <i class="bi bi-arrow-left"></i>
+                  </span>
+                </button>
+              </li>
+              <li class="page-item">
+                <button
+                  class="btn btn-outline-info"
+                  (click)="handleForwardPage()"
+                >
+                  <span aria-hidden="true">
+                    <i class="bi bi-arrow-right"></i>
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>

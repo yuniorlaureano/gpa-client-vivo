@@ -7,7 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { LayoutService } from '../services/layout.service';
+import { LayoutService } from '../service/layout.service';
 
 @Component({
   selector: 'gpa-admin-sidebar-menu-item',

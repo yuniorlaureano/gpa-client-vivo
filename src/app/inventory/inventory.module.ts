@@ -7,6 +7,7 @@ import { CategoryComponent } from './category/category.component';
 import { ManufacturedProductEntryComponent } from './manufactured-product-entry/manufactured-product-entry.component';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [

@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { AdminPageHeaderComponent } from './admin-page-header/admin-page-header.component';
 import { AdminPageFooterComponent } from './admin-page-footer/admin-page-footer.component';
 import { AdminPageTogglerComponent } from './admin-page-header/admin-page-toggler.component';
-import { LayoutService } from './services/layout.service';
+import { LayoutService } from './service/layout.service';
 import { AdminSidebarMenuItemComponent } from './admin-sidebar-menu-item/admin-sidebar-menu-item.component';
 
 @NgModule({

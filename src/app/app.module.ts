@@ -3,13 +3,26 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AdminTemplateComponent } from './core/admin-template/admin-template.component';
 import { CoreModule } from './core/core.module';
+import { ProductService } from './inventory/service/product.service';
+import {
+  HttpClientModule,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
+import { JwtAuthInterceptor } from './core/interceptor/jwt-auth.interceptor';
+import { TokenService } from './core/service/token.service';
+import { AuthService } from './security/service/auth..service';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, CoreModule],
-  providers: [],
+  imports: [BrowserModule, AppRoutingModule, CoreModule, HttpClientModule],
+  providers: [
+    ProductService,
+    TokenService,
+    AuthService,
+    provideHttpClient(withInterceptors([JwtAuthInterceptor])),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
