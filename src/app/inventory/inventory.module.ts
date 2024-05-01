@@ -6,8 +6,7 @@ import { ProductComponent } from './product/product.component';
 import { CategoryComponent } from './category/category.component';
 import { ManufacturedProductEntryComponent } from './manufactured-product-entry/manufactured-product-entry.component';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StockProductCatalogComponent } from '../core/stock-product-catalog/stock-product-catalog.component';
 import { DynamicSelectComponent } from '../core/dynamic-search/dynamic-search.component';
 import { ProviderDynamicSearchComponent } from './provider-dynamic-search/provider-dynamic-search.component';
@@ -25,6 +24,7 @@ import { ProviderDynamicSearchComponent } from './provider-dynamic-search/provid
     InventoryRoutingModule,
     NgbDatepickerModule,
     FormsModule,
+    ReactiveFormsModule,
     DynamicSelectComponent,
   ],
 })

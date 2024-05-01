@@ -9,7 +9,11 @@
         class="right-button"
         style="display: flexbox; justify-content: flex-end; gap: 4px"
       >
-        <button type="button" class="btn btn-outline-success btn-rounded">
+        <button
+          type="button"
+          class="btn btn-outline-success btn-rounded"
+          (click)="form.ngSubmit.emit()"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -57,11 +61,20 @@
       </div>
       <div class="card-body">
         <!-- Row start -->
-        <form class="row row-cols-sm-auto">
+        <form
+          class="row row-cols-sm-auto"
+          [formGroup]="stockForm"
+          (ngSubmit)="addProducts()"
+          #form="ngForm"
+        >
           <div class="col-12 col-sm-4">
             <div class="mb-3">
               <label for="reason" class="form-label">Motivo</label>
-              <select name="reason" class="form-select">
+              <select
+                name="reason"
+                class="form-select"
+                formControlName="reasonId"
+              >
                 <option value="1"></option>
                 <option
                   *ngFor="let reason of reasons$ | async"
@@ -76,7 +89,7 @@
             <div class="mb-3">
               <label for="inputNumber" class="form-label">Provedor</label>
               <gpa-provider-dynamic-search
-                [onSelectedItem]="handleSelectedClient"
+                [onSelectedItem]="handleSelectedProvider"
               />
             </div>
           </div>
@@ -89,6 +102,7 @@
                   placeholder="yyyy-mm-dd"
                   name="dp"
                   ngbDatepicker
+                  formControlName="date"
                   #d="ngbDatepicker"
                 />
                 <button

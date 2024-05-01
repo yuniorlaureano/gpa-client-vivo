@@ -1,18 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  BehaviorSubject,
-  map,
-  Observable,
-  Subscription,
-  switchMap,
-} from 'rxjs';
-import { SearchModel } from '../../core/models/search.model';
-import { SearchOptionsModel } from '../../core/models/search-options.model';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { StockService } from '../service/stock.service';
 import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
 import { ReasonModel } from '../models/reason.model';
 import { ReasonService } from '../service/reason.service';
 import { ProviderModel } from '../models/provider.model';
+import { FormArray, FormBuilder, NgForm, Validators } from '@angular/forms';
 
 @Component({
   selector: 'gpa-manufactured-product-entry',
@@ -30,9 +23,26 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
 
   reasons$!: Observable<ReasonModel[]>;
 
+  stockForm = this.formBuilder.group({
+    id: [''],
+    // description: [''],
+    transactionType: ['', Validators.required],
+    providerId: [''],
+    date: ['', Validators.required],
+    // storeId: [''],
+    reasonId: ['', Validators.required],
+    products: this.formBuilder.array([
+      this.formBuilder.group({
+        productId: ['', Validators.required],
+        quantity: ['', Validators.required],
+      }),
+    ]),
+  });
+
   constructor(
     private stockService: StockService,
-    private reasonService: ReasonService
+    private reasonService: ReasonService,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -50,7 +60,6 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
   removeProductFromCatalog(productId: string) {
     this.products = this.products.filter((x) => x.productId != productId);
     this.productPriceAndQuantity[productId] = { quantity: 0 };
-
     this.calculateSelectedProductCatalogAggregate();
   }
 
@@ -87,7 +96,26 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleSelectedClient = (model: ProviderModel) => {
-    console.log(model);
+  handleSelectedProvider = (model: ProviderModel) => {
+    this.stockForm.get('providerId')?.setValue(model.id);
   };
+
+  get formProducts() {
+    return this.stockForm.get('products') as FormArray;
+  }
+
+  addProducts() {
+    // this.formProducts.push(
+    //   this.products.map((product) => {
+    //     return {
+    //       productId: product.productId,
+    //       quantity: this.productPriceAndQuantity[product.productId],
+    //     };
+    //   })
+    // );
+    console.log(this.stockForm.value);
+    //set the provider
+    //set attachment, but for future
+    //add the productos to the stock
+  }
 }
