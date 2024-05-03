@@ -54,7 +54,7 @@
     <div class="card">
       <div class="card-body">
         <!-- Row start -->
-        <form class="row row-cols-sm-auto">
+        <form class="row row-cols-sm-auto" [formGroup]="saleForm">
           <div class="col-6 col-sm-6">
             <button
               class="btn btn-outline-primary"
@@ -108,13 +108,22 @@
               </div>
             </div>
           </div>
+          <div class="col-12 col-sm-4">
+            <div class="form-group">
+              <label for="" class="form-label">Estado</label>
+              <select name="" class="form-select">
+                <option value="">Completada</option>
+                <option value="">Pendiente</option>
+              </select>
+            </div>
+          </div>
           <div class="col-12 col-sm-12">
             <div class="mb-3">
               <label for="inputCompanyName" class="form-label">Adjuntos</label>
               <input type="file" class="form-control" />
             </div>
           </div>
-          <div class="col-xxl-6 col-xl-6 col-lg-8 col-md-8 col-sm-8 col-12">
+          <div class="col-6 col-sm-6">
             <div class="mb-3">
               <label class="form-label">Tipo de venta</label>
               <div class="mt-2">
@@ -143,6 +152,27 @@
                     >Crédito</label
                   >
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-4">
+            <div class="mb-3">
+              <label for="inputEmail" class="form-label"
+                >Fecha de expiración</label
+              >
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  placeholder="yyyy-mm-dd"
+                  name="dp"
+                  ngbDatepicker
+                  #d1="ngbDatepicker"
+                />
+                <button
+                  class="btn btn-outline-secondary bi bi-calendar3"
+                  (click)="d1.toggle()"
+                  type="button"
+                ></button>
               </div>
             </div>
           </div>
@@ -185,58 +215,49 @@
               </button>
             </div>
           </div>
-        </form>
-        <div class="row">
-          <div class="col-12">
+          <div class="col-12 col-sm-12">
             <div class="table-responsive">
               <table class="table table-sm">
                 <thead>
                   <tr>
                     <th>Código</th>
                     <th>Nombre</th>
+                    <th>Existencia</th>
                     <th>Cantidad</th>
-                    <th>Precio</th>
+                    <th>Precio Unitario</th>
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>RP-01</td>
-                    <td>Botellita</td>
+                <tbody formArrayName="products">
+                  <tr
+                    *ngFor="
+                      let formProduct of formProducts.controls;
+                      let i = index
+                    "
+                    [formGroupName]="i"
+                  >
+                    <td>{{ formProduct.get("productCode")?.value }}</td>
+                    <td>{{ formProduct.get("productName")?.value }}</td>
+                    <td>{{ this.products[i] && this.products[i].quantity }}</td>
                     <td>
                       <input
                         type="number"
                         class="form-control"
-                        style="margin: 0; padding: 0"
+                        (input)="handleQuantityChange()"
+                        formControlName="quantity"
+                        [class.quantity-error]="
+                          !formProduct.get('quantity')?.valid
+                        "
                       />
                     </td>
-                    <td>
-                      <input
-                        type="number"
-                        class="form-control"
-                        style="margin: 0; padding: 0"
-                      />
-                    </td>
+                    <td>$ {{ formProduct.get("price")?.value }}</td>
                     <td>
                       <button
                         type="button"
                         class="btn btn-outline-danger btn-rounded"
+                        (click)="removeProductFromCatalog(i)"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-trash"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
-                          />
-                          <path
-                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
-                          />
-                        </svg>
+                        <i class="bi bi-trash-fill"></i>
                       </button>
                     </td>
                   </tr>
@@ -244,96 +265,17 @@
               </table>
             </div>
           </div>
-        </div>
+        </form>
         <!-- Row end -->
       </div>
-      <div class="product-catalog" *ngIf="isProductCatalogVisible">
-        <h5 class="mb-3">Catálogo de productos</h5>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-search"></i></span>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Buscar productos"
-            style="margin-right: 20px"
-          />
-          <button
-            class="btn btn-outline-danger btn-rounded"
-            (click)="handleShowProductCatalog(false)"
-          >
-            <i class="bi bi-x"></i>
-          </button>
-        </div>
-        <div>
-          <ul>
-            <li><i class="bi bi-cart4"></i></li>
-            <li>Cantidad: 2</li>
-            <li>Total: $54</li>
-          </ul>
-        </div>
-        <hr />
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <td>Código</td>
-                <td>Nombre</td>
-                <td>Pecio</td>
-                <td>Cantidad</td>
-                <td>Ubicación</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>PROD-1</td>
-                <td>Botellon</td>
-                <td>$34</td>
-                <td>4</td>
-                <td>LOC-3</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
 
-      <div class="client-catalog" *ngIf="isClientCatalogVisible">
-        <h5 class="mb-3">Catálogo de clientes</h5>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-search"></i></span>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Buscar cliente"
-            style="margin-right: 20px"
-          />
-          <button
-            class="btn btn-outline-danger btn-rounded"
-            (click)="handleShowClientCatalog(false)"
-          >
-            <i class="bi bi-x"></i>
-          </button>
-        </div>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Identificación</th>
-                <th>Téfono</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Juan</td>
-                <td>Soto</td>
-                <td>22301566091</td>
-                <td>809555687</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <gpa-stock-product-catalog
+        [(visible)]="isProductCatalogVisible"
+      ></gpa-stock-product-catalog>
+
+      <gpa-client-catalog
+        [(visible)]="isClientCatalogVisible"
+      ></gpa-client-catalog>
     </div>
     <!-- Card end -->
   </div>

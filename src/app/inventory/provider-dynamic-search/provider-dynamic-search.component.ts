@@ -11,6 +11,7 @@ import { SearchModel } from '../../core/models/search.model';
 })
 export class ProviderDynamicSearchComponent implements OnInit {
   @Input() onSelectedItem: (model: ProviderModel | null) => void = () => {};
+  @Input() selectedItem: SelectModel<ProviderModel> | null = null;
   items: SelectModel<ProviderModel>[] = [];
   search: string = '';
   options: { count: number; page: number; pageSize: number } = {

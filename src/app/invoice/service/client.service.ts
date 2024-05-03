@@ -1,20 +1,20 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
 import { SearchModel } from '../../core/models/search.model';
-import { ReasonModel } from '../models/reason.model';
+import { environment } from '../../../environments/environment';
+import { ClientModel } from '../model/client.model';
 
 @Injectable()
-export class ReasonService {
-  url = `${environment.api_url}/inventory/reasons`;
+export class ClientService {
+  url = `${environment.api_url}/inventory/products`;
   constructor(private http: HttpClient) {}
 
-  getReasons(
+  getClients(
     search: SearchModel | null = null
-  ): Observable<ResponseModel<ReasonModel>> {
-    return this.http.get<ResponseModel<ReasonModel>>(
+  ): Observable<ResponseModel<ClientModel>> {
+    return this.http.get<ResponseModel<ClientModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`
     );
   }

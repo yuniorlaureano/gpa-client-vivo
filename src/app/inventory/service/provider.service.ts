@@ -6,9 +6,7 @@ import { ResponseModel } from '../../core/models/response.model';
 import { SearchModel } from '../../core/models/search.model';
 import { ProviderModel } from '../models/provider.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ProviderService {
   url = `${environment.api_url}/inventory/providers`;
   constructor(private http: HttpClient) {}

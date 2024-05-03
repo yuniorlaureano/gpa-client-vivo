@@ -1,8 +1,4 @@
-div.card {
-  position: relative;
-}
-
-.product-catalog {
+.client-catalog {
   position: absolute;
   padding: 20px;
   width: 100%;

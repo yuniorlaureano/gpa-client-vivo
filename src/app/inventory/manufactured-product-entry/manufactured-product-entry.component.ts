@@ -14,6 +14,7 @@ import {
 import { ReasonEnum } from '../../core/models/reason.enum';
 import { TransactionType } from '../../core/models/transaction-type.enum';
 import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
+import { SelectModel } from '../../core/models/select-model';
 
 @Component({
   selector: 'gpa-manufactured-product-entry',
@@ -23,6 +24,7 @@ import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
 export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
   products: RawProductCatalogModel[] = [];
   isProductCatalogVisible: boolean = false;
+  selectedProvider: SelectModel<ProviderModel> | null = null;
   productCatalogAggregate: {
     totalPrice: number;
     totalQuantity: number;
@@ -92,16 +94,24 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
 
   addProducts() {
     this.stockForm.markAsTouched();
-    if (this.stockForm.valid) {
+    if (this.stockForm.valid && this.formProducts.length > 0) {
       const value = {
         ...this.stockForm.value,
+        id: null,
+        storeId: null,
         products: this.formProducts.value.map((product: any) => ({
           productId: product.productId,
           quantity: product.quantity,
         })),
       };
-      console.log(value);
-      //this.stockService.addProducts(<InventoryEntryCollectionModel>value);
+
+      this.stockService
+        .addProducts(<InventoryEntryCollectionModel>value)
+        .subscribe({
+          next: () => {
+            this.clearForm();
+          },
+        });
     }
   }
 
@@ -114,7 +124,16 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
   }
 
   handleSelectedProvider = (model: ProviderModel | null) => {
-    this.stockForm.get('providerId')?.setValue(model?.id ?? null);
+    if (model) {
+      this.selectedProvider = {
+        text: model.name + ' ' + model.rnc,
+        value: model,
+      };
+      this.stockForm.get('providerId')?.setValue(model.id);
+    } else {
+      this.selectedProvider = null;
+      this.stockForm.get('providerId')?.setValue(null);
+    }
   };
 
   newProduct(product: RawProductCatalogModel) {
@@ -133,4 +152,11 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
       ],
     });
   }
+
+  clearForm = () => {
+    this.formProducts.clear();
+    this.products = [];
+    this.stockForm.reset();
+    this.selectedProvider = null;
+  };
 }

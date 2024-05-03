@@ -6,9 +6,7 @@ import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
 import { SearchModel } from '../../core/models/search.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ProductService {
   url = `${environment.api_url}/inventory/products`;
   constructor(private http: HttpClient) {}

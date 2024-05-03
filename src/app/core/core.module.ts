@@ -9,6 +9,8 @@ import { AdminPageFooterComponent } from './admin-page-footer/admin-page-footer.
 import { AdminPageTogglerComponent } from './admin-page-header/admin-page-toggler.component';
 import { LayoutService } from './service/layout.service';
 import { AdminSidebarMenuItemComponent } from './admin-sidebar-menu-item/admin-sidebar-menu-item.component';
+import { ClientCatalogComponent } from './client-catalog/client-catalog.component';
+import { StockProductCatalogComponent } from './stock-product-catalog/stock-product-catalog.component';
 
 @NgModule({
   declarations: [
@@ -19,8 +21,11 @@ import { AdminSidebarMenuItemComponent } from './admin-sidebar-menu-item/admin-s
     AdminPageFooterComponent,
     AdminPageTogglerComponent,
     AdminSidebarMenuItemComponent,
+    ClientCatalogComponent,
+    StockProductCatalogComponent,
   ],
   imports: [CommonModule, RouterModule],
   providers: [LayoutService],
+  exports: [ClientCatalogComponent, StockProductCatalogComponent],
 })
 export class CoreModule {}

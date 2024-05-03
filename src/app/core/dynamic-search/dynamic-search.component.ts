@@ -22,7 +22,7 @@ export class DynamicSelectComponent {
     pageSize: 10,
   };
   searching = false;
-  selectedItem: SelectModel<any> | null = null;
+  @Input() selectedItem: SelectModel<any> | null = null;
 
   constructor() {}
 

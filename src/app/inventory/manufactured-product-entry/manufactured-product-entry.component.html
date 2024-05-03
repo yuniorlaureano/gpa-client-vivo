@@ -89,6 +89,7 @@
             <div class="mb-3">
               <label for="inputNumber" class="form-label">Provedor</label>
               <gpa-provider-dynamic-search
+                [selectedItem]="selectedProvider"
                 [onSelectedItem]="handleSelectedProvider"
               />
             </div>
@@ -181,7 +182,7 @@
                   >
                     <td>{{ formProduct.get("productCode")?.value }}</td>
                     <td>{{ formProduct.get("productName")?.value }}</td>
-                    <td>{{ this.products[i].quantity }}</td>
+                    <td>{{ this.products[i] && this.products[i].quantity }}</td>
                     <td>
                       <input
                         type="number"
