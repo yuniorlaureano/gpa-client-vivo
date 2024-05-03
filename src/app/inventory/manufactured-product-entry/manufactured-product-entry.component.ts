@@ -1,11 +1,19 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { StockService } from '../service/stock.service';
 import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
 import { ReasonModel } from '../models/reason.model';
 import { ReasonService } from '../service/reason.service';
 import { ProviderModel } from '../models/provider.model';
-import { FormArray, FormBuilder, NgForm, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
+import { ReasonEnum } from '../../core/models/reason.enum';
+import { TransactionType } from '../../core/models/transaction-type.enum';
+import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
 
 @Component({
   selector: 'gpa-manufactured-product-entry',
@@ -14,7 +22,6 @@ import { FormArray, FormBuilder, NgForm, Validators } from '@angular/forms';
 })
 export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
   products: RawProductCatalogModel[] = [];
-  productPriceAndQuantity: any = {};
   isProductCatalogVisible: boolean = false;
   productCatalogAggregate: {
     totalPrice: number;
@@ -25,18 +32,13 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
 
   stockForm = this.formBuilder.group({
     id: [''],
-    // description: [''],
-    transactionType: ['', Validators.required],
+    description: [''],
+    transactionType: [TransactionType.Input, Validators.required],
     providerId: [''],
     date: ['', Validators.required],
-    // storeId: [''],
+    storeId: [''],
     reasonId: ['', Validators.required],
-    products: this.formBuilder.array([
-      this.formBuilder.group({
-        productId: ['', Validators.required],
-        quantity: ['', Validators.required],
-      }),
-    ]),
+    products: this.formBuilder.array([]),
   });
 
   constructor(
@@ -48,7 +50,11 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.reasons$ = this.reasonService
       .getReasons()
-      .pipe(map((data) => data.data));
+      .pipe(
+        map((data) =>
+          data.data.filter((reason) => reason.id != ReasonEnum.Sale)
+        )
+      );
   }
 
   ngOnDestroy(): void {}
@@ -57,65 +63,74 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     this.isProductCatalogVisible = visible;
   }
 
-  removeProductFromCatalog(productId: string) {
-    this.products = this.products.filter((x) => x.productId != productId);
-    this.productPriceAndQuantity[productId] = { quantity: 0 };
+  removeProductFromCatalog(index: number) {
+    this.formProducts.removeAt(index);
+    this.products = this.products.filter((item, i) => i != index);
     this.calculateSelectedProductCatalogAggregate();
   }
 
   calculateSelectedProductCatalogAggregate() {
     let totalPrice = 0;
     let totalQuantity = 0;
-    for (let product of this.products) {
-      totalQuantity += this.productPriceAndQuantity[product.productId].quantity;
-      totalPrice +=
-        this.productPriceAndQuantity[product.productId].quantity *
-        product.price;
+    for (let product of this.formProducts.value) {
+      totalQuantity += product.quantity;
+      totalPrice += product.quantity * product.price;
     }
     this.productCatalogAggregate = {
-      totalPrice: totalPrice,
-      totalQuantity: totalQuantity,
+      totalPrice,
+      totalQuantity,
     };
-  }
-
-  handleQuantityChange(productId: string, event: any) {
-    let product = this.products.find((x) => x.productId == productId);
-    if (product) {
-      this.productPriceAndQuantity[product.productId] = {
-        quantity: Number(event.value),
-      };
-      this.calculateSelectedProductCatalogAggregate();
-    }
   }
 
   handleSelectedProductFromCatalog(product: RawProductCatalogModel) {
     if (!this.products.find((x) => x.productId == product.productId)) {
-      this.productPriceAndQuantity[product.productId] = { quantity: 1 };
-      this.products = [...this.products, product];
+      this.products.push(product);
+      this.formProducts?.push(this.newProduct(product));
       this.calculateSelectedProductCatalogAggregate();
     }
   }
 
-  handleSelectedProvider = (model: ProviderModel) => {
-    this.stockForm.get('providerId')?.setValue(model.id);
-  };
+  addProducts() {
+    this.stockForm.markAsTouched();
+    if (this.stockForm.valid) {
+      const value = {
+        ...this.stockForm.value,
+        products: this.formProducts.value.map((product: any) => ({
+          productId: product.productId,
+          quantity: product.quantity,
+        })),
+      };
+      console.log(value);
+      //this.stockService.addProducts(<InventoryEntryCollectionModel>value);
+    }
+  }
+
+  handleQuantityChange() {
+    this.calculateSelectedProductCatalogAggregate();
+  }
 
   get formProducts() {
     return this.stockForm.get('products') as FormArray;
   }
 
-  addProducts() {
-    // this.formProducts.push(
-    //   this.products.map((product) => {
-    //     return {
-    //       productId: product.productId,
-    //       quantity: this.productPriceAndQuantity[product.productId],
-    //     };
-    //   })
-    // );
-    console.log(this.stockForm.value);
-    //set the provider
-    //set attachment, but for future
-    //add the productos to the stock
+  handleSelectedProvider = (model: ProviderModel | null) => {
+    this.stockForm.get('providerId')?.setValue(model?.id ?? null);
+  };
+
+  newProduct(product: RawProductCatalogModel) {
+    return this.formBuilder.group({
+      productCode: [product.productCode, Validators.required],
+      price: [product.price, Validators.required],
+      productName: [product.productName, Validators.required],
+      productId: [product.productId, Validators.required],
+      quantity: [
+        1,
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(product.quantity),
+        ],
+      ],
+    });
   }
 }

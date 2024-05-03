@@ -157,9 +157,8 @@
               </button>
             </div>
           </div>
-        </form>
-        <div class="row">
-          <div class="col-12">
+
+          <div class="col-12 col-sm-12">
             <div class="table-responsive">
               <table class="table table-sm">
                 <thead>
@@ -172,27 +171,34 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr *ngFor="let product of products">
-                    <td>{{ product.productCode }}</td>
-                    <td>{{ product.productName }}</td>
-                    <td>{{ product.quantity }}</td>
+                <tbody formArrayName="products">
+                  <tr
+                    *ngFor="
+                      let formProduct of formProducts.controls;
+                      let i = index
+                    "
+                    [formGroupName]="i"
+                  >
+                    <td>{{ formProduct.get("productCode")?.value }}</td>
+                    <td>{{ formProduct.get("productName")?.value }}</td>
+                    <td>{{ this.products[i].quantity }}</td>
                     <td>
                       <input
                         type="number"
-                        value="{{ 1 }}"
                         class="form-control"
-                        (input)="
-                          handleQuantityChange(product.productId, $event.target)
+                        (input)="handleQuantityChange()"
+                        formControlName="quantity"
+                        [class.quantity-error]="
+                          !formProduct.get('quantity')?.valid
                         "
                       />
                     </td>
-                    <td>$ {{ product.price }}</td>
+                    <td>$ {{ formProduct.get("price")?.value }}</td>
                     <td>
                       <button
                         type="button"
                         class="btn btn-outline-danger btn-rounded"
-                        (click)="removeProductFromCatalog(product.productId)"
+                        (click)="removeProductFromCatalog(i)"
                       >
                         <i class="bi bi-trash-fill"></i>
                       </button>
@@ -202,7 +208,7 @@
               </table>
             </div>
           </div>
-        </div>
+        </form>
         <!-- Row end -->
       </div>
 

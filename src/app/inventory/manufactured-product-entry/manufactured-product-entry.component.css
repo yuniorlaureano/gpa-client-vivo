@@ -16,3 +16,7 @@ div.card {
 .product-catalog tbody tr {
   cursor: pointer;
 }
+
+.quantity-error {
+  border: solid 1px red;
+}

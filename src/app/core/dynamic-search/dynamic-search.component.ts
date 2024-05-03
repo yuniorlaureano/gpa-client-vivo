@@ -12,7 +12,7 @@ import { SelectModel } from '../models/select-model';
 export class DynamicSelectComponent {
   dynamiclistIdentifier = uuidv4();
   @Input() items: SelectModel<any>[] = [];
-  @Input() onSelectedItem: (item: SelectModel<any>) => void = () => {};
+  @Input() onSelectedItem: (item: SelectModel<any> | null) => void = () => {};
   @Input() onSearch: (search: string) => void = () => {};
   @Input() onNext: (index: number) => void = () => {};
   @Input() onPrevious: (index: number) => void = () => {};
@@ -22,6 +22,7 @@ export class DynamicSelectComponent {
     pageSize: 10,
   };
   searching = false;
+  selectedItem: SelectModel<any> | null = null;
 
   constructor() {}
 
@@ -42,6 +43,7 @@ export class DynamicSelectComponent {
   }
 
   handleSelectItem(model: SelectModel<any>) {
+    this.selectedItem = model;
     this.handleCloseDynamiList();
     this.onSelectedItem(model);
   }
@@ -50,6 +52,9 @@ export class DynamicSelectComponent {
     var dynamicList = document.getElementById(this.dynamiclistIdentifier);
     if (dynamicList && dynamicList.classList.contains('open-dynamic-list')) {
       dynamicList.classList.remove('open-dynamic-list');
+    } else {
+      this.selectedItem = null;
+      this.onSelectedItem(null);
     }
   }
 

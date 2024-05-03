@@ -2,12 +2,13 @@
   <input
     type="text"
     class="form-control dynamic-list-search"
-    placeholder="Buscar"
+    [placeholder]="selectedItem ? selectedItem.text : 'Buscar'"
     (input)="handleSearch($event)"
     (focus)="handleListFocus()"
+    style="color: black"
   />
   <i
-    class="far fa-times-circle btn-close-dynamic-list"
+    class="bi bi-x-square btn-close-dynamic-list"
     (click)="handleCloseDynamiList()"
   ></i>
   <div class="dynamic-list-boundary" [id]="dynamiclistIdentifier">

@@ -10,7 +10,7 @@ import { SearchModel } from '../../core/models/search.model';
   templateUrl: './provider-dynamic-search.component.html',
 })
 export class ProviderDynamicSearchComponent implements OnInit {
-  @Input() onSelectedItem: (model: ProviderModel) => void = () => {};
+  @Input() onSelectedItem: (model: ProviderModel | null) => void = () => {};
   items: SelectModel<ProviderModel>[] = [];
   search: string = '';
   options: { count: number; page: number; pageSize: number } = {
@@ -32,8 +32,8 @@ export class ProviderDynamicSearchComponent implements OnInit {
     //this.search
   }
 
-  handleSelectedItem = (model: SelectModel<ProviderModel>) => {
-    this.onSelectedItem(model.value);
+  handleSelectedItem = (model: SelectModel<ProviderModel> | null) => {
+    this.onSelectedItem(model?.value ?? null);
   };
 
   handleSearch = (search: string) => {
