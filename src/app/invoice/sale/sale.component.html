@@ -9,7 +9,11 @@
         class="right-button"
         style="display: flexbox; justify-content: flex-end; gap: 4px"
       >
-        <button type="button" class="btn btn-outline-success btn-rounded">
+        <button
+          type="button"
+          class="btn btn-outline-success btn-rounded"
+          (click)="form.ngSubmit.emit()"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -54,36 +58,37 @@
     <div class="card">
       <div class="card-body">
         <!-- Row start -->
-        <form class="row row-cols-sm-auto" [formGroup]="saleForm">
+        <form
+          class="row row-cols-sm-auto"
+          [formGroup]="saleForm"
+          #form="ngForm"
+          (ngSubmit)="addSale()"
+        >
           <div class="col-6 col-sm-6">
             <button
               class="btn btn-outline-primary"
               type="button"
               (click)="handleShowClientCatalog(true)"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-person-add"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"
-                />
-                <path
-                  d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"
-                />
-              </svg>
+              <i class="bi bi-person-plus"></i>
               Cliente
             </button>
+            <button
+              class="btn btn-outline-danger"
+              style="margin-left: 5px"
+              (click)="clearSelectedClient()"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
           </div>
-          <div class="col-12 col-sm-12">
+          <div class="col-12 col-sm-12" *ngIf="client">
             <blockquote>
-              <p><span style="font-weight: 700">Nombre:</span> Raul Calsado</p>
-              <p><span style="font-weight: 700">Cédito:</span> 45</p>
-              <p><span style="font-weight: 700">Débito:</span> 34</p>
+              <p>
+                <span style="font-weight: 700">Nombre:</span>
+                {{ client.name }} {{ client.lastName }}
+              </p>
+              <p><span style="font-weight: 700">Cédito:</span> 0</p>
+              <p><span style="font-weight: 700">Débito:</span> 0</p>
             </blockquote>
           </div>
           <div class="col-12 col-sm-12">
@@ -91,18 +96,19 @@
           </div>
           <div class="col-12 col-sm-4">
             <div class="mb-3">
-              <label for="inputEmail" class="form-label">Fecha</label>
+              <label for="date" class="form-label">Fecha</label>
               <div class="input-group">
                 <input
+                  id="date"
                   class="form-control"
                   placeholder="yyyy-mm-dd"
-                  name="dp"
+                  formControlName="date"
                   ngbDatepicker
-                  #d="ngbDatepicker"
+                  #date="ngbDatepicker"
                 />
                 <button
                   class="btn btn-outline-secondary bi bi-calendar3"
-                  (click)="d.toggle()"
+                  (click)="date.toggle()"
                   type="button"
                 ></button>
               </div>
@@ -110,10 +116,10 @@
           </div>
           <div class="col-12 col-sm-4">
             <div class="form-group">
-              <label for="" class="form-label">Estado</label>
-              <select name="" class="form-select">
-                <option value="">Completada</option>
-                <option value="">Pendiente</option>
+              <label for="status" class="form-label">Estado</label>
+              <select id="status" class="form-select" formControlName="status">
+                <option value="COMPLETADO">Completada</option>
+                <option value="PENDIENTE">Pendiente</option>
               </select>
             </div>
           </div>
@@ -131,46 +137,43 @@
                   <input
                     class="form-check-input"
                     type="radio"
-                    name="billingRadioOptions"
-                    id="billingRadio1"
-                    value="option1"
+                    formControlName="type"
+                    id="cash"
+                    value="1"
                     checked=""
                   />
-                  <label class="form-check-label" for="billingRadio1"
-                    >Al contado</label
-                  >
+                  <label class="form-check-label" for="cash">Al contado</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input
                     class="form-check-input"
                     type="radio"
-                    name="billingRadioOptions"
-                    id="billingRadio2"
-                    value="option2"
+                    formControlName="type"
+                    id="credit"
+                    value="0"
                   />
-                  <label class="form-check-label" for="billingRadio2"
-                    >Crédito</label
-                  >
+                  <label class="form-check-label" for="credit">Crédito</label>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-12 col-sm-4">
             <div class="mb-3">
-              <label for="inputEmail" class="form-label"
+              <label for="expiratonDate" class="form-label"
                 >Fecha de expiración</label
               >
               <div class="input-group">
                 <input
                   class="form-control"
                   placeholder="yyyy-mm-dd"
-                  name="dp"
+                  id="expirationDate"
+                  formControlName="expirationDate"
                   ngbDatepicker
-                  #d1="ngbDatepicker"
+                  #expirationDate="ngbDatepicker"
                 />
                 <button
                   class="btn btn-outline-secondary bi bi-calendar3"
-                  (click)="d1.toggle()"
+                  (click)="expirationDate.toggle()"
                   type="button"
                 ></button>
               </div>
@@ -178,8 +181,12 @@
           </div>
           <div class="col-12 col-sm-12">
             <div class="mb-3">
-              <label for="inputCompanyName" class="form-label">Nota</label>
-              <textarea class="form-control"></textarea>
+              <label for="note" class="form-label">Nota</label>
+              <textarea
+                id="note"
+                formControlName="note"
+                class="form-control"
+              ></textarea>
             </div>
           </div>
           <div class="col-xl-3 col-sm-4 col-12">
@@ -192,7 +199,7 @@
                   <i class="bi bi-cart-check"></i>
                   <span
                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill shade-green"
-                    >$10</span
+                    >${{ productCatalogAggregate.totalPrice }}</span
                   >
                 </button>
                 <button
@@ -202,7 +209,7 @@
                   <i class="bi bi-bag-check-fill"></i>
                   <span
                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill shade-green"
-                    >10+</span
+                    >{{ productCatalogAggregate.totalQuantity }} +</span
                   >
                 </button>
               </div>
@@ -271,10 +278,12 @@
 
       <gpa-stock-product-catalog
         [(visible)]="isProductCatalogVisible"
+        (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
       ></gpa-stock-product-catalog>
 
       <gpa-client-catalog
         [(visible)]="isClientCatalogVisible"
+        (onSelectedClient)="handleSelectedClient($event)"
       ></gpa-client-catalog>
     </div>
     <!-- Card end -->

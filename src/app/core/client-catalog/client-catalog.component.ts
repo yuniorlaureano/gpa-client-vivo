@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { SearchModel } from '../models/search.model';
 import { SearchOptionsModel } from '../models/search-options.model';
-import { StockService } from '../../inventory/service/stock.service';
 import { ClientService } from '../../invoice/service/client.service';
 import { ClientModel } from '../../invoice/model/client.model';
 
@@ -28,10 +27,7 @@ export class ClientCatalogComponent {
     pageSize: 10,
   };
 
-  constructor(
-    private stockService: StockService,
-    private clientService: ClientService
-  ) {}
+  constructor(private clientService: ClientService) {}
 
   ngOnInit(): void {
     this.loadClients();

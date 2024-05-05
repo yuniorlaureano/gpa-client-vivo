@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { RawProductCatalogModel } from '../../inventory/models/raw-product-catalog.model';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
-import { TransactionType } from '../../core/models/transaction-type.enum';
-import { ReasonEnum } from '../../core/models/reason.enum';
+import { ClientModel } from '../model/client.model';
+import { SaleType } from '../../core/models/sale-type.enum';
+import { InvoiceService } from '../service/invoice.service';
+import { InvoiceModel } from '../model/invoice.model';
 
 @Component({
   selector: 'gpa-sale',
@@ -10,6 +12,8 @@ import { ReasonEnum } from '../../core/models/reason.enum';
   styleUrl: './sale.component.css',
 })
 export class SaleComponent implements OnInit {
+  client: ClientModel | null = null;
+
   isProductCatalogVisible: boolean = false;
   isClientCatalogVisible: boolean = false;
   products: RawProductCatalogModel[] = [];
@@ -20,16 +24,20 @@ export class SaleComponent implements OnInit {
 
   saleForm = this.formBuilder.group({
     id: [''],
-    description: [''],
-    transactionType: [TransactionType.Output, Validators.required],
-    date: ['', Validators.required],
-    saleType: ['', Validators.required],
+    note: [null],
+    status: ['', Validators.required],
+    date: [null, Validators.required],
+    expirationDate: [null, Validators.required],
+    type: [SaleType.Cash, Validators.required],
+    clientId: [''],
     storeId: [''],
-    reasonId: [ReasonEnum.Sale, Validators.required],
     products: this.formBuilder.array([]),
   });
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private invoiceService: InvoiceService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -91,5 +99,45 @@ export class SaleComponent implements OnInit {
         ],
       ],
     });
+  }
+
+  addSale() {
+    this.saleForm.markAsTouched();
+    if (this.saleForm.valid && this.formProducts.length > 0) {
+      const value = {
+        ...this.saleForm.value,
+        id: null,
+        storeId: null,
+        invoiceDetails: this.formProducts.value.map((product: any) => ({
+          productId: product.productId,
+          quantity: product.quantity,
+          price: product.price,
+        })),
+      };
+
+      this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
+        next: () => {
+          this.clearForm();
+        },
+      });
+    }
+  }
+
+  clearForm = () => {
+    this.formProducts.clear();
+    this.products = [];
+    this.saleForm.reset();
+    this.client = null;
+  };
+
+  clearSelectedClient() {
+    this.saleForm.get('clientId')?.setValue(null);
+    this.client = null;
+  }
+
+  handleSelectedClient(client: ClientModel) {
+    this.saleForm.get('clientId')?.setValue(client.id);
+    this.client = client;
+    this.isClientCatalogVisible = false;
   }
 }

@@ -5,17 +5,22 @@ import { ResponseModel } from '../../core/models/response.model';
 import { SearchModel } from '../../core/models/search.model';
 import { environment } from '../../../environments/environment';
 import { ClientModel } from '../model/client.model';
+import { InvoiceModel } from '../model/invoice.model';
 
 @Injectable()
-export class ClientService {
-  url = `${environment.api_url}/invoice/clients`;
+export class InvoiceService {
+  url = `${environment.api_url}/invoice/invoices`;
   constructor(private http: HttpClient) {}
 
-  getClients(
+  getInvoices(
     search: SearchModel | null = null
   ): Observable<ResponseModel<ClientModel>> {
     return this.http.get<ResponseModel<ClientModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`
     );
+  }
+
+  addInvoice(model: InvoiceModel): Observable<void> {
+    return this.http.post<void>(this.url, model);
   }
 }

@@ -18,19 +18,16 @@
       <thead>
         <tr>
           <td>Nombre</td>
-          <td>Apellido</td>
           <td>Documento de identidad</td>
         </tr>
       </thead>
       <tbody>
         <tr
-          *ngFor="let product of clients"
-          (click)="handleSelectedClientFromCatalog(product)"
+          *ngFor="let client of clients"
+          (click)="handleSelectedClientFromCatalog(client)"
         >
-          <!-- <td>{{ product.productCode }}</td>
-          <td>{{ product.productCode }}</td>
-          <td>{{ product.quantity }}</td>
-          <td>$ {{ product.price }}</td> -->
+          <td>{{ client.name + " " + client.lastName }}</td>
+          <td>{{ client.identification }}</td>
         </tr>
       </tbody>
     </table>
