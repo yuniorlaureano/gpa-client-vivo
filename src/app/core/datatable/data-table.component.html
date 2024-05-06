@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-header">
+    <ng-content select="[caption]"></ng-content>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <ng-content select="[header]"></ng-content>
+        </thead>
+        <ng-content select="[body]"></ng-content>
+      </table>
+    </div>
+  </div>
+  <!-- /.card-body -->
+  <div class="card-footer clearfix">
+    <span
+      >mostrando {{ options.filteredSize }} de
+      {{ options.count }} registros</span
+    >
+    <ul class="pagination pagination m-0 float-right">
+      <li class="page-item">
+        <button type="button" class="page-link" (click)="handleBackwardPage()">
+          &laquo;
+        </button>
+      </li>
+      <select class="form-control" (change)="handleSetPageToShow($event)">
+        <option value="10">mostrar 10</option>
+        <option value="50">mostrar 50</option>
+        <option value="100">mostrar 100</option>
+      </select>
+      <li class="page-item">
+        <button type="button" class="page-link" (click)="handleForwardPage()">
+          &raquo;
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- /.card -->

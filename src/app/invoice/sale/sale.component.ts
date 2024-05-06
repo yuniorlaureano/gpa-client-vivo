@@ -31,7 +31,7 @@ export class SaleComponent implements OnInit {
     type: [SaleType.Cash, Validators.required],
     clientId: [''],
     storeId: [''],
-    products: this.formBuilder.array([]),
+    invoiceDetails: this.formBuilder.array([]),
   });
 
   constructor(
@@ -52,7 +52,7 @@ export class SaleComponent implements OnInit {
   calculateSelectedProductCatalogAggregate() {
     let totalPrice = 0;
     let totalQuantity = 0;
-    for (let product of this.formProducts.value) {
+    for (let product of this.invoiceDetails.value) {
       totalQuantity += product.quantity;
       totalPrice += product.quantity * product.price;
     }
@@ -65,19 +65,19 @@ export class SaleComponent implements OnInit {
   handleSelectedProductFromCatalog(product: RawProductCatalogModel) {
     if (!this.products.find((x) => x.productId == product.productId)) {
       this.products.push(product);
-      this.formProducts?.push(this.newProduct(product));
+      this.invoiceDetails?.push(this.newProduct(product));
       this.calculateSelectedProductCatalogAggregate();
     }
   }
 
   removeProductFromCatalog(index: number) {
-    this.formProducts.removeAt(index);
+    this.invoiceDetails.removeAt(index);
     this.products = this.products.filter((item, i) => i != index);
     this.calculateSelectedProductCatalogAggregate();
   }
 
-  get formProducts() {
-    return this.saleForm.get('products') as FormArray;
+  get invoiceDetails() {
+    return this.saleForm.get('invoiceDetails') as FormArray;
   }
 
   handleQuantityChange() {
@@ -103,12 +103,12 @@ export class SaleComponent implements OnInit {
 
   addSale() {
     this.saleForm.markAsTouched();
-    if (this.saleForm.valid && this.formProducts.length > 0) {
+    if (this.saleForm.valid && this.invoiceDetails.length > 0) {
       const value = {
         ...this.saleForm.value,
         id: null,
         storeId: null,
-        invoiceDetails: this.formProducts.value.map((product: any) => ({
+        invoiceDetails: this.invoiceDetails.value.map((product: any) => ({
           productId: product.productId,
           quantity: product.quantity,
           price: product.price,
@@ -124,7 +124,7 @@ export class SaleComponent implements OnInit {
   }
 
   clearForm = () => {
-    this.formProducts.clear();
+    this.invoiceDetails.clear();
     this.products = [];
     this.saleForm.reset();
     this.client = null;

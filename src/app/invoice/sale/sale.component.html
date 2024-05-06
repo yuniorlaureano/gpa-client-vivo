@@ -235,10 +235,10 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody formArrayName="products">
+                <tbody formArrayName="invoiceDetails">
                   <tr
                     *ngFor="
-                      let formProduct of formProducts.controls;
+                      let formProduct of invoiceDetails.controls;
                       let i = index
                     "
                     [formGroupName]="i"

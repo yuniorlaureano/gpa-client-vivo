@@ -16,6 +16,7 @@ import { AuthService } from './security/service/auth..service';
 import { StockService } from './inventory/service/stock.service';
 import { ProviderService } from './inventory/service/provider.service';
 import { ClientService } from './invoice/service/client.service';
+import { InvoiceService } from './invoice/service/invoice.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import { ClientService } from './invoice/service/client.service';
     TokenService,
     AuthService,
     ClientService,
+    InvoiceService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
   ],
   bootstrap: [AppComponent],
