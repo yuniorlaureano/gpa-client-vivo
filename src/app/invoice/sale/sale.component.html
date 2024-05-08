@@ -18,6 +18,7 @@
           class="btn btn-outline-success btn-rounded"
           style="margin-right: 5px"
           (click)="form.ngSubmit.emit()"
+          *ngIf="!isEdit"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -33,6 +34,16 @@
             />
           </svg>
           Guardar
+        </button>
+        <button
+          *ngIf="isEdit"
+          type="button"
+          class="btn btn-outline-warning btn-rounded"
+          style="margin-right: 5px"
+          (click)="form.ngSubmit.emit()"
+        >
+          <i class="bi bi-pencil-square"></i>
+          Actualizar
         </button>
 
         <button type="button" class="btn btn-outline-dark btn-rounded">

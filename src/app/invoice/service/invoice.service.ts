@@ -26,4 +26,8 @@ export class InvoiceService {
   addInvoice(model: InvoiceModel): Observable<void> {
     return this.http.post<void>(this.url, model);
   }
+
+  updateInvoice(model: InvoiceModel): Observable<void> {
+    return this.http.put<void>(this.url, model);
+  }
 }

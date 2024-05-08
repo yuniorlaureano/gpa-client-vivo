@@ -109,28 +109,41 @@ export class SaleComponent implements OnInit {
 
   addSale() {
     this.saleForm.markAsTouched();
+    console.log('creating .......');
+    console.log(this.saleForm.valid);
+    console.log(this.invoiceDetails.length);
     if (this.saleForm.valid && this.invoiceDetails.length > 0) {
       const value = {
         ...this.saleForm.value,
-        id: null,
         storeId: null,
         client: null,
         invoiceDetails: this.invoiceDetails.value.map((product: any) => ({
+          id: product.id,
           productId: product.productId,
           quantity: product.quantity,
           price: product.price,
         })),
       };
 
-      this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
-        next: () => {
-          this.clearForm();
-        },
-      });
+      if (this.isEdit) {
+        this.invoiceService.updateInvoice(<InvoiceModel>value).subscribe({
+          next: () => {
+            this.clearForm();
+          },
+        });
+      } else {
+        value.id = null;
+        this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
+          next: () => {
+            this.clearForm();
+          },
+        });
+      }
     }
   }
 
   clearForm = () => {
+    this.isEdit = false;
     this.invoiceDetails.clear();
     this.products = [];
     this.saleForm.reset();
@@ -194,7 +207,7 @@ export class SaleComponent implements OnInit {
             [
               Validators.required,
               Validators.min(1),
-              Validators.max(product.quantity),
+              Validators.max(product.stockProduct?.quantity ?? 1),
             ],
           ],
         })

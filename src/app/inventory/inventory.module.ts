@@ -10,6 +10,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicSelectComponent } from '../core/dynamic-search/dynamic-search.component';
 import { ProviderDynamicSearchComponent } from './provider-dynamic-search/provider-dynamic-search.component';
 import { CoreModule } from '../core/core.module';
+import { StockListComponent } from './stock-list/stock-list.component';
+import { DataTableComponent } from '../core/datatable/data-table.component';
+import { StockListTableComponent } from './stock-list/stock-list-table.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,8 @@ import { CoreModule } from '../core/core.module';
     CategoryComponent,
     ManufacturedProductEntryComponent,
     ProviderDynamicSearchComponent,
+    StockListTableComponent,
+    StockListComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +31,7 @@ import { CoreModule } from '../core/core.module';
     ReactiveFormsModule,
     DynamicSelectComponent,
     CoreModule,
+    DataTableComponent,
   ],
 })
 export class InventoryModule {}
