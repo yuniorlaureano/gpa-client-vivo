@@ -4,14 +4,20 @@ import { CommonModule } from '@angular/common';
 import { InvoiceRoutingModule } from './invoice-routing.module';
 import { SaleComponent } from './sale/sale.component';
 import { PurchaseComponent } from './purchase/purchase.component';
-import { NgbDatepicker, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ClientCatalogComponent } from '../core/client-catalog/client-catalog.component';
-import { StockProductCatalogComponent } from '../core/stock-product-catalog/stock-product-catalog.component';
 import { CoreModule } from '../core/core.module';
+import { SaleListComponent } from './sale-list/sale-list.component';
+import { SaleListTableComponent } from './sale-list/sale-list-table.component';
+import { DataTableComponent } from '../core/datatable/data-table.component';
 
 @NgModule({
-  declarations: [SaleComponent, PurchaseComponent],
+  declarations: [
+    SaleComponent,
+    PurchaseComponent,
+    SaleListComponent,
+    SaleListTableComponent,
+  ],
   imports: [
     CommonModule,
     InvoiceRoutingModule,
@@ -20,6 +26,7 @@ import { CoreModule } from '../core/core.module';
     CoreModule,
     FormsModule,
     ReactiveFormsModule,
+    DataTableComponent,
   ],
 })
 export class InvoiceModule {}

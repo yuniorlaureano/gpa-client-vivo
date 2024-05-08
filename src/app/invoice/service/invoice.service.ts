@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
 import { SearchModel } from '../../core/models/search.model';
 import { environment } from '../../../environments/environment';
-import { ClientModel } from '../model/client.model';
 import { InvoiceModel } from '../model/invoice.model';
 
 @Injectable()
@@ -14,10 +13,14 @@ export class InvoiceService {
 
   getInvoices(
     search: SearchModel | null = null
-  ): Observable<ResponseModel<ClientModel>> {
-    return this.http.get<ResponseModel<ClientModel>>(
+  ): Observable<ResponseModel<InvoiceModel>> {
+    return this.http.get<ResponseModel<InvoiceModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`
     );
+  }
+
+  getInvoice(id: string): Observable<InvoiceModel> {
+    return this.http.get<InvoiceModel>(`${this.url}/${id}`);
   }
 
   addInvoice(model: InvoiceModel): Observable<void> {

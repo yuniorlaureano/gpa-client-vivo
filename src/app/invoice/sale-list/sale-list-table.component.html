@@ -1,0 +1,33 @@
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Estado</th>
+    <th>Tipo</th>
+    <th>Fecha</th>
+    <th>Nota</th>
+    <th>Cliente</th>
+    <th></th>
+  </tr>
+  <tbody body>
+    <tr *ngFor="let invoice of data.data">
+      <td>{{ invoice.status }}</td>
+      <td>{{ invoice.type }}</td>
+      <td>{{ invoice.date }}</td>
+      <td>{{ invoice.note }}</td>
+      <td>{{ invoice.clientId }}</td>
+      <td style="width: 100px">
+        <button class="btn btn-danger btn-icon" (click)="handleDelete(invoice)">
+          <i class="bi bi-trash"></i>
+        </button>
+        <button class="btn btn-warning btn-icon" (click)="handleEdit(invoice)">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

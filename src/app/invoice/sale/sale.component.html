@@ -5,13 +5,18 @@
       <div>
         <h3>Venta</h3>
       </div>
-      <div
-        class="right-button"
-        style="display: flexbox; justify-content: flex-end; gap: 4px"
-      >
+      <div class="right-button">
+        <a
+          routerLink="/invoice/sale/list"
+          class="btn btn-outline-info btn-rounded"
+          style="margin-right: 5px"
+        >
+          <i class="bi bi-card-list"></i> Lista de ventas
+        </a>
         <button
           type="button"
           class="btn btn-outline-success btn-rounded"
+          style="margin-right: 5px"
           (click)="form.ngSubmit.emit()"
         >
           <svg
@@ -139,7 +144,7 @@
                     type="radio"
                     formControlName="type"
                     id="cash"
-                    value="1"
+                    [value]="1"
                     checked=""
                   />
                   <label class="form-check-label" for="cash">Al contado</label>
@@ -150,7 +155,7 @@
                     type="radio"
                     formControlName="type"
                     id="credit"
-                    value="0"
+                    [value]="0"
                   />
                   <label class="form-check-label" for="credit">Crédito</label>
                 </div>

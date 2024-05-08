@@ -4,7 +4,9 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ClientModel } from '../model/client.model';
 import { SaleType } from '../../core/models/sale-type.enum';
 import { InvoiceService } from '../service/invoice.service';
-import { InvoiceModel } from '../model/invoice.model';
+import { InvoiceModel, InvoiceDetailModel } from '../model/invoice.model';
+import { ActivatedRoute } from '@angular/router';
+import { of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'gpa-sale',
@@ -13,7 +15,6 @@ import { InvoiceModel } from '../model/invoice.model';
 })
 export class SaleComponent implements OnInit {
   client: ClientModel | null = null;
-
   isProductCatalogVisible: boolean = false;
   isClientCatalogVisible: boolean = false;
   products: RawProductCatalogModel[] = [];
@@ -34,12 +35,17 @@ export class SaleComponent implements OnInit {
     invoiceDetails: this.formBuilder.array([]),
   });
 
+  isEdit = false;
+
   constructor(
     private formBuilder: FormBuilder,
-    private invoiceService: InvoiceService
+    private invoiceService: InvoiceService,
+    private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getInvoice();
+  }
 
   handleShowProductCatalog(visible: boolean) {
     this.isProductCatalogVisible = visible;
@@ -108,6 +114,7 @@ export class SaleComponent implements OnInit {
         ...this.saleForm.value,
         id: null,
         storeId: null,
+        client: null,
         invoiceDetails: this.invoiceDetails.value.map((product: any) => ({
           productId: product.productId,
           quantity: product.quantity,
@@ -139,5 +146,59 @@ export class SaleComponent implements OnInit {
     this.saleForm.get('clientId')?.setValue(client.id);
     this.client = client;
     this.isClientCatalogVisible = false;
+  }
+
+  getInvoice() {
+    this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          const id = params.get('id');
+          if (id == null) {
+            this.isEdit = false;
+            return of(null);
+          }
+          this.isEdit = true;
+          return this.invoiceService.getInvoice(id);
+        })
+      )
+      .subscribe((invoice) => {
+        if (invoice) {
+          this.saleForm.setValue({
+            id: invoice.id,
+            note: <any>invoice.note,
+            status: invoice.status,
+            date: <any>invoice.date,
+            expirationDate: <any>invoice.expirationDate,
+            type: invoice.type,
+            clientId: invoice.clientId,
+            storeId: null,
+            invoiceDetails: [],
+          });
+          this.client = invoice.client;
+          this.mapProductsToForm(invoice.invoiceDetails);
+        }
+      });
+  }
+
+  mapProductsToForm(invoiceDetails: InvoiceDetailModel[]) {
+    for (let product of invoiceDetails) {
+      this.products.push(product.stockProduct!);
+      this.invoiceDetails.push(
+        this.formBuilder.group({
+          productCode: [product.stockProduct?.productCode, Validators.required],
+          price: [product.price, Validators.required],
+          productName: [product.stockProduct?.productName, Validators.required],
+          productId: [product.productId, Validators.required],
+          quantity: [
+            product.quantity,
+            [
+              Validators.required,
+              Validators.min(1),
+              Validators.max(product.quantity),
+            ],
+          ],
+        })
+      );
+    }
   }
 }

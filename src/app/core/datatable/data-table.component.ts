@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { DataTableOptionModel } from '../../models/common/data-table-option.model';
-import { DEFAULT_SEARCH_PARAMS } from '../../services/common/util.service';
 import { FormsModule } from '@angular/forms';
+import { DataTableOptionModel } from '../models/data-table-option.model';
+import { DEFAULT_SEARCH_PARAMS } from '../models/util.constants';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'data-table',
+  selector: 'gpa-data-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './data-table.component.html',
 })
 export class DataTableComponent {
