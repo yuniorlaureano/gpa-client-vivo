@@ -13,6 +13,8 @@ import { CoreModule } from '../core/core.module';
 import { StockListComponent } from './stock-list/stock-list.component';
 import { DataTableComponent } from '../core/datatable/data-table.component';
 import { StockListTableComponent } from './stock-list/stock-list-table.component';
+import { StockMasterListComponent } from './stock-master-list/stock-master-list.component';
+import { StockMasterListTableComponent } from './stock-master-list/stock-master-list-table.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { StockListTableComponent } from './stock-list/stock-list-table.component
     ProviderDynamicSearchComponent,
     StockListTableComponent,
     StockListComponent,
+    StockMasterListComponent,
+    StockMasterListTableComponent,
   ],
   imports: [
     CommonModule,

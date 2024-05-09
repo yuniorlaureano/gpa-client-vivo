@@ -8,18 +8,20 @@
   <tr header>
     <th>Código</th>
     <th>Producto</th>
-    <th>Precio</th>
+    <th>Cantidad</th>
+    <th>Monto en producto</th>
     <th></th>
   </tr>
   <tbody body>
     <tr *ngFor="let invoice of data.data">
       <td>{{ invoice.productCode }}</td>
       <td>{{ invoice.productName }}</td>
-      <td>{{ invoice.price }}</td>
+      <td>{{ invoice.quantity }}</td>
+      <td>${{ invoice.price }}</td>
       <td style="width: 100px">
-        <button class="btn btn-danger btn-icon" (click)="handleDelete(invoice)">
+        <!-- <button class="btn btn-danger btn-icon" (click)="handleDelete(invoice)">
           <i class="bi bi-trash"></i>
-        </button>
+        </button> -->
         <button class="btn btn-warning btn-icon" (click)="handleEdit(invoice)">
           <i class="bi bi-pencil"></i>
         </button>
@@ -27,10 +29,3 @@
     </tr>
   </tbody>
 </gpa-data-table>
-<!-- 
-quantity: number;
-  productId: string;
-  productName: string;
-  productCode: string;
-  categoryId: string;
-  price: number; -->

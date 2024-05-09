@@ -1,20 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { StockService } from '../service/stock.service';
 import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
 import { ReasonModel } from '../models/reason.model';
 import { ReasonService } from '../service/reason.service';
 import { ProviderModel } from '../models/provider.model';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ReasonEnum } from '../../core/models/reason.enum';
 import { TransactionType } from '../../core/models/transaction-type.enum';
 import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
 import { SelectModel } from '../../core/models/select-model';
+import { ActivatedRoute } from '@angular/router';
+import { StockDetailsModel } from '../models/stock.model';
 
 @Component({
   selector: 'gpa-manufactured-product-entry',
@@ -22,6 +19,7 @@ import { SelectModel } from '../../core/models/select-model';
   styleUrl: './manufactured-product-entry.component.css',
 })
 export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
+  isEdit = false;
   products: RawProductCatalogModel[] = [];
   isProductCatalogVisible: boolean = false;
   selectedProvider: SelectModel<ProviderModel> | null = null;
@@ -40,13 +38,14 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     date: ['', Validators.required],
     storeId: [''],
     reasonId: ['', Validators.required],
-    products: this.formBuilder.array([]),
+    stockDetails: this.formBuilder.array([]),
   });
 
   constructor(
     private stockService: StockService,
     private reasonService: ReasonService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -57,6 +56,8 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
           data.data.filter((reason) => reason.id != ReasonEnum.Sale)
         )
       );
+
+    this.getStock();
   }
 
   ngOnDestroy(): void {}
@@ -99,7 +100,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
         ...this.stockForm.value,
         id: null,
         storeId: null,
-        products: this.formProducts.value.map((product: any) => ({
+        stockDetails: this.formProducts.value.map((product: any) => ({
           productId: product.productId,
           quantity: product.quantity,
         })),
@@ -120,7 +121,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
   }
 
   get formProducts() {
-    return this.stockForm.get('products') as FormArray;
+    return this.stockForm.get('stockDetails') as FormArray;
   }
 
   handleSelectedProvider = (model: ProviderModel | null) => {
@@ -142,15 +143,47 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
       price: [product.price, Validators.required],
       productName: [product.productName, Validators.required],
       productId: [product.productId, Validators.required],
-      quantity: [
-        1,
-        [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(product.quantity),
-        ],
-      ],
+      quantity: [1, [Validators.required, Validators.min(1)]],
     });
+  }
+
+  getStock() {
+    this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          const id = params.get('id');
+          if (id == null) {
+            this.isEdit = false;
+            return of(null);
+          }
+          this.isEdit = true;
+          return this.stockService.getStockById(id);
+        })
+      )
+      .subscribe((stock) => {
+        if (stock) {
+          this.stockForm.setValue({
+            id: stock.id,
+            description: stock.description,
+            transactionType: <TransactionType>stock.transactionType,
+            providerId: stock.providerId,
+            date: stock.date,
+            storeId: stock.storeId,
+            reasonId: stock.reasonId,
+            stockDetails: [],
+          });
+          this.mapStockToForm(stock.stockDetails);
+          this.selectedProvider = {
+            text: stock.providerName + ' ' + stock.providerRnc,
+            value: {
+              id: stock.providerId,
+              name: stock.providerName,
+              rnc: stock.providerRnc,
+            },
+          };
+          this.calculateSelectedProductCatalogAggregate();
+        }
+      });
   }
 
   clearForm = () => {
@@ -158,5 +191,30 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     this.products = [];
     this.stockForm.reset();
     this.selectedProvider = null;
+    this.isEdit = false;
   };
+
+  mapStockToForm(stockDetails: StockDetailsModel[]) {
+    for (let stockDetail of stockDetails) {
+      this.products.push(stockDetail.stockProduct!);
+      this.formProducts.push(
+        this.formBuilder.group({
+          productCode: [
+            stockDetail.stockProduct?.productCode,
+            Validators.required,
+          ],
+          price: [stockDetail.productPrice, Validators.required],
+          productName: [
+            stockDetail.stockProduct?.productName,
+            Validators.required,
+          ],
+          productId: [stockDetail.productId, Validators.required],
+          quantity: [
+            stockDetail.quantity,
+            [Validators.required, Validators.min(1)],
+          ],
+        })
+      );
+    }
+  }
 }

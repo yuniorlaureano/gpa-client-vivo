@@ -6,11 +6,24 @@ import { ResponseModel } from '../../core/models/response.model';
 import { SearchModel } from '../../core/models/search.model';
 import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
 import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
+import { StockModel } from '../models/stock.model';
 
 @Injectable()
 export class StockService {
   url = `${environment.api_url}/inventory/stocks`;
   constructor(private http: HttpClient) {}
+
+  getStockMaster(
+    search: SearchModel | null = null
+  ): Observable<ResponseModel<StockModel>> {
+    return this.http.get<ResponseModel<StockModel>>(
+      `${this.url}${search ? search.asQueryString() : ''}`
+    );
+  }
+
+  getStockById(id: string): Observable<StockModel> {
+    return this.http.get<StockModel>(`${this.url}/${id}`);
+  }
 
   getProductCatalog(
     search: SearchModel | null = null
@@ -21,6 +34,6 @@ export class StockService {
   }
 
   addProducts(products: InventoryEntryCollectionModel): Observable<void> {
-    return this.http.post<void>(`${this.url}/bulk`, products);
+    return this.http.post<void>(`${this.url}`, products);
   }
 }

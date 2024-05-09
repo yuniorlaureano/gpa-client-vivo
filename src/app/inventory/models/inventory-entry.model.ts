@@ -20,5 +20,5 @@ export interface InventoryEntryCollectionModel {
   providerId: string | null;
   storeId: string | null;
   reasonId: string;
-  products: { productId: string; quantity: number }[];
+  stockDetails: { productId: string; quantity: number }[];
 }

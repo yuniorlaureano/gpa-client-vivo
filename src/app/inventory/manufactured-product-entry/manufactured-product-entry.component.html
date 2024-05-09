@@ -123,6 +123,15 @@
           </div>
           <div class="col-12 col-sm-12">
             <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea
+                formControlName="description"
+                class="form-control"
+              ></textarea>
+            </div>
+          </div>
+          <div class="col-12 col-sm-12">
+            <div class="mb-3">
               <label for="inputCompanyName" class="form-label">Adjuntos</label>
               <input type="file" class="form-control" />
             </div>
@@ -179,7 +188,7 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody formArrayName="products">
+                <tbody formArrayName="stockDetails">
                   <tr
                     *ngFor="
                       let formProduct of formProducts.controls;

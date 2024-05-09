@@ -78,11 +78,11 @@
   padding: 20px 15px 20px 15px;
   color: #272727;
   font-size: 0.925rem;
-  -webkit-transition: all 0.5s ease-in-out;
+  /* -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
   -ms-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; */
   position: relative;
 }
 .sidebar-wrapper .sidebar-menu ul li a i {
@@ -134,11 +134,11 @@
   -moz-border-radius: 50px;
   border-radius: 50px;
 }
-.sidebar-wrapper .sidebar-menu ul li.active a.current-page {
+ul li.active a.current-page {
   position: relative;
   color: #435eef;
 }
-.sidebar-wrapper .sidebar-menu ul li.active a.current-page:hover {
+ul li.active a.current-page:hover {
   background-color: rgba(0, 0, 0, 0.0002);
   color: #435eef !important;
 }
@@ -205,8 +205,8 @@
 .sidebar-wrapper.dark .sidebar-menu ul li a:hover i {
   color: #ffffff;
 }
-.sidebar-wrapper.dark .sidebar-menu ul li.active a.current-page {
-  background-color: #3a3d48;
+ul li.active a.current-page {
+  background-color: #dcdee6;
   color: #ffffff;
 }
 .sidebar-wrapper.dark .sidebar-menu .sidebar-dropdown .sidebar-submenu ul {

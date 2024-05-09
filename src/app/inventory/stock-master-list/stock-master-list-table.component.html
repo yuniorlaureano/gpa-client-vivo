@@ -1,0 +1,31 @@
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Tipo de operación</th>
+    <th>Proveedor</th>
+    <th>Motivo</th>
+    <th>Descripción</th>
+    <th></th>
+  </tr>
+  <tbody body>
+    <tr *ngFor="let stock of data.data">
+      <td>{{ stock.transactionType }}</td>
+      <td>{{ stock.providerName }}</td>
+      <td>{{ stock.reasonName }}</td>
+      <td>${{ stock.description }}</td>
+      <td style="width: 100px">
+        <!-- <button class="btn btn-danger btn-icon" (click)="handleDelete(stock)">
+          <i class="bi bi-trash"></i>
+        </button> -->
+        <button class="btn btn-warning btn-icon" (click)="handleEdit(stock)">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>
