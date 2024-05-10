@@ -277,3 +277,13 @@ ul li.active a.current-page {
     height: 100vh;
   }
 }
+
+.menu-item-list {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 4px !important;
+}
+
+.menu-item-list i {
+  font-size: 15px !important;
+}

@@ -9,7 +9,7 @@ import { ReasonEnum } from '../../core/models/reason.enum';
 import { TransactionType } from '../../core/models/transaction-type.enum';
 import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
 import { SelectModel } from '../../core/models/select-model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StockDetailsModel } from '../models/stock.model';
 import { ProductModel } from '../models/product.model';
 
@@ -45,7 +45,8 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     private stockService: StockService,
     private reasonService: ReasonService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -98,6 +99,10 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     if (this.stockForm.valid && this.formProducts.length > 0) {
       const value = {
         ...this.stockForm.value,
+        providerId:
+          this.stockForm.value.providerId == ''
+            ? null
+            : this.stockForm.value.providerId,
         storeId: null,
         stockDetails: this.formProducts.value.map((product: any) => ({
           productId: product.productId,
@@ -173,6 +178,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
       )
       .subscribe((stock) => {
         if (stock) {
+          console.log(stock.reasonId);
           this.stockForm.setValue({
             id: stock.id,
             description: stock.description,
@@ -184,17 +190,24 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
             stockDetails: [],
           });
           this.mapStockToForm(stock.stockDetails);
-          this.selectedProvider = {
-            text: stock.providerName + ' ' + stock.providerRnc,
-            value: {
-              id: stock.providerId,
-              name: stock.providerName,
-              rnc: stock.providerRnc,
-            },
-          };
+          this.selectedProvider = stock.providerName
+            ? {
+                text: stock.providerName + ' ' + stock.providerRnc,
+                value: {
+                  id: stock.providerId,
+                  name: stock.providerName,
+                  rnc: stock.providerRnc,
+                },
+              }
+            : null;
           this.calculateSelectedProductCatalogAggregate();
         }
       });
+  }
+
+  handleCancel() {
+    this.clearForm();
+    this.router.navigate(['/inventory/manufactured-product-entry']);
   }
 
   clearForm = () => {

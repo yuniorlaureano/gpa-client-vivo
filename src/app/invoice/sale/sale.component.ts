@@ -5,7 +5,7 @@ import { ClientModel } from '../model/client.model';
 import { SaleType } from '../../core/models/sale-type.enum';
 import { InvoiceService } from '../service/invoice.service';
 import { InvoiceModel, InvoiceDetailModel } from '../model/invoice.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
 
 @Component({
@@ -40,7 +40,8 @@ export class SaleComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private invoiceService: InvoiceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -145,7 +146,7 @@ export class SaleComponent implements OnInit {
     this.isEdit = false;
     this.invoiceDetails.clear();
     this.selectedProducts = {};
-    this.saleForm.reset();
+    this.saleForm.reset({ type: SaleType.Cash });
     this.client = null;
   };
 
@@ -158,6 +159,11 @@ export class SaleComponent implements OnInit {
     this.saleForm.get('clientId')?.setValue(client.id);
     this.client = client;
     this.isClientCatalogVisible = false;
+  }
+
+  handleCancel() {
+    this.clearForm();
+    this.router.navigate(['/invoice/sale']);
   }
 
   getInvoice() {

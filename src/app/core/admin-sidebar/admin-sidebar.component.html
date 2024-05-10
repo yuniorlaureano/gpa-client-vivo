@@ -25,7 +25,7 @@
                 <a
                   routerLink="/inventory/product"
                   routerLinkActive="current-page"
-                  class="current-page"
+                  class="menu-item-list"
                   >Productos</a
                 >
               </li>
@@ -33,6 +33,7 @@
                 <a
                   routerLink="/inventory/category"
                   routerLinkActive="current-page"
+                  class="menu-item-list"
                   >Category</a
                 >
               </li>
@@ -40,21 +41,25 @@
                 <a
                   routerLink="/inventory/manufactured-product-entry"
                   routerLinkActive="current-page"
-                  >Entrada</a
+                  class="menu-item-list"
+                >
+                  Entrada</a
                 >
               </li>
               <li routerLinkActive="active">
                 <a
                   routerLink="/inventory/stock/list"
                   routerLinkActive="current-page"
-                  >Existencia</a
+                  class="menu-item-list"
+                  ><i class="bi bi-list"></i> Existencia</a
                 >
               </li>
               <li routerLinkActive="active">
                 <a
                   routerLink="/inventory/stock/master/list"
                   routerLinkActive="current-page"
-                  >Transacciones inventario</a
+                  class="menu-item-list"
+                  ><i class="bi bi-list"></i> Transacciones</a
                 >
               </li>
             </ul>
@@ -68,14 +73,29 @@
           <ng-container items>
             <ul>
               <li routerLinkActive="active">
-                <a routerLink="/invoice/sale" routerLinkActive="current-page"
-                  >Venta</a
+                <a
+                  routerLink="/invoice/sale"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                >
+                  <i class="bi bi-pencil" style="font-size: 15px"></i> Venta</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/invoice/sale/list"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  ><i class="bi bi-list"></i> Lista de ventas</a
                 >
               </li>
               <li routerLinkActive="active">
                 <a
                   routerLink="/invoice/purchase"
                   routerLinkActive="current-page"
+                  class="menu-item-list"
                   >Compra</a
                 >
               </li>
@@ -90,10 +110,20 @@
           <ng-container items>
             <ul>
               <li routerLinkActive="active">
-                <a href="#" routerLinkActive="current-page">Venta</a>
+                <a
+                  href="#"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  >Venta</a
+                >
               </li>
               <li routerLinkActive="active">
-                <a href="#" routerLinkActive="current-page">Compra</a>
+                <a
+                  href="#"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  >Compra</a
+                >
               </li>
             </ul>
           </ng-container>
@@ -106,10 +136,20 @@
           <ng-container items>
             <ul>
               <li routerLinkActive="active">
-                <a href="#" routerLinkActive="current-page">Venta</a>
+                <a
+                  href="#"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  >Venta</a
+                >
               </li>
               <li routerLinkActive="active">
-                <a href="#" routerLinkActive="current-page">Compra</a>
+                <a
+                  href="#"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  >Compra</a
+                >
               </li>
             </ul>
           </ng-container>
@@ -122,10 +162,20 @@
           <ng-container items>
             <ul>
               <li routerLinkActive="active">
-                <a href="#" routerLinkActive="current-page">Venta</a>
+                <a
+                  href="#"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  >Venta</a
+                >
               </li>
               <li routerLinkActive="active">
-                <a href="#" routerLinkActive="current-page">Compra</a>
+                <a
+                  href="#"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  >Compra</a
+                >
               </li>
             </ul>
           </ng-container>

@@ -46,7 +46,11 @@
           Actualizar
         </button>
 
-        <button type="button" class="btn btn-outline-dark btn-rounded">
+        <button
+          type="button"
+          class="btn btn-outline-dark btn-rounded"
+          (click)="handleCancel()"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -134,8 +138,8 @@
             <div class="form-group">
               <label for="status" class="form-label">Estado</label>
               <select id="status" class="form-select" formControlName="status">
-                <option value="COMPLETADO">Completada</option>
-                <option value="PENDIENTE">Pendiente</option>
+                <option value="SAVED">Guadado</option>
+                <option value="DRAFT">Borrador</option>
               </select>
             </div>
           </div>
