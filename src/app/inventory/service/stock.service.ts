@@ -36,4 +36,8 @@ export class StockService {
   addProducts(products: InventoryEntryCollectionModel): Observable<void> {
     return this.http.post<void>(`${this.url}`, products);
   }
+
+  updateProducts(products: InventoryEntryCollectionModel): Observable<void> {
+    return this.http.put<void>(`${this.url}`, products);
+  }
 }

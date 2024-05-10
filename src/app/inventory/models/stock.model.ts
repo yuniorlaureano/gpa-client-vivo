@@ -1,3 +1,4 @@
+import { ProductModel } from './product.model';
 import { RawProductCatalogModel } from './raw-product-catalog.model';
 export interface StockModel {
   id: string;
@@ -18,22 +19,5 @@ export interface StockDetailsModel {
   id: string;
   quantity: number;
   productId: string;
-  productCode: string;
-  productName: string;
-  productPrice: number;
-  productCategoryId: string;
-  stockProduct: RawProductCatalogModel | null;
-}
-
-export function fromStockDetailsModelToRawProductCatalogModel(
-  stockDetail: StockDetailsModel
-) {
-  return <RawProductCatalogModel>{
-    quantity: stockDetail.quantity,
-    productId: stockDetail.productId,
-    productName: stockDetail.productName,
-    productCode: stockDetail.productCode,
-    categoryId: stockDetail.productName,
-    price: stockDetail.productPrice,
-  };
+  product: ProductModel;
 }

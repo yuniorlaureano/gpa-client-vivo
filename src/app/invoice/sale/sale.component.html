@@ -240,6 +240,14 @@
           </div>
           <div class="col-12 col-sm-12">
             <div class="table-responsive">
+              <div
+                *ngIf="
+                  this.invoiceDetails.touched && !this.invoiceDetails?.valid
+                "
+                style="color: red"
+              >
+                {{ "Verifique que los productos tengan existencia" }}
+              </div>
               <table class="table table-sm">
                 <thead>
                   <tr>
@@ -261,7 +269,12 @@
                   >
                     <td>{{ formProduct.get("productCode")?.value }}</td>
                     <td>{{ formProduct.get("productName")?.value }}</td>
-                    <td>{{ this.products[i] && this.products[i].quantity }}</td>
+                    <td>
+                      {{
+                        selectedProducts[formProduct.get("productCode")?.value]
+                          .quantity
+                      }}
+                    </td>
                     <td>
                       <input
                         type="number"
@@ -278,7 +291,12 @@
                       <button
                         type="button"
                         class="btn btn-outline-danger btn-rounded"
-                        (click)="removeProductFromCatalog(i)"
+                        (click)="
+                          removeProductFromCatalog(
+                            i,
+                            formProduct.get('productCode')?.value
+                          )
+                        "
                       >
                         <i class="bi bi-trash-fill"></i>
                       </button>
@@ -294,6 +312,7 @@
 
       <gpa-stock-product-catalog
         [(visible)]="isProductCatalogVisible"
+        [selectedProducts]="selectedProducts"
         (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
       ></gpa-stock-product-catalog>
 

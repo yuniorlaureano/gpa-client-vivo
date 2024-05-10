@@ -13,17 +13,20 @@
     <th></th>
   </tr>
   <tbody body>
-    <tr *ngFor="let invoice of data.data">
-      <td>{{ invoice.productCode }}</td>
-      <td>{{ invoice.productName }}</td>
-      <td>{{ invoice.quantity }}</td>
-      <td>${{ invoice.price }}</td>
+    <tr *ngFor="let stock of data.data">
+      <td>{{ stock.productCode }}</td>
+      <td>{{ stock.productName }}</td>
+      <td>{{ stock.quantity }}</td>
+      <td>${{ stock.price * stock.quantity }}</td>
       <td style="width: 100px">
         <!-- <button class="btn btn-danger btn-icon" (click)="handleDelete(invoice)">
           <i class="bi bi-trash"></i>
         </button> -->
-        <button class="btn btn-warning btn-icon" (click)="handleEdit(invoice)">
-          <i class="bi bi-pencil"></i>
+        <button
+          class="btn btn-outline-info btn-rounded"
+          (click)="handleEdit(stock)"
+        >
+          <i class="bi bi-card-list"></i>
         </button>
       </td>
     </tr>

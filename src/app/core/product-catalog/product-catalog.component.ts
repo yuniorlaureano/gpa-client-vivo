@@ -9,33 +9,33 @@ import {
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { SearchModel } from '../models/search.model';
 import { SearchOptionsModel } from '../models/search-options.model';
-import { StockService } from '../../inventory/service/stock.service';
-import { RawProductCatalogModel } from '../../inventory/models/raw-product-catalog.model';
+import { ProductService } from '../../inventory/service/product.service';
+import { ProductModel } from '../../inventory/models/product.model';
 
 @Component({
-  selector: 'gpa-stock-product-catalog',
-  templateUrl: './stock-product-catalog.component.html',
-  styleUrl: './stock-product-catalog.component.css',
+  selector: 'gpa-product-catalog',
+  templateUrl: './product-catalog.component.html',
+  styleUrl: './product-catalog.component.css',
 })
-export class StockProductCatalogComponent implements OnInit, OnDestroy {
-  @Input() selectedProducts: { [key: string]: RawProductCatalogModel } = {};
+export class ProductCatalogComponent implements OnInit, OnDestroy {
+  @Input() selectedProducts: { [key: string]: boolean } = {};
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() onSelectedProduct = new EventEmitter<RawProductCatalogModel>();
+  @Output() onSelectedProduct = new EventEmitter<ProductModel>();
   productSubscription!: Subscription;
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,
     pageSize: 10,
   });
-  products!: RawProductCatalogModel[];
+  products!: ProductModel[];
   options: SearchOptionsModel = {
     count: 0,
     page: 1,
     pageSize: 10,
   };
 
-  constructor(private stockService: StockService) {}
+  constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -74,7 +74,7 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleSelectedProductFromCatalog(product: RawProductCatalogModel) {
+  handleSelectedProductFromCatalog(product: ProductModel) {
     this.onSelectedProduct.emit(product);
   }
 
@@ -84,7 +84,7 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((options) => {
           search.page = options.page;
-          return this.stockService.getProductCatalog(search);
+          return this.productService.getProducts(search);
         })
       )
       .subscribe({

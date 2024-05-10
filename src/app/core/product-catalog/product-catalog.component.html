@@ -14,33 +14,24 @@
       <i class="bi bi-x"></i>
     </button>
   </div>
-  <div>
-    <ul>
-      <li><i class="bi bi-cart4"></i></li>
-      <li>Cantidad: 2</li>
-      <li>Total: $54</li>
-    </ul>
-  </div>
   <hr />
   <div class="table-responsive">
-    <table class="table">
+    <table class="table table-bordered">
       <thead>
         <tr>
           <td>Código</td>
           <td>Nombre</td>
-          <td>Cantidad</td>
-          <td>Precio Unitario</td>
+          <td>Precio</td>
         </tr>
       </thead>
       <tbody>
         <tr
           *ngFor="let product of products"
           (click)="handleSelectedProductFromCatalog(product)"
-          [class.selected-product]="!!selectedProducts[product.productCode]"
+          [class.selected-product]="selectedProducts[product.id!]"
         >
-          <td>{{ product.productCode }}</td>
-          <td>{{ product.productName }}</td>
-          <td>{{ product.quantity }}</td>
+          <td>{{ product.code }}</td>
+          <td>{{ product.name }}</td>
           <td>$ {{ product.price }}</td>
         </tr>
       </tbody>

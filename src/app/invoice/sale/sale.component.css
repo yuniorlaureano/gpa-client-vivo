@@ -12,3 +12,7 @@ div.card {
   z-index: 50;
   background-color: white;
 }
+
+.quantity-error {
+  border: solid 1px red;
+}

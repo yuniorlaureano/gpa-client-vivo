@@ -17,7 +17,7 @@ export class SaleComponent implements OnInit {
   client: ClientModel | null = null;
   isProductCatalogVisible: boolean = false;
   isClientCatalogVisible: boolean = false;
-  products: RawProductCatalogModel[] = [];
+  selectedProducts: { [key: string]: RawProductCatalogModel } = {};
   productCatalogAggregate: {
     totalPrice: number;
     totalQuantity: number;
@@ -69,16 +69,16 @@ export class SaleComponent implements OnInit {
   }
 
   handleSelectedProductFromCatalog(product: RawProductCatalogModel) {
-    if (!this.products.find((x) => x.productId == product.productId)) {
-      this.products.push(product);
+    if (!this.selectedProducts[product.productCode]) {
+      this.selectedProducts[product.productCode] = product;
       this.invoiceDetails?.push(this.newProduct(product));
       this.calculateSelectedProductCatalogAggregate();
     }
   }
 
-  removeProductFromCatalog(index: number) {
+  removeProductFromCatalog(index: number, productCode: string) {
     this.invoiceDetails.removeAt(index);
-    this.products = this.products.filter((item, i) => i != index);
+    delete this.selectedProducts[productCode];
     this.calculateSelectedProductCatalogAggregate();
   }
 
@@ -109,9 +109,8 @@ export class SaleComponent implements OnInit {
 
   addSale() {
     this.saleForm.markAsTouched();
-    console.log('creating .......');
-    console.log(this.saleForm.valid);
-    console.log(this.invoiceDetails.length);
+    this.invoiceDetails.markAllAsTouched();
+    console.log(this.invoiceDetails);
     if (this.saleForm.valid && this.invoiceDetails.length > 0) {
       const value = {
         ...this.saleForm.value,
@@ -145,7 +144,7 @@ export class SaleComponent implements OnInit {
   clearForm = () => {
     this.isEdit = false;
     this.invoiceDetails.clear();
-    this.products = [];
+    this.selectedProducts = {};
     this.saleForm.reset();
     this.client = null;
   };
@@ -195,23 +194,32 @@ export class SaleComponent implements OnInit {
 
   mapProductsToForm(invoiceDetails: InvoiceDetailModel[]) {
     for (let product of invoiceDetails) {
-      this.products.push(product.stockProduct!);
-      this.invoiceDetails.push(
-        this.formBuilder.group({
-          productCode: [product.stockProduct?.productCode, Validators.required],
-          price: [product.price, Validators.required],
-          productName: [product.stockProduct?.productName, Validators.required],
-          productId: [product.productId, Validators.required],
-          quantity: [
-            product.quantity,
-            [
+      if (product.stockProduct) {
+        this.selectedProducts[product.stockProduct.productCode] =
+          product.stockProduct;
+        this.invoiceDetails.push(
+          this.formBuilder.group({
+            productCode: [
+              product.stockProduct.productCode,
               Validators.required,
-              Validators.min(1),
-              Validators.max(product.stockProduct?.quantity ?? 1),
             ],
-          ],
-        })
-      );
+            price: [product.price, Validators.required],
+            productName: [
+              product.stockProduct.productName,
+              Validators.required,
+            ],
+            productId: [product.productId, Validators.required],
+            quantity: [
+              product.quantity,
+              [
+                Validators.required,
+                Validators.min(1),
+                Validators.max(product.stockProduct.quantity),
+              ],
+            ],
+          })
+        );
+      }
     }
   }
 }

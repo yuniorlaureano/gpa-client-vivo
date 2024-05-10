@@ -14,10 +14,10 @@
   </tr>
   <tbody body>
     <tr *ngFor="let stock of data.data">
-      <td>{{ stock.transactionType }}</td>
+      <td>{{ stock.transactionType == 0 ? "Entrada" : "Salida" }}</td>
       <td>{{ stock.providerName }}</td>
       <td>{{ stock.reasonName }}</td>
-      <td>${{ stock.description }}</td>
+      <td>{{ stock.description }}</td>
       <td style="width: 100px">
         <!-- <button class="btn btn-danger btn-icon" (click)="handleDelete(stock)">
           <i class="bi bi-trash"></i>

@@ -11,6 +11,7 @@ import { LayoutService } from './service/layout.service';
 import { AdminSidebarMenuItemComponent } from './admin-sidebar-menu-item/admin-sidebar-menu-item.component';
 import { ClientCatalogComponent } from './client-catalog/client-catalog.component';
 import { StockProductCatalogComponent } from './stock-product-catalog/stock-product-catalog.component';
+import { ProductCatalogComponent } from './product-catalog/product-catalog.component';
 
 @NgModule({
   declarations: [
@@ -23,9 +24,14 @@ import { StockProductCatalogComponent } from './stock-product-catalog/stock-prod
     AdminSidebarMenuItemComponent,
     ClientCatalogComponent,
     StockProductCatalogComponent,
+    ProductCatalogComponent,
   ],
   imports: [CommonModule, RouterModule],
   providers: [LayoutService],
-  exports: [ClientCatalogComponent, StockProductCatalogComponent],
+  exports: [
+    ClientCatalogComponent,
+    StockProductCatalogComponent,
+    ProductCatalogComponent,
+  ],
 })
 export class CoreModule {}

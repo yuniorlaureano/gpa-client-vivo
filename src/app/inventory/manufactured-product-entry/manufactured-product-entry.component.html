@@ -14,7 +14,7 @@
           class="btn btn-outline-info btn-rounded"
           style="margin-right: 5px"
         >
-          <i class="bi bi-card-list"></i> Productos en inventario
+          <i class="bi bi-card-list"></i> Existencia
         </a>
         <button
           type="button"
@@ -198,7 +198,6 @@
                   >
                     <td>{{ formProduct.get("productCode")?.value }}</td>
                     <td>{{ formProduct.get("productName")?.value }}</td>
-                    <td>{{ this.products[i] && this.products[i].quantity }}</td>
                     <td>
                       <input
                         type="number"
@@ -215,7 +214,12 @@
                       <button
                         type="button"
                         class="btn btn-outline-danger btn-rounded"
-                        (click)="removeProductFromCatalog(i)"
+                        (click)="
+                          removeProductFromCatalog(
+                            i,
+                            formProduct.get('id')?.value
+                          )
+                        "
                       >
                         <i class="bi bi-trash-fill"></i>
                       </button>
@@ -229,10 +233,11 @@
         <!-- Row end -->
       </div>
 
-      <gpa-stock-product-catalog
+      <gpa-product-catalog
         [(visible)]="isProductCatalogVisible"
+        [selectedProducts]="selectedProducts"
         (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
-      ></gpa-stock-product-catalog>
+      ></gpa-product-catalog>
     </div>
     <!-- Card end -->
   </div>
