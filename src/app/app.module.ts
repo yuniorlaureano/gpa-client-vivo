@@ -18,6 +18,7 @@ import { ProviderService } from './inventory/service/provider.service';
 import { ClientService } from './invoice/service/client.service';
 import { InvoiceService } from './invoice/service/invoice.service';
 import { ReasonService } from './inventory/service/reason.service';
+import { CategoryService } from './inventory/service/category.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +32,7 @@ import { ReasonService } from './inventory/service/reason.service';
     ClientService,
     InvoiceService,
     ReasonService,
+    CategoryService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
   ],
   bootstrap: [AppComponent],

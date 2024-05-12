@@ -34,7 +34,16 @@
                   routerLink="/inventory/category"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
                   >Category</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/category/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  >Category List</a
                 >
               </li>
               <li routerLinkActive="active">

@@ -6,6 +6,7 @@ import { CategoryComponent } from './category/category.component';
 import { ManufacturedProductEntryComponent } from './manufactured-product-entry/manufactured-product-entry.component';
 import { StockListComponent } from './stock-list/stock-list.component';
 import { StockMasterListComponent } from './stock-master-list/stock-master-list.component';
+import { CategoryListComponent } from './category-list/category-list.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,11 @@ const routes: Routes = [
     children: [
       { path: 'product', component: ProductComponent },
       { path: 'category', component: CategoryComponent },
+      {
+        path: 'category/list',
+        component: CategoryListComponent,
+      },
+      { path: 'category/:id', component: CategoryComponent },
       { path: 'stock/list', component: StockListComponent },
       { path: 'stock/master/list', component: StockMasterListComponent },
       {

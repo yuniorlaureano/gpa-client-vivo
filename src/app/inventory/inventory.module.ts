@@ -15,6 +15,8 @@ import { DataTableComponent } from '../core/datatable/data-table.component';
 import { StockListTableComponent } from './stock-list/stock-list-table.component';
 import { StockMasterListComponent } from './stock-master-list/stock-master-list.component';
 import { StockMasterListTableComponent } from './stock-master-list/stock-master-list-table.component';
+import { CategoryListTableComponent } from './category-list/category-list-table.component';
+import { CategoryListComponent } from './category-list/category-list.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { StockMasterListTableComponent } from './stock-master-list/stock-master-
     StockListComponent,
     StockMasterListComponent,
     StockMasterListTableComponent,
+    CategoryListTableComponent,
+    CategoryListComponent,
   ],
   imports: [
     CommonModule,
