@@ -18,4 +18,16 @@ export class ProductService {
       `${this.url}${search ? search.asQueryString() : ''}`
     );
   }
+
+  getProductById(id: string): Observable<ProductModel> {
+    return this.http.get<ProductModel>(`${this.url}/${id}`);
+  }
+
+  addProduct(model: ProductModel): Observable<void> {
+    return this.http.post<void>(`${this.url}`, model);
+  }
+
+  updateProduct(model: ProductModel): Observable<void> {
+    return this.http.put<void>(`${this.url}`, model);
+  }
 }

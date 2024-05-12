@@ -17,6 +17,8 @@ import { StockMasterListComponent } from './stock-master-list/stock-master-list.
 import { StockMasterListTableComponent } from './stock-master-list/stock-master-list-table.component';
 import { CategoryListTableComponent } from './category-list/category-list-table.component';
 import { CategoryListComponent } from './category-list/category-list.component';
+import { ProductListComponent } from './product-list/product-list.component';
+import { ProductListTableComponent } from './product-list/product-list-table.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { CategoryListComponent } from './category-list/category-list.component';
     StockMasterListTableComponent,
     CategoryListTableComponent,
     CategoryListComponent,
+    ProductListComponent,
+    ProductListTableComponent,
   ],
   imports: [
     CommonModule,

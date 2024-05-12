@@ -8,6 +8,7 @@ export interface ProductModel {
   barCode: string;
   expirationDate: string | null;
   unitId: string;
+  unit: string;
   categoryId: string;
   category: string;
   productLocationId: string | null;

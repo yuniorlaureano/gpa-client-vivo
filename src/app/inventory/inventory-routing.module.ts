@@ -7,6 +7,7 @@ import { ManufacturedProductEntryComponent } from './manufactured-product-entry/
 import { StockListComponent } from './stock-list/stock-list.component';
 import { StockMasterListComponent } from './stock-master-list/stock-master-list.component';
 import { CategoryListComponent } from './category-list/category-list.component';
+import { ProductListComponent } from './product-list/product-list.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,8 @@ const routes: Routes = [
     component: AdminTemplateComponent,
     children: [
       { path: 'product', component: ProductComponent },
+      { path: 'product/list', component: ProductListComponent },
+      { path: 'product/:id', component: ProductComponent },
       { path: 'category', component: CategoryComponent },
       {
         path: 'category/list',

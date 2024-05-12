@@ -26,7 +26,16 @@
                   routerLink="/inventory/product"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
                   >Productos</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/product/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  >List de productos</a
                 >
               </li>
               <li routerLinkActive="active">
