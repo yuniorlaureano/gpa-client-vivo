@@ -5,3 +5,15 @@
 .input {
   color: green;
 }
+
+.cancel {
+  color: red;
+}
+
+.saved {
+  color: green;
+}
+
+.draft {
+  color: #dda50e;
+}

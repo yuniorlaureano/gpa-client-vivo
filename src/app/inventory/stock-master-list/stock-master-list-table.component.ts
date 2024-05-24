@@ -12,6 +12,7 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { StockService } from '../service/stock.service';
 import { StockModel } from '../models/stock.model';
+import { StockStatusEnum } from '../../core/models/stock-status.enum';
 
 @Component({
   selector: 'gpa-stock-master-list-table',
@@ -68,6 +69,19 @@ export class StockMasterListTableComponent {
           };
         },
       });
+  }
+
+  getStatusDescription(status: StockStatusEnum) {
+    switch (status) {
+      case StockStatusEnum.Saved:
+        return 'Guardado';
+      case StockStatusEnum.Draft:
+        return 'Borrador';
+      case StockStatusEnum.Canceled:
+        return 'Cancelado';
+      default:
+        return '';
+    }
   }
 
   handleEdit(model: StockModel) {

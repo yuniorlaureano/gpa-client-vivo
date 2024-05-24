@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminSidebarComponent } from './admin-sidebar/admin-sidebar.component';
 import { AdminTemplateComponent } from './admin-template/admin-template.component';
@@ -29,7 +29,7 @@ import { InvoiceCatalogComponent } from './invoice-catalog/invoice-catalog.compo
     InvoiceCatalogComponent,
   ],
   imports: [CommonModule, RouterModule],
-  providers: [LayoutService],
+  providers: [LayoutService, DecimalPipe],
   exports: [
     ClientCatalogComponent,
     StockProductCatalogComponent,

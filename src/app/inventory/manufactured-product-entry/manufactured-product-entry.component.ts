@@ -12,6 +12,7 @@ import { SelectModel } from '../../core/models/select-model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StockDetailsModel } from '../models/stock.model';
 import { ProductModel } from '../models/product.model';
+import { StockStatusEnum } from '../../core/models/stock-status.enum';
 
 @Component({
   selector: 'gpa-manufactured-product-entry',
@@ -36,6 +37,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     description: [''],
     transactionType: [TransactionType.Input, Validators.required],
     providerId: [''],
+    status: [StockStatusEnum.Saved],
     date: ['', Validators.required],
     storeId: [''],
     reasonId: ['', Validators.required],
@@ -140,6 +142,56 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     }
   }
 
+  save() {
+    this.stockForm.get('status')?.setValue(StockStatusEnum.Saved);
+    this.addProducts();
+  }
+
+  saveDraft() {
+    this.stockForm.get('status')?.setValue(StockStatusEnum.Draft);
+    this.addProducts();
+  }
+
+  cancelStock() {
+    var id = this.stockForm.get('id')?.value;
+    if (this.isEdit && id) {
+      this.stockService.cancelStock(id).subscribe({
+        next: () => {
+          this.clearForm();
+        },
+      });
+    }
+  }
+
+  isDraft() {
+    const status = this.stockForm.get('status')?.value;
+    return status == StockStatusEnum.Draft;
+  }
+
+  showCancel() {
+    const status = this.stockForm.get('status')?.value;
+    const reason = Number(this.stockForm.get('reasonId')?.value);
+    return (
+      (status == StockStatusEnum.Saved || status == StockStatusEnum.Draft) &&
+      ![ReasonEnum.Sale, ReasonEnum.Return].includes(reason)
+    );
+  }
+
+  getStatusDescription() {
+    const status = this.stockForm.get('status')?.value;
+
+    switch (status) {
+      case StockStatusEnum.Saved:
+        return 'Guardado';
+      case StockStatusEnum.Draft:
+        return 'Borrador';
+      case StockStatusEnum.Canceled:
+        return 'Cancelado';
+      default:
+        return '';
+    }
+  }
+
   handleQuantityChange() {
     this.calculateSelectedProductCatalogAggregate();
   }
@@ -187,12 +239,12 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((stock) => {
-        console.log(stock);
         if (stock) {
           this.stockForm.setValue({
             id: stock.id,
             description: stock.description,
             transactionType: <TransactionType>stock.transactionType,
+            status: stock.status,
             providerId: stock.providerId,
             date: stock.date,
             storeId: stock.storeId,
@@ -211,7 +263,12 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
               }
             : null;
           this.calculateSelectedProductCatalogAggregate();
-          this.disableForm(stock.transactionType == TransactionType.Output);
+          this.disableForm(
+            stock.transactionType == TransactionType.Output ||
+              Number(stock.reasonId) == ReasonEnum.Return ||
+              stock.status == StockStatusEnum.Saved ||
+              stock.status == StockStatusEnum.Canceled
+          );
         }
       });
   }
@@ -224,7 +281,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
   clearForm = () => {
     this.formProducts.clear();
     this.selectedProducts = {};
-    this.stockForm.reset();
+    this.stockForm.reset({ status: StockStatusEnum.Saved });
     this.selectedProvider = null;
     this.isEdit = false;
     this.disableForm(false);
@@ -247,6 +304,13 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
         })
       );
     }
+  }
+
+  computePrice(formProduct: any) {
+    return (
+      parseFloat(formProduct.get('quantity').value) *
+      parseFloat(formProduct.get('price').value)
+    );
   }
 
   disableForm(disable: boolean) {

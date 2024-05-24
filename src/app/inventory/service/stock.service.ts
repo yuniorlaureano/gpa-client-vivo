@@ -40,4 +40,8 @@ export class StockService {
   updateProducts(products: InventoryEntryCollectionModel): Observable<void> {
     return this.http.put<void>(`${this.url}`, products);
   }
+
+  cancelStock(id: string): Observable<void> {
+    return this.http.put<void>(`${this.url}/${id}/cancel`, {});
+  }
 }

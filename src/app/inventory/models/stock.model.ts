@@ -1,11 +1,12 @@
+import { StockStatusEnum } from '../../core/models/stock-status.enum';
 import { ProductModel } from './product.model';
-import { RawProductCatalogModel } from './raw-product-catalog.model';
 export interface StockModel {
   id: string;
   description: string;
   date: any;
   transactionType: number;
   providerId: string;
+  status: StockStatusEnum;
   providerName: string;
   providerRnc: string;
   storeId: string;
