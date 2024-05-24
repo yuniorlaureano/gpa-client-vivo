@@ -15,9 +15,15 @@
   </tr>
   <tbody body>
     <tr *ngFor="let invoice of data.data">
-      <td>{{ invoice.status }}</td>
+      <td
+        [class.draft]="invoice.status == 0"
+        [class.saved]="invoice.status == 1"
+        [class.cancel]="invoice.status == 2"
+      >
+        {{ getStatusDescription(invoice.status) }}
+      </td>
       <td>{{ invoice.type == 1 ? "Al contado" : "A crédito" }}</td>
-      <td>{{ invoice.date }}</td>
+      <td>{{ invoice.date | json }}</td>
       <td>{{ invoice.note }}</td>
       <td>{{ invoice.clientId }}</td>
       <td style="width: 100px">

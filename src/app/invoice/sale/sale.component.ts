@@ -5,8 +5,9 @@ import { ClientModel } from '../model/client.model';
 import { SaleType } from '../../core/models/sale-type.enum';
 import { InvoiceService } from '../service/invoice.service';
 import { InvoiceModel, InvoiceDetailModel } from '../model/invoice.model';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
+import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 
 @Component({
   selector: 'gpa-sale',
@@ -14,6 +15,9 @@ import { of, switchMap } from 'rxjs';
   styleUrl: './sale.component.css',
 })
 export class SaleComponent implements OnInit {
+  payment: number = 0;
+  disableForm: boolean = false;
+  saleType: SaleType = SaleType.Cash;
   client: ClientModel | null = null;
   isProductCatalogVisible: boolean = false;
   isClientCatalogVisible: boolean = false;
@@ -21,16 +25,16 @@ export class SaleComponent implements OnInit {
   productCatalogAggregate: {
     totalPrice: number;
     totalQuantity: number;
-  } = { totalPrice: 0, totalQuantity: 0 };
+    return: number;
+  } = { totalPrice: 0, totalQuantity: 0, return: 0 };
 
   saleForm = this.formBuilder.group({
     id: [''],
     note: [null],
-    status: ['', Validators.required],
+    status: [InvoiceStatusEnum.Saved, Validators.required],
     date: [null, Validators.required],
-    expirationDate: [null, Validators.required],
     type: [SaleType.Cash, Validators.required],
-    clientId: [''],
+    clientId: ['', Validators.required],
     storeId: [''],
     invoiceDetails: this.formBuilder.array([]),
   });
@@ -66,7 +70,9 @@ export class SaleComponent implements OnInit {
     this.productCatalogAggregate = {
       totalPrice,
       totalQuantity,
+      return: 0,
     };
+    this.payment = totalPrice;
   }
 
   handleSelectedProductFromCatalog(product: RawProductCatalogModel) {
@@ -91,6 +97,21 @@ export class SaleComponent implements OnInit {
     this.calculateSelectedProductCatalogAggregate();
   }
 
+  getStatusDescription() {
+    const status = this.saleForm.get('status')?.value;
+
+    switch (status) {
+      case InvoiceStatusEnum.Saved:
+        return 'Guardado';
+      case InvoiceStatusEnum.Draft:
+        return 'Borrador';
+      case InvoiceStatusEnum.Canceled:
+        return 'Cancelado';
+      default:
+        return '';
+    }
+  }
+
   newProduct(product: RawProductCatalogModel) {
     return this.formBuilder.group({
       productCode: [product.productCode, Validators.required],
@@ -108,15 +129,26 @@ export class SaleComponent implements OnInit {
     });
   }
 
+  save() {
+    this.saleForm.get('status')?.setValue(InvoiceStatusEnum.Saved);
+    this.addSale();
+  }
+
+  saveAsDraft() {
+    this.saleForm.get('status')?.setValue(InvoiceStatusEnum.Draft);
+    this.addSale();
+  }
+
   addSale() {
     this.saleForm.markAsTouched();
     this.invoiceDetails.markAllAsTouched();
-    console.log(this.invoiceDetails);
     if (this.saleForm.valid && this.invoiceDetails.length > 0) {
       const value = {
         ...this.saleForm.value,
         storeId: null,
         client: null,
+        type: this.saleType,
+        payment: this.payment,
         invoiceDetails: this.invoiceDetails.value.map((product: any) => ({
           id: product.id,
           productId: product.productId,
@@ -142,13 +174,49 @@ export class SaleComponent implements OnInit {
     }
   }
 
+  cancelInvoice() {
+    const id = this.saleForm.get('id')?.value;
+    this.invoiceService.cancelInvoice(id!).subscribe({
+      next: () => {
+        this.clearForm();
+      },
+    });
+  }
+
+  handlePayment(event: any) {
+    this.payment = Number(event.target.value);
+    if (this.payment < this.productCatalogAggregate.totalPrice) {
+      this.saleType = SaleType.Credit;
+    } else {
+      this.saleType = SaleType.Cash;
+      this.productCatalogAggregate.return =
+        this.payment - this.productCatalogAggregate.totalPrice;
+    }
+  }
+
   clearForm = () => {
     this.isEdit = false;
     this.invoiceDetails.clear();
     this.selectedProducts = {};
-    this.saleForm.reset({ type: SaleType.Cash });
+    this.saleForm.reset({
+      type: SaleType.Cash,
+      status: InvoiceStatusEnum.Saved,
+    });
     this.client = null;
+    this.payment = 0;
+    this.setDisable(false);
   };
+
+  isDraft() {
+    return this.saleForm.get('status')?.value == InvoiceStatusEnum.Draft;
+  }
+
+  showReturn() {
+    return (
+      this.isEdit &&
+      this.saleForm.get('status')?.value == InvoiceStatusEnum.Saved
+    );
+  }
 
   clearSelectedClient() {
     this.saleForm.get('clientId')?.setValue(null);
@@ -186,7 +254,6 @@ export class SaleComponent implements OnInit {
             note: <any>invoice.note,
             status: invoice.status,
             date: <any>invoice.date,
-            expirationDate: <any>invoice.expirationDate,
             type: invoice.type,
             clientId: invoice.clientId,
             storeId: null,
@@ -194,8 +261,21 @@ export class SaleComponent implements OnInit {
           });
           this.client = invoice.client;
           this.mapProductsToForm(invoice.invoiceDetails);
+          this.calculateSelectedProductCatalogAggregate();
+          this.setDisable(invoice.status == InvoiceStatusEnum.Canceled);
         }
       });
+  }
+
+  setDisable(disable: boolean) {
+    console.log(disable);
+    if (disable) {
+      this.disableForm = true;
+      this.saleForm.disable();
+    } else {
+      this.disableForm = false;
+      this.saleForm.enable();
+    }
   }
 
   mapProductsToForm(invoiceDetails: InvoiceDetailModel[]) {

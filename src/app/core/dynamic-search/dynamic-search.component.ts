@@ -11,6 +11,7 @@ import { SelectModel } from '../models/select-model';
 })
 export class DynamicSelectComponent {
   dynamiclistIdentifier = uuidv4();
+  @Input() disabled: boolean = false;
   @Input() items: SelectModel<any>[] = [];
   @Input() onSelectedItem: (item: SelectModel<any> | null) => void = () => {};
   @Input() onSearch: (search: string) => void = () => {};

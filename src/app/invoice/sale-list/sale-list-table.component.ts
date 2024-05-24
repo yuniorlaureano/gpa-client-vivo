@@ -12,6 +12,7 @@ import { SearchModel } from '../../core/models/search.model';
 import { InvoiceService } from '../service/invoice.service';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
+import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 
 @Component({
   selector: 'gpa-sale-list-table',
@@ -68,6 +69,19 @@ export class SaleListTableComponent {
           };
         },
       });
+  }
+
+  getStatusDescription(status: InvoiceStatusEnum) {
+    switch (status) {
+      case InvoiceStatusEnum.Saved:
+        return 'Guardado';
+      case InvoiceStatusEnum.Draft:
+        return 'Borrador';
+      case InvoiceStatusEnum.Canceled:
+        return 'Cancelado';
+      default:
+        return '';
+    }
   }
 
   handleEdit(model: InvoiceModel) {

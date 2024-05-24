@@ -13,7 +13,11 @@
     <th></th>
   </tr>
   <tbody body>
-    <tr *ngFor="let stock of data.data">
+    <tr
+      *ngFor="let stock of data.data"
+      [class.input]="stock.transactionType == 0"
+      [class.output]="stock.transactionType == 1"
+    >
       <td>{{ stock.transactionType == 0 ? "Entrada" : "Salida" }}</td>
       <td>{{ stock.providerName }}</td>
       <td>{{ stock.reasonName }}</td>

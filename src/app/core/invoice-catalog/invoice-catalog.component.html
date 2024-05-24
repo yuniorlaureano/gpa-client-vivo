@@ -1,6 +1,6 @@
-<div class="product-catalog" *ngIf="visible">
+<div class="invoice-catalog" *ngIf="visible">
   <div>
-    <h4>Catálogo de productos</h4>
+    <h4>Catálogo de facturas</h4>
   </div>
   <br />
   <div class="input-group">
@@ -8,12 +8,12 @@
     <input
       type="text"
       class="form-control"
-      placeholder="Buscar productos"
+      placeholder="Buscar facturas"
       style="margin-right: 20px"
     />
     <button
       class="btn btn-outline-danger btn-rounded"
-      (click)="handleShowProductCatalog(false)"
+      (click)="handleShowInvoiceCatalog(false)"
     >
       <i class="bi bi-x"></i>
     </button>
@@ -23,20 +23,24 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <td>Código</td>
-          <td>Producto</td>
-          <td>Precio</td>
+          <td>Nota</td>
+          <td>Fecha</td>
+          <td>Estado</td>
+          <td>Tipo</td>
+          <td>Cliente</td>
         </tr>
       </thead>
       <tbody>
         <tr
-          *ngFor="let product of products"
-          (click)="handleSelectedProductFromCatalog(product)"
-          [class.selected-product]="selectedProducts[product.id!]"
+          *ngFor="let invoice of invoices"
+          (click)="handleSelectedInvoiceFromCatalog(invoice)"
+          [class.selected-invoice]="selectedInvoice?.id == invoice.id"
         >
-          <td>{{ product.code }}</td>
-          <td>{{ product.name }}</td>
-          <td>$ {{ product.price }}</td>
+          <td>{{ invoice.note }}</td>
+          <td>{{ invoice.date }}</td>
+          <td>{{ invoice.status }}</td>
+          <td>{{ invoice.type }}</td>
+          <td>{{ invoice.client?.name + " " + invoice.client?.lastName }}</td>
         </tr>
       </tbody>
     </table>

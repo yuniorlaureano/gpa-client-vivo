@@ -3,7 +3,7 @@
   <div class="col-12">
     <div style="display: flex; justify-content: space-between; gap: 15px">
       <div>
-        <h3>Venta</h3>
+        <h3>Facturación</h3>
       </div>
       <div class="right-button">
         <a
@@ -11,39 +11,60 @@
           class="btn btn-outline-info btn-rounded"
           style="margin-right: 5px"
         >
-          <i class="bi bi-card-list"></i> Lista de ventas
+          <i class="bi bi-card-list"></i> Facturas
         </a>
+
         <button
           type="button"
-          class="btn btn-outline-success btn-rounded"
+          class="btn btn-outline-danger btn-rounded"
+          *ngIf="showReturn()"
           style="margin-right: 5px"
-          (click)="form.ngSubmit.emit()"
-          *ngIf="!isEdit"
+          (click)="cancelInvoice()"
+        >
+          <i class="bi bi-arrow-counterclockwise"></i>
+          Devolución
+        </button>
+
+        <button
+          *ngIf="!isEdit || isDraft()"
+          type="button"
+          class="btn btn-rounded"
+          [class.btn-outline-warning]="isEdit"
+          [class.btn-outline-success]="!isEdit"
+          style="margin-right: 5px"
+          (click)="save()"
+        >
+          <i
+            class="bi"
+            [class.bi-pencil-square]="isEdit"
+            [class.bi-cart-check]="!isEdit"
+          ></i>
+          {{ isEdit ? "Completar" : "Completar" }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-rounded"
+          *ngIf="!isEdit || isDraft()"
+          style="margin-right: 5px"
+          (click)="saveAsDraft()"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             fill="currentColor"
-            class="bi bi-floppy"
+            class="bi bi-database-add"
             viewBox="0 0 16 16"
           >
-            <path d="M11 2H9v3h2z" />
             <path
-              d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"
+              d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0"
+            />
+            <path
+              d="M12.096 6.223A5 5 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.5 4.5 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.5 4.5 0 0 1-.813-.927Q8.378 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.6 4.6 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10q.393 0 .774-.024a4.5 4.5 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777M3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4"
             />
           </svg>
-          Guardar
-        </button>
-        <button
-          *ngIf="isEdit"
-          type="button"
-          class="btn btn-outline-warning btn-rounded"
-          style="margin-right: 5px"
-          (click)="form.ngSubmit.emit()"
-        >
-          <i class="bi bi-pencil-square"></i>
-          Actualizar
+          {{ isEdit ? "Edictar como borrador" : "Guardar como borrador" }}
         </button>
 
         <button
@@ -51,22 +72,7 @@
           class="btn btn-outline-dark btn-rounded"
           (click)="handleCancel()"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-x-square"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"
-            />
-            <path
-              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
-            />
-          </svg>
-          Cancelar
+          <i class="bi bi-plus-lg"></i> Nueva
         </button>
       </div>
     </div>
@@ -82,13 +88,13 @@
           class="row row-cols-sm-auto"
           [formGroup]="saleForm"
           #form="ngForm"
-          (ngSubmit)="addSale()"
         >
           <div class="col-6 col-sm-6">
             <button
               class="btn btn-outline-primary"
               type="button"
               (click)="handleShowClientCatalog(true)"
+              [disabled]="disableForm"
             >
               <i class="bi bi-person-plus"></i>
               Cliente
@@ -97,6 +103,7 @@
               class="btn btn-outline-danger"
               style="margin-left: 5px"
               (click)="clearSelectedClient()"
+              [disabled]="disableForm"
             >
               <i class="bi bi-x-lg"></i>
             </button>
@@ -114,7 +121,7 @@
           <div class="col-12 col-sm-12">
             <hr />
           </div>
-          <div class="col-12 col-sm-4">
+          <div class="col-12 col-sm-6">
             <div class="mb-3">
               <label for="date" class="form-label">Fecha</label>
               <div class="input-group">
@@ -134,69 +141,20 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-sm-4">
-            <div class="form-group">
-              <label for="status" class="form-label">Estado</label>
-              <select id="status" class="form-select" formControlName="status">
-                <option value="SAVED">Guadado</option>
-                <option value="DRAFT">Borrador</option>
-              </select>
+          <div class="col-sm-6" *ngIf="isEdit">
+            <label for="status" class="form-label">Estado</label>
+            <div class="input-group">
+              <input
+                class="form-control"
+                disabled
+                [value]="getStatusDescription()"
+              />
             </div>
           </div>
           <div class="col-12 col-sm-12">
             <div class="mb-3">
               <label for="inputCompanyName" class="form-label">Adjuntos</label>
               <input type="file" class="form-control" />
-            </div>
-          </div>
-          <div class="col-6 col-sm-6">
-            <div class="mb-3">
-              <label class="form-label">Tipo de venta</label>
-              <div class="mt-2">
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    formControlName="type"
-                    id="cash"
-                    [value]="1"
-                    checked=""
-                  />
-                  <label class="form-check-label" for="cash">Al contado</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    formControlName="type"
-                    id="credit"
-                    [value]="0"
-                  />
-                  <label class="form-check-label" for="credit">Crédito</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-4">
-            <div class="mb-3">
-              <label for="expiratonDate" class="form-label"
-                >Fecha de expiración</label
-              >
-              <div class="input-group">
-                <input
-                  class="form-control"
-                  placeholder="yyyy-mm-dd"
-                  id="expirationDate"
-                  formControlName="expirationDate"
-                  ngbDatepicker
-                  #expirationDate="ngbDatepicker"
-                />
-                <button
-                  class="btn btn-outline-secondary bi bi-calendar3"
-                  (click)="expirationDate.toggle()"
-                  type="button"
-                ></button>
-              </div>
             </div>
           </div>
           <div class="col-12 col-sm-12">
@@ -209,38 +167,22 @@
               ></textarea>
             </div>
           </div>
-          <div class="col-xl-3 col-sm-4 col-12">
-            <div class="mb-3">
-              <div class="custom-btn-group">
-                <button
-                  type="button"
-                  class="btn btn-outline-success btn-icon position-relative"
-                >
-                  <i class="bi bi-cart-check"></i>
-                  <span
-                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill shade-green"
-                    >${{ productCatalogAggregate.totalPrice }}</span
-                  >
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-success btn-icon position-relative"
-                >
-                  <i class="bi bi-bag-check-fill"></i>
-                  <span
-                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill shade-green"
-                    >{{ productCatalogAggregate.totalQuantity }} +</span
-                  >
-                </button>
-              </div>
-              <button
-                class="btn btn-outline-primary"
-                type="button"
-                (click)="handleShowProductCatalog(true)"
-              >
-                <i class="bi bi-plus-lg"></i> Agregar producto
-              </button>
-            </div>
+          <h6 [class.credit-sale-type]="this.saleType == 0">
+            {{ this.saleType == 1 ? "Venta al contado" : "Venta a crédito" }}
+          </h6>
+          <div
+            class="col-sm-12"
+            style="display: flex; flex-direction: column; align-items: end"
+          >
+            <button
+              class="btn btn-outline-primary"
+              style="margin-top: 10px"
+              type="button"
+              (click)="handleShowProductCatalog(true)"
+              [disabled]="disableForm"
+            >
+              <i class="bi bi-plus-lg"></i> Agregar producto
+            </button>
           </div>
           <div class="col-12 col-sm-12">
             <div class="table-responsive">
@@ -256,7 +198,7 @@
                 <thead>
                   <tr>
                     <th>Código</th>
-                    <th>Nombre</th>
+                    <th>Producto</th>
                     <th>Existencia</th>
                     <th>Cantidad</th>
                     <th>Precio Unitario</th>
@@ -308,6 +250,26 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <div
+              class="col-sm-12"
+              style="display: flex; flex-direction: column; align-items: end"
+            >
+              <p>Total a pagar: ${{ productCatalogAggregate.totalPrice }}</p>
+              <p style="color: red">Descuento: $ 0</p>
+              <input
+                type="number"
+                name="payment"
+                [value]="payment"
+                (input)="handlePayment($event)"
+                class="form-control"
+                style="max-width: 200px"
+                [disabled]="disableForm"
+              />
+              <p style="color: green">
+                Devuelta: ${{ productCatalogAggregate.return }}
+              </p>
             </div>
           </div>
         </form>

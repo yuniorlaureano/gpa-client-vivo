@@ -1,14 +1,15 @@
+import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { SaleType } from '../../core/models/sale-type.enum';
 import { RawProductCatalogModel } from '../../inventory/models/raw-product-catalog.model';
 import { ClientModel } from './client.model';
 
 export interface InvoiceModel {
   id: string | null;
-  status: string;
+  status: InvoiceStatusEnum;
   type: SaleType;
-  expirationDate: object | null;
   date: object | null;
   note: string | null;
+  payment: number;
   clientId: string;
   invoiceDetails: InvoiceDetailModel[];
   client: ClientModel | null;

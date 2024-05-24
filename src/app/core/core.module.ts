@@ -12,6 +12,7 @@ import { AdminSidebarMenuItemComponent } from './admin-sidebar-menu-item/admin-s
 import { ClientCatalogComponent } from './client-catalog/client-catalog.component';
 import { StockProductCatalogComponent } from './stock-product-catalog/stock-product-catalog.component';
 import { ProductCatalogComponent } from './product-catalog/product-catalog.component';
+import { InvoiceCatalogComponent } from './invoice-catalog/invoice-catalog.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { ProductCatalogComponent } from './product-catalog/product-catalog.compo
     ClientCatalogComponent,
     StockProductCatalogComponent,
     ProductCatalogComponent,
+    InvoiceCatalogComponent,
   ],
   imports: [CommonModule, RouterModule],
   providers: [LayoutService],
@@ -32,6 +34,7 @@ import { ProductCatalogComponent } from './product-catalog/product-catalog.compo
     ClientCatalogComponent,
     StockProductCatalogComponent,
     ProductCatalogComponent,
+    InvoiceCatalogComponent,
   ],
 })
 export class CoreModule {}

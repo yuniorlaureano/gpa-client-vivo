@@ -20,6 +20,7 @@ import { ProductModel } from '../models/product.model';
 })
 export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
   isEdit = false;
+  isFormDisabled: boolean = false;
   selectedProducts: { [key: string]: boolean } = {};
   isProductCatalogVisible: boolean = false;
   selectedProvider: SelectModel<ProviderModel> | null = null;
@@ -54,7 +55,14 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
       .getReasons()
       .pipe(
         map((data) =>
-          data.data.filter((reason) => reason.id != ReasonEnum.Sale)
+          data.data.filter(
+            (reason) =>
+              ![
+                ReasonEnum.Sale,
+                ReasonEnum.Return,
+                ReasonEnum.Adjustment,
+              ].includes(reason.id)
+          )
         )
       );
 
@@ -106,6 +114,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
         storeId: null,
         stockDetails: this.formProducts.value.map((product: any) => ({
           productId: product.productId,
+          purchasePrice: product.purchasePrice,
           quantity: product.quantity,
         })),
       };
@@ -157,6 +166,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
       id: [product.id],
       productCode: [product.code, Validators.required],
       price: [product.price, Validators.required],
+      purchasePrice: [product.price, Validators.required],
       productName: [product.name, Validators.required],
       productId: [product.id, Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
@@ -177,8 +187,8 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((stock) => {
+        console.log(stock);
         if (stock) {
-          console.log(stock.reasonId);
           this.stockForm.setValue({
             id: stock.id,
             description: stock.description,
@@ -201,6 +211,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
               }
             : null;
           this.calculateSelectedProductCatalogAggregate();
+          this.disableForm(stock.transactionType == TransactionType.Output);
         }
       });
   }
@@ -216,6 +227,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     this.stockForm.reset();
     this.selectedProvider = null;
     this.isEdit = false;
+    this.disableForm(false);
   };
 
   mapStockToForm(stockDetails: StockDetailsModel[]) {
@@ -225,6 +237,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
         this.formBuilder.group({
           productCode: [stockDetail.product.code, Validators.required],
           price: [stockDetail.product.price, Validators.required],
+          purchasePrice: [stockDetail.purchasePrice, Validators.required],
           productName: [stockDetail.product.name, Validators.required],
           productId: [stockDetail.productId, Validators.required],
           quantity: [
@@ -233,6 +246,16 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
           ],
         })
       );
+    }
+  }
+
+  disableForm(disable: boolean) {
+    if (disable) {
+      this.stockForm.disable();
+      this.isFormDisabled = true;
+    } else {
+      this.stockForm.enable();
+      this.isFormDisabled = false;
     }
   }
 }

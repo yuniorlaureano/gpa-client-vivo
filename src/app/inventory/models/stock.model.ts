@@ -18,6 +18,7 @@ export interface StockModel {
 export interface StockDetailsModel {
   id: string;
   quantity: number;
+  purchasePrice: number;
   productId: string;
   product: ProductModel;
 }

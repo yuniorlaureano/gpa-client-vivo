@@ -10,6 +10,7 @@ import { SearchModel } from '../../core/models/search.model';
   templateUrl: './provider-dynamic-search.component.html',
 })
 export class ProviderDynamicSearchComponent implements OnInit {
+  @Input() disabled: boolean = false;
   @Input() onSelectedItem: (model: ProviderModel | null) => void = () => {};
   @Input() selectedItem: SelectModel<ProviderModel> | null = null;
   items: SelectModel<ProviderModel>[] = [];

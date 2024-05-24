@@ -30,4 +30,8 @@ export class InvoiceService {
   updateInvoice(model: InvoiceModel): Observable<void> {
     return this.http.put<void>(this.url, model);
   }
+
+  cancelInvoice(id: string): Observable<void> {
+    return this.http.put<void>(`${this.url}/cancel/${id}`, { id: id });
+  }
 }

@@ -3,7 +3,7 @@
   <div class="col-12">
     <div style="display: flex; justify-content: space-between; gap: 15px">
       <div>
-        <h3>Entrada</h3>
+        <h3>Inventario</h3>
       </div>
       <div
         class="right-button"
@@ -26,6 +26,7 @@
         <button
           type="button"
           class="btn btn-outline-success btn-rounded"
+          *ngIf="!isFormDisabled"
           (click)="form.ngSubmit.emit()"
         >
           <svg
@@ -48,23 +49,9 @@
           type="button"
           class="btn btn-outline-dark btn-rounded"
           (click)="handleCancel()"
+          style="margin-left: 5px"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-x-square"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"
-            />
-            <path
-              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
-            />
-          </svg>
-          Cancelar
+          <i class="bi bi-plus-lg"></i> Nueva
         </button>
       </div>
     </div>
@@ -108,6 +95,7 @@
               <gpa-provider-dynamic-search
                 [selectedItem]="selectedProvider"
                 [onSelectedItem]="handleSelectedProvider"
+                [disabled]="isFormDisabled"
               />
             </div>
           </div>
@@ -178,6 +166,7 @@
               <button
                 class="btn btn-outline-primary"
                 type="button"
+                [disabled]="isFormDisabled"
                 (click)="handleShowProductCatalog(true)"
               >
                 <i class="bi bi-plus-lg"></i> Agregar producto
@@ -191,9 +180,10 @@
                 <thead>
                   <tr>
                     <th>Código</th>
-                    <th>Nombre</th>
-                    <th>Existencia</th>
-                    <th>Precio Unitario</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Precio de Compra</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -213,12 +203,21 @@
                         class="form-control"
                         (input)="handleQuantityChange()"
                         formControlName="quantity"
+                        style="width: 130px"
                         [class.quantity-error]="
                           !formProduct.get('quantity')?.valid
                         "
                       />
                     </td>
                     <td>$ {{ formProduct.get("price")?.value }}</td>
+                    <td>
+                      <input
+                        type="number"
+                        class="form-control"
+                        formControlName="purchasePrice"
+                        style="width: 130px"
+                      />
+                    </td>
                     <td>
                       <button
                         type="button"

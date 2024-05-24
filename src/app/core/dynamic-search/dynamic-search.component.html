@@ -1,6 +1,7 @@
 <div class="dynamic-list">
   <input
     type="text"
+    [disabled]="disabled"
     class="form-control dynamic-list-search"
     [placeholder]="selectedItem ? selectedItem.text : 'Buscar'"
     (input)="handleSearch($event)"
