@@ -19,7 +19,7 @@
           class="btn btn-outline-danger btn-rounded"
           *ngIf="showReturn()"
           style="margin-right: 5px"
-          (click)="cancelInvoice()"
+          (click)="handleCancelInvoice()"
         >
           <i class="bi bi-arrow-counterclockwise"></i>
           Devolución
@@ -70,7 +70,7 @@
         <button
           type="button"
           class="btn btn-outline-dark btn-rounded"
-          (click)="handleCancel()"
+          (click)="clearForm()"
         >
           <i class="bi bi-plus-lg"></i> Nueva
         </button>
@@ -90,6 +90,7 @@
           #form="ngForm"
         >
           <div class="col-6 col-sm-6">
+            <span class="text-danger require-sign">*</span>
             <button
               class="btn btn-outline-primary"
               type="button"
@@ -107,6 +108,12 @@
             >
               <i class="bi bi-x-lg"></i>
             </button>
+            <gpa-validator-message
+              [control]="saleForm.get('clientId')"
+              [touched]="saleForm.touched"
+              validation="required"
+              message="El cliente es obligatorio"
+            />
           </div>
           <div class="col-12 col-sm-12" *ngIf="client">
             <blockquote>
@@ -123,7 +130,9 @@
           </div>
           <div class="col-12 col-sm-6">
             <div class="mb-3">
-              <label for="date" class="form-label">Fecha</label>
+              <label for="date" class="form-label"
+                ><span class="text-danger require-sign">*</span>Fecha</label
+              >
               <div class="input-group">
                 <input
                   id="date"
@@ -139,6 +148,12 @@
                   type="button"
                 ></button>
               </div>
+              <gpa-validator-message
+                [control]="saleForm.get('date')"
+                [touched]="saleForm.touched"
+                validation="required"
+                message="La fecha es obligatoria"
+              />
             </div>
           </div>
           <div class="col-sm-6" *ngIf="isEdit">
@@ -186,14 +201,12 @@
           </div>
           <div class="col-12 col-sm-12">
             <div class="table-responsive">
-              <div
-                *ngIf="
-                  this.invoiceDetails.touched && !this.invoiceDetails?.valid
-                "
-                style="color: red"
-              >
-                {{ "Verifique que los productos tengan existencia" }}
-              </div>
+              <gpa-validator-message
+                [control]="{ errors: { required: true } }"
+                [touched]="saleForm.touched && invoiceDetails.length == 0"
+                validation="required"
+                message="Debe elegir al menos un producto"
+              />
               <table class="table table-sm">
                 <thead>
                   <tr>

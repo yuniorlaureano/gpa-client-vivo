@@ -13,6 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StockDetailsModel } from '../models/stock.model';
 import { ProductModel } from '../models/product.model';
 import { StockStatusEnum } from '../../core/models/stock-status.enum';
+import { ToastService } from '../../core/service/toast.service';
+import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 
 @Component({
   selector: 'gpa-manufactured-product-entry',
@@ -49,7 +51,9 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     private reasonService: ReasonService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService,
+    private confirmService: ConfirmModalService
   ) {}
 
   ngOnInit(): void {
@@ -127,7 +131,12 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
           .subscribe({
             next: () => {
               this.clearForm();
+              this.toastService.showSucess('Registro modificado.');
             },
+            error: (err) =>
+              this.toastService.showError(
+                'Error modificando el registro. ' + err
+              ),
           });
       } else {
         value.id = null;
@@ -136,7 +145,12 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
           .subscribe({
             next: () => {
               this.clearForm();
+              this.toastService.showSucess('Registro agregado.');
             },
+            error: (err) =>
+              this.toastService.showError(
+                'Error modificando el registro. ' + err
+              ),
           });
       }
     }
@@ -152,13 +166,25 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     this.addProducts();
   }
 
+  handleCancelStock() {
+    this.confirmService
+      .confirm('Cancelar entrada', 'Está seguro de cancelar la entrada?')
+      .then(() => {
+        this.cancelStock();
+      })
+      .catch(() => {});
+  }
+
   cancelStock() {
-    var id = this.stockForm.get('id')?.value;
+    const id = this.stockForm.get('id')?.value;
     if (this.isEdit && id) {
       this.stockService.cancelStock(id).subscribe({
         next: () => {
+          this.toastService.showSucess('Registro cancelado');
           this.clearForm();
         },
+        error: (err) =>
+          this.toastService.showError('Error cancelando registro. ' + err),
       });
     }
   }
@@ -172,6 +198,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     const status = this.stockForm.get('status')?.value;
     const reason = Number(this.stockForm.get('reasonId')?.value);
     return (
+      this.isEdit &&
       (status == StockStatusEnum.Saved || status == StockStatusEnum.Draft) &&
       ![ReasonEnum.Sale, ReasonEnum.Return].includes(reason)
     );
@@ -238,44 +265,44 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
           return this.stockService.getStockById(id);
         })
       )
-      .subscribe((stock) => {
-        if (stock) {
-          this.stockForm.setValue({
-            id: stock.id,
-            description: stock.description,
-            transactionType: <TransactionType>stock.transactionType,
-            status: stock.status,
-            providerId: stock.providerId,
-            date: stock.date,
-            storeId: stock.storeId,
-            reasonId: stock.reasonId,
-            stockDetails: [],
-          });
-          this.mapStockToForm(stock.stockDetails);
-          this.selectedProvider = stock.providerName
-            ? {
-                text: stock.providerName + ' ' + stock.providerRnc,
-                value: {
-                  id: stock.providerId,
-                  name: stock.providerName,
-                  rnc: stock.providerRnc,
-                },
-              }
-            : null;
-          this.calculateSelectedProductCatalogAggregate();
-          this.disableForm(
-            stock.transactionType == TransactionType.Output ||
-              Number(stock.reasonId) == ReasonEnum.Return ||
-              stock.status == StockStatusEnum.Saved ||
-              stock.status == StockStatusEnum.Canceled
-          );
-        }
+      .subscribe({
+        next: (stock) => {
+          if (stock) {
+            this.stockForm.setValue({
+              id: stock.id,
+              description: stock.description,
+              transactionType: <TransactionType>stock.transactionType,
+              status: stock.status,
+              providerId: stock.providerId,
+              date: stock.date,
+              storeId: stock.storeId,
+              reasonId: stock.reasonId,
+              stockDetails: [],
+            });
+            this.mapStockToForm(stock.stockDetails);
+            this.selectedProvider = stock.providerName
+              ? {
+                  text: stock.providerName + ' ' + stock.providerRnc,
+                  value: {
+                    id: stock.providerId,
+                    name: stock.providerName,
+                    rnc: stock.providerRnc,
+                  },
+                }
+              : null;
+            this.calculateSelectedProductCatalogAggregate();
+            this.disableForm(
+              stock.transactionType == TransactionType.Output ||
+                Number(stock.reasonId) == ReasonEnum.Return ||
+                stock.status == StockStatusEnum.Saved ||
+                stock.status == StockStatusEnum.Canceled
+            );
+          }
+        },
+        error: (err) => {
+          this.toastService.showError('Error obteniendo el registro. ' + err);
+        },
       });
-  }
-
-  handleCancel() {
-    this.clearForm();
-    this.router.navigate(['/inventory/manufactured-product-entry']);
   }
 
   clearForm = () => {
@@ -285,6 +312,7 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
     this.selectedProvider = null;
     this.isEdit = false;
     this.disableForm(false);
+    this.router.navigate(['/inventory/manufactured-product-entry']);
   };
 
   mapStockToForm(stockDetails: StockDetailsModel[]) {

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule, DecimalPipe, NgTemplateOutlet } from '@angular/common';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminSidebarComponent } from './admin-sidebar/admin-sidebar.component';
 import { AdminTemplateComponent } from './admin-template/admin-template.component';
@@ -13,6 +13,12 @@ import { ClientCatalogComponent } from './client-catalog/client-catalog.componen
 import { StockProductCatalogComponent } from './stock-product-catalog/stock-product-catalog.component';
 import { ProductCatalogComponent } from './product-catalog/product-catalog.component';
 import { InvoiceCatalogComponent } from './invoice-catalog/invoice-catalog.component';
+import { ToastContainerComponent } from './toast-container/toast-container.component';
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastService } from './service/toast.service';
+import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
+import { ConfirmModalService } from './service/confirm-modal.service';
+import { ValidatorMessageComponent } from './validator-message/validator-message.component';
 
 @NgModule({
   declarations: [
@@ -27,14 +33,19 @@ import { InvoiceCatalogComponent } from './invoice-catalog/invoice-catalog.compo
     StockProductCatalogComponent,
     ProductCatalogComponent,
     InvoiceCatalogComponent,
+    ToastContainerComponent,
+    ConfirmModalComponent,
+    ValidatorMessageComponent,
   ],
-  imports: [CommonModule, RouterModule],
-  providers: [LayoutService, DecimalPipe],
+  imports: [CommonModule, RouterModule, NgbToastModule, NgTemplateOutlet],
+  providers: [LayoutService, DecimalPipe, ToastService, ConfirmModalService],
   exports: [
     ClientCatalogComponent,
     StockProductCatalogComponent,
     ProductCatalogComponent,
     InvoiceCatalogComponent,
+    ConfirmModalComponent,
+    ValidatorMessageComponent,
   ],
 })
 export class CoreModule {}

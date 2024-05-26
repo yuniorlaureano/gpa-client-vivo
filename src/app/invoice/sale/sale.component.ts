@@ -8,6 +8,8 @@ import { InvoiceModel, InvoiceDetailModel } from '../model/invoice.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
+import { ToastService } from '../../core/service/toast.service';
+import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 
 @Component({
   selector: 'gpa-sale',
@@ -45,7 +47,9 @@ export class SaleComponent implements OnInit {
     private formBuilder: FormBuilder,
     private invoiceService: InvoiceService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService,
+    private confirmService: ConfirmModalService
   ) {}
 
   ngOnInit(): void {
@@ -161,17 +165,32 @@ export class SaleComponent implements OnInit {
         this.invoiceService.updateInvoice(<InvoiceModel>value).subscribe({
           next: () => {
             this.clearForm();
+            this.toastService.showSucess('Venta editada');
           },
+          error: (err) =>
+            this.toastService.showError('Error editando venta. ' + err),
         });
       } else {
         value.id = null;
         this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
           next: () => {
             this.clearForm();
+            this.toastService.showSucess('Venta creada');
           },
+          error: (err) =>
+            this.toastService.showError('Error creando venta. ' + err),
         });
       }
     }
+  }
+
+  handleCancelInvoice() {
+    this.confirmService
+      .confirm('Devolver factura', 'Está seguro de devolver la factura?')
+      .then(() => {
+        this.cancelInvoice();
+      })
+      .catch(() => {});
   }
 
   cancelInvoice() {
@@ -179,7 +198,10 @@ export class SaleComponent implements OnInit {
     this.invoiceService.cancelInvoice(id!).subscribe({
       next: () => {
         this.clearForm();
+        this.toastService.showSucess('Devolución realizada');
       },
+      error: (err) =>
+        this.toastService.showError('Realizando devolución. ' + err),
     });
   }
 
@@ -205,6 +227,7 @@ export class SaleComponent implements OnInit {
     this.client = null;
     this.payment = 0;
     this.setDisable(false);
+    this.router.navigate(['/invoice/sale']);
   };
 
   isDraft() {
@@ -227,11 +250,6 @@ export class SaleComponent implements OnInit {
     this.saleForm.get('clientId')?.setValue(client.id);
     this.client = client;
     this.isClientCatalogVisible = false;
-  }
-
-  handleCancel() {
-    this.clearForm();
-    this.router.navigate(['/invoice/sale']);
   }
 
   getInvoice() {

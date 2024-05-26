@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CategoryService } from '../service/category.service';
 import { CategoryModel } from '../models/category.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-category',
@@ -12,7 +13,6 @@ import { of, switchMap } from 'rxjs';
 })
 export class CategoryComponent implements OnInit {
   isEdit = false;
-
   categoryForm = this.formBuilder.group({
     id: [''],
     name: ['', Validators.required],
@@ -22,7 +22,9 @@ export class CategoryComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private categoryService: CategoryService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastService: ToastService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -39,14 +41,20 @@ export class CategoryComponent implements OnInit {
         this.categoryService.updateCategory(<CategoryModel>value).subscribe({
           next: () => {
             this.clearForm();
+            this.toastService.showSucess('Categoría modificada');
           },
+          error: (err) =>
+            this.toastService.showSucess('Error modificando categoría. ' + err),
         });
       } else {
         value.id = null;
         this.categoryService.addCategory(<CategoryModel>value).subscribe({
           next: () => {
             this.clearForm();
+            this.toastService.showSucess('Categoría creada');
           },
+          error: (err) =>
+            this.toastService.showSucess('Error creando categoría. ' + err),
         });
       }
     }
@@ -81,6 +89,7 @@ export class CategoryComponent implements OnInit {
 
   handleCancel() {
     this.clearForm();
+    this.router.navigate(['/inventory/category']);
   }
 
   clearForm() {

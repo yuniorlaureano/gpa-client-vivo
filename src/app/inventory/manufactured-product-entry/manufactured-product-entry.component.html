@@ -76,7 +76,7 @@
           class="btn btn-outline-danger btn-rounded"
           style="margin-left: 5px"
           *ngIf="showCancel()"
-          (click)="cancelStock()"
+          (click)="handleCancelStock()"
         >
           <i class="bi bi-x-lg"></i>
           Canelar
@@ -85,7 +85,7 @@
         <button
           type="button"
           class="btn btn-outline-dark btn-rounded"
-          (click)="handleCancel()"
+          (click)="clearForm()"
           style="margin-left: 5px"
         >
           <i class="bi bi-plus-lg"></i> Nueva
@@ -110,7 +110,9 @@
         >
           <div class="col-12 col-sm-4">
             <div class="mb-3">
-              <label for="reason" class="form-label">Motivo</label>
+              <label for="reason" class="form-label"
+                ><span class="text-danger require-sign">*</span>Motivo</label
+              >
               <select
                 name="reason"
                 class="form-select"
@@ -123,6 +125,12 @@
                   {{ reason.name }}
                 </option>
               </select>
+              <gpa-validator-message
+                [control]="stockForm.get('reasonId')"
+                [touched]="stockForm.touched"
+                validation="required"
+                message="El motivo es obligatorio"
+              />
             </div>
           </div>
           <div class="col-12 col-sm-4">
@@ -137,7 +145,9 @@
           </div>
           <div class="col-12 col-sm-4">
             <div class="mb-3">
-              <label for="inputEmail" class="form-label">Fecha</label>
+              <label for="inputEmail" class="form-label"
+                ><span class="text-danger require-sign">*</span>Fecha</label
+              >
               <div class="input-group">
                 <input
                   class="form-control"
@@ -153,6 +163,12 @@
                   type="button"
                 ></button>
               </div>
+              <gpa-validator-message
+                [control]="stockForm.get('date')"
+                [touched]="stockForm.touched"
+                validation="required"
+                message="La fecha es obligatoria"
+              />
             </div>
           </div>
           <div class="col-12 col-sm-12">
@@ -180,10 +196,6 @@
               />
             </div>
           </div>
-          <div class="col-12 col-sm-12">
-            <div class="form-section-title">Productos</div>
-          </div>
-
           <div class="col-xl-3 col-sm-4 col-12">
             <div class="mb-3">
               <div class="custom-btn-group">
@@ -221,6 +233,12 @@
           </div>
 
           <div class="col-12 col-sm-12">
+            <gpa-validator-message
+              [control]="{ errors: { required: true } }"
+              [touched]="stockForm.touched && formProducts.length == 0"
+              validation="required"
+              message="Debe elegir al menos un producto"
+            />
             <div class="table-responsive">
               <table class="table table-sm">
                 <thead>
