@@ -10,6 +10,9 @@ import { CoreModule } from '../core/core.module';
 import { SaleListComponent } from './sale-list/sale-list.component';
 import { SaleListTableComponent } from './sale-list/sale-list-table.component';
 import { DataTableComponent } from '../core/datatable/data-table.component';
+import { ReceivableAccountComponent } from './receivable-account/receivable-account.component';
+import { ReceivableAccountListComponent } from './receivable-account-list/receivable-account-list.component';
+import { ReceivableAccountListTableComponent } from './receivable-account-list/receivable-account-list-table.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,9 @@ import { DataTableComponent } from '../core/datatable/data-table.component';
     PurchaseComponent,
     SaleListComponent,
     SaleListTableComponent,
+    ReceivableAccountComponent,
+    ReceivableAccountListComponent,
+    ReceivableAccountListTableComponent,
   ],
   imports: [
     CommonModule,

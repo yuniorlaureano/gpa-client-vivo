@@ -3,18 +3,18 @@
   <div class="col-12">
     <div style="display: flex; justify-content: space-between; gap: 15px">
       <div>
-        <h3>Facturas</h3>
+        <h3>Cuentas por cobrar</h3>
       </div>
       <div class="right-button">
         <a
-          routerLink="/invoice/receivable-account-list"
+          routerLink="/invoice/sale/list"
           class="btn btn-outline-info btn-rounded"
           style="margin-right: 5px"
         >
-          <i class="bi bi-cash-coin"></i> Cuentas por cobrar Cuenta por cobrar
+          <i class="bi bi-card-list"></i> Facturas
         </a>
         <a
-          routerLink="/invoice/sale"
+          routerLink="/invoice/receivable-account"
           class="btn btn-outline-primary btn-rounded"
           style="margin-right: 5px"
         >
@@ -24,7 +24,7 @@
     </div>
   </div>
 </div>
-<gpa-sale-list-table
+<gpa-receivable-account-list-table
   (onDelete)="handleDelete($event)"
   (onEdit)="handleEdit($event)"
-></gpa-sale-list-table>
+></gpa-receivable-account-list-table>

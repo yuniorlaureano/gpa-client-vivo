@@ -4,6 +4,8 @@ import { SaleComponent } from './sale/sale.component';
 import { AdminTemplateComponent } from '../core/admin-template/admin-template.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { SaleListComponent } from './sale-list/sale-list.component';
+import { ReceivableAccountComponent } from './receivable-account/receivable-account.component';
+import { ReceivableAccountListComponent } from './receivable-account-list/receivable-account-list.component';
 
 const routes: Routes = [
   {
@@ -14,6 +16,11 @@ const routes: Routes = [
       { path: 'sale/edit/:id', component: SaleComponent },
       { path: 'sale/list', component: SaleListComponent },
       { path: 'purchase', component: PurchaseComponent },
+      {
+        path: 'receivable-account-list',
+        component: ReceivableAccountListComponent,
+      },
+      { path: 'receivable-account', component: ReceivableAccountComponent },
     ],
   },
 ];
