@@ -76,7 +76,9 @@ export class SaleComponent implements OnInit {
       totalQuantity,
       return: 0,
     };
-    this.payment = totalPrice;
+    if (!this.isEdit) {
+      this.payment = totalPrice;
+    }
   }
 
   handleSelectedProductFromCatalog(product: RawProductCatalogModel) {
@@ -277,6 +279,8 @@ export class SaleComponent implements OnInit {
             storeId: null,
             invoiceDetails: [],
           });
+          this.payment = invoice.payment;
+          this.saleType = invoice.type;
           this.client = invoice.client;
           this.mapProductsToForm(invoice.invoiceDetails);
           this.calculateSelectedProductCatalogAggregate();
