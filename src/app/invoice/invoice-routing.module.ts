@@ -20,7 +20,10 @@ const routes: Routes = [
         path: 'receivable-account-list',
         component: ReceivableAccountListComponent,
       },
-      { path: 'receivable-account', component: ReceivableAccountComponent },
+      {
+        path: 'receivable-account/invoice/:id',
+        component: ReceivableAccountComponent,
+      },
     ],
   },
 ];

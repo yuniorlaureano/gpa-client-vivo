@@ -5,6 +5,7 @@ import { ResponseModel } from '../../core/models/response.model';
 import { SearchModel } from '../../core/models/search.model';
 import { environment } from '../../../environments/environment';
 import { ReceivableAccountModel } from '../model/receivable-account.model';
+import { InvoiceWithReceivableAccountModel } from '../model/invoice-with-receivable-account';
 
 @Injectable()
 export class ReceivableAccountService {
@@ -16,6 +17,14 @@ export class ReceivableAccountService {
   ): Observable<ResponseModel<ReceivableAccountModel>> {
     return this.http.get<ResponseModel<ReceivableAccountModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`
+    );
+  }
+
+  getReceivableAccountsByInvoiceId(
+    invoiceId: string
+  ): Observable<InvoiceWithReceivableAccountModel> {
+    return this.http.get<InvoiceWithReceivableAccountModel>(
+      `${this.url}/invoice/${invoiceId}`
     );
   }
 

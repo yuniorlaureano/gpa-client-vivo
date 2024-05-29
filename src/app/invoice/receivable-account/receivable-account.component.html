@@ -18,6 +18,7 @@
           type="button"
           class="btn btn-outline-primary btn-rounded"
           style="margin-right: 5px"
+          (click)="handleSave()"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +43,160 @@
   <div class="col-sm-12 col-12">
     <!-- Card start -->
     <div class="card">
-      <div class="card-body"></div>
+      <div class="card-body">
+        <form class="row row-cols-sm-auto" [formGroup]="receivableForm">
+          <div class="col-sm-3">
+            <div class="mb-3">
+              <label for="date" class="form-label"
+                ><span class="text-danger require-sign">*</span>Pago
+                pediente</label
+              >
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="0.00"
+                  [value]="invoice?.pendingPayment?.pendingPayment"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="mb-3">
+              <label for="date" class="form-label"
+                ><span class="text-danger require-sign">*</span>Pago</label
+              >
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="0.00"
+                  formControlName="payment"
+                />
+              </div>
+              <gpa-validator-message
+                [control]="receivableForm.get('payment')"
+                [touched]="receivableForm.touched"
+                validation="required"
+                message="El pago es obligatorio"
+              />
+              <gpa-validator-message
+                [control]="receivableForm.get('payment')"
+                [touched]="receivableForm.touched"
+                validation="min"
+                message="El pago debe ser mayor a 0"
+              />
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="mb-3">
+              <label for="date" class="form-label"
+                ><span class="text-danger require-sign">*</span>Fecha</label
+              >
+              <div class="input-group">
+                <input
+                  id="date"
+                  class="form-control"
+                  placeholder="yyyy-mm-dd"
+                  ngbDatepicker
+                  formControlName="date"
+                  #date="ngbDatepicker"
+                />
+                <button
+                  class="btn btn-outline-secondary bi bi-calendar3"
+                  (click)="date.toggle()"
+                  type="button"
+                ></button>
+              </div>
+              <gpa-validator-message
+                [control]="receivableForm.get('date')"
+                [touched]="receivableForm.touched"
+                validation="required"
+                message="La fecha es obligatoria"
+              />
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-12">
+            <div class="mb-3">
+              <label for="note" class="form-label">Nota</label>
+              <textarea
+                id="note"
+                class="form-control"
+                formControlName="note"
+              ></textarea>
+            </div>
+          </div>
+        </form>
+        <div class="col-sm-12">
+          <i class="bi bi-receipt" style="font-size: 50px"></i>
+          <span style="font-size: 40px">Factura</span>
+          <div>
+            <ul>
+              <li>
+                <span class="client-profile">Estado:</span>
+                {{ getStatusDescription(invoice?.invoiceStatus) }}
+              </li>
+              <li>
+                <span class="client-profile">Tipo:</span>
+                {{ invoice?.saleType == 0 ? "A crédito" : "Al contado" }}
+              </li>
+              <li>
+                <span class="client-profile">Fecha:</span>
+                {{ invoice?.date }}
+              </li>
+              <li>
+                <span class="client-profile">Nota:</span>
+                {{ invoice?.invoiceNote }}
+              </li>
+              <li>
+                <span class="client-profile">Pago inicial:</span>
+                {{ invoice?.payment }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <i class="bi bi-person" style="font-size: 50px"></i>
+          <span style="font-size: 40px">Cliente</span>
+          <div>
+            <ul>
+              <li>
+                <span class="client-profile">Cliente:</span>
+                {{ invoice?.clientName }}
+              </li>
+              <li>
+                <span class="client-profile">Email:</span>
+                {{ invoice?.clientEmail }}
+              </li>
+              <li>
+                <span class="client-profile">Teléfono:</span>
+                {{ invoice?.clientPhone }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <hr />
+        <h4>Historial de pagos</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Pago pendiente</th>
+              <th>Pagado</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let account of invoice?.receivableAccounts">
+              <td>{{ account.pendingPayment }}</td>
+              <td>{{ account.payment }}</td>
+              <td>{{ account.date }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <!-- Card end -->
   </div>

@@ -11,10 +11,14 @@ export class ReceivableAccountListComponent {
   constructor(private router: Router) {}
 
   handleEdit(invoice: ReceivableAccountModel) {
-    this.router.navigate(['/invoice/sale/edit/' + invoice.id]);
+    this.router.navigate([
+      '/invoice/receivable-account/invoice/' + invoice.invoiceId,
+    ]);
   }
 
   handleDelete(invoice: ReceivableAccountModel) {
-    this.router.navigate(['/invoice/sale/edit/' + invoice.id]);
+    this.router.navigate([
+      '/invoice/receivable-account/invoice/' + invoice.invoiceId,
+    ]);
   }
 }

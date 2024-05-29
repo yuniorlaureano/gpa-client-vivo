@@ -102,6 +102,17 @@
               </li>
               <li routerLinkActive="active">
                 <a
+                  routerLink="/invoice/receivable-account-list"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                >
+                  <i class="bi bi-currency-exchange"></i> Cuentas por cobrar</a
+                >
+              </li>
+
+              <li routerLinkActive="active">
+                <a
                   routerLink="/invoice/sale/list"
                   routerLinkActive="current-page"
                   [routerLinkActiveOptions]="{ exact: true }"
