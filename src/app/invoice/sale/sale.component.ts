@@ -136,8 +136,13 @@ export class SaleComponent implements OnInit {
   }
 
   save() {
-    this.saleForm.get('status')?.setValue(InvoiceStatusEnum.Saved);
-    this.addSale();
+    this.confirmService
+      .confirm('Venta', 'Está seguro de realizar la venta?')
+      .then(() => {
+        this.saleForm.get('status')?.setValue(InvoiceStatusEnum.Saved);
+        this.addSale();
+      })
+      .catch(() => {});
   }
 
   saveAsDraft() {

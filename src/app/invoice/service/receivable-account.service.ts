@@ -6,6 +6,7 @@ import { SearchModel } from '../../core/models/search.model';
 import { environment } from '../../../environments/environment';
 import { ReceivableAccountModel } from '../model/receivable-account.model';
 import { InvoiceWithReceivableAccountModel } from '../model/invoice-with-receivable-account';
+import { ReceivableAccountSummaryModel } from '../model/receivable-account-summary.model';
 
 @Injectable()
 export class ReceivableAccountService {
@@ -17,6 +18,14 @@ export class ReceivableAccountService {
   ): Observable<ResponseModel<ReceivableAccountModel>> {
     return this.http.get<ResponseModel<ReceivableAccountModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`
+    );
+  }
+
+  getReceivableAccountSummary(
+    search: SearchModel | null = null
+  ): Observable<ResponseModel<ReceivableAccountSummaryModel>> {
+    return this.http.get<ResponseModel<ReceivableAccountSummaryModel>>(
+      `${this.url}/summary${search ? search.asQueryString() : ''}`
     );
   }
 

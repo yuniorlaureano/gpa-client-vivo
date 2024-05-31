@@ -8,12 +8,10 @@ import {
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { SearchModel } from '../../core/models/search.model';
-import { InvoiceService } from '../service/invoice.service';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
-import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
-import { ReceivableAccountModel } from '../model/receivable-account.model';
 import { ReceivableAccountService } from '../service/receivable-account.service';
+import { ReceivableAccountSummaryModel } from '../model/receivable-account-summary.model';
 
 @Component({
   selector: 'gpa-receivable-account-list-table',
@@ -21,8 +19,8 @@ import { ReceivableAccountService } from '../service/receivable-account.service'
   styleUrl: './receivable-account-list-table.component.css',
 })
 export class ReceivableAccountListTableComponent {
-  @Output() onDelete = new EventEmitter<ReceivableAccountModel>();
-  @Output() onEdit = new EventEmitter<ReceivableAccountModel>();
+  @Output() onDelete = new EventEmitter<ReceivableAccountSummaryModel>();
+  @Output() onEdit = new EventEmitter<ReceivableAccountSummaryModel>();
   @Input() reloadTable: number = 1;
 
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
@@ -30,7 +28,7 @@ export class ReceivableAccountListTableComponent {
     page: 1,
     pageSize: 10,
   });
-  public data: DataTableDataModel<ReceivableAccountModel> = {
+  public data: DataTableDataModel<ReceivableAccountSummaryModel> = {
     data: [],
     options: {
       ...DEFAULT_SEARCH_PARAMS,
@@ -50,7 +48,7 @@ export class ReceivableAccountListTableComponent {
         switchMap((search) => {
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
-          return this.receivableAccountService.getReceivableAccounts(
+          return this.receivableAccountService.getReceivableAccountSummary(
             searchModel
           );
         })
@@ -74,15 +72,15 @@ export class ReceivableAccountListTableComponent {
       });
   }
 
-  isPedding(model: ReceivableAccountModel) {
-    return model.payment < model.pendingPayment;
+  isPedding(model: ReceivableAccountSummaryModel) {
+    return model.payment != model.pendingPayment;
   }
 
-  handleEdit(model: ReceivableAccountModel) {
+  handleEdit(model: ReceivableAccountSummaryModel) {
     this.onEdit.emit(model);
   }
 
-  handleDelete(model: ReceivableAccountModel) {
+  handleDelete(model: ReceivableAccountSummaryModel) {
     this.onDelete.emit(model);
   }
 

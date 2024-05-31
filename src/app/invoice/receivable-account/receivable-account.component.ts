@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ReceivableAccountService } from '../service/receivable-account.service';
 import { ActivatedRoute } from '@angular/router';
-import { of, switchMap } from 'rxjs';
+import { combineLatest, of, Subject, switchMap } from 'rxjs';
 import { InvoiceWithReceivableAccountModel } from '../model/invoice-with-receivable-account';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ReceivableAccountModel } from '../model/receivable-account.model';
 import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
+import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
 
 @Component({
   selector: 'gpa-receivable-account',
@@ -17,12 +18,12 @@ import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 export class ReceivableAccountComponent implements OnInit {
   isEdit: boolean = false;
   invoice: InvoiceWithReceivableAccountModel | null = null;
-
+  invoiceIdSubject$ = new Subject<string | null>();
   receivableForm = this.form.group({
     id: [''],
     payment: [0.0, [Validators.required, Validators.min(1)]],
     date: [null, Validators.required],
-    note: [null, Validators.required],
+    note: [null],
     invoiceId: ['', Validators.required],
   });
 
@@ -36,6 +37,12 @@ export class ReceivableAccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.getInvoice();
+    this.route.paramMap.subscribe({
+      next: (params) => {
+        const id = params.get('id');
+        this.invoiceIdSubject$.next(id);
+      },
+    });
   }
 
   handleSave() {
@@ -51,17 +58,21 @@ export class ReceivableAccountComponent implements OnInit {
       Con ${pendingPayment - payment} pendientes`
       )
       .then(() => {
-        this.save();
+        this.update();
       })
       .catch(() => {});
   }
 
-  save() {
+  update() {
     this.receivableForm.markAllAsTouched();
     const canEdit =
       this.isEdit &&
       this.receivableForm.valid &&
       this.receivableForm.get('id')?.value;
+
+    console.log(canEdit);
+    console.log(this.receivableForm.valid);
+    console.log(this.receivableForm.get('id')?.value);
     if (canEdit) {
       const value: ReceivableAccountModel = {
         id: this.receivableForm.get('id')?.value ?? '',
@@ -70,11 +81,12 @@ export class ReceivableAccountComponent implements OnInit {
         pendingPayment: 0.0,
         invoiceId: this.receivableForm.get('invoiceId')?.value ?? '',
       };
+
       this.receivableAccountService.updateReceivableAccount(value).subscribe({
         next: () => {
           this.toastService.showSucess('Pago realizado');
           this.receivableForm.reset();
-          this.getInvoice();
+          this.invoiceIdSubject$.next(this.invoice?.invoiceId ?? null);
         },
       });
     }
@@ -93,11 +105,21 @@ export class ReceivableAccountComponent implements OnInit {
     }
   }
 
+  getPaymentStatusDescription(status?: PaymentStatusEnum) {
+    switch (status) {
+      case PaymentStatusEnum.Pending:
+        return 'Pendiente de pagar';
+      case PaymentStatusEnum.Payed:
+        return 'Pagada';
+      default:
+        return '';
+    }
+  }
+
   getInvoice() {
-    this.route.paramMap
+    this.invoiceIdSubject$
       .pipe(
-        switchMap((params) => {
-          const id = params.get('id');
+        switchMap((id) => {
           if (id == null) {
             this.isEdit = false;
             return of(null);
@@ -118,7 +140,6 @@ export class ReceivableAccountComponent implements OnInit {
             invoiceId: invoice.invoiceId,
           });
           this.invoice = invoice;
-          console.log(this.invoice.pendingPayment);
         }
       });
   }

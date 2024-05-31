@@ -56,6 +56,7 @@
                   class="form-control"
                   type="number"
                   placeholder="0.00"
+                  disabled
                   [value]="invoice?.pendingPayment?.pendingPayment"
                 />
               </div>
@@ -153,7 +154,14 @@
               </li>
               <li>
                 <span class="client-profile">Pago inicial:</span>
-                {{ invoice?.payment }}
+                {{ invoice?.payment | currency }}
+              </li>
+              <li
+                [class.payment_status_payed]="invoice?.paymentStatus == 0"
+                [class.payment_status_pending]="invoice?.paymentStatus == 1"
+              >
+                <span class="client-profile">Estado:</span>
+                {{ getPaymentStatusDescription(invoice?.paymentStatus) }}
               </li>
             </ul>
           </div>
@@ -189,10 +197,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let account of invoice?.receivableAccounts">
+            <tr
+              *ngFor="let account of invoice?.receivableAccounts"
+              [class.row_paid]="account.payment != 0"
+            >
               <td>{{ account.pendingPayment }}</td>
               <td>{{ account.payment }}</td>
-              <td>{{ account.date }}</td>
+              <td>{{ account.date | json }}</td>
             </tr>
           </tbody>
         </table>

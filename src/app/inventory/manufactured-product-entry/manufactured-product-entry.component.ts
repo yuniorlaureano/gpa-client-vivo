@@ -157,8 +157,13 @@ export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.stockForm.get('status')?.setValue(StockStatusEnum.Saved);
-    this.addProducts();
+    this.confirmService
+      .confirm('Entrada', 'Está seguro de guardar la entrada?')
+      .then(() => {
+        this.stockForm.get('status')?.setValue(StockStatusEnum.Saved);
+        this.addProducts();
+      })
+      .catch(() => {});
   }
 
   saveDraft() {

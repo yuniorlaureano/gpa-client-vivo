@@ -2,3 +2,15 @@
   font-weight: 700;
   font-size: 15px;
 }
+
+.row_paid {
+  background-color: lightgreen;
+}
+
+.payment_status_pending {
+  color: red;
+}
+
+.payment_status_payed {
+  color: lightgreen;
+}
