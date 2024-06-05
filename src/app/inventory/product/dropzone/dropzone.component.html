@@ -1,0 +1,46 @@
+<div class="wrapper">
+  <div (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="fileInput.click()" class="dragZone">
+    <input type="file" #fileInput id="fileInput" (change)="onFileSelected($event)" hidden multiple>
+    <i class="bi bi-cloud-upload"></i>
+    <p>Deja caer tus archivos aquí o haz clic para seleccionarlos.</p>
+  </div>
+  <!--  -->
+  <section *ngFor="let file of files; let i = index">
+    <!-- Contenido a mostrar mientras se cargan las imagenes con un fake upload -->
+    <div *ngIf="!file.uploadComplete" class="progress-area">
+      <div class="file-row common">
+        <img *ngIf="file.isImage" [src]="file.dataURL" [alt]="file.name">
+        <div class="details-row">
+          <div class="details">
+            <span class="name">{{file.name}} - Subiendo</span>
+            <span class="percent">{{file.progress + '%'}}</span>
+          </div>
+          <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0"
+            aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" [style.width]="file.progress + '%'">{{
+              convertSize(file.bytesSent) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historial de imagenes cargadas -->
+    <div *ngIf="file.uploadComplete">
+      <section class="uploaded-area">
+        <div class="file-row common">
+          <div class="content">
+            <img *ngIf="file.isImage" [src]="file.dataURL" [alt]="file.name">
+            <div class="details-row">
+              <div class="details">
+                <span class="name">{{file.name}} - Carga exitosa!</span>
+                <span class="size">{{
+                  convertSize(file.bytesSent) }}</span>
+              </div>
+            </div>
+            <i class="bi bi-check"></i>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</div>

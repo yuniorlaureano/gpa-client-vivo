@@ -3,7 +3,7 @@ export interface ProductModel {
   code: string;
   name: string;
   photo: string | null;
-  price: string;
+  price: number;
   description: string;
   barCode: string;
   expirationDate: string | null;
