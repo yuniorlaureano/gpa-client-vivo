@@ -126,11 +126,7 @@ export class SaleComponent implements OnInit {
       productId: [product.productId, Validators.required],
       quantity: [
         1,
-        [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(product.quantity),
-        ],
+        [Validators.required, Validators.min(1), Validators.max(product.stock)],
       ],
     });
   }
@@ -327,7 +323,7 @@ export class SaleComponent implements OnInit {
               [
                 Validators.required,
                 Validators.min(1),
-                Validators.max(product.stockProduct.quantity),
+                Validators.max(product.stockProduct.stock),
               ],
             ],
           })

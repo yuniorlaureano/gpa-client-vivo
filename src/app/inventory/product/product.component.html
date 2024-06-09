@@ -205,7 +205,7 @@
                   <div class="col-sm-3 col-12">
                     <div class="mb-3">
                       <label class="form-label"
-                        >Categoría<span class="text-red">*</span></label
+                        >Unidad<span class="text-red">*</span></label
                       >
                       <select
                         name="unitId"
@@ -222,13 +222,31 @@
                     </div>
                   </div>
                   <!--  -->
-                  <div class="col-sm-6 col-12">
+                  <div class="col-sm-4 col-12">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Tipo de producto<span class="text-red">*</span></label
+                      >
+                      <select
+                        name="categoryId"
+                        class="form-select"
+                        formControlName="type"
+                      >
+                        <option value="1">Producto terminado</option>
+                        <option value="2">Materia prima</option>
+                      </select>
+                      <div *ngIf="isFieldInvalid('type')" class="text-danger">
+                        El tipo es obligatorio
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-12">
                     <div class="mb-2">
                       <label class="form-label"
                         >Descripcion<span class="text-red">*</span></label
                       >
                       <textarea
-                        rows="7"
+                        rows="4"
                         class="form-control"
                         formControlName="description"
                         placeholder="Use este espacio para agregar una descripcion del producto"
@@ -236,7 +254,7 @@
                     </div>
                   </div>
                   <!--  -->
-                  <div class="col-sm-6 col-12 dropzone-area">
+                  <div class="col-sm-12 col-12 dropzone-area">
                     <div class="card-border">
                       <div class="card-border-title">Imagenes del producto</div>
                       <div class="card-border-body">

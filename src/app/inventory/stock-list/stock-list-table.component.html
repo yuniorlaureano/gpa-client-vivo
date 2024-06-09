@@ -8,15 +8,23 @@
   <tr header>
     <th>Código</th>
     <th>Producto</th>
-    <th>Cantidad</th>
+    <th>Tipo</th>
+    <th>Entrada</th>
+    <th>Salida</th>
+    <th>Existencia</th>
     <th>Monto en producto</th>
   </tr>
   <tbody body>
     <tr *ngFor="let stock of data.data">
       <td>{{ stock.productCode }}</td>
       <td>{{ stock.productName }}</td>
-      <td>{{ stock.quantity }}</td>
-      <td>{{ stock.price * stock.quantity | currency }}</td>
+      <td>
+        {{ stock.productType == 1 ? "Producto terminado" : "Materia prima" }}
+      </td>
+      <td style="color: green">{{ stock.input }}</td>
+      <td style="color: red">{{ stock.output }}</td>
+      <td>{{ stock.stock }}</td>
+      <td>{{ stock.price * stock.stock | currency }}</td>
     </tr>
   </tbody>
 </gpa-data-table>

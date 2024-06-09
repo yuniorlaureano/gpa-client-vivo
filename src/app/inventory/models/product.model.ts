@@ -1,3 +1,5 @@
+import { ProductType } from '../../core/models/product-type.enum';
+
 export interface ProductModel {
   id: string | null;
   code: string;
@@ -10,6 +12,7 @@ export interface ProductModel {
   unitId: string;
   unit: string;
   categoryId: string;
+  type: ProductType;
   category: string;
   productLocationId: string | null;
   productLocation: string;

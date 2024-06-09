@@ -10,6 +10,7 @@ import { UnitModel } from '../../common/model/unit.model';
 import { UnitService } from '../../common/service/unit.service';
 import { CategoryModel } from '../models/category.model';
 import { CategoryService } from '../service/category.service';
+import { ProductType } from '../../core/models/product-type.enum';
 
 @Component({
   selector: 'gpa-product',
@@ -61,6 +62,10 @@ export class ProductComponent implements OnInit {
     expirationDate: ['', Validators.required],
     unitId: ['', Validators.required],
     categoryId: ['', Validators.required],
+    type: [
+      ProductType.FinishedProduct,
+      [Validators.required, Validators.min(1), Validators.max(2)],
+    ],
   });
 
   //Validaciones generales para los campos del formulario
@@ -161,6 +166,7 @@ export class ProductComponent implements OnInit {
               expirationDate: product.expirationDate,
               unitId: product.unitId,
               categoryId: product.categoryId,
+              type: product.type,
             });
           }
         },
