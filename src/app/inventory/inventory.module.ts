@@ -20,6 +20,10 @@ import { CategoryListComponent } from './category-list/category-list.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductListTableComponent } from './product-list/product-list-table.component';
 import { DropzoneComponent } from './product/dropzone/dropzone.component';
+import { StockCycleComponent } from './stock-cycle/stock-cycle.component';
+import { StockCycleDetailComponent } from './stock-cycle-detail/stock-cycle-detail.component';
+import { StockCycleListComponent } from './stock-cycle-list/stock-cycle-list.component';
+import { StockCycleListTableComponent } from './stock-cycle-list/stock-cycle-list-table.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +40,10 @@ import { DropzoneComponent } from './product/dropzone/dropzone.component';
     ProductListComponent,
     ProductListTableComponent,
     DropzoneComponent,
+    StockCycleComponent,
+    StockCycleDetailComponent,
+    StockCycleListComponent,
+    StockCycleListTableComponent,
   ],
   imports: [
     CommonModule,

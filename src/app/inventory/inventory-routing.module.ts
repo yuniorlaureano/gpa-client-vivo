@@ -8,6 +8,9 @@ import { StockListComponent } from './stock-list/stock-list.component';
 import { StockMasterListComponent } from './stock-master-list/stock-master-list.component';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { ProductListComponent } from './product-list/product-list.component';
+import { StockCycleComponent } from './stock-cycle/stock-cycle.component';
+import { StockCycleDetailComponent } from './stock-cycle-detail/stock-cycle-detail.component';
+import { StockCycleListComponent } from './stock-cycle-list/stock-cycle-list.component';
 
 const routes: Routes = [
   {
@@ -32,6 +35,18 @@ const routes: Routes = [
       {
         path: 'manufactured-product-entry/edit/:id',
         component: ManufacturedProductEntryComponent,
+      },
+      {
+        path: 'stock/cycle',
+        component: StockCycleComponent,
+      },
+      {
+        path: 'stock/cycle/list',
+        component: StockCycleListComponent,
+      },
+      {
+        path: 'stock/cycle/:id/detail',
+        component: StockCycleDetailComponent,
       },
     ],
   },

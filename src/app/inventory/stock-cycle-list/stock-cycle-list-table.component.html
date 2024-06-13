@@ -1,0 +1,32 @@
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Fecha de inicio</th>
+    <th>Fecha final</th>
+    <th>Estado</th>
+    <th>Nota</th>
+  </tr>
+  <tbody body>
+    <tr *ngFor="let stockCycle of data.data">
+      <td>{{ stockCycle.startDate | json }}</td>
+      <td>{{ stockCycle.endDate | json }}</td>
+      <td>
+        {{ stockCycle.isClose ? "Cerrado" : "Abierto" }}
+      </td>
+      <td>{{ stockCycle.note }}</td>
+      <td style="width: 50px">
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(stockCycle)"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

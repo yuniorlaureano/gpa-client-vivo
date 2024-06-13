@@ -1,0 +1,95 @@
+<!-- Row start -->
+<div class="row">
+  <div class="col-12">
+    <div style="display: flex; justify-content: space-between; gap: 15px">
+      <div>
+        <h3>Ciclo de inventario</h3>
+      </div>
+      <div class="right-button">
+        <a
+          routerLink="/inventory/stock/cycle/list"
+          class="btn btn-outline-info btn-rounded"
+          style="margin-right: 5px"
+        >
+          <i class="bi bi-card-list"></i> Listado de ciclos
+        </a>
+        <a
+          routerLink="/inventory/stock/cycle"
+          class="btn btn-outline-primary btn-rounded"
+          style="margin-right: 5px"
+        >
+          <i class="bi bi-plus-lg"></i> Nuevo ciclo
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Row start -->
+<div class="row">
+  <div class="col-sm-12 col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="invoice-container">
+          <!-- Row start -->
+          <div class="row">
+            <div class="col-sm-12 col-12">
+              <div
+                style="
+                  border: solid 1px lightgray;
+                  padding: 6px;
+                  opacity: 0.7;
+                  font-weight: bold;
+                "
+              >
+                <address class="m-0">
+                  Fecha de inicio: {{ stockCycle?.startDate | json }} <br />
+                  Fech ade fin: {{ stockCycle?.endDate | json }} <br />
+                  Estado: {{ stockCycle?.isClose ? "Cerrado" : "Abierto" }}
+                  <br />
+                  Nota:
+                  {{ stockCycle?.note }} <br />
+                </address>
+                <!-- 
+                <div class="invoice-num">
+                  <div>Invoice - #010</div>
+                  <div>January 20th 2022</div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <!-- Row end -->
+          <hr />
+          <!-- Row start -->
+          <div class="row">
+            <div class="col-12">
+              <div class="table-responsive">
+                <table class="table table-bordered invoice-table">
+                  <thead>
+                    <tr>
+                      <th>Producto</th>
+                      <th>Precio</th>
+                      <th>Entraron</th>
+                      <th>Salieron</th>
+                      <th>En existencia</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let detail of stockCycle?.stockCycleDetails">
+                      <td>{{ detail.productName }}</td>
+                      <td>{{ detail.productPrice | currency }}</td>
+                      <td>{{ detail.input }}</td>
+                      <td>{{ detail.output }}</td>
+                      <td>{{ detail.stock }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Row end -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Row end -->
