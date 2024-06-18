@@ -12,9 +12,8 @@ import { ConfirmModalService } from '../../core/service/confirm-modal.service';
   styleUrl: './stock-cycle.component.css',
 })
 export class StockCycleComponent implements OnInit {
-  isEdit: boolean = false;
   cycleForm = this.form.group({
-    note: [''],
+    note: ['', Validators.required],
     startDate: [null, Validators.required],
     endDate: [null, Validators.required],
     isClose: [false],
@@ -36,15 +35,17 @@ export class StockCycleComponent implements OnInit {
       ...this.cycleForm.value,
       isClose: false,
     };
-    if (this.isEdit) {
-    } else {
-      this.confirmService
-        .confirm('Ciclo', 'Está seguro de abrir el ciclo de inventario ')
-        .then(() => {
-          this.save(<StockCycleModel>value);
-        })
-        .catch(() => {});
+
+    if (!this.cycleForm.valid) {
+      return;
     }
+
+    this.confirmService
+      .confirm('Ciclo', 'Está seguro de abrir el ciclo de inventario ')
+      .then(() => {
+        this.save(<StockCycleModel>value);
+      })
+      .catch(() => {});
   }
 
   save(value: StockCycleModel) {

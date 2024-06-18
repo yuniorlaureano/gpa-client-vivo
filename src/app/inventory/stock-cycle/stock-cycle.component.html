@@ -18,7 +18,6 @@
           class="btn btn-outline-success btn-rounded"
           style="margin-right: 5px"
           (click)="onSubmit()"
-          *ngIf="!isEdit"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,17 +34,6 @@
           </svg>
           Abrir ciclo
         </button>
-        <button
-          *ngIf="isEdit"
-          type="button"
-          class="btn btn-outline-warning btn-rounded"
-          style="margin-right: 5px"
-          (click)="onSubmit()"
-        >
-          <i class="bi bi-pencil-square"></i>
-          Cerrar ciclo
-        </button>
-
         <button
           type="button"
           class="btn btn-outline-dark btn-rounded"
@@ -85,7 +73,7 @@
             <div class="col-sm-4 col-12">
               <div class="mb-3">
                 <label for="startDate" class="form-label"
-                  >Fecha de expiración</label
+                  ><span class="text-red">*</span>Fecha de expiración</label
                 >
                 <div class="input-group">
                   <input
@@ -102,13 +90,19 @@
                     type="button"
                   ></button>
                 </div>
+                <gpa-validator-message
+                  [control]="cycleForm.get('startDate')"
+                  [touched]="cycleForm.touched"
+                  validation="required"
+                  message="La fecha de inicio es requerida"
+                />
               </div>
             </div>
 
             <div class="col-sm-4 col-12">
               <div class="mb-3">
                 <label for="endDate" class="form-label"
-                  >Fecha de expiración</label
+                  ><span class="text-red">*</span>Fecha de expiración</label
                 >
                 <div class="input-group">
                   <input
@@ -125,13 +119,19 @@
                     type="button"
                   ></button>
                 </div>
+                <gpa-validator-message
+                  [control]="cycleForm.get('startDate')"
+                  [touched]="cycleForm.touched"
+                  validation="required"
+                  message="La fecha final es requerida"
+                />
               </div>
             </div>
 
             <div class="col-sm-12 col-12">
               <div class="mb-2">
                 <label class="form-label"
-                  >Descripcion<span class="text-red">*</span></label
+                  ><span class="text-red">*</span>Nota</label
                 >
                 <textarea
                   rows="4"
@@ -139,6 +139,12 @@
                   formControlName="note"
                 ></textarea>
               </div>
+              <gpa-validator-message
+                [control]="cycleForm.get('startDate')"
+                [touched]="cycleForm.touched"
+                validation="required"
+                message="La nota es requrida"
+              />
             </div>
           </div>
         </form>

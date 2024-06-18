@@ -1,3 +1,5 @@
+import { CycleTypeEnum } from '../../core/models/cycle-type.enum';
+
 export interface StockCycleModel {
   id: string | null;
   note: string | null;
@@ -16,6 +18,6 @@ export interface StockCycleDetailModel {
   stock: number;
   input: number;
   output: number;
-  type: number;
+  type: CycleTypeEnum;
   stockCycleId: string;
 }

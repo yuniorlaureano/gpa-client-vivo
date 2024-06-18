@@ -27,6 +27,10 @@ export class StockCycleService {
     return this.http.post<void>(`${this.url}/open`, model);
   }
 
+  closeStockCycle(id: string): Observable<void> {
+    return this.http.put<void>(`${this.url}/close/${id}`, null);
+  }
+
   updateStockCycle(model: StockCycleModel): Observable<void> {
     return this.http.put<void>(`${this.url}`, model);
   }

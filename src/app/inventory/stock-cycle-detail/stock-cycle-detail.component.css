@@ -1,0 +1,35 @@
+.initial-detail {
+  margin-right: 15px;
+  color: blue;
+  border-right: solid 1px red;
+  padding-right: 10px;
+}
+
+.final-detail {
+  color: green;
+  margin: 0;
+  padding: 0;
+}
+
+.initial-indicator {
+  padding: 10px;
+  background: blue;
+  width: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.final-indicator {
+  padding: 10px;
+  background: green;
+  width: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.invoice-num {
+  text-align: right;
+  padding-top: 50px;
+}

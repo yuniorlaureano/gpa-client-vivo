@@ -13,6 +13,16 @@
         >
           <i class="bi bi-card-list"></i> Listado de ciclos
         </a>
+        <button
+          type="button"
+          *ngIf="isClose()"
+          class="btn btn-outline-warning btn-rounded"
+          style="margin-right: 5px"
+          (click)="closeCycle()"
+        >
+          <i class="bi bi-pencil-square"></i>
+          Cerrar ciclo
+        </button>
         <a
           routerLink="/inventory/stock/cycle"
           class="btn btn-outline-primary btn-rounded"
@@ -33,27 +43,24 @@
           <!-- Row start -->
           <div class="row">
             <div class="col-sm-12 col-12">
-              <div
-                style="
-                  border: solid 1px lightgray;
-                  padding: 6px;
-                  opacity: 0.7;
-                  font-weight: bold;
-                "
-              >
-                <address class="m-0">
-                  Fecha de inicio: {{ stockCycle?.startDate | json }} <br />
-                  Fech ade fin: {{ stockCycle?.endDate | json }} <br />
-                  Estado: {{ stockCycle?.isClose ? "Cerrado" : "Abierto" }}
-                  <br />
-                  Nota:
-                  {{ stockCycle?.note }} <br />
-                </address>
-                <!-- 
-                <div class="invoice-num">
-                  <div>Invoice - #010</div>
-                  <div>January 20th 2022</div>
-                </div> -->
+              <div>
+                <div class="row">
+                  <address class="col-sm-8 col-10">
+                    Fecha de inicio: {{ stockCycle?.cycle?.startDate | json }}
+                    <br />
+                    Fech ade fin: {{ stockCycle?.cycle?.endDate | json }} <br />
+                    Estado:
+                    {{ stockCycle?.cycle?.isClose ? "Cerrado" : "Abierto" }}
+                    <br />
+                    Nota:
+                    {{ stockCycle?.cycle?.note }} <br />
+                  </address>
+
+                  <div class="invoice-num col-sm-4 col-2">
+                    <span class="initial-indicator"></span> Inicial
+                    <span class="final-indicator"></span> Final
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -74,12 +81,45 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let detail of stockCycle?.stockCycleDetails">
-                      <td>{{ detail.productName }}</td>
-                      <td>{{ detail.productPrice | currency }}</td>
-                      <td>{{ detail.input }}</td>
-                      <td>{{ detail.output }}</td>
-                      <td>{{ detail.stock }}</td>
+                    <tr *ngFor="let detail of stockCycle?.detail">
+                      <td>
+                        {{
+                          detail.initial?.productName ||
+                            detail.final?.productName
+                        }}
+                      </td>
+                      <td>
+                        <span class="initial-detail">{{
+                          detail.initial?.productPrice ?? 0 | currency
+                        }}</span>
+                        <span class="final-detail">{{
+                          detail.final?.productPrice ?? 0 | currency
+                        }}</span>
+                      </td>
+                      <td>
+                        <span class="initial-detail">{{
+                          detail.initial?.input ?? 0 | currency
+                        }}</span>
+                        <span class="final-detail">{{
+                          detail.final?.input ?? 0 | currency
+                        }}</span>
+                      </td>
+                      <td>
+                        <span class="initial-detail">{{
+                          detail.initial?.output ?? 0 | currency
+                        }}</span>
+                        <span class="final-detail">{{
+                          detail.final?.output ?? 0 | currency
+                        }}</span>
+                      </td>
+                      <td>
+                        <span class="initial-detail">{{
+                          detail.initial?.stock ?? 0 | currency
+                        }}</span>
+                        <span class="final-detail">{{
+                          detail.final?.stock ?? 0 | currency
+                        }}</span>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
