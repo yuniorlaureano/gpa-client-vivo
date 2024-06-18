@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
+import { ExistenceModel } from '../models/existence.model';
 
 @Component({
   selector: 'gpa-stock-list',
@@ -10,11 +10,11 @@ import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
 export class StockListComponent {
   constructor(private router: Router) {}
 
-  handleEdit(invoice: RawProductCatalogModel) {
+  handleEdit(invoice: ExistenceModel) {
     // this.router.navigate(['/invoice/sale/edit/' + invoice.id]);
   }
 
-  handleDelete(invoice: RawProductCatalogModel) {
+  handleDelete(invoice: ExistenceModel) {
     // this.router.navigate(['/invoice/sale/edit/' + invoice.id]);
   }
 }

@@ -87,12 +87,20 @@
           <div class="row">
             <div class="col-sm-12 col-12">
               <div class="mb-3">
-                <label for="name" class="form-label">Nombre</label>
+                <label for="name" class="form-label"
+                  ><span class="text-red">*</span> Nombre</label
+                >
                 <input
                   type="text"
                   class="form-control"
                   id="name"
                   formControlName="name"
+                />
+                <gpa-validator-message
+                  [control]="categoryForm.get('name')"
+                  [touched]="categoryForm.touched"
+                  validation="required"
+                  message="El nombre el requerido"
                 />
               </div>
             </div>

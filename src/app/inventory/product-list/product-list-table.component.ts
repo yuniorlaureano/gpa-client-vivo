@@ -12,6 +12,7 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProductModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
+import { ProductType } from '../../core/models/product-type.enum';
 
 @Component({
   selector: 'gpa-product-list-table',
@@ -67,6 +68,15 @@ export class ProductListTableComponent {
           };
         },
       });
+  }
+
+  getTypeLabel(type: ProductType) {
+    switch (type) {
+      case ProductType.FinishedProduct:
+        return 'Prodocto terminado';
+      case ProductType.RawProduct:
+        return 'Materia prima';
+    }
   }
 
   handleEdit(model: ProductModel) {

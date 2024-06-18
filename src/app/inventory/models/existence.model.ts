@@ -1,5 +1,5 @@
 import { ProductType } from '../../core/models/product-type.enum';
-export interface RawProductCatalogModel {
+export interface ExistenceModel {
   stock: number;
   input: number;
   output: number;

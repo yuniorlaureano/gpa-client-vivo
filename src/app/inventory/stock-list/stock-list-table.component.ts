@@ -11,7 +11,7 @@ import { SearchModel } from '../../core/models/search.model';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { StockService } from '../service/stock.service';
-import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
+import { ExistenceModel } from '../models/existence.model';
 
 @Component({
   selector: 'gpa-stock-list-table',
@@ -19,8 +19,8 @@ import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
   styleUrl: './stock-list-table.component.css',
 })
 export class StockListTableComponent {
-  @Output() onDelete = new EventEmitter<RawProductCatalogModel>();
-  @Output() onEdit = new EventEmitter<RawProductCatalogModel>();
+  @Output() onDelete = new EventEmitter<ExistenceModel>();
+  @Output() onEdit = new EventEmitter<ExistenceModel>();
   @Input() reloadTable: number = 1;
 
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
@@ -28,7 +28,7 @@ export class StockListTableComponent {
     page: 1,
     pageSize: 10,
   });
-  public data: DataTableDataModel<RawProductCatalogModel> = {
+  public data: DataTableDataModel<ExistenceModel> = {
     data: [],
     options: {
       ...DEFAULT_SEARCH_PARAMS,
@@ -48,7 +48,7 @@ export class StockListTableComponent {
         switchMap((search) => {
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
-          return this.stockService.getProductCatalog(searchModel);
+          return this.stockService.getExistence(searchModel);
         })
       )
       .subscribe({
@@ -70,11 +70,11 @@ export class StockListTableComponent {
       });
   }
 
-  handleEdit(model: RawProductCatalogModel) {
+  handleEdit(model: ExistenceModel) {
     this.onEdit.emit(model);
   }
 
-  handleDelete(model: RawProductCatalogModel) {
+  handleDelete(model: ExistenceModel) {
     this.onDelete.emit(model);
   }
 

@@ -10,7 +10,7 @@ import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { SearchModel } from '../models/search.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { StockService } from '../../inventory/service/stock.service';
-import { RawProductCatalogModel } from '../../inventory/models/raw-product-catalog.model';
+import { ProductCatalogModel } from '../../inventory/models/product-catalog.model';
 
 @Component({
   selector: 'gpa-stock-product-catalog',
@@ -18,17 +18,17 @@ import { RawProductCatalogModel } from '../../inventory/models/raw-product-catal
   styleUrl: './stock-product-catalog.component.css',
 })
 export class StockProductCatalogComponent implements OnInit, OnDestroy {
-  @Input() selectedProducts: { [key: string]: RawProductCatalogModel } = {};
+  @Input() selectedProducts: { [key: string]: ProductCatalogModel } = {};
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() onSelectedProduct = new EventEmitter<RawProductCatalogModel>();
+  @Output() onSelectedProduct = new EventEmitter<ProductCatalogModel>();
   productSubscription!: Subscription;
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,
     pageSize: 10,
   });
-  products!: RawProductCatalogModel[];
+  products!: ProductCatalogModel[];
   options: SearchOptionsModel = {
     count: 0,
     page: 1,
@@ -74,7 +74,7 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleSelectedProductFromCatalog(product: RawProductCatalogModel) {
+  handleSelectedProductFromCatalog(product: ProductCatalogModel) {
     this.onSelectedProduct.emit(product);
   }
 

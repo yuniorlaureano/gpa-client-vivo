@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
+import { ProductCatalogModel } from '../models/product-catalog.model';
 import { StockCycleModel } from '../models/stock-cycle.model';
 
 @Component({

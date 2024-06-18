@@ -4,9 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
 import { SearchModel } from '../../core/models/search.model';
-import { RawProductCatalogModel } from '../models/raw-product-catalog.model';
+import { ProductCatalogModel } from '../models/product-catalog.model';
 import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
 import { StockModel } from '../models/stock.model';
+import { ExistenceModel } from '../models/existence.model';
 
 @Injectable()
 export class StockService {
@@ -27,9 +28,17 @@ export class StockService {
 
   getProductCatalog(
     search: SearchModel | null = null
-  ): Observable<ResponseModel<RawProductCatalogModel>> {
-    return this.http.get<ResponseModel<RawProductCatalogModel>>(
+  ): Observable<ResponseModel<ProductCatalogModel>> {
+    return this.http.get<ResponseModel<ProductCatalogModel>>(
       `${this.url}/products${search ? search.asQueryString() : ''}`
+    );
+  }
+
+  getExistence(
+    search: SearchModel | null = null
+  ): Observable<ResponseModel<ExistenceModel>> {
+    return this.http.get<ResponseModel<ExistenceModel>>(
+      `${this.url}/existance${search ? search.asQueryString() : ''}`
     );
   }
 

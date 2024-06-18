@@ -12,6 +12,7 @@
     <th>Precio</th>
     <th>Categoría</th>
     <th>Unidad</th>
+    <th>Tipo</th>
     <!-- <th></th> -->
   </tr>
   <tbody body>
@@ -22,7 +23,7 @@
       <td>{{ product.price }}</td>
       <td>{{ product.category }}</td>
       <td>{{ product.unit }}</td>
-      <td>{{ product.description }}</td>
+      <td>{{ getTypeLabel(product.type) }}</td>
       <td style="width: 100px">
         <button
           class="btn btn-outline-danger btn-icon"

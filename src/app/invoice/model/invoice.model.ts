@@ -1,6 +1,6 @@
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { SaleType } from '../../core/models/sale-type.enum';
-import { RawProductCatalogModel } from '../../inventory/models/raw-product-catalog.model';
+import { ProductCatalogModel } from '../../inventory/models/product-catalog.model';
 import { ClientModel } from './client.model';
 
 export interface InvoiceModel {
@@ -20,5 +20,5 @@ export interface InvoiceDetailModel {
   price: number;
   quantity: number;
   productId: string;
-  stockProduct: RawProductCatalogModel | null;
+  stockProduct: ProductCatalogModel | null;
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RawProductCatalogModel } from '../../inventory/models/raw-product-catalog.model';
+import { ProductCatalogModel } from '../../inventory/models/product-catalog.model';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ClientModel } from '../model/client.model';
 import { SaleType } from '../../core/models/sale-type.enum';
@@ -23,7 +23,7 @@ export class SaleComponent implements OnInit {
   client: ClientModel | null = null;
   isProductCatalogVisible: boolean = false;
   isClientCatalogVisible: boolean = false;
-  selectedProducts: { [key: string]: RawProductCatalogModel } = {};
+  selectedProducts: { [key: string]: ProductCatalogModel } = {};
   productCatalogAggregate: {
     totalPrice: number;
     totalQuantity: number;
@@ -81,7 +81,7 @@ export class SaleComponent implements OnInit {
     }
   }
 
-  handleSelectedProductFromCatalog(product: RawProductCatalogModel) {
+  handleSelectedProductFromCatalog(product: ProductCatalogModel) {
     if (!this.selectedProducts[product.productCode]) {
       this.selectedProducts[product.productCode] = product;
       this.invoiceDetails?.push(this.newProduct(product));
@@ -118,7 +118,7 @@ export class SaleComponent implements OnInit {
     }
   }
 
-  newProduct(product: RawProductCatalogModel) {
+  newProduct(product: ProductCatalogModel) {
     return this.formBuilder.group({
       productCode: [product.productCode, Validators.required],
       price: [product.price, Validators.required],
