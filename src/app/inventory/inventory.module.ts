@@ -10,9 +10,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicSelectComponent } from '../core/dynamic-search/dynamic-search.component';
 import { ProviderDynamicSearchComponent } from './provider-dynamic-search/provider-dynamic-search.component';
 import { CoreModule } from '../core/core.module';
-import { StockListComponent } from './stock-list/stock-list.component';
+import { ExistenceListComponent } from './existence/existence-list.component';
 import { DataTableComponent } from '../core/datatable/data-table.component';
-import { StockListTableComponent } from './stock-list/stock-list-table.component';
+import { ExistenceListTableComponent } from './existence/existence-list-table.component';
 import { TransactionListComponent } from './transaction/transaction-list.component';
 import { TransactionListTableComponent } from './transaction/transaction-list-table.component';
 import { CategoryListTableComponent } from './category-list/category-list-table.component';
@@ -31,8 +31,8 @@ import { StockCycleListTableComponent } from './stock-cycle-list/stock-cycle-lis
     CategoryComponent,
     StockEntryComponent,
     ProviderDynamicSearchComponent,
-    StockListTableComponent,
-    StockListComponent,
+    ExistenceListTableComponent,
+    ExistenceListComponent,
     TransactionListComponent,
     TransactionListTableComponent,
     CategoryListTableComponent,

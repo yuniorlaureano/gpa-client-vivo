@@ -4,7 +4,7 @@ import { ProductComponent } from './product/product.component';
 import { AdminTemplateComponent } from '../core/admin-template/admin-template.component';
 import { CategoryComponent } from './category/category.component';
 import { StockEntryComponent } from './stock-entry/stock-entry.component';
-import { StockListComponent } from './stock-list/stock-list.component';
+import { ExistenceListComponent } from './existence/existence-list.component';
 import { TransactionListComponent } from './transaction/transaction-list.component';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { ProductListComponent } from './product-list/product-list.component';
@@ -26,14 +26,14 @@ const routes: Routes = [
         component: CategoryListComponent,
       },
       { path: 'category/:id', component: CategoryComponent },
-      { path: 'stock/list', component: StockListComponent },
-      { path: 'stock/master/list', component: TransactionListComponent },
+      { path: 'existence/list', component: ExistenceListComponent },
+      { path: 'transaction/list', component: TransactionListComponent },
       {
-        path: 'manufactured-product-entry',
+        path: 'transaction',
         component: StockEntryComponent,
       },
       {
-        path: 'manufactured-product-entry/edit/:id',
+        path: 'transaction/edit/:id',
         component: StockEntryComponent,
       },
       {

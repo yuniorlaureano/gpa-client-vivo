@@ -11,9 +11,7 @@ export class TransactionListComponent {
   constructor(private router: Router) {}
 
   handleEdit(stock: StockModel) {
-    this.router.navigate([
-      '/inventory/manufactured-product-entry/edit/' + stock.id,
-    ]);
+    this.router.navigate(['/inventory/transaction/edit/' + stock.id]);
   }
 
   handleDelete(stock: StockModel) {

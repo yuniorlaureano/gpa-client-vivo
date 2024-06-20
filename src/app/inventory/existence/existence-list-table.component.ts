@@ -14,11 +14,11 @@ import { StockService } from '../service/stock.service';
 import { ExistenceModel } from '../models/existence.model';
 
 @Component({
-  selector: 'gpa-stock-list-table',
-  templateUrl: './stock-list-table.component.html',
-  styleUrl: './stock-list-table.component.css',
+  selector: 'gpa-existence-list-table',
+  templateUrl: './existence-list-table.component.html',
+  styleUrl: './existence-list-table.component.css',
 })
-export class StockListTableComponent {
+export class ExistenceListTableComponent {
   @Output() onDelete = new EventEmitter<ExistenceModel>();
   @Output() onEdit = new EventEmitter<ExistenceModel>();
   @Input() reloadTable: number = 1;

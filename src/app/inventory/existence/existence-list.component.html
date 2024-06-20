@@ -7,14 +7,14 @@
       </div>
       <div class="right-button">
         <a
-          routerLink="/inventory/stock/master/list"
+          routerLink="/inventory/transaction/list"
           class="btn btn-outline-info btn-rounded"
           style="margin-right: 5px"
         >
           <i class="bi bi-list"></i> Transaccioens
         </a>
         <a
-          routerLink="/inventory/manufactured-product-entry"
+          routerLink="/inventory/transaction"
           class="btn btn-outline-primary btn-rounded"
           style="margin-right: 5px"
         >
@@ -24,7 +24,7 @@
     </div>
   </div>
 </div>
-<gpa-stock-list-table
+<gpa-existence-list-table
   (onDelete)="handleDelete($event)"
   (onEdit)="handleEdit($event)"
-></gpa-stock-list-table>
+></gpa-existence-list-table>

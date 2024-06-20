@@ -317,7 +317,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     this.selectedProvider = null;
     this.isEdit = false;
     this.disableForm(false);
-    this.router.navigate(['/inventory/manufactured-product-entry']);
+    this.router.navigate(['/inventory/transaction']);
   };
 
   mapStockToForm(stockDetails: StockDetailsModel[]) {

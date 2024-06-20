@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { ExistenceModel } from '../models/existence.model';
 
 @Component({
-  selector: 'gpa-stock-list',
-  templateUrl: './stock-list.component.html',
-  styleUrl: './stock-list.component.css',
+  selector: 'gpa-existence-list',
+  templateUrl: './existence-list.component.html',
+  styleUrl: './existence-list.component.css',
 })
-export class StockListComponent {
+export class ExistenceListComponent {
   constructor(private router: Router) {}
 
   handleEdit(invoice: ExistenceModel) {
