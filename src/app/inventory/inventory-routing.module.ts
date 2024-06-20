@@ -5,7 +5,7 @@ import { AdminTemplateComponent } from '../core/admin-template/admin-template.co
 import { CategoryComponent } from './category/category.component';
 import { StockEntryComponent } from './stock-entry/stock-entry.component';
 import { StockListComponent } from './stock-list/stock-list.component';
-import { StockMasterListComponent } from './stock-master-list/stock-master-list.component';
+import { TransactionListComponent } from './transaction/transaction-list.component';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { StockCycleComponent } from './stock-cycle/stock-cycle.component';
@@ -27,7 +27,7 @@ const routes: Routes = [
       },
       { path: 'category/:id', component: CategoryComponent },
       { path: 'stock/list', component: StockListComponent },
-      { path: 'stock/master/list', component: StockMasterListComponent },
+      { path: 'stock/master/list', component: TransactionListComponent },
       {
         path: 'manufactured-product-entry',
         component: StockEntryComponent,

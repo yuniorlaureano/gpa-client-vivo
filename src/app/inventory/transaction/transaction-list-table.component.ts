@@ -15,11 +15,11 @@ import { StockModel } from '../models/stock.model';
 import { StockStatusEnum } from '../../core/models/stock-status.enum';
 
 @Component({
-  selector: 'gpa-stock-master-list-table',
-  templateUrl: './stock-master-list-table.component.html',
-  styleUrl: './stock-master-list-table.component.css',
+  selector: 'gpa-transaction-list-table',
+  templateUrl: './transaction-list-table.component.html',
+  styleUrl: './transaction-list-table.component.css',
 })
-export class StockMasterListTableComponent {
+export class TransactionListTableComponent {
   @Output() onDelete = new EventEmitter<StockModel>();
   @Output() onEdit = new EventEmitter<StockModel>();
   @Input() reloadTable: number = 1;

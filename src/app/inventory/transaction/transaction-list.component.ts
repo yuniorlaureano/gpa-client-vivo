@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { StockModel } from '../models/stock.model';
 
 @Component({
-  selector: 'gpa-stock-master-list',
-  templateUrl: './stock-master-list.component.html',
-  styleUrl: './stock-master-list.component.css',
+  selector: 'gpa-transaction-list',
+  templateUrl: './transaction-list.component.html',
+  styleUrl: './transaction-list.component.css',
 })
-export class StockMasterListComponent {
+export class TransactionListComponent {
   constructor(private router: Router) {}
 
   handleEdit(stock: StockModel) {

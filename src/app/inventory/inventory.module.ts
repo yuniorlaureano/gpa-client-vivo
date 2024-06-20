@@ -13,8 +13,8 @@ import { CoreModule } from '../core/core.module';
 import { StockListComponent } from './stock-list/stock-list.component';
 import { DataTableComponent } from '../core/datatable/data-table.component';
 import { StockListTableComponent } from './stock-list/stock-list-table.component';
-import { StockMasterListComponent } from './stock-master-list/stock-master-list.component';
-import { StockMasterListTableComponent } from './stock-master-list/stock-master-list-table.component';
+import { TransactionListComponent } from './transaction/transaction-list.component';
+import { TransactionListTableComponent } from './transaction/transaction-list-table.component';
 import { CategoryListTableComponent } from './category-list/category-list-table.component';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { ProductListComponent } from './product-list/product-list.component';
@@ -33,8 +33,8 @@ import { StockCycleListTableComponent } from './stock-cycle-list/stock-cycle-lis
     ProviderDynamicSearchComponent,
     StockListTableComponent,
     StockListComponent,
-    StockMasterListComponent,
-    StockMasterListTableComponent,
+    TransactionListComponent,
+    TransactionListTableComponent,
     CategoryListTableComponent,
     CategoryListComponent,
     ProductListComponent,
