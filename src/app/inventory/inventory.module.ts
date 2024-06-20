@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { InventoryRoutingModule } from './inventory-routing.module';
 import { ProductComponent } from './product/product.component';
 import { CategoryComponent } from './category/category.component';
-import { ManufacturedProductEntryComponent } from './manufactured-product-entry/manufactured-product-entry.component';
+import { StockEntryComponent } from './stock-entry/stock-entry.component';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicSelectComponent } from '../core/dynamic-search/dynamic-search.component';
@@ -29,7 +29,7 @@ import { StockCycleListTableComponent } from './stock-cycle-list/stock-cycle-lis
   declarations: [
     ProductComponent,
     CategoryComponent,
-    ManufacturedProductEntryComponent,
+    StockEntryComponent,
     ProviderDynamicSearchComponent,
     StockListTableComponent,
     StockListComponent,

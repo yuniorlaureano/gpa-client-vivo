@@ -17,11 +17,11 @@ import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 
 @Component({
-  selector: 'gpa-manufactured-product-entry',
-  templateUrl: './manufactured-product-entry.component.html',
-  styleUrl: './manufactured-product-entry.component.css',
+  selector: 'gpa-stock-entry',
+  templateUrl: './stock-entry.component.html',
+  styleUrl: './stock-entry.component.css',
 })
-export class ManufacturedProductEntryComponent implements OnInit, OnDestroy {
+export class StockEntryComponent implements OnInit, OnDestroy {
   isEdit = false;
   isFormDisabled: boolean = false;
   selectedProducts: { [key: string]: boolean } = {};

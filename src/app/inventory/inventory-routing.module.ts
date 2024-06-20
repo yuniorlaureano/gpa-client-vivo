@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProductComponent } from './product/product.component';
 import { AdminTemplateComponent } from '../core/admin-template/admin-template.component';
 import { CategoryComponent } from './category/category.component';
-import { ManufacturedProductEntryComponent } from './manufactured-product-entry/manufactured-product-entry.component';
+import { StockEntryComponent } from './stock-entry/stock-entry.component';
 import { StockListComponent } from './stock-list/stock-list.component';
 import { StockMasterListComponent } from './stock-master-list/stock-master-list.component';
 import { CategoryListComponent } from './category-list/category-list.component';
@@ -30,11 +30,11 @@ const routes: Routes = [
       { path: 'stock/master/list', component: StockMasterListComponent },
       {
         path: 'manufactured-product-entry',
-        component: ManufacturedProductEntryComponent,
+        component: StockEntryComponent,
       },
       {
         path: 'manufactured-product-entry/edit/:id',
-        component: ManufacturedProductEntryComponent,
+        component: StockEntryComponent,
       },
       {
         path: 'stock/cycle',
