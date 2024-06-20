@@ -11,6 +11,8 @@ import { SearchModel } from '../models/search.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { ProductService } from '../../inventory/service/product.service';
 import { ProductModel } from '../../inventory/models/product.model';
+import { getProductTypeDescription } from '../utils/product.util';
+import { ProductType } from '../models/product-type.enum';
 
 @Component({
   selector: 'gpa-product-catalog',
@@ -73,6 +75,7 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
       this.pageOptionsSubject.next(this.options);
     }
   }
+  productType = (type: ProductType) => getProductTypeDescription(type);
 
   handleSelectedProductFromCatalog(product: ProductModel) {
     this.onSelectedProduct.emit(product);
