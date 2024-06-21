@@ -11,6 +11,7 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { StockCycleComponent } from './stock-cycle/stock-cycle.component';
 import { StockCycleDetailComponent } from './stock-cycle-detail/stock-cycle-detail.component';
 import { StockCycleListComponent } from './stock-cycle-list/stock-cycle-list.component';
+import { StockOutputComponent } from './stock-output/stock-output.component';
 
 const routes: Routes = [
   {
@@ -29,11 +30,11 @@ const routes: Routes = [
       { path: 'existence/list', component: ExistenceListComponent },
       { path: 'transaction/list', component: TransactionListComponent },
       {
-        path: 'transaction',
+        path: 'entry',
         component: StockEntryComponent,
       },
       {
-        path: 'transaction/edit/:id',
+        path: 'entry/edit/:id',
         component: StockEntryComponent,
       },
       {
@@ -47,6 +48,14 @@ const routes: Routes = [
       {
         path: 'stock/cycle/:id/detail',
         component: StockCycleDetailComponent,
+      },
+      {
+        path: 'output',
+        component: StockOutputComponent,
+      },
+      {
+        path: 'output/edit/:id',
+        component: StockOutputComponent,
       },
     ],
   },

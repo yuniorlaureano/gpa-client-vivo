@@ -22,3 +22,12 @@ export interface InventoryEntryCollectionModel {
   reasonId: string;
   stockDetails: { productId: string; quantity: number }[];
 }
+
+export interface InventoryOutputCollectionModel {
+  id?: string | null;
+  description?: string | null;
+  transactionType: TransactionType;
+  storeId: string | null;
+  reasonId: string;
+  stockDetails: { productId: string; quantity: number }[];
+}

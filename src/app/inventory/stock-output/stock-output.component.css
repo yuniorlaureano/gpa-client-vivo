@@ -1,0 +1,22 @@
+div.card {
+  position: relative;
+}
+
+.product-catalog {
+  position: absolute;
+  padding: 20px;
+  width: 100%;
+  min-height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  background-color: white;
+}
+
+.product-catalog tbody tr {
+  cursor: pointer;
+}
+
+.quantity-error {
+  border: solid 1px red;
+}

@@ -11,7 +11,7 @@ export interface StockModel {
   providerRnc: string;
   storeId: string;
   storeName: string;
-  reasonId: string;
+  reasonId: number;
   reasonName: string;
   stockDetails: StockDetailsModel[];
 }

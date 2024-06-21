@@ -3,12 +3,10 @@ import { map, Observable, of, switchMap } from 'rxjs';
 import { StockService } from '../service/stock.service';
 import { ReasonModel } from '../models/reason.model';
 import { ReasonService } from '../service/reason.service';
-import { ProviderModel } from '../models/provider.model';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ReasonEnum } from '../../core/models/reason.enum';
 import { TransactionType } from '../../core/models/transaction-type.enum';
-import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
-import { SelectModel } from '../../core/models/select-model';
+import { InventoryOutputCollectionModel } from '../models/inventory-entry.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StockDetailsModel } from '../models/stock.model';
 import { ProductModel } from '../models/product.model';
@@ -17,30 +15,26 @@ import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 
 @Component({
-  selector: 'gpa-stock-entry',
-  templateUrl: './stock-entry.component.html',
-  styleUrl: './stock-entry.component.css',
+  selector: 'gpa-stock-output',
+  templateUrl: './stock-output.component.html',
+  styleUrl: './stock-output.component.css',
 })
-export class StockEntryComponent implements OnInit, OnDestroy {
+export class StockOutputComponent implements OnInit, OnDestroy {
   isEdit = false;
   isFormDisabled: boolean = false;
   selectedProducts: { [key: string]: boolean } = {};
   isProductCatalogVisible: boolean = false;
-  selectedProvider: SelectModel<ProviderModel> | null = null;
   productCatalogAggregate: {
-    totalPrice: number;
     totalQuantity: number;
-  } = { totalPrice: 0, totalQuantity: 0 };
+  } = { totalQuantity: 0 };
 
   reasons$!: Observable<ReasonModel[]>;
 
   stockForm = this.formBuilder.group({
     id: [''],
     description: [''],
-    transactionType: [TransactionType.Input, Validators.required],
-    providerId: [''],
+    transactionType: [TransactionType.Output, Validators.required],
     status: [StockStatusEnum.Saved],
-    date: ['', Validators.required],
     storeId: [''],
     reasonId: ['', Validators.required],
     stockDetails: this.formBuilder.array([]),
@@ -64,11 +58,10 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           data.data.filter(
             (reason) =>
               ![
+                ReasonEnum.Purchase,
                 ReasonEnum.Sale,
                 ReasonEnum.Return,
-                ReasonEnum.DamagedProduct,
-                ReasonEnum.ExpiredProduct,
-                ReasonEnum.RawMaterial,
+                ReasonEnum.Manufactured,
               ].includes(reason.id)
           )
         )
@@ -90,14 +83,11 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   }
 
   calculateSelectedProductCatalogAggregate() {
-    let totalPrice = 0;
     let totalQuantity = 0;
     for (let product of this.formProducts.value) {
       totalQuantity += product.quantity;
-      totalPrice += product.quantity * product.price;
     }
     this.productCatalogAggregate = {
-      totalPrice,
       totalQuantity,
     };
   }
@@ -115,21 +105,16 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     if (this.stockForm.valid && this.formProducts.length > 0) {
       const value = {
         ...this.stockForm.value,
-        providerId:
-          this.stockForm.value.providerId == ''
-            ? null
-            : this.stockForm.value.providerId,
         storeId: null,
         stockDetails: this.formProducts.value.map((product: any) => ({
           productId: product.productId,
-          purchasePrice: product.purchasePrice,
           quantity: product.quantity,
         })),
       };
 
       if (this.isEdit) {
         this.stockService
-          .updateInput(<InventoryEntryCollectionModel>value)
+          .updateOutput(<InventoryOutputCollectionModel>value)
           .subscribe({
             next: () => {
               this.clearForm();
@@ -143,7 +128,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       } else {
         value.id = null;
         this.stockService
-          .registerInput(<InventoryEntryCollectionModel>value)
+          .registerOutput(<InventoryOutputCollectionModel>value)
           .subscribe({
             next: () => {
               this.clearForm();
@@ -160,7 +145,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
 
   save() {
     this.confirmService
-      .confirm('Entrada', 'Está seguro de guardar la entrada?')
+      .confirm('Salida', 'Está seguro de guardar la salida?')
       .then(() => {
         this.stockForm.get('status')?.setValue(StockStatusEnum.Saved);
         this.addProducts();
@@ -175,7 +160,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
 
   handleCancelStock() {
     this.confirmService
-      .confirm('Cancelar entrada', 'Está seguro de cancelar la entrada?')
+      .confirm('Cancelar salida', 'Está seguro de cancelar la salida?')
       .then(() => {
         this.cancelStock();
       })
@@ -234,25 +219,10 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     return this.stockForm.get('stockDetails') as FormArray;
   }
 
-  handleSelectedProvider = (model: ProviderModel | null) => {
-    if (model) {
-      this.selectedProvider = {
-        text: model.name + ' ' + model.rnc,
-        value: model,
-      };
-      this.stockForm.get('providerId')?.setValue(model.id);
-    } else {
-      this.selectedProvider = null;
-      this.stockForm.get('providerId')?.setValue(null);
-    }
-  };
-
   newProduct(product: ProductModel) {
     return this.formBuilder.group({
       id: [product.id],
       productCode: [product.code, Validators.required],
-      price: [product.price, Validators.required],
-      purchasePrice: [product.price, Validators.required],
       productName: [product.name, Validators.required],
       productId: [product.id, Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
@@ -280,27 +250,20 @@ export class StockEntryComponent implements OnInit, OnDestroy {
               description: stock.description,
               transactionType: <TransactionType>stock.transactionType,
               status: stock.status,
-              providerId: stock.providerId,
-              date: stock.date,
               storeId: stock.storeId,
               reasonId: stock.reasonId.toString(),
               stockDetails: [],
             });
             this.mapStockToForm(stock.stockDetails);
-            this.selectedProvider = stock.providerName
-              ? {
-                  text: stock.providerName + ' ' + stock.providerRnc,
-                  value: {
-                    id: stock.providerId,
-                    name: stock.providerName,
-                    rnc: stock.providerRnc,
-                  },
-                }
-              : null;
             this.calculateSelectedProductCatalogAggregate();
+
+            var notAValidReason =
+              Number(stock.reasonId) != ReasonEnum.DamagedProduct &&
+              Number(stock.reasonId) != ReasonEnum.ExpiredProduct &&
+              Number(stock.reasonId) != ReasonEnum.RawMaterial;
             this.disableForm(
-              stock.transactionType == TransactionType.Output ||
-                Number(stock.reasonId) == ReasonEnum.Return ||
+              stock.transactionType == TransactionType.Input ||
+                notAValidReason ||
                 stock.status == StockStatusEnum.Saved ||
                 stock.status == StockStatusEnum.Canceled
             );
@@ -316,10 +279,9 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     this.formProducts.clear();
     this.selectedProducts = {};
     this.stockForm.reset({ status: StockStatusEnum.Saved });
-    this.selectedProvider = null;
     this.isEdit = false;
     this.disableForm(false);
-    this.router.navigate(['/inventory/entry']);
+    this.router.navigate(['/inventory/output']);
   };
 
   mapStockToForm(stockDetails: StockDetailsModel[]) {
@@ -328,8 +290,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       this.formProducts.push(
         this.formBuilder.group({
           productCode: [stockDetail.product.code, Validators.required],
-          price: [stockDetail.product.price, Validators.required],
-          purchasePrice: [stockDetail.purchasePrice, Validators.required],
           productName: [stockDetail.product.name, Validators.required],
           productId: [stockDetail.productId, Validators.required],
           quantity: [
@@ -339,13 +299,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         })
       );
     }
-  }
-
-  computePrice(formProduct: any) {
-    return (
-      parseFloat(formProduct.get('quantity').value) *
-      parseFloat(formProduct.get('price').value)
-    );
   }
 
   disableForm(disable: boolean) {

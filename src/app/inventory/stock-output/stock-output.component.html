@@ -1,0 +1,240 @@
+<!-- Row start -->
+<div class="row">
+  <div class="col-12">
+    <div style="display: flex; justify-content: space-between; gap: 15px">
+      <div>
+        <h3>Inventario</h3>
+      </div>
+      <div
+        class="right-button"
+        style="display: flexbox; justify-content: flex-end; gap: 4px"
+      >
+        <a
+          routerLink="/inventory/existence/list"
+          class="btn btn-outline-info btn-rounded"
+          style="margin-right: 5px"
+        >
+          <i class="bi bi-card-list"></i> Existencia
+        </a>
+        <a
+          routerLink="/inventory/transaction/list"
+          class="btn btn-outline-info btn-rounded"
+          style="margin-right: 5px"
+        >
+          <i class="bi bi-card-list"></i> Transacciones
+        </a>
+        <button
+          type="button"
+          class="btn btn-outline-success btn-rounded"
+          [disabled]="isFormDisabled"
+          *ngIf="!isEdit || (isEdit && isDraft())"
+          (click)="save()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-floppy"
+            viewBox="0 0 16 16"
+          >
+            <path d="M11 2H9v3h2z" />
+            <path
+              d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"
+            />
+          </svg>
+          Guardar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-rounded"
+          style="margin-left: 5px"
+          (click)="saveDraft()"
+          *ngIf="!isEdit || isDraft()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-database-add"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0"
+            />
+            <path
+              d="M12.096 6.223A5 5 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.5 4.5 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.5 4.5 0 0 1-.813-.927Q8.378 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.6 4.6 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10q.393 0 .774-.024a4.5 4.5 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777M3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4"
+            />
+          </svg>
+          Guardar como borrador
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-rounded"
+          style="margin-left: 5px"
+          *ngIf="showCancel()"
+          (click)="handleCancelStock()"
+        >
+          <i class="bi bi-x-lg"></i>
+          Canelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-outline-dark btn-rounded"
+          (click)="clearForm()"
+          style="margin-left: 5px"
+        >
+          <i class="bi bi-plus-lg"></i> Nueva
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12 col-12">
+    <!-- Card start -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Salida de inventario</div>
+      </div>
+      <div class="card-body">
+        <!-- Row start -->
+        <form
+          class="row row-cols-sm-auto"
+          [formGroup]="stockForm"
+          #form="ngForm"
+        >
+          <div class="col-12 col-sm-4">
+            <div class="mb-3">
+              <label for="reason" class="form-label"
+                ><span class="text-danger require-sign">*</span>Motivo</label
+              >
+              <select
+                name="reason"
+                class="form-select"
+                formControlName="reasonId"
+              >
+                <option
+                  *ngFor="let reason of reasons$ | async"
+                  value="{{ reason.id }}"
+                >
+                  {{ reason.name }}
+                </option>
+              </select>
+              <gpa-validator-message
+                [control]="stockForm.get('reasonId')"
+                [touched]="stockForm.touched"
+                validation="required"
+                message="El motivo es obligatorio"
+              />
+            </div>
+          </div>
+          <div class="col-12 col-sm-12">
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea
+                formControlName="description"
+                class="form-control"
+              ></textarea>
+            </div>
+          </div>
+          <div class="col-sm-6" *ngIf="isEdit">
+            <label for="status" class="form-label">Estado</label>
+            <div class="input-group">
+              <input
+                class="form-control"
+                disabled
+                [value]="getStatusDescription()"
+              />
+            </div>
+          </div>
+          <div class="col-sm-12 col-12">
+            <div class="mb-3">
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                [disabled]="isFormDisabled"
+                (click)="handleShowProductCatalog(true)"
+              >
+                <i class="bi bi-plus-lg"></i> Producto
+              </button>
+            </div>
+            <div>Cantidad: {{ productCatalogAggregate.totalQuantity }}</div>
+          </div>
+
+          <div class="col-12 col-sm-12">
+            <gpa-validator-message
+              [control]="{ errors: { required: true } }"
+              [touched]="stockForm.touched && formProducts.length == 0"
+              validation="required"
+              message="Debe elegir al menos un producto"
+            />
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="stockDetails">
+                  <tr
+                    *ngFor="
+                      let formProduct of formProducts.controls;
+                      let i = index
+                    "
+                    [formGroupName]="i"
+                  >
+                    <td>{{ formProduct.get("productCode")?.value }}</td>
+                    <td>{{ formProduct.get("productName")?.value }}</td>
+                    <td>
+                      <input
+                        type="number"
+                        class="form-control"
+                        (input)="handleQuantityChange()"
+                        formControlName="quantity"
+                        style="width: 130px"
+                        [class.quantity-error]="
+                          !formProduct.get('quantity')?.valid
+                        "
+                      />
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-rounded"
+                        (click)="
+                          removeProductFromCatalog(
+                            i,
+                            formProduct.get('id')?.value
+                          )
+                        "
+                      >
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+        <!-- Row end -->
+      </div>
+
+      <gpa-product-catalog
+        [(visible)]="isProductCatalogVisible"
+        [selectedProducts]="selectedProducts"
+        (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
+      ></gpa-product-catalog>
+    </div>
+    <!-- Card end -->
+  </div>
+</div>
+<!-- Row end -->

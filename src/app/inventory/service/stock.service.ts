@@ -5,7 +5,10 @@ import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
 import { SearchModel } from '../../core/models/search.model';
 import { ProductCatalogModel } from '../models/product-catalog.model';
-import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
+import {
+  InventoryEntryCollectionModel,
+  InventoryOutputCollectionModel,
+} from '../models/inventory-entry.model';
 import { StockModel } from '../models/stock.model';
 import { ExistenceModel } from '../models/existence.model';
 
@@ -42,12 +45,20 @@ export class StockService {
     );
   }
 
-  addProducts(products: InventoryEntryCollectionModel): Observable<void> {
-    return this.http.post<void>(`${this.url}`, products);
+  registerInput(products: InventoryEntryCollectionModel): Observable<void> {
+    return this.http.post<void>(`${this.url}/input`, products);
   }
 
-  updateProducts(products: InventoryEntryCollectionModel): Observable<void> {
-    return this.http.put<void>(`${this.url}`, products);
+  registerOutput(products: InventoryOutputCollectionModel): Observable<void> {
+    return this.http.post<void>(`${this.url}/output`, products);
+  }
+
+  updateInput(products: InventoryEntryCollectionModel): Observable<void> {
+    return this.http.put<void>(`${this.url}/input`, products);
+  }
+
+  updateOutput(products: InventoryOutputCollectionModel): Observable<void> {
+    return this.http.put<void>(`${this.url}/output`, products);
   }
 
   cancelStock(id: string): Observable<void> {
