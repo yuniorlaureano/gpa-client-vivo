@@ -12,6 +12,8 @@ import { StockCycleComponent } from './stock-cycle/stock-cycle.component';
 import { StockCycleDetailComponent } from './stock-cycle-detail/stock-cycle-detail.component';
 import { StockCycleListComponent } from './stock-cycle-list/stock-cycle-list.component';
 import { StockOutputComponent } from './stock-output/stock-output.component';
+import { AddonComponent } from './addon/addon.component';
+import { AddonListComponent } from './addon-list/addon-list.component';
 
 const routes: Routes = [
   {
@@ -56,6 +58,18 @@ const routes: Routes = [
       {
         path: 'output/edit/:id',
         component: StockOutputComponent,
+      },
+      {
+        path: 'addon',
+        component: AddonComponent,
+      },
+      {
+        path: 'addon/edit/:id',
+        component: AddonComponent,
+      },
+      {
+        path: 'addon/list',
+        component: AddonListComponent,
       },
     ],
   },

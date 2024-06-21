@@ -57,6 +57,15 @@
               </li>
               <li routerLinkActive="active">
                 <a
+                  routerLink="/inventory/addon"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  >Agregados</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
                   routerLink="/inventory/category/list"
                   routerLinkActive="current-page"
                   class="menu-item-list"

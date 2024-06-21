@@ -25,6 +25,9 @@ import { StockCycleDetailComponent } from './stock-cycle-detail/stock-cycle-deta
 import { StockCycleListComponent } from './stock-cycle-list/stock-cycle-list.component';
 import { StockCycleListTableComponent } from './stock-cycle-list/stock-cycle-list-table.component';
 import { StockOutputComponent } from './stock-output/stock-output.component';
+import { AddonComponent } from './addon/addon.component';
+import { AddonListComponent } from './addon-list/addon-list.component';
+import { AddonListTableComponent } from './addon-list/addon-list-table.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import { StockOutputComponent } from './stock-output/stock-output.component';
     StockCycleListComponent,
     StockCycleListTableComponent,
     StockOutputComponent,
+    AddonComponent,
+    AddonListComponent,
+    AddonListTableComponent,
   ],
   imports: [
     CommonModule,

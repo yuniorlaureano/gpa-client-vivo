@@ -253,6 +253,39 @@
                       ></textarea>
                     </div>
                   </div>
+
+                  <div class="col-sm-12 col-12">
+                    <div class="mb-2">
+                      <label class="form-label"
+                        >Agregados<span class="text-red">*</span></label
+                      >
+                      <div formArrayName="addons">
+                        <div
+                          *ngFor="
+                            let credit of this.addonsForm.controls;
+                            let i = index
+                          "
+                          class="form-check"
+                          [formGroupName]="i"
+                        >
+                          <input
+                            type="checkbox"
+                            [id]="credit.get('id')?.value"
+                            formControlName="selected"
+                            [value]="credit.get('selected')?.value"
+                            class="form-check-input"
+                          />
+                          <label
+                            [for]="credit.get('id')?.value"
+                            class="form-check-label"
+                          >
+                            {{ credit.get("concept")?.value }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <!--  -->
                   <div class="col-sm-12 col-12 dropzone-area">
                     <div class="card-border">
