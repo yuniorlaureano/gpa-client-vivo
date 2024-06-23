@@ -13,6 +13,7 @@ export interface StockModel {
   storeName: string;
   reasonId: number;
   reasonName: string;
+  invoiceId: string;
   stockDetails: StockDetailsModel[];
 }
 

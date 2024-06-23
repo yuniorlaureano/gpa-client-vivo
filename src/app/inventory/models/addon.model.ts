@@ -7,3 +7,8 @@ export interface AddonModel {
 }
 
 export type AddonType = 'PERCENTAGE' | 'AMOUNT';
+
+export const AddonTypeConst = {
+  percentage: 'PERCENTAGE',
+  amount: 'AMOUNT',
+};

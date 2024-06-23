@@ -278,17 +278,29 @@
               style="display: flex; flex-direction: column; align-items: end"
             >
               <p>
-                Total a pagar:
-                {{ productCatalogAggregate.totalPrice | currency }}
+                Total a pagar bruto:
+                {{ productCatalogAggregate.grossTotalPrice | currency }}
               </p>
-              <p style="color: red">Descuento: $ 0</p>
+              <p>____________________________</p>
+              <p
+                [class.debit]="concept.isDiscount"
+                [class.credit]="!concept.isDiscount"
+                *ngFor="let concept of concepts"
+              >
+                {{ concept.concept }}: $ {{ concept.total }}
+              </p>
+              <p>____________________________</p>
+              <p>
+                Total a pagar neto:
+                {{ productCatalogAggregate.netTotalPrice | currency }}
+              </p>
               <input
                 type="number"
                 name="payment"
                 [value]="payment"
                 (input)="handlePayment($event)"
                 class="form-control"
-                style="max-width: 200px"
+                style="max-width: 200px; text-align: right"
                 [disabled]="disableForm"
               />
               <p style="color: green">

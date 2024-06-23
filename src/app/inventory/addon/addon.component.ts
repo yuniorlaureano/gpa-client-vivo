@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
 import { AddonService } from '../service/addon.service';
-import { AddonModel, AddonType } from '../models/addon.model';
+import { AddonModel } from '../models/addon.model';
 
 @Component({
   selector: 'gpa-addon',

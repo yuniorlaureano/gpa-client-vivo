@@ -18,6 +18,9 @@ export class TransactionListComponent {
       case ReasonEnum.RawMaterial:
         this.router.navigate(['/inventory/output/edit/' + stock.id]);
         break;
+      case ReasonEnum.Sale:
+        this.router.navigate(['/invoice/sale/edit/' + stock.invoiceId]);
+        break;
       default:
         this.router.navigate(['/inventory/entry/edit/' + stock.id]);
     }

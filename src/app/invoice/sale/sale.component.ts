@@ -10,6 +10,10 @@ import { of, switchMap } from 'rxjs';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
+import {
+  calculateAddonPerConcept,
+  conceptObjectToFlatArray,
+} from '../../core/utils/product.util';
 
 @Component({
   selector: 'gpa-sale',
@@ -24,11 +28,13 @@ export class SaleComponent implements OnInit {
   isProductCatalogVisible: boolean = false;
   isClientCatalogVisible: boolean = false;
   selectedProducts: { [key: string]: ProductCatalogModel } = {};
+  concepts: { concept: string; total: number; isDiscount: boolean }[] = [];
   productCatalogAggregate: {
-    totalPrice: number;
+    grossTotalPrice: number;
+    netTotalPrice: number;
     totalQuantity: number;
     return: number;
-  } = { totalPrice: 0, totalQuantity: 0, return: 0 };
+  } = { grossTotalPrice: 0, netTotalPrice: 0, totalQuantity: 0, return: 0 };
 
   saleForm = this.formBuilder.group({
     id: [''],
@@ -67,18 +73,28 @@ export class SaleComponent implements OnInit {
   calculateSelectedProductCatalogAggregate() {
     let totalPrice = 0;
     let totalQuantity = 0;
+    let concepts: { [id: string]: { isDiscount: boolean; total: number } } = {};
+
     for (let product of this.invoiceDetails.value) {
       totalQuantity += product.quantity;
       totalPrice += product.quantity * product.price;
+      calculateAddonPerConcept(
+        product.quantity * product.price,
+        this.selectedProducts[product.productCode].addons ?? [],
+        concepts
+      );
     }
+
+    const flatConcepts = conceptObjectToFlatArray(concepts);
+    this.concepts = flatConcepts.flatConcepts;
+
     this.productCatalogAggregate = {
-      totalPrice,
+      grossTotalPrice: totalPrice,
+      netTotalPrice: totalPrice - flatConcepts.debit + flatConcepts.credit,
       totalQuantity,
       return: 0,
     };
-    if (!this.isEdit) {
-      this.payment = totalPrice;
-    }
+    this.payment = totalPrice - flatConcepts.debit + flatConcepts.credit;
   }
 
   handleSelectedProductFromCatalog(product: ProductCatalogModel) {
@@ -169,6 +185,7 @@ export class SaleComponent implements OnInit {
           next: () => {
             this.clearForm();
             this.toastService.showSucess('Venta editada');
+            this.calculateSelectedProductCatalogAggregate();
           },
           error: (err) =>
             this.toastService.showError('Error editando venta. ' + err),
@@ -179,6 +196,7 @@ export class SaleComponent implements OnInit {
           next: () => {
             this.clearForm();
             this.toastService.showSucess('Venta creada');
+            this.calculateSelectedProductCatalogAggregate();
           },
           error: (err) =>
             this.toastService.showError('Error creando venta. ' + err),
@@ -210,12 +228,13 @@ export class SaleComponent implements OnInit {
 
   handlePayment(event: any) {
     this.payment = Number(event.target.value);
-    if (this.payment < this.productCatalogAggregate.totalPrice) {
+    if (this.payment < this.productCatalogAggregate.netTotalPrice) {
       this.saleType = SaleType.Credit;
+      this.productCatalogAggregate.return = 0;
     } else {
       this.saleType = SaleType.Cash;
       this.productCatalogAggregate.return =
-        this.payment - this.productCatalogAggregate.totalPrice;
+        this.payment - this.productCatalogAggregate.netTotalPrice;
     }
   }
 
@@ -291,7 +310,6 @@ export class SaleComponent implements OnInit {
   }
 
   setDisable(disable: boolean) {
-    console.log(disable);
     if (disable) {
       this.disableForm = true;
       this.saleForm.disable();

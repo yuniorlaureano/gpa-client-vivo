@@ -20,3 +20,11 @@ div.card {
 .credit-sale-type {
   color: red;
 }
+
+.debit {
+  color: red;
+}
+
+.credit {
+  color: green;
+}

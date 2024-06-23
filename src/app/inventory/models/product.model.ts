@@ -17,5 +17,7 @@ export interface ProductModel {
   category: string;
   productLocationId: string | null;
   productLocation: string;
+  debit: number;
+  credit: number;
   addons: AddonModel[];
 }
