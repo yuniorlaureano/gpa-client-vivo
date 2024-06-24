@@ -14,6 +14,8 @@ import {
   calculateAddonPerConcept,
   conceptObjectToFlatArray,
 } from '../../core/utils/product.util';
+import { ClientService } from '../service/client.service';
+import { getTotalClientFees } from '../../core/utils/client.utils';
 
 @Component({
   selector: 'gpa-sale',
@@ -25,6 +27,7 @@ export class SaleComponent implements OnInit {
   disableForm: boolean = false;
   saleType: SaleType = SaleType.Cash;
   client: ClientModel | null = null;
+  clientFees: { credit: number; debit: number } = { credit: 0, debit: 0 };
   isProductCatalogVisible: boolean = false;
   isClientCatalogVisible: boolean = false;
   selectedProducts: { [key: string]: ProductCatalogModel } = {};
@@ -34,7 +37,14 @@ export class SaleComponent implements OnInit {
     netTotalPrice: number;
     totalQuantity: number;
     return: number;
-  } = { grossTotalPrice: 0, netTotalPrice: 0, totalQuantity: 0, return: 0 };
+    outOfCredit: boolean;
+  } = {
+    grossTotalPrice: 0,
+    netTotalPrice: 0,
+    totalQuantity: 0,
+    return: 0,
+    outOfCredit: false,
+  };
 
   saleForm = this.formBuilder.group({
     id: [''],
@@ -55,7 +65,8 @@ export class SaleComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toastService: ToastService,
-    private confirmService: ConfirmModalService
+    private confirmService: ConfirmModalService,
+    private clientService: ClientService
   ) {}
 
   ngOnInit(): void {
@@ -93,6 +104,7 @@ export class SaleComponent implements OnInit {
       netTotalPrice: totalPrice - flatConcepts.debit + flatConcepts.credit,
       totalQuantity,
       return: 0,
+      outOfCredit: false,
     };
     this.payment = totalPrice - flatConcepts.debit + flatConcepts.credit;
   }
@@ -163,6 +175,10 @@ export class SaleComponent implements OnInit {
   }
 
   addSale() {
+    if (this.productCatalogAggregate.outOfCredit) {
+      this.toastService.showError('No tiene crédito suficiente. Verificar');
+      return;
+    }
     this.saleForm.markAsTouched();
     this.invoiceDetails.markAllAsTouched();
     if (this.saleForm.valid && this.invoiceDetails.length > 0) {
@@ -231,6 +247,9 @@ export class SaleComponent implements OnInit {
     if (this.payment < this.productCatalogAggregate.netTotalPrice) {
       this.saleType = SaleType.Credit;
       this.productCatalogAggregate.return = 0;
+      this.productCatalogAggregate.outOfCredit =
+        this.productCatalogAggregate.netTotalPrice - this.payment >
+        this.clientFees.credit;
     } else {
       this.saleType = SaleType.Cash;
       this.productCatalogAggregate.return =
@@ -270,8 +289,13 @@ export class SaleComponent implements OnInit {
 
   handleSelectedClient(client: ClientModel) {
     this.saleForm.get('clientId')?.setValue(client.id);
-    this.client = client;
     this.isClientCatalogVisible = false;
+    this.clientService.getClientById(client.id).subscribe({
+      next: (data) => {
+        this.client = data;
+        this.clientFees = getTotalClientFees(data);
+      },
+    });
   }
 
   getInvoice() {
@@ -302,6 +326,7 @@ export class SaleComponent implements OnInit {
           this.payment = invoice.payment;
           this.saleType = invoice.type;
           this.client = invoice.client;
+          this.clientFees = getTotalClientFees(invoice.client);
           this.mapProductsToForm(invoice.invoiceDetails);
           this.calculateSelectedProductCatalogAggregate();
           this.setDisable(invoice.status == InvoiceStatusEnum.Canceled);

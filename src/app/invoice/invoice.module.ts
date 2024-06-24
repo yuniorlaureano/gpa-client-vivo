@@ -13,6 +13,9 @@ import { DataTableComponent } from '../core/datatable/data-table.component';
 import { ReceivableAccountComponent } from './receivable-account/receivable-account.component';
 import { ReceivableAccountListComponent } from './receivable-account-list/receivable-account-list.component';
 import { ReceivableAccountListTableComponent } from './receivable-account-list/receivable-account-list-table.component';
+import { ClientComponent } from './client/client.component';
+import { ClientListComponent } from './client-list/client-list.component';
+import { ClientListTableComponent } from './client-list/client-list-table.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +26,9 @@ import { ReceivableAccountListTableComponent } from './receivable-account-list/r
     ReceivableAccountComponent,
     ReceivableAccountListComponent,
     ReceivableAccountListTableComponent,
+    ClientComponent,
+    ClientListComponent,
+    ClientListTableComponent,
   ],
   imports: [
     CommonModule,

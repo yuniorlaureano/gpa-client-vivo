@@ -121,8 +121,27 @@
                 <span style="font-weight: 700">Nombre:</span>
                 {{ client.name }} {{ client.lastName }}
               </p>
-              <p><span style="font-weight: 700">Cédito:</span> 0</p>
-              <p><span style="font-weight: 700">Débito:</span> 0</p>
+              <p>
+                <span style="font-weight: 700">Crédito:</span>
+                {{ this.clientFees.credit }}
+              </p>
+              <div *ngIf="this.clientFees.debit">
+                <p>
+                  <span style="font-weight: 700">Débito:</span>
+                  {{ this.clientFees.debit }}
+                </p>
+                <h5>Cuentas por pagar</h5>
+                <ol>
+                  <li *ngFor="let cl of client.debits">
+                    <a
+                      routerLink="{{
+                        '/invoice/receivable-account/invoice/' + cl.invoiceId
+                      }}"
+                      >Cuenta por cobrar</a
+                    >
+                  </li>
+                </ol>
+              </div>
             </blockquote>
           </div>
           <div class="col-12 col-sm-12">
@@ -182,9 +201,22 @@
               ></textarea>
             </div>
           </div>
-          <h6 [class.credit-sale-type]="this.saleType == 0">
-            {{ this.saleType == 1 ? "Venta al contado" : "Venta a crédito" }}
+          <h6 [class.credit-sale-type]="saleType == 0">
+            {{ saleType == 1 ? "Venta al contado" : "Venta a crédito" }}
           </h6>
+          <div
+            class="alert alert-danger col-12 col-sm-12"
+            role="alert"
+            *ngIf="productCatalogAggregate.outOfCredit"
+          >
+            <ul>
+              <li>No tiene crédito suficiente.</li>
+              <li>Crédito disponible: {{ clientFees.credit }}</li>
+              <li>
+                Débito: {{ productCatalogAggregate.netTotalPrice - payment }}
+              </li>
+            </ul>
+          </div>
           <div
             class="col-sm-12"
             style="display: flex; flex-direction: column; align-items: end"
@@ -303,6 +335,12 @@
                 style="max-width: 200px; text-align: right"
                 [disabled]="disableForm"
               />
+              <p
+                style="color: red"
+                *ngIf="productCatalogAggregate.netTotalPrice - payment >= 0"
+              >
+                Adeuda: {{ productCatalogAggregate.netTotalPrice - payment }}
+              </p>
               <p style="color: green">
                 Devuelta: {{ productCatalogAggregate.return | currency }}
               </p>

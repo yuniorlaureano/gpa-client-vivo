@@ -18,4 +18,16 @@ export class ClientService {
       `${this.url}${search ? search.asQueryString() : ''}`
     );
   }
+
+  getClientById(id: string): Observable<ClientModel> {
+    return this.http.get<ClientModel>(`${this.url}/${id}`);
+  }
+
+  addClient(model: ClientModel): Observable<void> {
+    return this.http.post<void>(`${this.url}`, model);
+  }
+
+  updateClient(model: ClientModel): Observable<void> {
+    return this.http.put<void>(`${this.url}`, model);
+  }
 }

@@ -148,10 +148,24 @@
               </li>
               <li routerLinkActive="active">
                 <a
-                  routerLink="/invoice/purchase"
+                  routerLink="/invoice/client"
                   routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
                   class="menu-item-list"
-                  >Compra</a
+                >
+                  <i class="bi bi-pencil" style="font-size: 15px"></i>
+                  Cliente</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/invoice/client/list"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                >
+                  <i class="bi bi-pencil" style="font-size: 15px"></i>Listado de
+                  clientes</a
                 >
               </li>
             </ul>

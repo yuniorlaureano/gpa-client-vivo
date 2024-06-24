@@ -25,7 +25,7 @@
       <td>{{ invoice.type == 1 ? "Al contado" : "A crédito" }}</td>
       <td>{{ invoice.date | json }}</td>
       <td>{{ invoice.note }}</td>
-      <td>{{ invoice.clientId }}</td>
+      <td>{{ invoice.client?.name + " " + invoice.client?.lastName }}</td>
       <td style="width: 100px">
         <button
           class="btn btn-outline-danger btn-icon"
