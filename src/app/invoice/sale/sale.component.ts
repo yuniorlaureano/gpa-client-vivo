@@ -24,6 +24,7 @@ import { getTotalClientFees } from '../../core/utils/client.utils';
 })
 export class SaleComponent implements OnInit {
   payment: number = 0;
+  paymentValue: number = 0;
   disableForm: boolean = false;
   saleType: SaleType = SaleType.Cash;
   client: ClientModel | null = null;
@@ -106,7 +107,11 @@ export class SaleComponent implements OnInit {
       return: 0,
       outOfCredit: false,
     };
-    this.payment = totalPrice - flatConcepts.debit + flatConcepts.credit;
+
+    if (!this.isEdit) {
+      this.payment = totalPrice - flatConcepts.debit + flatConcepts.credit;
+      this.paymentValue = totalPrice - flatConcepts.debit + flatConcepts.credit;
+    }
   }
 
   handleSelectedProductFromCatalog(product: ProductCatalogModel) {
@@ -160,6 +165,11 @@ export class SaleComponent implements OnInit {
   }
 
   save() {
+    this.handlePayment({ target: { value: this.getPayment() } });
+    if (this.productCatalogAggregate.outOfCredit) {
+      this.toastService.showError('No tiene crédito suficiente. Verificar');
+      return;
+    }
     this.confirmService
       .confirm('Venta', 'Está seguro de realizar la venta?')
       .then(() => {
@@ -175,50 +185,64 @@ export class SaleComponent implements OnInit {
   }
 
   addSale() {
-    if (this.productCatalogAggregate.outOfCredit) {
-      this.toastService.showError('No tiene crédito suficiente. Verificar');
-      return;
-    }
     this.saleForm.markAsTouched();
     this.invoiceDetails.markAllAsTouched();
-    if (this.saleForm.valid && this.invoiceDetails.length > 0) {
-      const value = {
-        ...this.saleForm.value,
-        storeId: null,
-        client: null,
-        type: this.saleType,
-        payment: this.payment,
-        invoiceDetails: this.invoiceDetails.value.map((product: any) => ({
-          id: product.id,
-          productId: product.productId,
-          quantity: product.quantity,
-          price: product.price,
-        })),
-      };
 
+    if (this.saleForm.valid && this.invoiceDetails.length > 0) {
+      const value = this.getValue();
       if (this.isEdit) {
-        this.invoiceService.updateInvoice(<InvoiceModel>value).subscribe({
-          next: () => {
-            this.clearForm();
-            this.toastService.showSucess('Venta editada');
-            this.calculateSelectedProductCatalogAggregate();
-          },
-          error: (err) =>
-            this.toastService.showError('Error editando venta. ' + err),
-        });
+        this.updateInvoice(value);
       } else {
-        value.id = null;
-        this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
-          next: () => {
-            this.clearForm();
-            this.toastService.showSucess('Venta creada');
-            this.calculateSelectedProductCatalogAggregate();
-          },
-          error: (err) =>
-            this.toastService.showError('Error creando venta. ' + err),
-        });
+        this.addInvoice(value);
       }
     }
+  }
+
+  addInvoice(value: InvoiceModel) {
+    value.id = null;
+    this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
+      next: (data) => {
+        this.router.navigate(['/invoice/sale/edit/' + data.id]);
+        this.toastService.showSucess('Venta creada');
+        this.calculateSelectedProductCatalogAggregate();
+      },
+      error: (err) =>
+        this.toastService.showError('Error creando venta. ' + err),
+    });
+  }
+
+  updateInvoice(value: InvoiceModel) {
+    this.invoiceService.updateInvoice(value).subscribe({
+      next: () => {
+        this.router.navigate(['/invoice/sale/edit/' + value.id]);
+        this.toastService.showSucess('Venta editada');
+        this.calculateSelectedProductCatalogAggregate();
+      },
+      error: (err) =>
+        this.toastService.showError('Error editando venta. ' + err),
+    });
+  }
+
+  getValue() {
+    return {
+      ...this.saleForm.value,
+      storeId: null,
+      client: null,
+      type: this.saleType,
+      payment: this.getPayment(),
+      invoiceDetails: this.invoiceDetails.value.map((product: any) => ({
+        id: product.id,
+        productId: product.productId,
+        quantity: product.quantity,
+        price: product.price,
+      })),
+    } as InvoiceModel;
+  }
+
+  getPayment() {
+    return this.payment > this.productCatalogAggregate.netTotalPrice
+      ? this.productCatalogAggregate.netTotalPrice
+      : this.payment;
   }
 
   handleCancelInvoice() {
@@ -247,14 +271,19 @@ export class SaleComponent implements OnInit {
     if (this.payment < this.productCatalogAggregate.netTotalPrice) {
       this.saleType = SaleType.Credit;
       this.productCatalogAggregate.return = 0;
-      this.productCatalogAggregate.outOfCredit =
-        this.productCatalogAggregate.netTotalPrice - this.payment >
-        this.clientFees.credit;
+      this.setOutOfCredit();
     } else {
+      this.setOutOfCredit();
       this.saleType = SaleType.Cash;
       this.productCatalogAggregate.return =
         this.payment - this.productCatalogAggregate.netTotalPrice;
     }
+  }
+
+  setOutOfCredit() {
+    this.productCatalogAggregate.outOfCredit =
+      this.productCatalogAggregate.netTotalPrice - this.payment >
+      this.clientFees.credit;
   }
 
   clearForm = () => {
@@ -267,8 +296,8 @@ export class SaleComponent implements OnInit {
     });
     this.client = null;
     this.payment = 0;
+    this.paymentValue = 0;
     this.setDisable(false);
-    this.router.navigate(['/invoice/sale']);
   };
 
   isDraft() {
@@ -324,6 +353,7 @@ export class SaleComponent implements OnInit {
             invoiceDetails: [],
           });
           this.payment = invoice.payment;
+          this.paymentValue = invoice.payment;
           this.saleType = invoice.type;
           this.client = invoice.client;
           this.clientFees = getTotalClientFees(invoice.client);
@@ -355,12 +385,12 @@ export class SaleComponent implements OnInit {
               product.stockProduct.productCode,
               Validators.required,
             ],
-            price: [product.price, Validators.required],
+            price: [product.stockProduct.price, Validators.required],
             productName: [
               product.stockProduct.productName,
               Validators.required,
             ],
-            productId: [product.productId, Validators.required],
+            productId: [product.stockProduct.productId, Validators.required],
             quantity: [
               product.quantity,
               [

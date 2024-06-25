@@ -23,8 +23,8 @@ export class InvoiceService {
     return this.http.get<InvoiceModel>(`${this.url}/${id}`);
   }
 
-  addInvoice(model: InvoiceModel): Observable<void> {
-    return this.http.post<void>(this.url, model);
+  addInvoice(model: InvoiceModel): Observable<InvoiceModel> {
+    return this.http.post<InvoiceModel>(this.url, model);
   }
 
   updateInvoice(model: InvoiceModel): Observable<void> {
