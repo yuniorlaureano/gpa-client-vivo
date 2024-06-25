@@ -48,9 +48,7 @@ export class StockCycleDetailComponent implements OnInit {
         this.stockCycleService.closeStockCycle(this.cycleId!).subscribe({
           next: () => {
             this.toast.showSucess('Cicle cerrado');
-            this.router.navigate([
-              'inventory/stock/cycle/' + this.cycleId + '/detail',
-            ]);
+            this.loadCycle();
           },
         });
       })

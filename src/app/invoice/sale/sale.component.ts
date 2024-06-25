@@ -286,6 +286,11 @@ export class SaleComponent implements OnInit {
       this.clientFees.credit;
   }
 
+  handleNew() {
+    this.clearForm();
+    this.router.navigate(['/invoice/sale']);
+  }
+
   clearForm = () => {
     this.isEdit = false;
     this.invoiceDetails.clear();
