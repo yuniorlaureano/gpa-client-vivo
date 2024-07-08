@@ -23,6 +23,9 @@ import { ReceivableAccountService } from './invoice/service/receivable-account.s
 import { UnitService } from './common/service/unit.service';
 import { StockCycleService } from './inventory/service/cycle.service';
 import { AddonService } from './inventory/service/addon.service';
+import { UserService } from './security/service/user.service';
+import { ProfileService } from './security/service/profile.service';
+import { PermissionService } from './security/service/permission.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +44,9 @@ import { AddonService } from './inventory/service/addon.service';
     UnitService,
     StockCycleService,
     AddonService,
+    UserService,
+    ProfileService,
+    PermissionService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
   ],
   bootstrap: [AppComponent],

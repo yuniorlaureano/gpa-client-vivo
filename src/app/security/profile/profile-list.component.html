@@ -1,0 +1,73 @@
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let profile of data.data">
+    <div class="row">
+      <div class="col-sm-10">{{ profile.name }}</div>
+      <div class="col-sm-2">
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(profile)"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(profile)"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        <a
+          routerLink="/auth/profiles/permissions/{{ profile.id }}"
+          class="btn btn-outline-primary btn-icon"
+        >
+          <i class="bi bi-plus-lg"></i>
+        </a>
+      </div>
+    </div>
+  </li>
+</ul>
+<select class="btn btn-outline-dark" (change)="handleSetPageToShow($event)">
+  <option value="10">mostrar 10</option>
+  <option value="50">mostrar 50</option>
+  <option value="100">mostrar 100</option>
+</select>
+
+<nav aria-label="Page Navigation">
+  <ul style="display: flex">
+    <li style="flex: 1">
+      mostrando {{ data.options.filteredSize }} de
+      {{ data.options.count }} registros
+    </li>
+    <li class="page-item">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="handleBackwardPage()"
+      >
+        <span aria-hidden="true">
+          <i class="bi bi-arrow-left"></i>
+        </span>
+      </button>
+    </li>
+    <li class="page-item">
+      <select
+        class="btn btn-outline-dark"
+        (change)="handleSetPageToShow($event)"
+      >
+        <option value="10">mostrar 10</option>
+        <option value="50">mostrar 50</option>
+        <option value="100">mostrar 100</option>
+      </select>
+    </li>
+    <li class="page-item">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="handleForwardPage()"
+      >
+        <span aria-hidden="true">
+          <i class="bi bi-arrow-right"></i>
+        </span>
+      </button>
+    </li>
+  </ul>
+</nav>

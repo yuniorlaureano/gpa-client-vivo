@@ -1,0 +1,35 @@
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Nombre</th>
+    <th>Email</th>
+    <th>Usuario</th>
+    <th></th>
+  </tr>
+  <tbody body>
+    <tr *ngFor="let user of data.data">
+      <td>{{ user.firstName + " " + user.lastName }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.userName }}</td>
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(user)"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(user)"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>
