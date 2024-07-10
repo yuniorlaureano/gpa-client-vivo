@@ -97,6 +97,22 @@ export class ProfilePermissionComponent {
   ) {}
   ngOnInit(): void {
     this.loadUser();
+
+    //ToDo: Use this to paint the checkboxes and create the profile
+
+    // let permissions = [];
+    // processProfile(prof, [], permissions);
+    // console.log(permissions);
+
+    // let permissionsAsArrayOfTokens =
+    //   splitPermissionPathsIntoArrayOfTokens(permissions);
+    // console.log(permissionsAsArrayOfTokens);
+
+    // var profile = {};
+    // for (let permissionsAsArrayOfToken of permissionsAsArrayOfTokens) {
+    //   buildProfileObjectFromArrayOfToken(profile, permissionsAsArrayOfToken);
+    // }
+    // console.log(profile);
   }
 
   userForm = this.fb.group({
