@@ -1,3 +1,5 @@
+import { ElementRef } from '@angular/core';
+
 export function processProfile(
   profile: any,
   path: string[] = [],
@@ -67,4 +69,144 @@ export function buildProfileObjectFromArrayOfToken(
       index + 1
     );
   }
+}
+
+function moveOneUlBackward(
+  ul: string[],
+  ulLevel: number[],
+  permissionsAsArrayOfToken: string[]
+) {
+  while (ulLevel[ulLevel.length - 1] != permissionsAsArrayOfToken.length) {
+    ul.push(`</ol>`);
+    ulLevel.pop();
+  }
+}
+function liInput(val: string, id: string) {
+  return `<li>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              id="${id}"
+              class="form-check-input"
+            />
+            <label
+              class="form-check-label"
+              for="${id}"
+              >${val}</label
+            >
+          </div>
+        </li>`;
+}
+
+export function buildProfileUI(permissionsAsArrayOfTokens: string[][]) {
+  let ul = [];
+  let previous = 0;
+  let ulLevel = [];
+  for (let permissionsAsArrayOfToken of permissionsAsArrayOfTokens) {
+    let val = permissionsAsArrayOfToken[permissionsAsArrayOfToken.length - 1];
+    let isAddUlLevel = permissionsAsArrayOfToken.length > previous;
+    let isAddLIInTheSameLevel = permissionsAsArrayOfToken.length == previous;
+
+    if (isAddUlLevel) {
+      ulLevel.push(permissionsAsArrayOfToken.length);
+      ul.push(`<ol style="list-style-type:disclosure-closed">`);
+      ul.push(liInput(val, permissionsAsArrayOfToken.join('|')));
+    } else if (isAddLIInTheSameLevel) {
+      ul.push(liInput(val, permissionsAsArrayOfToken.join('|')));
+    } else {
+      moveOneUlBackward(ul, ulLevel, permissionsAsArrayOfToken);
+      ul.push(`</ol>`);
+      ul.push(`<ol style="list-style-type:disclosure-closed">`);
+      ul.push(liInput(val, permissionsAsArrayOfToken.join('|')));
+    }
+
+    previous = permissionsAsArrayOfToken.length;
+  }
+  for (let i = 0; i < ulLevel.length; i++) {
+    ul.push(`</ol>`);
+  }
+  return ul;
+}
+
+export function GetValueBasedProfile(containerElement: ElementRef) {
+  let valueBasedProfile: any = {};
+  const els = containerElement.nativeElement.querySelectorAll(
+    'input[type="checkbox"]'
+  );
+  els.forEach((el: any) => {
+    if (el.checked) {
+      let profileValues = el.id.split('-');
+      if (valueBasedProfile[profileValues[0]] == undefined)
+        valueBasedProfile[profileValues[0]] = {};
+
+      if (valueBasedProfile[profileValues[0]][profileValues[1]] == undefined)
+        valueBasedProfile[profileValues[0]][profileValues[1]] = {};
+
+      if (
+        valueBasedProfile[profileValues[0]][profileValues[1]][
+          profileValues[2]
+        ] == undefined
+      )
+        valueBasedProfile[profileValues[0]][profileValues[1]][
+          profileValues[2]
+        ] = {};
+
+      if (
+        valueBasedProfile[profileValues[0]][profileValues[1]][profileValues[2]][
+          profileValues[3]
+        ] == undefined
+      )
+        valueBasedProfile[profileValues[0]][profileValues[1]][profileValues[2]][
+          profileValues[3]
+        ] = {};
+    }
+  });
+
+  return valueBasedProfile;
+}
+
+export function buildNewProfile(valueBasedProfile: any) {
+  let newProfile: any[] = [];
+  let apps = Object.keys(valueBasedProfile);
+  for (let app_index = 0; app_index < apps.length; app_index++) {
+    newProfile.push({ app: apps[app_index], modules: [] });
+
+    let modules = Object.keys(valueBasedProfile[apps[app_index]]);
+    for (let module_index = 0; module_index < modules.length; module_index++) {
+      newProfile[app_index].modules.push({
+        id: modules[module_index],
+        components: [],
+      });
+
+      let components = Object.keys(
+        valueBasedProfile[apps[app_index]][modules[module_index]]
+      );
+      for (
+        let component_index = 0;
+        component_index < components.length;
+        component_index++
+      ) {
+        newProfile[app_index].modules[module_index].components.push({
+          id: components[component_index],
+          permissions: [],
+        });
+
+        let permissions = Object.keys(
+          valueBasedProfile[apps[app_index]][modules[module_index]][
+            components[component_index]
+          ]
+        );
+        for (
+          let permission_index = 0;
+          permission_index < permissions.length;
+          permission_index++
+        ) {
+          newProfile[app_index].modules[module_index].components[
+            component_index
+          ].permissions.push(permissions[permission_index]);
+        }
+      }
+    }
+  }
+  return newProfile;
 }

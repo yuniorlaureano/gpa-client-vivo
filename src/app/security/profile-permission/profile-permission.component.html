@@ -81,30 +81,42 @@
       <!-- Comienza row de sergundo nivel! -->
       <div class="row">
         <form [formGroup]="userForm" class="row">
-          <ul>
-            <li *ngFor="let p of masterProfile.modules">
-              <h4>{{ p.id }}</h4>
+          <!-- <div
+            [innerHTML]="profileUI"
+            #profilecontainer
+            id="prifle-container"
+          ></div> -->
+          <ul #profilecontainer>
+            <li *ngFor="let app of masterProfile">
+              <h3>{{ app.app }}</h3>
               <ol style="margin-left: 20px">
-                <li *ngFor="let c of p.components">
-                  <h6>{{ c.id }}</h6>
+                <li *ngFor="let md of app.modules">
+                  <h4>{{ md.id }}</h4>
                   <ul
-                    *ngFor="let pm of c.permissions"
+                    *ngFor="let cp of md.components"
                     style="margin-left: 30px"
                   >
-                    <li>
-                      <div class="form-check">
-                        <input
-                          type="checkbox"
-                          [id]="p.id + '-' + c.id + '-' + pm"
-                          class="form-check-input"
-                        />
-                        <label
-                          class="form-check-label"
-                          [for]="p.id + '-' + c.id + '-' + pm"
-                          >{{ pm }}</label
-                        >
-                      </div>
-                    </li>
+                    <h5>{{ cp.id }}</h5>
+                    <ul>
+                      <li *ngFor="let pm of cp.permissions">
+                        <div class="form-check">
+                          <input
+                            type="checkbox"
+                            [id]="
+                              app.app + '-' + md.id + '-' + cp.id + '-' + pm
+                            "
+                            class="form-check-input"
+                          />
+                          <label
+                            class="form-check-label"
+                            [for]="
+                              app.app + '-' + md.id + '-' + cp.id + '-' + pm
+                            "
+                            >{{ pm }}</label
+                          >
+                        </div>
+                      </li>
+                    </ul>
                   </ul>
                 </li>
               </ol>

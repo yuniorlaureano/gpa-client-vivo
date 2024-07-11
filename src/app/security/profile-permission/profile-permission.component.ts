@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { of, switchMap } from 'rxjs';
 import { PermissionService } from '../service/permission.service';
@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../core/service/toast.service';
 import { UserModel } from '../model/user.model';
 import { ProfileModel } from '../model/profile.model';
+import * as profileUtils from '../../core/utils/profile.utils';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'gpa-profile-permission',
@@ -15,104 +17,121 @@ import { ProfileModel } from '../model/profile.model';
 export class ProfilePermissionComponent {
   isEdit: boolean = false;
   profile: ProfileModel | null = null;
+  permissions: string[] = [];
+  profileUI: any = null;
+  @ViewChild('profilecontainer') profilecontainer!: ElementRef;
 
-  masterProfile = {
-    app: 'GPA',
-    modules: [
-      {
-        id: 'inventory',
-        components: [
-          {
-            id: 'addon',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-          {
-            id: 'category',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-          {
-            id: 'productLocation',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-          {
-            id: 'product',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-          {
-            id: 'provider',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-          {
-            id: 'reason',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-          {
-            id: 'stockCycle',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-          {
-            id: 'stock',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-        ],
-      },
-      {
-        id: 'invoice',
-        components: [
-          {
-            id: 'client',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-          {
-            id: 'invoice',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-          {
-            id: 'receivableAccount',
-            permissions: ['create', 'update', 'delete', 'read'],
-          },
-        ],
-      },
-      {
-        id: 'report',
-        components: [],
-      },
-      {
-        id: 'security',
-        components: [],
-      },
-      {
-        id: 'common',
-        components: [],
-      },
-    ],
-  };
+  masterProfile = [
+    {
+      app: 'GPA',
+      modules: [
+        {
+          id: 'inventory',
+          components: [
+            {
+              id: 'addon',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+            {
+              id: 'category',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+            {
+              id: 'productLocation',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+            {
+              id: 'product',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+            {
+              id: 'provider',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+            {
+              id: 'reason',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+            {
+              id: 'stockCycle',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+            {
+              id: 'stock',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+          ],
+        },
+        {
+          id: 'invoice',
+          components: [
+            {
+              id: 'client',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+            {
+              id: 'invoice',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+            {
+              id: 'receivableAccount',
+              permissions: ['create', 'update', 'delete', 'read'],
+            },
+          ],
+        },
+        {
+          id: 'report',
+          components: [],
+        },
+        {
+          id: 'security',
+          components: [],
+        },
+        {
+          id: 'common',
+          components: [],
+        },
+      ],
+    },
+  ];
 
   constructor(
     private fb: FormBuilder,
     private permissionService: PermissionService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private sanitizer: DomSanitizer
   ) {}
+
+  // ngAfterViewInit() {
+  //   this.profilecontainer.nativeElement.addEventListener(
+  //     'change',
+  //     (event: any) => {
+  //       const lastArray = event.target.id.lastIndexOf(']') + 1;
+  //       const selector = event.target.id.substring(0, lastArray);
+  //       let els = this.profilecontainer.nativeElement.querySelectorAll(
+  //         `[id^="${selector}"]`
+  //       );
+  //       els.forEach((el: any) => {
+  //         if (el != event.target) {
+  //           el.checked = event.target.checked;
+  //         }
+  //       });
+  //     }
+  //   );
+  // }
+
+  saveProfile() {
+    let valueBasedProfile = profileUtils.GetValueBasedProfile(
+      this.profilecontainer
+    );
+    let enwProfile = profileUtils.buildNewProfile(valueBasedProfile);
+    console.log(enwProfile);
+  }
+
   ngOnInit(): void {
     this.loadUser();
-
-    //ToDo: Use this to paint the checkboxes and create the profile
-
-    // let permissions = [];
-    // processProfile(prof, [], permissions);
-    // console.log(permissions);
-
-    // let permissionsAsArrayOfTokens =
-    //   splitPermissionPathsIntoArrayOfTokens(permissions);
-    // console.log(permissionsAsArrayOfTokens);
-
-    // var profile = {};
-    // for (let permissionsAsArrayOfToken of permissionsAsArrayOfTokens) {
-    //   buildProfileObjectFromArrayOfToken(profile, permissionsAsArrayOfToken);
-    // }
-    // console.log(profile);
   }
 
   userForm = this.fb.group({
@@ -124,6 +143,7 @@ export class ProfilePermissionComponent {
   });
 
   onSubmit() {
+    this.saveProfile();
     if (this.userForm.valid) {
       if (!this.isEdit) {
         this.creaUser();
