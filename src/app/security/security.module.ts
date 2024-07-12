@@ -13,6 +13,8 @@ import { UserRegisterComponent } from './user-register/user-register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileListComponent } from './profile/profile-list.component';
 import { ProfilePermissionComponent } from './profile-permission/profile-permission.component';
+import { UserCatalogComponent } from '../core/user-catalog/user-catalog.component';
+import { CoreModule } from '../core/core.module';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { ProfilePermissionComponent } from './profile-permission/profile-permiss
     FormsModule,
     ReactiveFormsModule,
     DataTableComponent,
+    CoreModule,
   ],
 })
 export class SecurityModule {}

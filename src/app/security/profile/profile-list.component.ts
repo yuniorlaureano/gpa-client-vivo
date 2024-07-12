@@ -12,6 +12,7 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProfileModel } from '../model/profile.model';
 import { ProfileService } from '../service/profile.service';
+import { UserModel } from '../model/user.model';
 
 @Component({
   selector: 'gpa-profile-list',
@@ -19,10 +20,16 @@ import { ProfileService } from '../service/profile.service';
   styleUrl: './profile-list.component.css',
 })
 export class ProfileListComponent {
+  isUserCatalogVisible: boolean = false;
+  selectedProfile!: ProfileModel;
   @Input() reloadTable: number = 1;
   @Output() onDelete = new EventEmitter<ProfileModel>();
   @Output() onEdit = new EventEmitter<ProfileModel>();
   @Output() onView = new EventEmitter<ProfileModel>();
+  @Output() onAssignPermission = new EventEmitter<{
+    profile: ProfileModel;
+    user: UserModel;
+  }>();
 
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
@@ -90,6 +97,15 @@ export class ProfileListComponent {
 
   handleView(model: ProfileModel) {
     this.onView.emit(model);
+  }
+
+  handleAddUser(model: ProfileModel) {
+    this.selectedProfile = model;
+    this.isUserCatalogVisible = true;
+  }
+
+  handleSelectedUser(user: UserModel) {
+    this.onAssignPermission.emit({ profile: this.selectedProfile, user: user });
   }
 
   loadProfiles() {

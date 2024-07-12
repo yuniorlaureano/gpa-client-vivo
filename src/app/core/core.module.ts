@@ -21,6 +21,7 @@ import { ConfirmModalService } from './service/confirm-modal.service';
 import { ValidatorMessageComponent } from './validator-message/validator-message.component';
 import { ModalService } from './service/modal.service';
 import { ModalComponent } from './modal/modal.component';
+import { UserCatalogComponent } from './user-catalog/user-catalog.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ModalComponent } from './modal/modal.component';
     ConfirmModalComponent,
     ModalComponent,
     ValidatorMessageComponent,
+    UserCatalogComponent,
   ],
   imports: [CommonModule, RouterModule, NgbToastModule, NgTemplateOutlet],
   providers: [
@@ -55,6 +57,7 @@ import { ModalComponent } from './modal/modal.component';
     InvoiceCatalogComponent,
     ConfirmModalComponent,
     ValidatorMessageComponent,
+    UserCatalogComponent,
   ],
 })
 export class CoreModule {}

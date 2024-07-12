@@ -29,7 +29,7 @@
         </button>
         <button
           class="btn btn-outline-info btn-icon"
-          (click)="handleView(profile)"
+          (click)="handleAddUser(profile)"
         >
           <i class="bi bi-person-plus"></i>
         </button>
@@ -83,3 +83,7 @@
     </li>
   </ul>
 </nav>
+<gpa-user-catalog
+  [(visible)]="isUserCatalogVisible"
+  (onSelectedUser)="handleSelectedUser($event)"
+></gpa-user-catalog>

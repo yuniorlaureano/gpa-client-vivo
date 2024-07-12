@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
 import { ProfileService } from '../service/profile.service';
 import { ProfileModel } from '../model/profile.model';
 import { Profile } from '../../core/models/profile.type';
 import { ModalService } from '../../core/service/modal.service';
+import { UserModel } from '../model/user.model';
+import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 
 @Component({
   selector: 'gpa-profile',
@@ -21,7 +21,8 @@ export class ProfileComponent {
     private fb: FormBuilder,
     private profileService: ProfileService,
     private toastService: ToastService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private confirmService: ConfirmModalService
   ) {}
 
   profileForm = this.fb.group({
@@ -95,6 +96,25 @@ export class ProfileComponent {
       id: model.id,
       name: model.name,
     });
+  }
+
+  handleAssignPermission({
+    profile,
+    user,
+  }: {
+    profile: ProfileModel;
+    user: UserModel;
+  }) {
+    this.confirmService
+      .confirm(
+        'Perfil',
+        'Está seguro de asignar el usuario:\n ' +
+          user.email +
+          ' al perfil: \n ' +
+          profile.name
+      )
+      .then(() => {})
+      .catch(() => {});
   }
 
   handleView(model: ProfileModel) {
