@@ -22,6 +22,7 @@ export class ProfileListComponent {
   @Input() reloadTable: number = 1;
   @Output() onDelete = new EventEmitter<ProfileModel>();
   @Output() onEdit = new EventEmitter<ProfileModel>();
+  @Output() onView = new EventEmitter<ProfileModel>();
 
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
@@ -85,6 +86,10 @@ export class ProfileListComponent {
 
   handleDelete(model: ProfileModel) {
     this.onDelete.emit(model);
+  }
+
+  handleView(model: ProfileModel) {
+    this.onView.emit(model);
   }
 
   loadProfiles() {

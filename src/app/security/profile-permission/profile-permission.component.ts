@@ -1,21 +1,18 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 import { of, switchMap } from 'rxjs';
 import { PermissionService } from '../service/permission.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../core/service/toast.service';
-import { UserModel } from '../model/user.model';
 import { ProfileModel } from '../model/profile.model';
 import * as profileUtils from '../../core/utils/profile.utils';
-import { DomSanitizer } from '@angular/platform-browser';
+import { ProfileService } from '../service/profile.service';
 
 @Component({
   selector: 'gpa-profile-permission',
   templateUrl: './profile-permission.component.html',
   styleUrl: './profile-permission.component.css',
 })
-export class ProfilePermissionComponent {
-  isEdit: boolean = false;
+export class ProfilePermissionComponent implements AfterViewInit {
   profile: ProfileModel | null = null;
   permissions: string[] = [];
   profileUI: any = null;
@@ -96,106 +93,44 @@ export class ProfilePermissionComponent {
   ];
 
   constructor(
-    private fb: FormBuilder,
     private permissionService: PermissionService,
-    private router: Router,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private sanitizer: DomSanitizer
+    private profileService: ProfileService
   ) {}
 
-  // ngAfterViewInit() {
-  //   this.profilecontainer.nativeElement.addEventListener(
-  //     'change',
-  //     (event: any) => {
-  //       const lastArray = event.target.id.lastIndexOf(']') + 1;
-  //       const selector = event.target.id.substring(0, lastArray);
-  //       let els = this.profilecontainer.nativeElement.querySelectorAll(
-  //         `[id^="${selector}"]`
-  //       );
-  //       els.forEach((el: any) => {
-  //         if (el != event.target) {
-  //           el.checked = event.target.checked;
-  //         }
-  //       });
-  //     }
-  //   );
-  // }
+  ngAfterViewInit() {
+    this.loadUser();
+  }
 
-  saveProfile() {
+  getNewProfile() {
     let valueBasedProfile = profileUtils.GetValueBasedProfile(
       this.profilecontainer
     );
     let enwProfile = profileUtils.buildNewProfile(valueBasedProfile);
-    console.log(enwProfile);
+    return enwProfile;
   }
-
-  ngOnInit(): void {
-    this.loadUser();
-  }
-
-  userForm = this.fb.group({
-    id: [''],
-    firstName: ['', Validators.required],
-    lastName: ['', [Validators.required]],
-    email: ['', Validators.required],
-    userName: ['', Validators.required],
-  });
 
   onSubmit() {
-    this.saveProfile();
-    if (this.userForm.valid) {
-      if (!this.isEdit) {
-        this.creaUser();
-      } else {
-        this.upateUser();
-      }
-    } else {
-      this.toastService.showError(
-        'Debe llenar todos los campos del formulario'
-      );
-    }
+    let newProfile = this.getNewProfile();
+    this.creaUser(newProfile);
   }
 
-  creaUser() {
-    this.userForm.get('id')?.setValue(null);
-    const value = {
-      ...this.userForm.value,
+  creaUser(newProfile: any[]) {
+    let updatedProfile = {
+      ...this.profile,
+      value: JSON.stringify(newProfile),
     };
 
-    // this.permissionService.addPermission(value as UserModel).subscribe({
-    //   next: () => {
-    //     this.clearForm();
-    //     this.toastService.showSucess('Usuario agregado');
-    //   },
-    //   error: (err) =>
-    //     this.toastService.showError('Error agregando usuario. ' + err),
-    // });
-  }
-
-  upateUser() {
-    const value = {
-      ...this.userForm.value,
-    };
-
-    // this.permissionService.updateUser(value as UserModel).subscribe({
-    //   next: () => {
-    //     this.clearForm();
-    //     this.toastService.showSucess('Usuario actualizado');
-    //   },
-    //   error: (err) =>
-    //     this.toastService.showError('Error actualizado usuario. ' + err),
-    // });
-  }
-
-  handleCancel() {
-    this.clearForm();
-    this.router.navigate(['/auth/users/register']);
-  }
-
-  clearForm() {
-    this.userForm.reset();
-    this.isEdit = false;
+    this.profileService
+      .updateProfile(updatedProfile as ProfileModel)
+      .subscribe({
+        next: () => {
+          this.toastService.showSucess('Perfil actualizado');
+        },
+        error: (err) =>
+          this.toastService.showError('Error actualizando perfil. ' + err),
+      });
   }
 
   loadUser() {
@@ -204,18 +139,28 @@ export class ProfilePermissionComponent {
         switchMap((params) => {
           const id = params.get('id');
           if (id) {
-            this.isEdit = true;
             return this.permissionService.getPermissionById(id);
           } else {
-            this.isEdit = false;
             return of(null);
           }
         })
       )
       .subscribe({
         next: (profile) => {
-          this.profile = profile;
+          if (profile) {
+            this.profile = profile;
+            this.setSelectedPermissions(profile.value);
+          }
         },
       });
+  }
+
+  setSelectedPermissions(value: string) {
+    if (!value) {
+      return;
+    }
+
+    this.permissions = profileUtils.GetProfileAsPermissions(value);
+    profileUtils.setSelectedPermission(this.profilecontainer, this.permissions);
   }
 }

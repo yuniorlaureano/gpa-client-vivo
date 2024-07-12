@@ -1,4 +1,5 @@
 import { ElementRef } from '@angular/core';
+import { Profile } from '../models/profile.type';
 
 export function processProfile(
   profile: any,
@@ -209,4 +210,35 @@ export function buildNewProfile(valueBasedProfile: any) {
     }
   }
   return newProfile;
+}
+
+export function GetProfileAsPermissions(profile: string) {
+  let jsonProfile: Profile[] = JSON.parse(profile);
+  let permissions: string[] = [];
+  for (let app of jsonProfile) {
+    for (let module of app.modules) {
+      for (let component of module.components) {
+        for (let permission of component.permissions) {
+          permissions.push(
+            `${app.app}-${module.id}-${component.id}-${permission}`
+          );
+        }
+      }
+    }
+  }
+
+  return permissions;
+}
+
+export function setSelectedPermission(
+  containerElement: ElementRef,
+  permissions: string[]
+) {
+  const els = containerElement.nativeElement.querySelectorAll(
+    'input[type="checkbox"]'
+  );
+
+  els.forEach((el: any) => {
+    el.checked = permissions.includes(el.id);
+  });
 }

@@ -5,6 +5,8 @@ import { of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
 import { ProfileService } from '../service/profile.service';
 import { ProfileModel } from '../model/profile.model';
+import { Profile } from '../../core/models/profile.type';
+import { ModalService } from '../../core/service/modal.service';
 
 @Component({
   selector: 'gpa-profile',
@@ -18,9 +20,8 @@ export class ProfileComponent {
   constructor(
     private fb: FormBuilder,
     private profileService: ProfileService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private modalService: ModalService
   ) {}
 
   profileForm = this.fb.group({
@@ -94,6 +95,51 @@ export class ProfileComponent {
       id: model.id,
       name: model.name,
     });
+  }
+
+  handleView(model: ProfileModel) {
+    let permissons: Profile[] = JSON.parse(model.value);
+    let ul = [];
+    let ulApp = [];
+    let ulModule = [];
+    let ulComponent = [];
+    if (permissons) {
+      for (let app of permissons) {
+        ulApp.push('<ol style="list-style-type: disclosure-open">');
+        ulApp.push('<li><h3>' + app.app + '</h3></li>');
+
+        for (let module of app.modules) {
+          ulModule.push('<ol style="list-style-type: disclosure-open">');
+          ulModule.push('<li><h4>' + module.id + '</h4></li>');
+
+          for (let component of module.components) {
+            ulComponent.push('<ol style="list-style-type: disclosure-open">');
+            ulComponent.push('<li><h5>' + component.id + '</h5></li>');
+            ulComponent.push('<ol style="list-style-type: circle">');
+            for (let permission of component.permissions) {
+              ulComponent.push('<li>' + permission + '</li>');
+            }
+            ulComponent.push('</ol>');
+            ulComponent.push('</ol>');
+          }
+
+          ulModule.push(ulComponent.join(''));
+          ulModule.push('</ol>');
+          ulComponent = [];
+        }
+
+        ulApp.push(ulModule.join(''));
+        ulApp.push('</ol>');
+        ul.push(ulApp.join(''));
+        ulModule = [];
+        ulApp = [];
+      }
+    }
+
+    this.modalService
+      .show('Permisos para: ' + model.name, ul.join(''))
+      .then(() => {})
+      .catch(() => {});
   }
 
   handleDelete(model: ProfileModel) {}

@@ -19,6 +19,8 @@ import { ToastService } from './service/toast.service';
 import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
 import { ConfirmModalService } from './service/confirm-modal.service';
 import { ValidatorMessageComponent } from './validator-message/validator-message.component';
+import { ModalService } from './service/modal.service';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -35,10 +37,17 @@ import { ValidatorMessageComponent } from './validator-message/validator-message
     InvoiceCatalogComponent,
     ToastContainerComponent,
     ConfirmModalComponent,
+    ModalComponent,
     ValidatorMessageComponent,
   ],
   imports: [CommonModule, RouterModule, NgbToastModule, NgTemplateOutlet],
-  providers: [LayoutService, DecimalPipe, ToastService, ConfirmModalService],
+  providers: [
+    LayoutService,
+    DecimalPipe,
+    ToastService,
+    ConfirmModalService,
+    ModalService,
+  ],
   exports: [
     ClientCatalogComponent,
     StockProductCatalogComponent,
