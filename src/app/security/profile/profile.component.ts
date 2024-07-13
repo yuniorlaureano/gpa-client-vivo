@@ -16,6 +16,7 @@ import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 export class ProfileComponent {
   isEdit: boolean = false;
   reloadTable: number = 1;
+  isUserCatalogVisible: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -105,6 +106,7 @@ export class ProfileComponent {
     profile: ProfileModel;
     user: UserModel;
   }) {
+    this.isUserCatalogVisible = true;
     this.confirmService
       .confirm(
         'Perfil',
@@ -113,8 +115,20 @@ export class ProfileComponent {
           ' al perfil: \n ' +
           profile.name
       )
-      .then(() => {})
-      .catch(() => {});
+      .then(() => {
+        this.profileService.assignUser(profile.id!, user.id!).subscribe({
+          next: () => {
+            this.isUserCatalogVisible = false;
+            this.toastService.showSucess('Usuario asignado');
+          },
+          error: (err) => {
+            this.toastService.showError('Error asignando usuario. ' + err);
+          },
+        });
+      })
+      .catch(() => {
+        this.isUserCatalogVisible = false;
+      });
   }
 
   handleView(model: ProfileModel) {

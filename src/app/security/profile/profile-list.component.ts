@@ -20,7 +20,7 @@ import { UserModel } from '../model/user.model';
   styleUrl: './profile-list.component.css',
 })
 export class ProfileListComponent {
-  isUserCatalogVisible: boolean = false;
+  @Input() isUserCatalogVisible: boolean = false;
   selectedProfile!: ProfileModel;
   @Input() reloadTable: number = 1;
   @Output() onDelete = new EventEmitter<ProfileModel>();

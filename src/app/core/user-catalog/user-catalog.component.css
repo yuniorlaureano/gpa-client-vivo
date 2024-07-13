@@ -17,6 +17,6 @@ div.card {
   cursor: pointer;
 }
 
-.selected-user {
+.selected {
   background-color: lightblue;
 }

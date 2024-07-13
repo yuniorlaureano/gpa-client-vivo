@@ -30,4 +30,11 @@ export class ProfileService {
   updateProfile(model: ProfileModel): Observable<void> {
     return this.http.put<void>(`${this.url}`, model);
   }
+
+  assignUser(profileId: string, userId: string): Observable<void> {
+    return this.http.put<void>(
+      `${this.url}/${profileId}/assign/users/${userId}`,
+      null
+    );
+  }
 }

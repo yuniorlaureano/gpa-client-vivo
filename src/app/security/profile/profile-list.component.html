@@ -13,7 +13,7 @@
           class="btn btn-outline-danger btn-icon"
           (click)="handleDelete(profile)"
         >
-          <i class="bi bi-eye"></i>
+          <i class="bi bi-trash"></i>
         </button>
         <a
           routerLink="/auth/profiles/permissions/{{ profile.id }}"
@@ -86,4 +86,5 @@
 <gpa-user-catalog
   [(visible)]="isUserCatalogVisible"
   (onSelectedUser)="handleSelectedUser($event)"
+  [selectedProfile]="selectedProfile.id!"
 ></gpa-user-catalog>

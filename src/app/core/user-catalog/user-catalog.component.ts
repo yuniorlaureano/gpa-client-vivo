@@ -21,6 +21,7 @@ export class UserCatalogComponent implements OnInit, OnDestroy {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() onSelectedUser = new EventEmitter<UserModel>();
+  @Input() selectedProfile: string = '';
   userSubscription!: Subscription;
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
@@ -75,6 +76,10 @@ export class UserCatalogComponent implements OnInit, OnDestroy {
 
   handleSelectedUserFromCatalog(user: UserModel) {
     this.onSelectedUser.emit(user);
+  }
+
+  rowIsSelected(profiles: string[] | null) {
+    return profiles != null && profiles.includes(this.selectedProfile);
   }
 
   loadUsers() {
