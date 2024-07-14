@@ -9,45 +9,49 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
-import { SearchModel } from '../models/search.model';
-import { SearchOptionsModel } from '../models/search-options.model';
-import { UserModel } from '../../security/model/user.model';
-import { UserService } from '../../security/service/user.service';
+import { SearchOptionsModel } from '../../../core/models/search-options.model';
+import { SearchModel } from '../../../core/models/search.model';
+import { ProfileService } from '../../service/profile.service';
+import { RawUserModel } from '../../model/raw-user.model';
+import { ProfileModel } from '../../model/profile.model';
 
 @Component({
-  selector: 'gpa-user-catalog',
-  templateUrl: './user-catalog.component.html',
-  styleUrl: './user-catalog.component.css',
+  selector: 'gpa-profile-user-catalog',
+  templateUrl: './profile-user-catalog.component.html',
+  styleUrl: './profile-user-catalog.component.css',
 })
-export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
+export class ProfileUserCatalogComponent
+  implements OnDestroy, OnChanges, OnInit
+{
   @Input() reloadTable: number = 1;
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() onSelectedUser = new EventEmitter<UserModel>();
-  @Input() selectedProfile: string = '';
+  @Output() onAdd = new EventEmitter<RawUserModel>();
+  @Output() onRemove = new EventEmitter<RawUserModel>();
+  @Input() selectedProfile: ProfileModel | null = null;
   userSubscription!: Subscription;
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,
     pageSize: 10,
   });
-  users!: UserModel[];
+  users!: RawUserModel[];
   options: SearchOptionsModel = {
     count: 0,
     page: 1,
     pageSize: 10,
   };
 
-  constructor(private userService: UserService) {}
+  constructor(private profileService: ProfileService) {}
+
+  ngOnInit(): void {
+    this.loadUsers();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['reloadTable'] && !changes['reloadTable'].firstChange) {
       this.pageOptionsSubject.next({ ...this.options });
     }
-  }
-
-  ngOnInit(): void {
-    this.loadUsers();
   }
 
   ngOnDestroy(): void {
@@ -83,12 +87,12 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  handleSelectedUserFromCatalog(user: UserModel) {
-    this.onSelectedUser.emit(user);
+  handleAdd(user: RawUserModel) {
+    this.onAdd.emit(user);
   }
 
-  rowIsSelected(profiles: string[] | null) {
-    return profiles != null && profiles.includes(this.selectedProfile);
+  handleRemove(user: RawUserModel) {
+    this.onRemove.emit(user);
   }
 
   loadUsers() {
@@ -97,7 +101,13 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(
         switchMap((options) => {
           search.page = options.page;
-          return this.userService.getUsers(search);
+          if (this.selectedProfile?.id) {
+            return this.profileService.getUsers(
+              this.selectedProfile.id,
+              search
+            );
+          }
+          return [];
         })
       )
       .subscribe({

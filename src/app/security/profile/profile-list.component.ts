@@ -12,7 +12,9 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProfileModel } from '../model/profile.model';
 import { ProfileService } from '../service/profile.service';
-import { UserModel } from '../model/user.model';
+import { ConfirmModalService } from '../../core/service/confirm-modal.service';
+import { ToastService } from '../../core/service/toast.service';
+import { RawUserModel } from '../model/raw-user.model';
 
 @Component({
   selector: 'gpa-profile-list',
@@ -20,16 +22,13 @@ import { UserModel } from '../model/user.model';
   styleUrl: './profile-list.component.css',
 })
 export class ProfileListComponent {
-  @Input() isUserCatalogVisible: boolean = false;
-  selectedProfile!: ProfileModel;
+  reloadProfileUserTable: number = 1;
+  @Input() isProfileUserCatalogVisible: boolean = false;
+  selectedProfile!: ProfileModel | null;
   @Input() reloadTable: number = 1;
   @Output() onDelete = new EventEmitter<ProfileModel>();
   @Output() onEdit = new EventEmitter<ProfileModel>();
   @Output() onView = new EventEmitter<ProfileModel>();
-  @Output() onAssignPermission = new EventEmitter<{
-    profile: ProfileModel;
-    user: UserModel;
-  }>();
 
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
@@ -47,7 +46,11 @@ export class ProfileListComponent {
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
-  constructor(private profileService: ProfileService) {}
+  constructor(
+    private profileService: ProfileService,
+    private confirmService: ConfirmModalService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadProfiles();
@@ -101,11 +104,69 @@ export class ProfileListComponent {
 
   handleAddUser(model: ProfileModel) {
     this.selectedProfile = model;
-    this.isUserCatalogVisible = true;
+    this.isProfileUserCatalogVisible = true;
+    this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
   }
 
-  handleSelectedUser(user: UserModel) {
-    this.onAssignPermission.emit({ profile: this.selectedProfile, user: user });
+  handdleUserAdded(user: RawUserModel) {
+    this.handleAssignPermission(this.selectedProfile, user);
+  }
+
+  handdleUserRemoved(user: RawUserModel) {
+    this.handleRemovePermission(this.selectedProfile, user);
+  }
+
+  handleAssignPermission(profile: ProfileModel | null, user: RawUserModel) {
+    if (!profile) {
+      return;
+    }
+
+    this.confirmService
+      .confirm(
+        'Perfil',
+        'Está seguro de asignar el usuario:\n ' +
+          user.email +
+          ' al perfil: \n ' +
+          profile.name
+      )
+      .then(() => {
+        this.profileService.assignUser(profile.id!, user.id!).subscribe({
+          next: () => {
+            this.toastService.showSucess('Usuario asignado');
+            this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
+          },
+          error: (err) => {
+            this.toastService.showError('Error asignando usuario. ' + err);
+          },
+        });
+      })
+      .catch(() => {});
+  }
+
+  handleRemovePermission(profile: ProfileModel | null, user: RawUserModel) {
+    if (!profile) {
+      return;
+    }
+
+    this.confirmService
+      .confirm(
+        'Perfil',
+        'Está seguro de remover el usuario.\n ' +
+          ' del perfil: \n ' +
+          profile.name
+      )
+      .then(() => {
+        this.profileService.removeUser(profile.id!, user.id!).subscribe({
+          next: () => {
+            this.toastService.showSucess('Usuario removido');
+            this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
+          },
+          error: (err) => {
+            this.toastService.showError('Error removiendo usuario. ' + err);
+          },
+        });
+      })
+      .catch(() => {});
   }
 
   loadProfiles() {

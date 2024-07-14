@@ -1,0 +1,77 @@
+<div class="profile-user-catalog" *ngIf="visible">
+  <div>
+    <h4>Agregando usuarios la perfil: {{ selectedProfile?.name }}</h4>
+  </div>
+  <br />
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar usuarios"
+      style="margin-right: 20px"
+    />
+    <button
+      class="btn btn-outline-danger btn-rounded"
+      (click)="handleShowUserCatalog(false)"
+    >
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+  <hr />
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td>Nombre</td>
+          <td>Apellido</td>
+          <td>Email</td>
+          <td>Usuario</td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.userName }}</td>
+          <td>
+            <button
+              class="btn btn-outline-info btn-icon"
+              (click)="handleAdd(user)"
+              *ngIf="!user.isAssigned"
+            >
+              <i class="bi bi-plus"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger btn-icon"
+              (click)="handleRemove(user)"
+              *ngIf="user.isAssigned"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <nav aria-label="Page Navigation">
+      <ul class="pagination justify-content-end">
+        <li class="page-item" style="margin-right: 6px">
+          <button class="btn btn-outline-info" (click)="handleBackwardPage()">
+            <span aria-hidden="true">
+              <i class="bi bi-arrow-left"></i>
+            </span>
+          </button>
+        </li>
+        <li class="page-item">
+          <button class="btn btn-outline-info" (click)="handleForwardPage()">
+            <span aria-hidden="true">
+              <i class="bi bi-arrow-right"></i>
+            </span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

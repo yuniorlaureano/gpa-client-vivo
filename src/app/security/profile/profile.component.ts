@@ -16,7 +16,6 @@ import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 export class ProfileComponent {
   isEdit: boolean = false;
   reloadTable: number = 1;
-  isUserCatalogVisible: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -99,36 +98,13 @@ export class ProfileComponent {
     });
   }
 
-  handleAssignPermission({
-    profile,
-    user,
-  }: {
-    profile: ProfileModel;
-    user: UserModel;
-  }) {
-    this.isUserCatalogVisible = true;
-    this.confirmService
-      .confirm(
-        'Perfil',
-        'Está seguro de asignar el usuario:\n ' +
-          user.email +
-          ' al perfil: \n ' +
-          profile.name
-      )
-      .then(() => {
-        this.profileService.assignUser(profile.id!, user.id!).subscribe({
-          next: () => {
-            this.isUserCatalogVisible = false;
-            this.toastService.showSucess('Usuario asignado');
-          },
-          error: (err) => {
-            this.toastService.showError('Error asignando usuario. ' + err);
-          },
-        });
-      })
-      .catch(() => {
-        this.isUserCatalogVisible = false;
-      });
+  //handleShowUser
+  handleShowUser(model: ProfileModel) {
+    let users = this.profileService.getUsers(model.id!);
+    // this.modalService
+    //   .show('Permisos para: ' + model.name, ul.join(''))
+    //   .then(() => {})
+    //   .catch(() => {});
   }
 
   handleView(model: ProfileModel) {

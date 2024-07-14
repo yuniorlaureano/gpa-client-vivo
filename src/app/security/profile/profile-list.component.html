@@ -1,8 +1,8 @@
 <ul class="list-group">
   <li class="list-group-item" *ngFor="let profile of data.data">
     <div class="row">
-      <div class="col-sm-9">{{ profile.name }}</div>
-      <div class="col-sm-3">
+      <div class="col-sm-8">{{ profile?.name }}</div>
+      <div class="col-sm-4">
         <button
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(profile)"
@@ -31,7 +31,7 @@
           class="btn btn-outline-info btn-icon"
           (click)="handleAddUser(profile)"
         >
-          <i class="bi bi-person-plus"></i>
+          <i class="bi bi-person-lines-fill"></i>
         </button>
       </div>
     </div>
@@ -83,8 +83,10 @@
     </li>
   </ul>
 </nav>
-<gpa-user-catalog
-  [(visible)]="isUserCatalogVisible"
-  (onSelectedUser)="handleSelectedUser($event)"
-  [selectedProfile]="selectedProfile.id!"
-></gpa-user-catalog>
+<gpa-profile-user-catalog
+  [(visible)]="isProfileUserCatalogVisible"
+  (onAdd)="handdleUserAdded($event)"
+  (onRemove)="handdleUserRemoved($event)"
+  [selectedProfile]="selectedProfile"
+  [reloadTable]="reloadProfileUserTable"
+></gpa-profile-user-catalog>

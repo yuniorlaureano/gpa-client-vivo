@@ -1,0 +1,22 @@
+div.card {
+  position: relative;
+}
+
+.profile-user-catalog {
+  position: absolute;
+  padding: 20px;
+  width: 100%;
+  min-height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  background-color: white;
+}
+
+.profile-user-catalog tbody tr {
+  cursor: pointer;
+}
+
+.profile-user-selected {
+  background-color: lightblue;
+}

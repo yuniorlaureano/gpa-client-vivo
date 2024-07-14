@@ -94,7 +94,11 @@ export class ProductListTableComponent {
   }
 
   handleSetPageToShow = (value: number) => {
-    this.pageOptionsSubject.next({ ...this.searchOptions, pageSize: value });
+    this.pageOptionsSubject.next({
+      ...this.searchOptions,
+      page: 1,
+      pageSize: value,
+    });
   };
 
   handleForwardPage = (page: number): void => {
