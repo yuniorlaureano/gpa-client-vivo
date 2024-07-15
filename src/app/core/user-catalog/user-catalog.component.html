@@ -33,7 +33,6 @@
         <tr
           *ngFor="let user of users"
           (click)="handleSelectedUserFromCatalog(user)"
-          [class.selected]="rowIsSelected(user.profiles)"
         >
           <td>{{ user.firstName }}</td>
           <td>{{ user.lastName }}</td>

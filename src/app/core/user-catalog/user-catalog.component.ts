@@ -87,10 +87,6 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
     this.onSelectedUser.emit(user);
   }
 
-  rowIsSelected(profiles: string[] | null) {
-    return profiles != null && profiles.includes(this.selectedProfile);
-  }
-
   loadUsers() {
     const search = new SearchModel();
     this.userSubscription = this.pageOptionsSubject

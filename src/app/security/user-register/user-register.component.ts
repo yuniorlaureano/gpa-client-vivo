@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../core/service/toast.service';
 import { UserModel } from '../model/user.model';
 import { of, switchMap } from 'rxjs';
+import { Profile } from '../../core/models/profile.type';
+import { ProfileModel } from '../model/profile.model';
 
 @Component({
   selector: 'gpa-user-register',
@@ -13,6 +15,7 @@ import { of, switchMap } from 'rxjs';
 })
 export class UserRegisterComponent {
   isEdit: boolean = false;
+  profiles: ProfileModel[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -112,6 +115,7 @@ export class UserRegisterComponent {
               email: user.email,
               userName: user.userName,
             });
+            this.profiles = user.profiles;
           }
         },
       });

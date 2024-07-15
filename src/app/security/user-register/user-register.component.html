@@ -146,6 +146,15 @@
             </div>
           </div>
         </form>
+        <div
+          class="col-12 col-sm-12"
+          style="border: solid 1px lightgray; padding: 5px"
+        >
+          <h5>Perfiles</h5>
+          <ol>
+            <li *ngFor="let profile of profiles">{{ profile.name }}</li>
+          </ol>
+        </div>
       </div>
     </div>
   </div>
