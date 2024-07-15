@@ -1,0 +1,9 @@
+.profile-tiem:hover {
+  background-color: lightgray;
+}
+
+.profile-title {
+  margin: 5px;
+  text-align: center;
+  border: solid 1px lightgray;
+}

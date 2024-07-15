@@ -16,6 +16,7 @@ import { ProfilePermissionComponent } from './profile-permission/profile-permiss
 import { UserCatalogComponent } from '../core/user-catalog/user-catalog.component';
 import { CoreModule } from '../core/core.module';
 import { ProfileUserCatalogComponent } from './profile/profile-user-catalog/profile-user-catalog.component';
+import { UserProfileEditComponent } from './user-profile-edit/user-profile-edit.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ProfileUserCatalogComponent } from './profile/profile-user-catalog/prof
     ProfileListComponent,
     ProfilePermissionComponent,
     ProfileUserCatalogComponent,
+    UserProfileEditComponent,
   ],
   imports: [
     CommonModule,

@@ -8,6 +8,7 @@ import { UserListComponent } from './user-list/user-list.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfilePermissionComponent } from './profile-permission/profile-permission.component';
+import { UserProfileEditComponent } from './user-profile-edit/user-profile-edit.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
       {
         path: 'profiles/permissions/:id',
         component: ProfilePermissionComponent,
+      },
+      {
+        path: 'users/:id/profile/edit',
+        component: UserProfileEditComponent,
       },
     ],
   },

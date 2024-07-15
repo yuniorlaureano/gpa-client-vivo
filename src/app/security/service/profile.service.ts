@@ -33,6 +33,10 @@ export class ProfileService {
     );
   }
 
+  getProfilesByUserId(userId: string): Observable<ProfileModel[]> {
+    return this.http.get<ProfileModel[]>(`${this.url}/users/${userId}`);
+  }
+
   addProfile(model: ProfileModel): Observable<void> {
     return this.http.post<void>(`${this.url}`, model);
   }

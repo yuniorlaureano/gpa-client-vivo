@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '../service/auth..service';
+import { AuthService } from '../service/auth.service';
 import { LoginModel } from '../model/login.model';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -25,7 +25,9 @@ export class LoginComponent implements OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    this.loginSubscription!.unsubscribe();
+    if (this.loginSubscription) {
+      this.loginSubscription!.unsubscribe();
+    }
   }
 
   login() {
