@@ -1,3 +1,8 @@
 .require-sign {
   font-size: 20px;
 }
+
+.invalid-sign {
+  color: red;
+  font-size: 20px;
+}

@@ -11,10 +11,12 @@ export const JwtAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const token = tokenService.getToken();
   let headers = req.headers;
 
-  if (!token) {
-    router.navigate(['/auth/login']);
-  } else {
-    headers = req.headers.set('Authorization', `Bearer ${token}`);
+  if (!req.url.endsWith('/security/auth/signup')) {
+    if (!token) {
+      router.navigate(['/auth/login']);
+    } else {
+      headers = req.headers.set('Authorization', `Bearer ${token}`);
+    }
   }
 
   const newRequest = req.clone({

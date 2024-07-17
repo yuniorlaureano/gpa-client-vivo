@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
 import { LoginTemplateComponent } from '../core/login-template/login-template.component';
 import { AdminTemplateComponent } from '../core/admin-template/admin-template.component';
 import { UserListComponent } from './user-list/user-list.component';
@@ -16,7 +16,7 @@ const routes: Routes = [
     component: LoginTemplateComponent,
     children: [
       { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
+      { path: 'register', component: SignUpComponent },
     ],
   },
   {

@@ -1,0 +1,153 @@
+<form [formGroup]="signUpForm" (ngSubmit)="save()">
+  <div class="login-box">
+    <div class="login-form">
+      <a href="index.html" class="login-logo">
+        <!-- <img src="assets/images/logo.svg" alt="Vico Admin" /> -->
+        <h1>GPA</h1>
+      </a>
+      <div class="login-welcome">
+        Bienvenido <br />Sistema de gestión de planta de agua.
+      </div>
+      <ul class="text-danger">
+        <li *ngFor="let error of errors">{{ error }}</li>
+      </ul>
+      <div class="mb-3">
+        <label class="form-label"
+          ><span class="invalid-sign">*</span>Nombre</label
+        >
+        <input type="text" class="form-control" formControlName="firstName" />
+        <gpa-validator-message
+          [control]="signUpForm.get('firstName')"
+          [touched]="signUpForm.touched"
+          validation="required"
+          message="El Nombre es requerido"
+        />
+        <gpa-validator-message
+          [control]="signUpForm.get('firstName')"
+          [touched]="signUpForm.touched"
+          validation="maxlength"
+          message="El nombre no puede tener más de 100 caracteres."
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label"
+          ><span class="invalid-sign">*</span>Apellido</label
+        >
+        <input type="text" class="form-control" formControlName="lastName" />
+        <gpa-validator-message
+          [control]="signUpForm.get('lastName')"
+          [touched]="signUpForm.touched"
+          validation="required"
+          message="El Apellido es requerido"
+        />
+        <gpa-validator-message
+          [control]="signUpForm.get('lastName')"
+          [touched]="signUpForm.touched"
+          validation="maxlength"
+          message="El apellido no puede tener más de 100 caracteres."
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label"
+          ><span class="invalid-sign">*</span>Correo</label
+        >
+        <input type="email" class="form-control" formControlName="email" />
+        <gpa-validator-message
+          [control]="signUpForm.get('email')"
+          [touched]="signUpForm.touched"
+          validation="required"
+          message="El Correo es requerido"
+        />
+        <gpa-validator-message
+          [control]="signUpForm.get('email')"
+          [touched]="signUpForm.touched"
+          validation="maxlength"
+          message="El email no puede tener más de 254 caracteres."
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label"
+          ><span class="invalid-sign">*</span>Usuario</label
+        >
+        <input type="text" class="form-control" formControlName="userName" />
+        <gpa-validator-message
+          [control]="signUpForm.get('userName')"
+          [touched]="signUpForm.touched"
+          validation="required"
+          message="El Usuario es requerido"
+        />
+        <gpa-validator-message
+          [control]="signUpForm.get('userName')"
+          [touched]="signUpForm.touched"
+          validation="maxlength"
+          message="El nombre de usuario no puede tener más de 30 caracteres."
+        />
+      </div>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between">
+          <label class="form-label"
+            ><span class="invalid-sign">*</span>Contraseña</label
+          >
+        </div>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="password"
+        />
+        <gpa-validator-message
+          [control]="signUpForm.get('password')"
+          [touched]="signUpForm.touched"
+          validation="required"
+          message="La Contraseña es requerida"
+        />
+        <gpa-validator-message
+          [control]="signUpForm.get('password')"
+          [touched]="signUpForm.touched"
+          validation="maxlength"
+          message="La Contraseña es requerida"
+        />
+      </div>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between">
+          <label class="form-label"
+            ><span class="invalid-sign">*</span>Confirmar contraseña</label
+          >
+        </div>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="confirmPassword"
+        />
+        <gpa-validator-message
+          [control]="signUpForm.get('confirmPassword')"
+          [touched]="signUpForm.touched"
+          validation="required"
+          message="La Confirmar contraseña es requerida"
+        />
+        <gpa-validator-message
+          [control]="signUpForm.get('confirmPassword')"
+          [touched]="signUpForm.touched"
+          validation="bothPasswordAreInvalid"
+          message="Las contraseñas no coinciden"
+        />
+        <gpa-validator-message
+          [control]="signUpForm.get('confirmPassword')"
+          [touched]="signUpForm.touched"
+          validation="maxlength"
+          message="Las contraseñas no coinciden"
+        />
+      </div>
+      <div class="login-form-actions">
+        <button type="submit" class="btn">
+          <span class="icon"> <i class="bi bi-arrow-right-circle"></i> </span>
+          Registrarse
+        </button>
+      </div>
+      <div class="login-form-footer">
+        <div class="additional-link">
+          Ya tiene una cuenta? <a routerLink="/auth/login"> ENTRAR</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

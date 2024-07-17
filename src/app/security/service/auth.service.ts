@@ -7,6 +7,7 @@ import { TokenModel } from '../model/token.model';
 import { TokenService } from '../../core/service/token.service';
 import { Router } from '@angular/router';
 import { UserModel } from '../model/user.model';
+import { SignUpModel } from '../model/sign-up.model';
 
 @Injectable()
 export class AuthService {
@@ -52,5 +53,9 @@ export class AuthService {
           },
         })
       );
+  }
+
+  signUp(model: SignUpModel): Observable<void> {
+    return this.http.post<void>(`${this.url}/signup`, model);
   }
 }

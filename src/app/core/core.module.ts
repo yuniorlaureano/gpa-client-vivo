@@ -58,6 +58,7 @@ import { UserCatalogComponent } from './user-catalog/user-catalog.component';
     ConfirmModalComponent,
     ValidatorMessageComponent,
     UserCatalogComponent,
+    ToastContainerComponent,
   ],
 })
 export class CoreModule {}
