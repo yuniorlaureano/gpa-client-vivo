@@ -13,6 +13,7 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProductModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
 import { ProductType } from '../../core/models/product-type.enum';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-product-list-table',
@@ -39,13 +40,17 @@ export class ProductListTableComponent {
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit(): void {
     let searchModel = new SearchModel();
     this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
+          this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
           return this.productService.getProducts(searchModel);
@@ -66,6 +71,7 @@ export class ProductListTableComponent {
               filteredSize: data.data.length,
             },
           };
+          this.spinner.hide('table-spinner');
         },
       });
   }

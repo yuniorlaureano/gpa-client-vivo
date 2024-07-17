@@ -12,6 +12,7 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { UserModel } from '../model/user.model';
 import { UserService } from '../service/user.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-user-list-table',
@@ -39,13 +40,17 @@ export class UserListTableComponent {
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit(): void {
     let searchModel = new SearchModel();
     this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
+          this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
           return this.userService.getUsers(searchModel);
@@ -66,6 +71,7 @@ export class UserListTableComponent {
               filteredSize: data.data.length,
             },
           };
+          this.spinner.hide('table-spinner');
         },
       });
   }

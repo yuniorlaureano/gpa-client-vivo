@@ -12,6 +12,7 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { AddonModel } from '../models/addon.model';
 import { AddonService } from '../service/addon.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-addon-list-table',
@@ -38,13 +39,17 @@ export class AddonListTableComponent {
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
-  constructor(private addonService: AddonService) {}
+  constructor(
+    private addonService: AddonService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit(): void {
     let searchModel = new SearchModel();
     this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
+          this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
           return this.addonService.getAddon(searchModel);
@@ -65,6 +70,7 @@ export class AddonListTableComponent {
               filteredSize: data.data.length,
             },
           };
+          this.spinner.hide('table-spinner');
         },
       });
   }

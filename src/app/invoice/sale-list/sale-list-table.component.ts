@@ -13,6 +13,7 @@ import { InvoiceService } from '../service/invoice.service';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-sale-list-table',
@@ -40,13 +41,17 @@ export class SaleListTableComponent {
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
-  constructor(private invoiceService: InvoiceService) {}
+  constructor(
+    private invoiceService: InvoiceService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit(): void {
     let searchModel = new SearchModel();
     this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
+          this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
           return this.invoiceService.getInvoices(searchModel);
@@ -67,6 +72,7 @@ export class SaleListTableComponent {
               filteredSize: data.data.length,
             },
           };
+          this.spinner.hide('table-spinner');
         },
       });
   }

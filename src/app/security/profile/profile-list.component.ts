@@ -15,6 +15,7 @@ import { ProfileService } from '../service/profile.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { ToastService } from '../../core/service/toast.service';
 import { RawUserModel } from '../model/raw-user.model';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-profile-list',
@@ -49,7 +50,8 @@ export class ProfileListComponent {
   constructor(
     private profileService: ProfileService,
     private confirmService: ConfirmModalService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -174,6 +176,7 @@ export class ProfileListComponent {
     this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
+          this.spinner.show('profile-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
           return this.profileService.getProfiles(searchModel);
@@ -194,6 +197,7 @@ export class ProfileListComponent {
               filteredSize: data.data.length,
             },
           };
+          this.spinner.hide('profile-spinner');
         },
       });
   }

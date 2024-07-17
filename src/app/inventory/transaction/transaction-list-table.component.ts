@@ -13,6 +13,7 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { StockService } from '../service/stock.service';
 import { StockModel } from '../models/stock.model';
 import { StockStatusEnum } from '../../core/models/stock-status.enum';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-transaction-list-table',
@@ -40,13 +41,17 @@ export class TransactionListTableComponent {
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
-  constructor(private stockService: StockService) {}
+  constructor(
+    private stockService: StockService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit(): void {
     let searchModel = new SearchModel();
     this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
+          this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
           return this.stockService.getStockMaster(searchModel);
@@ -67,6 +72,7 @@ export class TransactionListTableComponent {
               filteredSize: data.data.length,
             },
           };
+          this.spinner.hide('table-spinner');
         },
       });
   }

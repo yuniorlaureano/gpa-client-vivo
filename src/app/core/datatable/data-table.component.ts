@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { DataTableOptionModel } from '../models/data-table-option.model';
 import { DEFAULT_SEARCH_PARAMS } from '../models/util.constants';
 import { RouterModule } from '@angular/router';
+import { NgxSpinnerComponent } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-data-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NgxSpinnerComponent],
   templateUrl: './data-table.component.html',
 })
 export class DataTableComponent {

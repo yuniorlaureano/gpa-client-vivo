@@ -12,6 +12,7 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ReceivableAccountService } from '../service/receivable-account.service';
 import { ReceivableAccountSummaryModel } from '../model/receivable-account-summary.model';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-receivable-account-list-table',
@@ -39,13 +40,17 @@ export class ReceivableAccountListTableComponent {
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
-  constructor(private receivableAccountService: ReceivableAccountService) {}
+  constructor(
+    private receivableAccountService: ReceivableAccountService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit(): void {
     let searchModel = new SearchModel();
     this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
+          this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
           return this.receivableAccountService.getReceivableAccountSummary(
@@ -68,6 +73,7 @@ export class ReceivableAccountListTableComponent {
               filteredSize: data.data.length,
             },
           };
+          this.spinner.hide('table-spinner');
         },
       });
   }
