@@ -5,6 +5,7 @@ import { of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
 import { AddonService } from '../service/addon.service';
 import { AddonModel } from '../models/addon.model';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-addon',
@@ -26,7 +27,8 @@ export class AddonComponent implements OnInit {
     private addonService: AddonService,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +43,7 @@ export class AddonComponent implements OnInit {
         value: Number(this.addonForm.get('value')?.value),
       };
       if (this.isEdit) {
+        this.spinner.show('fullscreen');
         this.addonService.updateAddon(<AddonModel>value).subscribe({
           next: () => {
             this.clearForm();
@@ -51,13 +54,17 @@ export class AddonComponent implements OnInit {
         });
       } else {
         value.id = null;
+        this.spinner.show('fullscreen');
         this.addonService.addAddon(<AddonModel>value).subscribe({
           next: () => {
             this.clearForm();
             this.toastService.showSucess('Agregado creada');
+            this.spinner.hide('fullscreen');
           },
-          error: (err) =>
-            this.toastService.showSucess('Error creando agregado. ' + err),
+          error: (err) => {
+            this.toastService.showSucess('Error creando agregado. ' + err);
+            this.spinner.hide('fullscreen');
+          },
         });
       }
     }
@@ -67,6 +74,7 @@ export class AddonComponent implements OnInit {
     this.route.paramMap
       .pipe(
         switchMap((params) => {
+          this.spinner.show('fullscreen');
           const id = params.get('id');
           if (id) {
             this.isEdit = true;
@@ -88,6 +96,7 @@ export class AddonComponent implements OnInit {
               value: addon.value.toString(),
             });
           }
+          this.spinner.hide('fullscreen');
         },
       });
   }

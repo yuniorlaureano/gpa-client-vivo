@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReceivableAccountService } from '../service/receivable-account.service';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, of, Subject, switchMap } from 'rxjs';
+import { of, Subject, switchMap } from 'rxjs';
 import { InvoiceWithReceivableAccountModel } from '../model/invoice-with-receivable-account';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -9,6 +9,7 @@ import { ReceivableAccountModel } from '../model/receivable-account.model';
 import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-receivable-account',
@@ -32,7 +33,8 @@ export class ReceivableAccountComponent implements OnInit {
     private route: ActivatedRoute,
     private form: FormBuilder,
     private toastService: ToastService,
-    private confirmService: ConfirmModalService
+    private confirmService: ConfirmModalService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -70,10 +72,8 @@ export class ReceivableAccountComponent implements OnInit {
       this.receivableForm.valid &&
       this.receivableForm.get('id')?.value;
 
-    console.log(canEdit);
-    console.log(this.receivableForm.valid);
-    console.log(this.receivableForm.get('id')?.value);
     if (canEdit) {
+      this.spinner.show('fullscreen');
       const value: ReceivableAccountModel = {
         id: this.receivableForm.get('id')?.value ?? '',
         payment: this.receivableForm.get('payment')?.value ?? 0.0,
@@ -87,6 +87,7 @@ export class ReceivableAccountComponent implements OnInit {
           this.toastService.showSucess('Pago realizado');
           this.receivableForm.reset();
           this.invoiceIdSubject$.next(this.invoice?.invoiceId ?? null);
+          this.spinner.hide('fullscreen');
         },
       });
     }
@@ -120,6 +121,7 @@ export class ReceivableAccountComponent implements OnInit {
     this.invoiceIdSubject$
       .pipe(
         switchMap((id) => {
+          this.spinner.show('fullscreen');
           if (id == null) {
             this.isEdit = false;
             return of(null);
@@ -141,6 +143,7 @@ export class ReceivableAccountComponent implements OnInit {
           });
           this.invoice = invoice;
         }
+        this.spinner.hide('fullscreen');
       });
   }
 }

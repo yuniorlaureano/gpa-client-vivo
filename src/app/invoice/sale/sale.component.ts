@@ -16,6 +16,7 @@ import {
 } from '../../core/utils/product.util';
 import { ClientService } from '../service/client.service';
 import { getTotalClientFees } from '../../core/utils/client.utils';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-sale',
@@ -67,7 +68,8 @@ export class SaleComponent implements OnInit {
     private router: Router,
     private toastService: ToastService,
     private confirmService: ConfirmModalService,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -199,27 +201,34 @@ export class SaleComponent implements OnInit {
   }
 
   addInvoice(value: InvoiceModel) {
+    this.spinner.show('fullscreen');
     value.id = null;
     this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
       next: (data) => {
         this.router.navigate(['/invoice/sale/edit/' + data.id]);
         this.toastService.showSucess('Venta creada');
         this.calculateSelectedProductCatalogAggregate();
+        this.spinner.hide('fullscreen');
       },
-      error: (err) =>
-        this.toastService.showError('Error creando venta. ' + err),
+      error: (err) => {
+        this.toastService.showError('Error creando venta. ' + err);
+        this.spinner.hide('fullscreen');
+      },
     });
   }
 
   updateInvoice(value: InvoiceModel) {
+    this.spinner.show('fullscreen');
     this.invoiceService.updateInvoice(value).subscribe({
       next: () => {
         this.router.navigate(['/invoice/sale/edit/' + value.id]);
         this.toastService.showSucess('Venta editada');
         this.calculateSelectedProductCatalogAggregate();
       },
-      error: (err) =>
-        this.toastService.showError('Error editando venta. ' + err),
+      error: (err) => {
+        this.toastService.showError('Error editando venta. ' + err);
+        this.spinner.hide('fullscreen');
+      },
     });
   }
 
@@ -336,6 +345,7 @@ export class SaleComponent implements OnInit {
     this.route.paramMap
       .pipe(
         switchMap((params) => {
+          this.spinner.show('fullscreen');
           const id = params.get('id');
           if (id == null) {
             this.isEdit = false;
@@ -366,6 +376,7 @@ export class SaleComponent implements OnInit {
           this.calculateSelectedProductCatalogAggregate();
           this.setDisable(invoice.status == InvoiceStatusEnum.Canceled);
         }
+        this.spinner.hide('fullscreen');
       });
   }
 

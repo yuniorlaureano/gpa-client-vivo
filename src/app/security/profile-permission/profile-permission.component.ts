@@ -6,6 +6,7 @@ import { ToastService } from '../../core/service/toast.service';
 import { ProfileModel } from '../model/profile.model';
 import * as profileUtils from '../../core/utils/profile.utils';
 import { ProfileService } from '../service/profile.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-profile-permission',
@@ -96,7 +97,8 @@ export class ProfilePermissionComponent implements AfterViewInit {
     private permissionService: PermissionService,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngAfterViewInit() {
@@ -121,15 +123,18 @@ export class ProfilePermissionComponent implements AfterViewInit {
       ...this.profile,
       value: JSON.stringify(newProfile),
     };
-
+    this.spinner.show('fullscreen');
     this.profileService
       .updateProfile(updatedProfile as ProfileModel)
       .subscribe({
         next: () => {
           this.toastService.showSucess('Perfil actualizado');
+          this.spinner.hide('fullscreen');
         },
-        error: (err) =>
-          this.toastService.showError('Error actualizando perfil. ' + err),
+        error: (err) => {
+          this.toastService.showError('Error actualizando perfil. ' + err);
+          this.spinner.hide('fullscreen');
+        },
       });
   }
 
@@ -137,6 +142,7 @@ export class ProfilePermissionComponent implements AfterViewInit {
     this.route.paramMap
       .pipe(
         switchMap((params) => {
+          this.spinner.show('fullscreen');
           const id = params.get('id');
           if (id) {
             return this.permissionService.getPermissionById(id);
@@ -151,6 +157,7 @@ export class ProfilePermissionComponent implements AfterViewInit {
             this.profile = profile;
             this.setSelectedPermissions(profile.value);
           }
+          this.spinner.hide('fullscreen');
         },
       });
   }

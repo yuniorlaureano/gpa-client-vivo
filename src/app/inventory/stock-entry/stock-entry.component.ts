@@ -15,6 +15,7 @@ import { ProductModel } from '../models/product.model';
 import { StockStatusEnum } from '../../core/models/stock-status.enum';
 import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-stock-entry',
@@ -53,7 +54,8 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private toastService: ToastService,
-    private confirmService: ConfirmModalService
+    private confirmService: ConfirmModalService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -128,19 +130,24 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       };
 
       if (this.isEdit) {
+        this.spinner.show('fullscreen');
         this.stockService
           .updateInput(<InventoryEntryCollectionModel>value)
           .subscribe({
             next: () => {
               this.clearForm();
               this.toastService.showSucess('Registro modificado.');
+              this.spinner.hide('fullscreen');
             },
-            error: (err) =>
+            error: (err) => {
               this.toastService.showError(
                 'Error modificando el registro. ' + err
-              ),
+              );
+              this.spinner.hide('fullscreen');
+            },
           });
       } else {
+        this.spinner.show('fullscreen');
         value.id = null;
         this.stockService
           .registerInput(<InventoryEntryCollectionModel>value)
@@ -149,10 +156,12 @@ export class StockEntryComponent implements OnInit, OnDestroy {
               this.clearForm();
               this.toastService.showSucess('Registro agregado.');
             },
-            error: (err) =>
+            error: (err) => {
               this.toastService.showError(
                 'Error modificando el registro. ' + err
-              ),
+              );
+              this.spinner.hide('fullscreen');
+            },
           });
       }
     }
@@ -263,6 +272,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     this.route.paramMap
       .pipe(
         switchMap((params) => {
+          this.spinner.show('fullscreen');
           const id = params.get('id');
           if (id == null) {
             this.isEdit = false;
@@ -305,9 +315,11 @@ export class StockEntryComponent implements OnInit, OnDestroy {
                 stock.status == StockStatusEnum.Canceled
             );
           }
+          this.spinner.hide('fullscreen');
         },
         error: (err) => {
           this.toastService.showError('Error obteniendo el registro. ' + err);
+          this.spinner.hide('fullscreen');
         },
       });
   }

@@ -6,6 +6,7 @@ import { ToastService } from '../../core/service/toast.service';
 import { ClientModel } from '../model/client.model';
 import { ClientService } from '../service/client.service';
 import { ClientCreditModel } from '../model/client-credit.model';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-client',
@@ -21,7 +22,8 @@ export class ClientComponent implements OnInit {
     private clientService: ClientService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private spinner: NgxSpinnerService
   ) {}
   ngOnInit(): void {
     this.loadClient();
@@ -56,14 +58,17 @@ export class ClientComponent implements OnInit {
     const value = {
       ...this.clientForm.value,
     };
-
+    this.spinner.show('fullscreen');
     this.clientService.addClient(value as ClientModel).subscribe({
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Cliente agregado');
+        this.spinner.hide('fullscreen');
       },
-      error: (err) =>
-        this.toastService.showSucess('Error agregando cliente. ' + err),
+      error: (err) => {
+        this.toastService.showSucess('Error agregando cliente. ' + err);
+        this.spinner.hide('fullscreen');
+      },
     });
   }
 
@@ -72,13 +77,16 @@ export class ClientComponent implements OnInit {
       ...this.clientForm.value,
     };
 
+    this.spinner.show('fullscreen');
     this.clientService.updateClient(value as ClientModel).subscribe({
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Cliente actualizado');
       },
-      error: (err) =>
-        this.toastService.showSucess('Error actualizado cliente. ' + err),
+      error: (err) => {
+        this.toastService.showSucess('Error actualizado cliente. ' + err);
+        this.spinner.hide('fullscreen');
+      },
     });
   }
 
@@ -113,6 +121,7 @@ export class ClientComponent implements OnInit {
     this.route.paramMap
       .pipe(
         switchMap((params) => {
+          this.spinner.show('fullscreen');
           const id = params.get('id');
           if (id) {
             this.isEdit = true;
@@ -135,6 +144,7 @@ export class ClientComponent implements OnInit {
             });
             this.mapCredits(client.credits);
           }
+          this.spinner.hide('fullscreen');
         },
       });
   }

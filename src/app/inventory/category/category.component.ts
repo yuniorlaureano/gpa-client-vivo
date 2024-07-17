@@ -5,6 +5,7 @@ import { CategoryModel } from '../models/category.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-category',
@@ -24,7 +25,8 @@ export class CategoryComponent implements OnInit {
     private categoryService: CategoryService,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +40,7 @@ export class CategoryComponent implements OnInit {
         ...this.categoryForm.value,
       };
       if (this.isEdit) {
+        this.spinner.show('fullscreen');
         this.categoryService.updateCategory(<CategoryModel>value).subscribe({
           next: () => {
             this.clearForm();
@@ -48,13 +51,17 @@ export class CategoryComponent implements OnInit {
         });
       } else {
         value.id = null;
+        this.spinner.show('fullscreen');
         this.categoryService.addCategory(<CategoryModel>value).subscribe({
           next: () => {
             this.clearForm();
             this.toastService.showSucess('Categoría creada');
+            this.spinner.hide('fullscreen');
           },
-          error: (err) =>
-            this.toastService.showSucess('Error creando categoría. ' + err),
+          error: (err) => {
+            this.toastService.showSucess('Error creando categoría. ' + err);
+            this.spinner.hide('fullscreen');
+          },
         });
       }
     }
@@ -64,6 +71,7 @@ export class CategoryComponent implements OnInit {
     this.route.paramMap
       .pipe(
         switchMap((params) => {
+          this.spinner.show('fullscreen');
           const id = params.get('id');
           if (id) {
             this.isEdit = true;
@@ -83,6 +91,7 @@ export class CategoryComponent implements OnInit {
               description: category.description,
             });
           }
+          this.spinner.hide('fullscreen');
         },
       });
   }

@@ -5,6 +5,7 @@ import { StockCycleModel } from '../models/stock-cycle.model';
 import { ToastService } from '../../core/service/toast.service';
 import { Router } from '@angular/router';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-stock-cycle',
@@ -23,7 +24,8 @@ export class StockCycleComponent implements OnInit {
     private stockCycleService: StockCycleService,
     private toast: ToastService,
     private router: Router,
-    private confirmService: ConfirmModalService
+    private confirmService: ConfirmModalService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {}
@@ -49,6 +51,7 @@ export class StockCycleComponent implements OnInit {
   }
 
   save(value: StockCycleModel) {
+    this.spinner.show('fullscreen');
     this.stockCycleService.openStockCycle(value).subscribe({
       next: (stockCycleId) => {
         this.toast.showSucess('Cicle abierto');
@@ -56,6 +59,7 @@ export class StockCycleComponent implements OnInit {
         this.router.navigate([
           'inventory/stock/cycle/' + stockCycleId + '/detail',
         ]);
+        this.spinner.hide('fullscreen');
       },
     });
   }

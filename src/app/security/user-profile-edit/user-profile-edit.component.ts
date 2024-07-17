@@ -6,6 +6,7 @@ import { ToastService } from '../../core/service/toast.service';
 import { UserModel } from '../model/user.model';
 import { of, switchMap } from 'rxjs';
 import { AuthService } from '../service/auth.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-user-profile-edit',
@@ -21,7 +22,8 @@ export class UserProfileEditComponent {
     private router: Router,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private authService: AuthService
+    private authService: AuthService,
+    private spinner: NgxSpinnerService
   ) {}
   ngOnInit(): void {
     this.loadUser();
@@ -50,14 +52,18 @@ export class UserProfileEditComponent {
       ...this.userForm.value,
     };
 
+    this.spinner.show('fullscreen');
     this.authService.editUserProfile(value as UserModel).subscribe({
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Usuario actualizado');
         this.router.navigate(['/']);
+        this.spinner.hide('fullscreen');
       },
-      error: (err) =>
-        this.toastService.showError('Error actualizado usuario. ' + err),
+      error: (err) => {
+        this.toastService.showError('Error actualizado usuario. ' + err);
+        this.spinner.hide('fullscreen');
+      },
     });
   }
 
@@ -75,6 +81,7 @@ export class UserProfileEditComponent {
     this.route.paramMap
       .pipe(
         switchMap((params) => {
+          this.spinner.show('fullscreen');
           const id = params.get('id');
           if (id) {
             this.isEdit = true;
@@ -96,6 +103,7 @@ export class UserProfileEditComponent {
               userName: user.userName,
             });
           }
+          this.spinner.hide('fullscreen');
         },
       });
   }

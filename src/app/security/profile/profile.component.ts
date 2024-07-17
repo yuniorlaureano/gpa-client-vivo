@@ -5,8 +5,8 @@ import { ProfileService } from '../service/profile.service';
 import { ProfileModel } from '../model/profile.model';
 import { Profile } from '../../core/models/profile.type';
 import { ModalService } from '../../core/service/modal.service';
-import { UserModel } from '../model/user.model';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-profile',
@@ -22,7 +22,7 @@ export class ProfileComponent {
     private profileService: ProfileService,
     private toastService: ToastService,
     private modalService: ModalService,
-    private confirmService: ConfirmModalService
+    private spinner: NgxSpinnerService
   ) {}
 
   profileForm = this.fb.group({
@@ -66,14 +66,18 @@ export class ProfileComponent {
       ...this.profileForm.value,
     };
 
+    this.spinner.show('fullscreen');
     this.profileService.updateProfile(value as ProfileModel).subscribe({
       next: () => {
         this.handleReloadTable();
         this.clearForm();
         this.toastService.showSucess('Usuario actualizado');
+        this.spinner.hide('fullscreen');
       },
-      error: (err) =>
-        this.toastService.showError('Error actualizado usuario. ' + err),
+      error: (err) => {
+        this.toastService.showError('Error actualizado usuario. ' + err);
+        this.spinner.hide('fullscreen');
+      },
     });
   }
 
@@ -108,6 +112,7 @@ export class ProfileComponent {
   }
 
   handleView(model: ProfileModel) {
+    this.spinner.show('fullscreen');
     let permissons: Profile[] = JSON.parse(model.value);
     let ul = [];
     let ulApp = [];
@@ -150,6 +155,7 @@ export class ProfileComponent {
       .show('Permisos para: ' + model.name, ul.join(''))
       .then(() => {})
       .catch(() => {});
+    this.spinner.hide('fullscreen');
   }
 
   handleDelete(model: ProfileModel) {}

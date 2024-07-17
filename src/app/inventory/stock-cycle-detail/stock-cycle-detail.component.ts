@@ -9,6 +9,7 @@ import {
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { ToastService } from '../../core/service/toast.service';
 import { CycleTypeEnum } from '../../core/models/cycle-type.enum';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-stock-cycle-detail',
@@ -30,7 +31,7 @@ export class StockCycleDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private confirmService: ConfirmModalService,
     private toast: ToastService,
-    private router: Router
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +64,7 @@ export class StockCycleDetailComponent implements OnInit {
     this.route.paramMap
       .pipe(
         switchMap((route) => {
+          this.spinner.show('fullscreen');
           const id = route.get('id');
           if (id) {
             return this.stockCycleService.getStockCycleById(id);
@@ -81,6 +83,7 @@ export class StockCycleDetailComponent implements OnInit {
             };
             this.cycleId = data?.id;
           }
+          this.spinner.hide('fullscreen');
         },
       });
   }

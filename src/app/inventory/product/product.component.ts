@@ -18,6 +18,7 @@ import { CategoryService } from '../service/category.service';
 import { ProductType } from '../../core/models/product-type.enum';
 import { AddonService } from '../service/addon.service';
 import { AddonModel } from '../models/addon.model';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-product',
@@ -40,7 +41,8 @@ export class ProductComponent implements OnInit {
     private toastService: ToastService,
     private unitService: UnitService,
     private categoryService: CategoryService,
-    private addonService: AddonService
+    private addonService: AddonService,
+    private spinner: NgxSpinnerService
   ) {
     // Esto es parte de la validacion general
     //sirve para que la fecha de expiracion no sea menor a la fecha actual
@@ -130,13 +132,17 @@ export class ProductComponent implements OnInit {
         .map((credit: any) => credit.id),
     };
 
+    this.spinner.show('fullscreen');
     this.productService.addProduct(value as ProductModel).subscribe({
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Producto agregado');
+        this.spinner.hide('fullscreen');
       },
-      error: (err) =>
-        this.toastService.showSucess('Error agregando producto. ' + err),
+      error: (err) => {
+        this.toastService.showSucess('Error agregando producto. ' + err);
+        this.spinner.hide('fullscreen');
+      },
     });
   }
 
@@ -152,14 +158,17 @@ export class ProductComponent implements OnInit {
         .filter((creadit: any) => creadit.selected)
         .map((credit: any) => credit.id),
     };
-
+    this.spinner.show('fullscreen');
     this.productService.updateProduct(value as ProductModel).subscribe({
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Producto actualizado');
+        this.spinner.hide('fullscreen');
       },
-      error: (err) =>
-        this.toastService.showSucess('Error actualizado producto. ' + err),
+      error: (err) => {
+        this.toastService.showSucess('Error actualizado producto. ' + err);
+        this.spinner.hide('fullscreen');
+      },
     });
   }
 
@@ -200,6 +209,7 @@ export class ProductComponent implements OnInit {
     this.route.paramMap
       .pipe(
         switchMap((params) => {
+          this.spinner.show('fullscreen');
           const id = params.get('id');
           if (id) {
             this.isEdit = true;
@@ -240,6 +250,7 @@ export class ProductComponent implements OnInit {
               );
             }
           }
+          this.spinner.hide('fullscreen');
         },
       });
   }

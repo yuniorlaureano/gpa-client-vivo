@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { InvoiceRoutingModule } from './invoice-routing.module';
 import { SaleComponent } from './sale/sale.component';
-import { PurchaseComponent } from './purchase/purchase.component';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
@@ -20,7 +19,6 @@ import { ClientListTableComponent } from './client-list/client-list-table.compon
 @NgModule({
   declarations: [
     SaleComponent,
-    PurchaseComponent,
     SaleListComponent,
     SaleListTableComponent,
     ReceivableAccountComponent,
