@@ -1,19 +1,15 @@
 import { Component } from '@angular/core';
-import { UserService } from '../service/user.service';
 import { AuthService } from '../service/auth.service';
 import {
-  AbstractControl,
   FormBuilder,
   FormControl,
-  FormGroup,
   ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { SignUpModel } from '../model/sign-up.model';
 import { ToastService } from '../../core/service/toast.service';
-import { map } from 'rxjs';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-sign-up',
@@ -35,7 +31,8 @@ export class SignUpComponent {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit() {}
@@ -50,14 +47,15 @@ export class SignUpComponent {
 
   save() {
     this.signUpForm.markAllAsTouched();
-    console.log(this.signUpForm.get('userName')?.errors);
     if (this.signUpForm.valid) {
+      this.spinner.show('fullscreen');
       this.authService.signUp(<SignUpModel>this.signUpForm.value).subscribe({
         next: () => {
           this.toastService.showSucess('Usuario registrado correctamente');
           this.signUpForm.reset();
           setTimeout(() => {
             this.router.navigate(['/auth/login']);
+            this.spinner.hide('fullscreen');
           }, 500);
         },
         error: (error) => {
@@ -67,6 +65,7 @@ export class SignUpComponent {
             this.errors = error.error.map((e: any) => e.errorMessage);
             this.toastService.showError('Error al registrar usuario');
           }
+          this.spinner.hide('fullscreen');
         },
       });
     }

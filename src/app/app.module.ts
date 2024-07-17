@@ -26,10 +26,17 @@ import { AddonService } from './inventory/service/addon.service';
 import { UserService } from './security/service/user.service';
 import { ProfileService } from './security/service/profile.service';
 import { PermissionService } from './security/service/permission.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, CoreModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    CoreModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+  ],
   providers: [
     ProductService,
     StockService,

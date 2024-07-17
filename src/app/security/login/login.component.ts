@@ -4,6 +4,7 @@ import { AuthService } from '../service/auth.service';
 import { LoginModel } from '../model/login.model';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnDestroy(): void {
@@ -32,12 +34,14 @@ export class LoginComponent implements OnDestroy {
 
   login() {
     if (this.loginForm.valid) {
+      this.spinner.show('fullscreen');
       this.loginSubscription = this.authService
         .login(this.loginForm.value as LoginModel)
         .subscribe({
           next: () => {
             this.errors = [];
             this.router.navigate(['']);
+            this.spinner.hide('fullscreen');
           },
           error: ({ error }) => {
             const errors = Object.keys(error).map((err) => error[err]);
@@ -46,6 +50,7 @@ export class LoginComponent implements OnDestroy {
               concatenatedErrors = concatenatedErrors.concat(err);
             }
             this.errors = concatenatedErrors;
+            this.spinner.hide('fullscreen');
           },
         });
     }

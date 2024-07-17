@@ -1,6 +1,10 @@
 <form [formGroup]="signUpForm" (ngSubmit)="save()">
   <div class="login-box">
     <div class="login-form">
+      <ngx-spinner
+        type="ball-scale-multiple"
+        [fullScreen]="false"
+      ></ngx-spinner>
       <a href="index.html" class="login-logo">
         <!-- <img src="assets/images/logo.svg" alt="Vico Admin" /> -->
         <h1>GPA</h1>

@@ -34,7 +34,9 @@
               "src/assets/fonts/bootstrap/bootstrap-icons.css",
               "src/assets/css/main.min.css",
               "src/assets/vendor/overlay-scroll/OverlayScrollbars.min.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
+              "node_modules/ngx-spinner/animations/timer.css"
             ],
             "scripts": [
               "src/assets/js/jquery.min.js",
