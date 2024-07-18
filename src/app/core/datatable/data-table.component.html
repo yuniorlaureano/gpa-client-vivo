@@ -7,59 +7,61 @@
         </div>
       </div>
       <div class="card-body">
-        <ngx-spinner
-          name="table-spinner"
-          [fullScreen]="false"
-          type="timer"
-          size="medium"
-        ></ngx-spinner>
         <div class="table-responsive">
-          <table class="table table-bordered invoice-table">
-            <thead>
-              <ng-content select="[header]"></ng-content>
-            </thead>
-            <ng-content select="[body]"></ng-content>
-          </table>
-          <nav aria-label="Page Navigation">
-            <ul style="display: flex">
-              <li style="flex: 1">
-                mostrando {{ options.filteredSize }} de
-                {{ options.count }} registros
-              </li>
-              <li class="page-item">
-                <button
-                  type="button"
-                  class="btn btn-outline-dark"
-                  (click)="handleBackwardPage()"
-                >
-                  <span aria-hidden="true">
-                    <i class="bi bi-arrow-left"></i>
-                  </span>
-                </button>
-              </li>
-              <li class="page-item">
-                <select
-                  class="btn btn-outline-dark"
-                  (change)="handleSetPageToShow($event)"
-                >
-                  <option value="10">mostrar 10</option>
-                  <option value="50">mostrar 50</option>
-                  <option value="100">mostrar 100</option>
-                </select>
-              </li>
-              <li class="page-item">
-                <button
-                  type="button"
-                  class="btn btn-outline-dark"
-                  (click)="handleForwardPage()"
-                >
-                  <span aria-hidden="true">
-                    <i class="bi bi-arrow-right"></i>
-                  </span>
-                </button>
-              </li>
-            </ul>
-          </nav>
+          <div class="card">
+            <ngx-spinner
+              name="table-spinner"
+              [fullScreen]="false"
+              type="timer"
+              size="medium"
+            ></ngx-spinner>
+            <table class="table table-bordered invoice-table">
+              <thead>
+                <ng-content select="[header]"></ng-content>
+              </thead>
+              <ng-content select="[body]"></ng-content>
+            </table>
+            <nav aria-label="Page Navigation">
+              <ul style="display: flex">
+                <li style="flex: 1">
+                  mostrando {{ options.filteredSize }} de
+                  {{ options.count }} registros
+                </li>
+                <li class="page-item">
+                  <button
+                    type="button"
+                    class="btn btn-outline-dark"
+                    (click)="handleBackwardPage()"
+                  >
+                    <span aria-hidden="true">
+                      <i class="bi bi-arrow-left"></i>
+                    </span>
+                  </button>
+                </li>
+                <li class="page-item">
+                  <select
+                    class="btn btn-outline-dark"
+                    (change)="handleSetPageToShow($event)"
+                  >
+                    <option value="10">mostrar 10</option>
+                    <option value="50">mostrar 50</option>
+                    <option value="100">mostrar 100</option>
+                  </select>
+                </li>
+                <li class="page-item">
+                  <button
+                    type="button"
+                    class="btn btn-outline-dark"
+                    (click)="handleForwardPage()"
+                  >
+                    <span aria-hidden="true">
+                      <i class="bi bi-arrow-right"></i>
+                    </span>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </div>

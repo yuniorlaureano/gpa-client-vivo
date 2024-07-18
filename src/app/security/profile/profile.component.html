@@ -3,7 +3,7 @@
   <div class="col-12">
     <div style="display: flex; justify-content: space-between; gap: 15px">
       <div>
-        <h3>Usuario</h3>
+        <h3>Perfiles </h3>
       </div>
     </div>
   </div>
@@ -66,14 +66,22 @@
             </div>
           </div>
           <div class="col-sm-12">
-            <hr />
-            <h4>Lista de perfiles</h4>
-            <gpa-profile-list
-              [reloadTable]="reloadTable"
-              (onDelete)="handleDelete($event)"
-              (onEdit)="handleEdit($event)"
-              (onView)="handleView($event)"
-            ></gpa-profile-list>
+            <div class="card">
+              <ngx-spinner
+                name="profile-spinner"
+                [fullScreen]="false"
+                type="timer"
+                size="medium"
+              ></ngx-spinner>
+              <hr />
+              <h4>Lista de perfiles</h4>
+              <gpa-profile-list
+                [reloadTable]="reloadTable"
+                (onDelete)="handleDelete($event)"
+                (onEdit)="handleEdit($event)"
+                (onView)="handleView($event)"
+              ></gpa-profile-list>
+            </div>
           </div>
         </form>
       </div>
