@@ -7,6 +7,7 @@ import { Profile } from '../../core/models/profile.type';
 import { ModalService } from '../../core/service/modal.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
+import { RawUserModel } from '../model/raw-user.model';
 
 @Component({
   selector: 'gpa-profile',
@@ -16,6 +17,9 @@ import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 export class ProfileComponent {
   isEdit: boolean = false;
   reloadTable: number = 1;
+  isProfileUserCatalogVisible: boolean = false;
+  reloadProfileUserTable: number = 1;
+  selectedProfile!: ProfileModel | null;
 
   constructor(
     private fb: FormBuilder,
@@ -120,6 +124,79 @@ export class ProfileComponent {
           error: (error) => {
             this.spinner.hide('fullscreen');
             this.toastService.showError('Error elimiando perfil');
+          },
+        });
+      })
+      .catch(() => {});
+  }
+
+  handleAddUser(model: ProfileModel) {
+    this.selectedProfile = model;
+    this.isProfileUserCatalogVisible = true;
+    this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
+  }
+
+  handdleUserAdded(user: RawUserModel) {
+    this.handleAssignPermission(this.selectedProfile, user);
+  }
+
+  handleAssignPermission(profile: ProfileModel | null, user: RawUserModel) {
+    if (!profile) {
+      return;
+    }
+
+    this.confirmService
+      .confirm(
+        'Perfil',
+        'Está seguro de asignar el usuario:\n ' +
+          user.email +
+          ' al perfil: \n ' +
+          profile.name
+      )
+      .then(() => {
+        this.spinner.show('fullscreen');
+        this.profileService.assignUser(profile.id!, user.id!).subscribe({
+          next: () => {
+            this.toastService.showSucess('Usuario asignado');
+            this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
+            this.spinner.hide('fullscreen');
+          },
+          error: (error) => {
+            this.spinner.hide('fullscreen');
+            this.toastService.showError('Error asignando usuario');
+          },
+        });
+      })
+      .catch(() => {});
+  }
+
+  handdleUserRemoved(user: RawUserModel) {
+    this.handleRemoveUser(this.selectedProfile, user);
+  }
+
+  handleRemoveUser(profile: ProfileModel | null, user: RawUserModel) {
+    if (!profile) {
+      return;
+    }
+
+    this.confirmService
+      .confirm(
+        'Perfil',
+        'Está seguro de remover el usuario.\n ' +
+          ' del perfil: \n ' +
+          profile.name
+      )
+      .then(() => {
+        this.spinner.show('fullscreen');
+        this.profileService.removeUser(profile.id!, user.id!).subscribe({
+          next: () => {
+            this.toastService.showSucess('Usuario removido');
+            this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
+            this.spinner.hide('fullscreen');
+          },
+          error: (error) => {
+            this.spinner.hide('fullscreen');
+            this.toastService.showError('Error removiendo usuario');
           },
         });
       })

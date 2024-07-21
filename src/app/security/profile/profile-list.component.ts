@@ -23,13 +23,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrl: './profile-list.component.css',
 })
 export class ProfileListComponent {
-  reloadProfileUserTable: number = 1;
-  @Input() isProfileUserCatalogVisible: boolean = false;
-  selectedProfile!: ProfileModel | null;
   @Input() reloadTable: number = 1;
   @Output() onDelete = new EventEmitter<ProfileModel>();
   @Output() onEdit = new EventEmitter<ProfileModel>();
   @Output() onView = new EventEmitter<ProfileModel>();
+  @Output() onAddUser = new EventEmitter<ProfileModel>();
 
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
@@ -105,75 +103,7 @@ export class ProfileListComponent {
   }
 
   handleAddUser(model: ProfileModel) {
-    this.selectedProfile = model;
-    this.isProfileUserCatalogVisible = true;
-    this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
-  }
-
-  handdleUserAdded(user: RawUserModel) {
-    this.handleAssignPermission(this.selectedProfile, user);
-  }
-
-  handleAssignPermission(profile: ProfileModel | null, user: RawUserModel) {
-    if (!profile) {
-      return;
-    }
-
-    this.confirmService
-      .confirm(
-        'Perfil',
-        'Está seguro de asignar el usuario:\n ' +
-          user.email +
-          ' al perfil: \n ' +
-          profile.name
-      )
-      .then(() => {
-        this.spinner.show('profile-spinner');
-        this.profileService.assignUser(profile.id!, user.id!).subscribe({
-          next: () => {
-            this.toastService.showSucess('Usuario asignado');
-            this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
-            this.spinner.hide('profile-spinner');
-          },
-          error: (error) => {
-            this.spinner.hide('profile-spinner');
-            this.toastService.showError('Error asignando usuario');
-          },
-        });
-      })
-      .catch(() => {});
-  }
-
-  handdleUserRemoved(user: RawUserModel) {
-    this.handleRemoveUser(this.selectedProfile, user);
-  }
-
-  handleRemoveUser(profile: ProfileModel | null, user: RawUserModel) {
-    if (!profile) {
-      return;
-    }
-
-    this.confirmService
-      .confirm(
-        'Perfil',
-        'Está seguro de remover el usuario.\n ' +
-          ' del perfil: \n ' +
-          profile.name
-      )
-      .then(() => {
-        this.spinner.show('profile-spinner');
-        this.profileService.removeUser(profile.id!, user.id!).subscribe({
-          next: () => {
-            this.toastService.showSucess('Usuario removido');
-            this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
-          },
-          error: (error) => {
-            this.spinner.hide('profile-spinner');
-            this.toastService.showError('Error removiendo usuario');
-          },
-        });
-      })
-      .catch(() => {});
+    this.onAddUser.emit(model);
   }
 
   loadProfiles() {
