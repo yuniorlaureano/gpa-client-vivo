@@ -14,6 +14,7 @@ import { SearchModel } from '../../../core/models/search.model';
 import { ProfileService } from '../../service/profile.service';
 import { RawUserModel } from '../../model/raw-user.model';
 import { ProfileModel } from '../../model/profile.model';
+import { ToastService } from '../../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-profile-user-catalog',
@@ -42,7 +43,10 @@ export class ProfileUserCatalogComponent
     pageSize: 10,
   };
 
-  constructor(private profileService: ProfileService) {}
+  constructor(
+    private profileService: ProfileService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -117,6 +121,9 @@ export class ProfileUserCatalogComponent
             ...this.options,
             count: model.count,
           };
+        },
+        error: (error) => {
+          this.toastService.showError('Error cargando usuarios');
         },
       });
   }

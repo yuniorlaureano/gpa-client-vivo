@@ -13,6 +13,7 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { StockCycleService } from '../service/cycle.service';
 import { StockCycleModel } from '../models/stock-cycle.model';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-stock-cycle-list-table',
@@ -42,7 +43,8 @@ export class StockCycleListTableComponent {
 
   constructor(
     private stockCycleService: StockCycleService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +74,10 @@ export class StockCycleListTableComponent {
             },
           };
           this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error al cargar existencias');
         },
       });
   }

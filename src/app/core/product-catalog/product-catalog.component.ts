@@ -13,6 +13,7 @@ import { ProductService } from '../../inventory/service/product.service';
 import { ProductModel } from '../../inventory/models/product.model';
 import { getProductTypeDescription } from '../utils/product.util';
 import { ProductType } from '../models/product-type.enum';
+import { ToastService } from '../service/toast.service';
 
 @Component({
   selector: 'gpa-product-catalog',
@@ -37,7 +38,10 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
     pageSize: 10,
   };
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -97,6 +101,9 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
             ...this.options,
             count: model.count,
           };
+        },
+        error: (error) => {
+          this.toastService.showError('Error cargando productos');
         },
       });
   }

@@ -61,6 +61,10 @@ export class StockCycleComponent implements OnInit {
         ]);
         this.spinner.hide('fullscreen');
       },
+      error: (error) => {
+        this.spinner.hide('fullscreen');
+        this.toast.showError('Error al abrir el ciclo de inventario');
+      },
     });
   }
   handleCancel() {

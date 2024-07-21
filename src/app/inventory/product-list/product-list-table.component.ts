@@ -14,6 +14,7 @@ import { ProductModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
 import { ProductType } from '../../core/models/product-type.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-product-list-table',
@@ -42,7 +43,8 @@ export class ProductListTableComponent {
 
   constructor(
     private productService: ProductService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +74,10 @@ export class ProductListTableComponent {
             },
           };
           this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error al cargar productos');
         },
       });
   }

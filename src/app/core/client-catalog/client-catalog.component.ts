@@ -4,6 +4,7 @@ import { SearchModel } from '../models/search.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { ClientService } from '../../invoice/service/client.service';
 import { ClientModel } from '../../invoice/model/client.model';
+import { ToastService } from '../service/toast.service';
 
 @Component({
   selector: 'gpa-client-catalog',
@@ -27,7 +28,10 @@ export class ClientCatalogComponent {
     pageSize: 10,
   };
 
-  constructor(private clientService: ClientService) {}
+  constructor(
+    private clientService: ClientService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadClients();
@@ -79,6 +83,9 @@ export class ClientCatalogComponent {
             ...this.options,
             count: model.count,
           };
+        },
+        error: (error) => {
+          this.toastService.showError('Error cargando clientes');
         },
       });
   }

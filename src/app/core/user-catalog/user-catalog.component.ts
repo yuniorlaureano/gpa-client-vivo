@@ -13,6 +13,7 @@ import { SearchModel } from '../models/search.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { UserModel } from '../../security/model/user.model';
 import { UserService } from '../../security/service/user.service';
+import { ToastService } from '../service/toast.service';
 
 @Component({
   selector: 'gpa-user-catalog',
@@ -38,7 +39,10 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
     pageSize: 10,
   };
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private toastService: ToastService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['reloadTable'] && !changes['reloadTable'].firstChange) {
@@ -103,6 +107,9 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
             ...this.options,
             count: model.count,
           };
+        },
+        error: (error) => {
+          this.toastService.showError('Error cargando usuarios');
         },
       });
   }

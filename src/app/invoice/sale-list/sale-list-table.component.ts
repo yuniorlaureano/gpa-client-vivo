@@ -14,6 +14,7 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-sale-list-table',
@@ -43,7 +44,8 @@ export class SaleListTableComponent {
 
   constructor(
     private invoiceService: InvoiceService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +75,10 @@ export class SaleListTableComponent {
             },
           };
           this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error al cargar las facturas');
         },
       });
   }

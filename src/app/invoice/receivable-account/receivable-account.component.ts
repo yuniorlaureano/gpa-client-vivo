@@ -89,6 +89,10 @@ export class ReceivableAccountComponent implements OnInit {
           this.invoiceIdSubject$.next(this.invoice?.invoiceId ?? null);
           this.spinner.hide('fullscreen');
         },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al realizar el pago');
+        },
       });
     }
   }
@@ -132,18 +136,24 @@ export class ReceivableAccountComponent implements OnInit {
           );
         })
       )
-      .subscribe((invoice) => {
-        if (invoice) {
-          this.receivableForm.setValue({
-            id: invoice.pendingPayment?.id ?? null,
-            payment: 0.0,
-            date: null,
-            note: null,
-            invoiceId: invoice.invoiceId,
-          });
-          this.invoice = invoice;
-        }
-        this.spinner.hide('fullscreen');
+      .subscribe({
+        next: (invoice) => {
+          if (invoice) {
+            this.receivableForm.setValue({
+              id: invoice.pendingPayment?.id ?? null,
+              payment: 0.0,
+              date: null,
+              note: null,
+              invoiceId: invoice.invoiceId,
+            });
+            this.invoice = invoice;
+          }
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al cargar la factura');
+        },
       });
   }
 }

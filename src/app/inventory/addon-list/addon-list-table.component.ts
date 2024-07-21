@@ -13,6 +13,7 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { AddonModel } from '../models/addon.model';
 import { AddonService } from '../service/addon.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-addon-list-table',
@@ -41,7 +42,8 @@ export class AddonListTableComponent {
 
   constructor(
     private addonService: AddonService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +73,10 @@ export class AddonListTableComponent {
             },
           };
           this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error al cargar los agregados.');
         },
       });
   }

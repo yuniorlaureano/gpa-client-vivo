@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../core/service/toast.service';
 import { UserModel } from '../model/user.model';
 import { of, switchMap } from 'rxjs';
-import { Profile } from '../../core/models/profile.type';
 import { ProfileModel } from '../model/profile.model';
 
 @Component({
@@ -61,8 +60,9 @@ export class UserRegisterComponent {
         this.clearForm();
         this.toastService.showSucess('Usuario agregado');
       },
-      error: (err) =>
-        this.toastService.showError('Error agregando usuario. ' + err),
+      error: (error) => {
+        this.toastService.showError('Error al agregar usuario. ');
+      },
     });
   }
 
@@ -117,6 +117,9 @@ export class UserRegisterComponent {
             });
             this.profiles = user.profiles;
           }
+        },
+        error: (error) => {
+          this.toastService.showError('Error cargando usuario. ');
         },
       });
   }

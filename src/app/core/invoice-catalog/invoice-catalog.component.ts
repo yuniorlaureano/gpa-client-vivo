@@ -11,6 +11,7 @@ import { SearchModel } from '../models/search.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { InvoiceModel } from '../../invoice/model/invoice.model';
 import { InvoiceService } from '../../invoice/service/invoice.service';
+import { ToastService } from '../service/toast.service';
 
 @Component({
   selector: 'gpa-invoice-catalog',
@@ -35,7 +36,10 @@ export class InvoiceCatalogComponent implements OnInit, OnDestroy {
     pageSize: 10,
   };
 
-  constructor(private invoiceService: InvoiceService) {}
+  constructor(
+    private invoiceService: InvoiceService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadInvoices();
@@ -94,6 +98,9 @@ export class InvoiceCatalogComponent implements OnInit, OnDestroy {
             ...this.options,
             count: model.count,
           };
+        },
+        error: (error) => {
+          this.toastService.showError('Error cargando facturas');
         },
       });
   }

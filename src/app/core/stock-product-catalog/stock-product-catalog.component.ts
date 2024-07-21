@@ -11,6 +11,7 @@ import { SearchModel } from '../models/search.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { StockService } from '../../inventory/service/stock.service';
 import { ProductCatalogModel } from '../../inventory/models/product-catalog.model';
+import { ToastService } from '../service/toast.service';
 
 @Component({
   selector: 'gpa-stock-product-catalog',
@@ -35,7 +36,10 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
     pageSize: 10,
   };
 
-  constructor(private stockService: StockService) {}
+  constructor(
+    private stockService: StockService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -94,6 +98,9 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
             ...this.options,
             count: model.count,
           };
+        },
+        error: (error) => {
+          this.toastService.showError('Error cargando productos');
         },
       });
   }

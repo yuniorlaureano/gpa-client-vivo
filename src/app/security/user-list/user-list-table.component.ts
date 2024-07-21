@@ -13,6 +13,7 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { UserModel } from '../model/user.model';
 import { UserService } from '../service/user.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-user-list-table',
@@ -42,7 +43,8 @@ export class UserListTableComponent {
 
   constructor(
     private userService: UserService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +73,10 @@ export class UserListTableComponent {
               filteredSize: data.data.length,
             },
           };
+          this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.toastService.showError('Error al cargar usuarios');
           this.spinner.hide('table-spinner');
         },
       });

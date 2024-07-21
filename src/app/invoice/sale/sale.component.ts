@@ -206,13 +206,13 @@ export class SaleComponent implements OnInit {
     this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
       next: (data) => {
         this.router.navigate(['/invoice/sale/edit/' + data.id]);
-        this.toastService.showSucess('Venta creada');
+        this.toastService.showSucess('Venta realizada');
         this.calculateSelectedProductCatalogAggregate();
         this.spinner.hide('fullscreen');
       },
-      error: (err) => {
-        this.toastService.showError('Error creando venta. ' + err);
+      error: (error) => {
         this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al realizar la venta');
       },
     });
   }
@@ -225,9 +225,9 @@ export class SaleComponent implements OnInit {
         this.toastService.showSucess('Venta editada');
         this.calculateSelectedProductCatalogAggregate();
       },
-      error: (err) => {
-        this.toastService.showError('Error editando venta. ' + err);
+      error: (error) => {
         this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al editar la venta');
       },
     });
   }
@@ -264,14 +264,18 @@ export class SaleComponent implements OnInit {
   }
 
   cancelInvoice() {
+    this.spinner.hide('fullscreen');
     const id = this.saleForm.get('id')?.value;
     this.invoiceService.cancelInvoice(id!).subscribe({
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Devolución realizada');
+        this.spinner.hide('fullscreen');
       },
-      error: (err) =>
-        this.toastService.showError('Realizando devolución. ' + err),
+      error: (error) => {
+        this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al cancelar la factura');
+      },
     });
   }
 
@@ -331,12 +335,18 @@ export class SaleComponent implements OnInit {
   }
 
   handleSelectedClient(client: ClientModel) {
+    this.spinner.show('fullscreen');
     this.saleForm.get('clientId')?.setValue(client.id);
     this.isClientCatalogVisible = false;
     this.clientService.getClientById(client.id).subscribe({
       next: (data) => {
         this.client = data;
         this.clientFees = getTotalClientFees(data);
+        this.spinner.hide('fullscreen');
+      },
+      error: (error) => {
+        this.toastService.showError('Error al cargar el cliente');
+        this.spinner.hide('fullscreen');
       },
     });
   }
@@ -355,28 +365,34 @@ export class SaleComponent implements OnInit {
           return this.invoiceService.getInvoice(id);
         })
       )
-      .subscribe((invoice) => {
-        if (invoice) {
-          this.saleForm.setValue({
-            id: invoice.id,
-            note: <any>invoice.note,
-            status: invoice.status,
-            date: <any>invoice.date,
-            type: invoice.type,
-            clientId: invoice.clientId,
-            storeId: null,
-            invoiceDetails: [],
-          });
-          this.payment = invoice.payment;
-          this.paymentValue = invoice.payment;
-          this.saleType = invoice.type;
-          this.client = invoice.client;
-          this.clientFees = getTotalClientFees(invoice.client);
-          this.mapProductsToForm(invoice.invoiceDetails);
-          this.calculateSelectedProductCatalogAggregate();
-          this.setDisable(invoice.status == InvoiceStatusEnum.Canceled);
-        }
-        this.spinner.hide('fullscreen');
+      .subscribe({
+        next: (invoice) => {
+          if (invoice) {
+            this.saleForm.setValue({
+              id: invoice.id,
+              note: <any>invoice.note,
+              status: invoice.status,
+              date: <any>invoice.date,
+              type: invoice.type,
+              clientId: invoice.clientId,
+              storeId: null,
+              invoiceDetails: [],
+            });
+            this.payment = invoice.payment;
+            this.paymentValue = invoice.payment;
+            this.saleType = invoice.type;
+            this.client = invoice.client;
+            this.clientFees = getTotalClientFees(invoice.client);
+            this.mapProductsToForm(invoice.invoiceDetails);
+            this.calculateSelectedProductCatalogAggregate();
+            this.setDisable(invoice.status == InvoiceStatusEnum.Canceled);
+          }
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.toastService.showError('Error al cargar la factura');
+          this.spinner.hide('fullscreen');
+        },
       });
   }
 

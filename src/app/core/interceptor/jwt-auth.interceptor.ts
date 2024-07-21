@@ -3,10 +3,12 @@ import { tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from '../service/token.service';
+import { ErrorService } from '../service/error.service';
 
 export const JwtAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const tokenService = inject(TokenService);
+  const errorService = inject(ErrorService);
 
   const token = tokenService.getToken();
   let headers = req.headers;
@@ -28,6 +30,10 @@ export const JwtAuthInterceptor: HttpInterceptorFn = (req, next) => {
       error: (error) => {
         if (error.status && error.status == 401) {
           router.navigate(['/auth/login']);
+        }
+
+        if (error.status && error.status == 403) {
+          errorService.addError(error);
         }
       },
     })

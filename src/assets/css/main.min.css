@@ -17215,7 +17215,8 @@ fieldset:disabled .btn-white {
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
-  width: 12rem;
+  min-width: 12rem;
+  max-width: 30rem;
   box-shadow: 0 10px 10px rgba(0, 10, 10, 0.1);
 }
 .dropdown-menu:before {

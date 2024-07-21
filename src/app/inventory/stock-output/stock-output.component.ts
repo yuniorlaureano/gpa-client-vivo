@@ -124,11 +124,9 @@ export class StockOutputComponent implements OnInit, OnDestroy {
               this.toastService.showSucess('Registro modificado.');
               this.spinner.hide('fullscreen');
             },
-            error: (err) => {
-              this.toastService.showError(
-                'Error modificando el registro. ' + err
-              );
+            error: (error) => {
               this.spinner.hide('fullscreen');
+              this.toastService.showError('Error modificando registro');
             },
           });
       } else {
@@ -141,11 +139,9 @@ export class StockOutputComponent implements OnInit, OnDestroy {
               this.clearForm();
               this.toastService.showSucess('Registro agregado.');
             },
-            error: (err) => {
-              this.toastService.showError(
-                'Error modificando el registro. ' + err
-              );
+            error: (error) => {
               this.spinner.hide('fullscreen');
+              this.toastService.showError('Error agregando registro');
             },
           });
       }
@@ -179,13 +175,17 @@ export class StockOutputComponent implements OnInit, OnDestroy {
   cancelStock() {
     const id = this.stockForm.get('id')?.value;
     if (this.isEdit && id) {
+      this.spinner.show('fullscreen');
       this.stockService.cancelStock(id).subscribe({
         next: () => {
           this.toastService.showSucess('Registro cancelado');
           this.clearForm();
+          this.spinner.hide('fullscreen');
         },
-        error: (err) =>
-          this.toastService.showError('Error cancelando registro. ' + err),
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error cancelando registro');
+        },
       });
     }
   }
@@ -280,8 +280,9 @@ export class StockOutputComponent implements OnInit, OnDestroy {
           }
           this.spinner.hide('fullscreen');
         },
-        error: (err) => {
-          this.toastService.showError('Error obteniendo el registro. ' + err);
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error cargando registro');
         },
       });
   }

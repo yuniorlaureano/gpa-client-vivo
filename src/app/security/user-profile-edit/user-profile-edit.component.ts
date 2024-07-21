@@ -60,9 +60,9 @@ export class UserProfileEditComponent {
         this.router.navigate(['/']);
         this.spinner.hide('fullscreen');
       },
-      error: (err) => {
-        this.toastService.showError('Error actualizado usuario. ' + err);
+      error: (error) => {
         this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al actualizar el usuario');
       },
     });
   }
@@ -104,6 +104,10 @@ export class UserProfileEditComponent {
             });
           }
           this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error cargando usuario');
         },
       });
   }

@@ -13,6 +13,7 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { StockService } from '../service/stock.service';
 import { ExistenceModel } from '../models/existence.model';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-existence-list-table',
@@ -42,7 +43,8 @@ export class ExistenceListTableComponent {
 
   constructor(
     private stockService: StockService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +74,10 @@ export class ExistenceListTableComponent {
             },
           };
           this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error cargando existencias');
         },
       });
   }

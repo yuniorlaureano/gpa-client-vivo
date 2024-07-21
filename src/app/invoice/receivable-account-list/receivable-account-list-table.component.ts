@@ -13,6 +13,7 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ReceivableAccountService } from '../service/receivable-account.service';
 import { ReceivableAccountSummaryModel } from '../model/receivable-account-summary.model';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-receivable-account-list-table',
@@ -42,7 +43,8 @@ export class ReceivableAccountListTableComponent {
 
   constructor(
     private receivableAccountService: ReceivableAccountService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +76,10 @@ export class ReceivableAccountListTableComponent {
             },
           };
           this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error al cargar cuentas por cobrar');
         },
       });
   }

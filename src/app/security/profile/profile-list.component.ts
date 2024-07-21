@@ -132,13 +132,16 @@ export class ProfileListComponent {
           profile.name
       )
       .then(() => {
+        this.spinner.show('profile-spinner');
         this.profileService.assignUser(profile.id!, user.id!).subscribe({
           next: () => {
             this.toastService.showSucess('Usuario asignado');
             this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
+            this.spinner.hide('profile-spinner');
           },
-          error: (err) => {
-            this.toastService.showError('Error asignando usuario. ' + err);
+          error: (error) => {
+            this.spinner.hide('profile-spinner');
+            this.toastService.showError('Error asignando usuario');
           },
         });
       })
@@ -158,13 +161,15 @@ export class ProfileListComponent {
           profile.name
       )
       .then(() => {
+        this.spinner.show('profile-spinner');
         this.profileService.removeUser(profile.id!, user.id!).subscribe({
           next: () => {
             this.toastService.showSucess('Usuario removido');
             this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
           },
-          error: (err) => {
-            this.toastService.showError('Error removiendo usuario. ' + err);
+          error: (error) => {
+            this.spinner.hide('profile-spinner');
+            this.toastService.showError('Error removiendo usuario');
           },
         });
       })
@@ -198,6 +203,10 @@ export class ProfileListComponent {
             },
           };
           this.spinner.hide('profile-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('profile-spinner');
+          this.toastService.showError('Error al cargar perfiles');
         },
       });
   }

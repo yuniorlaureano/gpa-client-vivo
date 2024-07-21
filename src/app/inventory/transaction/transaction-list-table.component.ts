@@ -14,6 +14,7 @@ import { StockService } from '../service/stock.service';
 import { StockModel } from '../models/stock.model';
 import { StockStatusEnum } from '../../core/models/stock-status.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-transaction-list-table',
@@ -43,7 +44,8 @@ export class TransactionListTableComponent {
 
   constructor(
     private stockService: StockService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +75,10 @@ export class TransactionListTableComponent {
             },
           };
           this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error al cargar transacciones.');
         },
       });
   }

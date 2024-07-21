@@ -1,5 +1,11 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { of, switchMap } from 'rxjs';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { Observable, of, switchMap } from 'rxjs';
 import { PermissionService } from '../service/permission.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../core/service/toast.service';
@@ -7,91 +13,19 @@ import { ProfileModel } from '../model/profile.model';
 import * as profileUtils from '../../core/utils/profile.utils';
 import { ProfileService } from '../service/profile.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { MasterProfileModel } from '../model/master-profile.mode';
 
 @Component({
   selector: 'gpa-profile-permission',
   templateUrl: './profile-permission.component.html',
   styleUrl: './profile-permission.component.css',
 })
-export class ProfilePermissionComponent implements AfterViewInit {
+export class ProfilePermissionComponent implements AfterViewInit, OnInit {
   profile: ProfileModel | null = null;
   permissions: string[] = [];
   profileUI: any = null;
   @ViewChild('profilecontainer') profilecontainer!: ElementRef;
-
-  masterProfile = [
-    {
-      app: 'GPA',
-      modules: [
-        {
-          id: 'inventory',
-          components: [
-            {
-              id: 'addon',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-            {
-              id: 'category',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-            {
-              id: 'productLocation',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-            {
-              id: 'product',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-            {
-              id: 'provider',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-            {
-              id: 'reason',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-            {
-              id: 'stockCycle',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-            {
-              id: 'stock',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-          ],
-        },
-        {
-          id: 'invoice',
-          components: [
-            {
-              id: 'client',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-            {
-              id: 'invoice',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-            {
-              id: 'receivableAccount',
-              permissions: ['create', 'update', 'delete', 'read'],
-            },
-          ],
-        },
-        {
-          id: 'report',
-          components: [],
-        },
-        {
-          id: 'security',
-          components: [],
-        },
-        {
-          id: 'common',
-          components: [],
-        },
-      ],
-    },
-  ];
+  masterProfile$!: Observable<MasterProfileModel[]>;
 
   constructor(
     private permissionService: PermissionService,
@@ -101,8 +35,12 @@ export class ProfilePermissionComponent implements AfterViewInit {
     private spinner: NgxSpinnerService
   ) {}
 
+  ngOnInit(): void {
+    this.masterProfile$ = this.permissionService.getMasterProfile();
+  }
+
   ngAfterViewInit() {
-    this.loadUser();
+    this.loadPermission();
   }
 
   getNewProfile() {
@@ -131,14 +69,14 @@ export class ProfilePermissionComponent implements AfterViewInit {
           this.toastService.showSucess('Perfil actualizado');
           this.spinner.hide('fullscreen');
         },
-        error: (err) => {
-          this.toastService.showError('Error actualizando perfil. ' + err);
+        error: (error) => {
           this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al actualizar perfil. ');
         },
       });
   }
 
-  loadUser() {
+  loadPermission() {
     this.route.paramMap
       .pipe(
         switchMap((params) => {
@@ -158,6 +96,10 @@ export class ProfilePermissionComponent implements AfterViewInit {
             this.setSelectedPermissions(profile.value);
           }
           this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al cargar perfil. ');
         },
       });
   }

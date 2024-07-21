@@ -13,6 +13,7 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { CategoryModel } from '../models/category.model';
 import { CategoryService } from '../service/category.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-category-list-table',
@@ -41,7 +42,8 @@ export class CategoryListTableComponent {
 
   constructor(
     private categoryService: CategoryService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +73,10 @@ export class CategoryListTableComponent {
             },
           };
           this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error cargando categorias');
         },
       });
   }

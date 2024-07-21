@@ -51,8 +51,7 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
         this.toastService.showSucess(`Ha elegido el perifl de ${profileName}`);
       },
       error: (error) => {
-        this.toastService.showSucess(`Error al cambiar de perfil`);
-        this.toastService.showSucess(error);
+        this.toastService.showError(`Error al cambiar de perfil`);
       },
     });
   }
@@ -84,12 +83,7 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
           return profiles;
         }),
         catchError((error) => {
-          if (error.status === 403) {
-            this.store.dispatch(
-              new AddError('No tiene permisos para ver los perfiles')
-            );
-            this.toastService.showError(error.error.message);
-          }
+          this.toastService.showError(`Error cargando permisos`);
           return of([] as ProfileModel[]);
         })
       );

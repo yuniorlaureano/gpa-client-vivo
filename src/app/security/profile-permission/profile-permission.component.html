@@ -49,7 +49,7 @@
       <div class="row">
         <form class="row">
           <ul #profilecontainer>
-            <li *ngFor="let app of masterProfile">
+            <li *ngFor="let app of masterProfile$ | async">
               <h3>{{ app.app }}</h3>
               <ol style="margin-left: 20px">
                 <li *ngFor="let md of app.modules">

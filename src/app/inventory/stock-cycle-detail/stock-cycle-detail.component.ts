@@ -46,10 +46,15 @@ export class StockCycleDetailComponent implements OnInit {
     this.confirmService
       .confirm('Ciclo', 'Está seguro de cerrar el ciclo de inventario ')
       .then(() => {
+        this.spinner.show('fullscreen');
         this.stockCycleService.closeStockCycle(this.cycleId!).subscribe({
           next: () => {
             this.toast.showSucess('Cicle cerrado');
             this.loadCycle();
+          },
+          error: (error) => {
+            this.spinner.show('fullscreen');
+            this.toast.showError('Error al cerrar el ciclo de inventario');
           },
         });
       })
@@ -84,6 +89,10 @@ export class StockCycleDetailComponent implements OnInit {
             this.cycleId = data?.id;
           }
           this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toast.showError('Error al cargar el ciclo de inventario');
         },
       });
   }

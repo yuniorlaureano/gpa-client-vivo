@@ -48,9 +48,12 @@ export class AddonComponent implements OnInit {
           next: () => {
             this.clearForm();
             this.toastService.showSucess('Agregado modificado');
+            this.spinner.hide('fullscreen');
           },
-          error: (err) =>
-            this.toastService.showSucess('Error modificando agregado. ' + err),
+          error: (error) => {
+            this.spinner.hide('fullscreen');
+            this.toastService.showError('Error al modificar el agregado');
+          },
         });
       } else {
         value.id = null;
@@ -61,9 +64,9 @@ export class AddonComponent implements OnInit {
             this.toastService.showSucess('Agregado creada');
             this.spinner.hide('fullscreen');
           },
-          error: (err) => {
-            this.toastService.showSucess('Error creando agregado. ' + err);
+          error: (error) => {
             this.spinner.hide('fullscreen');
+            this.toastService.showError('Error al crear el agregado');
           },
         });
       }
@@ -97,6 +100,10 @@ export class AddonComponent implements OnInit {
             });
           }
           this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al cargar el agregado');
         },
       });
   }

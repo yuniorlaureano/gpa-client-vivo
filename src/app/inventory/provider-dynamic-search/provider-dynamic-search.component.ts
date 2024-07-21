@@ -4,6 +4,7 @@ import { ProviderModel } from '../models/provider.model';
 import { ProviderService } from '../service/provider.service';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { SearchModel } from '../../core/models/search.model';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-provider-dynamic-search',
@@ -27,7 +28,10 @@ export class ProviderDynamicSearchComponent implements OnInit {
     pageSize: number;
   }>(this.options);
 
-  constructor(private providerService: ProviderService) {}
+  constructor(
+    private providerService: ProviderService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadProviders();
@@ -84,6 +88,9 @@ export class ProviderDynamicSearchComponent implements OnInit {
             ...this.options,
             count: data.count,
           };
+        },
+        error: (error) => {
+          this.toastService.showError('Error cargando proveedores');
         },
       });
   }

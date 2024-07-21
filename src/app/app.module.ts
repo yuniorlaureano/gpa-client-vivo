@@ -29,6 +29,7 @@ import { PermissionService } from './security/service/permission.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsModule } from '@ngxs/store';
 import { AppState } from './core/ng-xs-store/states/app.state';
+import { ErrorService } from './core/service/error.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -59,6 +60,7 @@ import { AppState } from './core/ng-xs-store/states/app.state';
     UserService,
     ProfileService,
     PermissionService,
+    ErrorService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
   ],
   bootstrap: [AppComponent],

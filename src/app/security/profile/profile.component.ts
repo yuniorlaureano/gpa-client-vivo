@@ -5,7 +5,6 @@ import { ProfileService } from '../service/profile.service';
 import { ProfileModel } from '../model/profile.model';
 import { Profile } from '../../core/models/profile.type';
 import { ModalService } from '../../core/service/modal.service';
-import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -49,15 +48,18 @@ export class ProfileComponent {
     const value = {
       ...this.profileForm.value,
     };
-
+    this.spinner.show('fullscreen');
     this.profileService.addProfile(value as ProfileModel).subscribe({
       next: () => {
         this.handleReloadTable();
         this.clearForm();
         this.toastService.showSucess('Profile agregado');
+        this.spinner.hide('fullscreen');
       },
-      error: (err) =>
-        this.toastService.showError('Error agregando profile. ' + err),
+      error: (error) => {
+        this.spinner.hide('fullscreen');
+        this.toastService.showError('Error creado perfil');
+      },
     });
   }
 
@@ -74,9 +76,9 @@ export class ProfileComponent {
         this.toastService.showSucess('Usuario actualizado');
         this.spinner.hide('fullscreen');
       },
-      error: (err) => {
-        this.toastService.showError('Error actualizado usuario. ' + err);
+      error: (error) => {
         this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al actualizar el usuario');
       },
     });
   }

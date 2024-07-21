@@ -65,9 +65,9 @@ export class ClientComponent implements OnInit {
         this.toastService.showSucess('Cliente agregado');
         this.spinner.hide('fullscreen');
       },
-      error: (err) => {
-        this.toastService.showSucess('Error agregando cliente. ' + err);
+      error: (error) => {
         this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al agregar cliente');
       },
     });
   }
@@ -83,9 +83,9 @@ export class ClientComponent implements OnInit {
         this.clearForm();
         this.toastService.showSucess('Cliente actualizado');
       },
-      error: (err) => {
-        this.toastService.showSucess('Error actualizado cliente. ' + err);
+      error: (error) => {
         this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al actualizar el cliente');
       },
     });
   }
@@ -145,6 +145,10 @@ export class ClientComponent implements OnInit {
             this.mapCredits(client.credits);
           }
           this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al cargar el cliente');
         },
       });
   }

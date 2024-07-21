@@ -13,6 +13,7 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ClientModel } from '../model/client.model';
 import { ClientService } from '../service/client.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-client-list-table',
@@ -42,7 +43,8 @@ export class ClientListTableComponent {
 
   constructor(
     private clientService: ClientService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +74,10 @@ export class ClientListTableComponent {
             },
           };
           this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error al cargar clientes');
         },
       });
   }

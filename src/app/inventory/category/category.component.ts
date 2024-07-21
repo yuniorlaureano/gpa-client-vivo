@@ -45,9 +45,12 @@ export class CategoryComponent implements OnInit {
           next: () => {
             this.clearForm();
             this.toastService.showSucess('Categoría modificada');
+            this.spinner.hide('fullscreen');
           },
-          error: (err) =>
-            this.toastService.showSucess('Error modificando categoría. ' + err),
+          error: (error) => {
+            this.spinner.hide('fullscreen');
+            this.toastService.showError('Error al modificar la categoría');
+          },
         });
       } else {
         value.id = null;
@@ -58,9 +61,9 @@ export class CategoryComponent implements OnInit {
             this.toastService.showSucess('Categoría creada');
             this.spinner.hide('fullscreen');
           },
-          error: (err) => {
-            this.toastService.showSucess('Error creando categoría. ' + err);
+          error: (error) => {
             this.spinner.hide('fullscreen');
+            this.toastService.showError('Error al crear la categoría');
           },
         });
       }
@@ -92,6 +95,10 @@ export class CategoryComponent implements OnInit {
             });
           }
           this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al cargar la categoría');
         },
       });
   }

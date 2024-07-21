@@ -63,6 +63,9 @@ export class ProductComponent implements OnInit {
     if (!this.isEdit) {
       this.addonService.getAddon().subscribe({
         next: (data) => this.mapAddon(data.data),
+        error: (error) => {
+          this.toastService.showError('Error cargando agregados');
+        },
       });
     }
   }
@@ -139,9 +142,9 @@ export class ProductComponent implements OnInit {
         this.toastService.showSucess('Producto agregado');
         this.spinner.hide('fullscreen');
       },
-      error: (err) => {
-        this.toastService.showSucess('Error agregando producto. ' + err);
+      error: (error) => {
         this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al agregar producto');
       },
     });
   }
@@ -165,9 +168,9 @@ export class ProductComponent implements OnInit {
         this.toastService.showSucess('Producto actualizado');
         this.spinner.hide('fullscreen');
       },
-      error: (err) => {
-        this.toastService.showSucess('Error actualizado producto. ' + err);
+      error: (error) => {
         this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al actualizar el producto');
       },
     });
   }
@@ -251,6 +254,10 @@ export class ProductComponent implements OnInit {
             }
           }
           this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al cargar el producto');
         },
       });
   }
