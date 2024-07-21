@@ -45,6 +45,10 @@ export class ProfileService {
     return this.http.put<void>(`${this.url}`, model);
   }
 
+  removeProfile(profileId: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${profileId}`);
+  }
+
   assignUser(profileId: string, userId: string): Observable<void> {
     return this.http.put<void>(
       `${this.url}/${profileId}/assign/users/${userId}`,

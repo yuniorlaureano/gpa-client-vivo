@@ -114,10 +114,6 @@ export class ProfileListComponent {
     this.handleAssignPermission(this.selectedProfile, user);
   }
 
-  handdleUserRemoved(user: RawUserModel) {
-    this.handleRemovePermission(this.selectedProfile, user);
-  }
-
   handleAssignPermission(profile: ProfileModel | null, user: RawUserModel) {
     if (!profile) {
       return;
@@ -148,7 +144,11 @@ export class ProfileListComponent {
       .catch(() => {});
   }
 
-  handleRemovePermission(profile: ProfileModel | null, user: RawUserModel) {
+  handdleUserRemoved(user: RawUserModel) {
+    this.handleRemoveUser(this.selectedProfile, user);
+  }
+
+  handleRemoveUser(profile: ProfileModel | null, user: RawUserModel) {
     if (!profile) {
       return;
     }

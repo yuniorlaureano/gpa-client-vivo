@@ -6,6 +6,7 @@ import { ProfileModel } from '../model/profile.model';
 import { Profile } from '../../core/models/profile.type';
 import { ModalService } from '../../core/service/modal.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 
 @Component({
   selector: 'gpa-profile',
@@ -21,7 +22,8 @@ export class ProfileComponent {
     private profileService: ProfileService,
     private toastService: ToastService,
     private modalService: ModalService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private confirmService: ConfirmModalService
   ) {}
 
   profileForm = this.fb.group({
@@ -104,13 +106,24 @@ export class ProfileComponent {
     });
   }
 
-  //handleShowUser
-  handleShowUser(model: ProfileModel) {
-    let users = this.profileService.getUsers(model.id!);
-    // this.modalService
-    //   .show('Permisos para: ' + model.name, ul.join(''))
-    //   .then(() => {})
-    //   .catch(() => {});
+  handleDelete(model: ProfileModel) {
+    this.confirmService
+      .confirm('Perfil', 'Está seguro de eliminar el perfil:\n ' + model.name)
+      .then(() => {
+        this.spinner.show('fullscreen');
+        this.profileService.removeProfile(model.id!).subscribe({
+          next: () => {
+            this.toastService.showSucess('Perfil eliminado');
+            this.reloadTable = this.reloadTable * -1;
+            this.spinner.hide('fullscreen');
+          },
+          error: (error) => {
+            this.spinner.hide('fullscreen');
+            this.toastService.showError('Error elimiando perfil');
+          },
+        });
+      })
+      .catch(() => {});
   }
 
   handleView(model: ProfileModel) {
@@ -159,6 +172,4 @@ export class ProfileComponent {
       .catch(() => {});
     this.spinner.hide('fullscreen');
   }
-
-  handleDelete(model: ProfileModel) {}
 }

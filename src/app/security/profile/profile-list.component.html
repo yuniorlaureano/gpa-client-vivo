@@ -6,18 +6,21 @@
         <button
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(profile)"
+          *ngIf="profile?.name != 'administrador'"
         >
           <i class="bi bi-pencil"></i>
         </button>
         <button
           class="btn btn-outline-danger btn-icon"
           (click)="handleDelete(profile)"
+          *ngIf="profile?.name != 'administrador'"
         >
           <i class="bi bi-trash"></i>
         </button>
         <a
           routerLink="/auth/profiles/permissions/{{ profile.id }}"
           class="btn btn-outline-primary btn-icon"
+          *ngIf="profile?.name != 'administrador'"
         >
           <i class="bi bi-plus-lg"></i>
         </a>
