@@ -27,6 +27,8 @@ import { UserService } from './security/service/user.service';
 import { ProfileService } from './security/service/profile.service';
 import { PermissionService } from './security/service/permission.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxsModule } from '@ngxs/store';
+import { AppState } from './core/ng-xs-store/states/app.state';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +38,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CoreModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    NgxsModule.forRoot([AppState], {
+      developmentMode: true,
+    }),
   ],
   providers: [
     ProductService,
