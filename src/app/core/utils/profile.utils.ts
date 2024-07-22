@@ -1,5 +1,10 @@
 import { ElementRef } from '@angular/core';
 import { Profile } from '../models/profile.type';
+import { PermissionType } from '../models/permission.type';
+import {
+  ModuleRequiredPermissionType,
+  RequiredPermissionType,
+} from '../models/required-permission.type';
 
 export function processProfile(
   profile: any,
@@ -241,4 +246,57 @@ export function setSelectedPermission(
   els.forEach((el: any) => {
     el.checked = permissions.includes(el.id);
   });
+}
+
+export function hasPermission(
+  permissions: PermissionType,
+  app: string,
+  module: string,
+  component: string,
+  permission: string
+) {
+  return permissions[app][module][component][permission];
+}
+
+export function hasPermissionByRequiredPermission(
+  permissions: PermissionType,
+  requiredPermissions: RequiredPermissionType,
+  app: string,
+  module: string,
+  component: string
+) {
+  Object.keys(requiredPermissions).forEach((requiredPermission) => {
+    requiredPermissions[requiredPermission].valid =
+      permissions[app][module][component][
+        requiredPermissions[requiredPermission].expected
+      ];
+  });
+}
+
+export function hasPermissionByRequiredPermissionForModules(
+  permissions: PermissionType,
+  requiredPermissions: ModuleRequiredPermissionType,
+  app: string
+) {
+  Object.keys(requiredPermissions).forEach((module) => {
+    Object.keys(requiredPermissions[module]).forEach((component) => {
+      Object.keys(requiredPermissions[module][component]).forEach(
+        (requiredPermission) => {
+          requiredPermissions[module][component][requiredPermission].valid =
+            permissions[app][module][component][
+              requiredPermissions[module][component][
+                requiredPermission
+              ].expected
+            ];
+        }
+      );
+    });
+  });
+}
+
+export function validateIfCan(
+  permissions: RequiredPermissionType,
+  permission: string
+) {
+  return permissions[permission] && permissions[permission].valid;
 }

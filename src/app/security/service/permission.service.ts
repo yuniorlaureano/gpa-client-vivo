@@ -6,6 +6,7 @@ import { SearchModel } from '../../core/models/search.model';
 import { environment } from '../../../environments/environment';
 import { ProfileModel } from '../model/profile.model';
 import { MasterProfileModel } from '../model/master-profile.mode';
+import { PermissionType } from '../../core/models/permission.type';
 
 @Injectable()
 export class PermissionService {
@@ -34,5 +35,9 @@ export class PermissionService {
 
   getMasterProfile(): Observable<MasterProfileModel[]> {
     return this.http.get<MasterProfileModel[]>(`${this.url}/master-profile`);
+  }
+
+  getInlinePermissions(): Observable<PermissionType> {
+    return this.http.get<PermissionType>(`${this.url}/permissions`);
   }
 }

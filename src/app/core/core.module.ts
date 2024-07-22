@@ -14,7 +14,7 @@ import { StockProductCatalogComponent } from './stock-product-catalog/stock-prod
 import { ProductCatalogComponent } from './product-catalog/product-catalog.component';
 import { InvoiceCatalogComponent } from './invoice-catalog/invoice-catalog.component';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
-import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from './service/toast.service';
 import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
 import { ConfirmModalService } from './service/confirm-modal.service';
@@ -23,6 +23,7 @@ import { ModalService } from './service/modal.service';
 import { ModalComponent } from './modal/modal.component';
 import { UserCatalogComponent } from './user-catalog/user-catalog.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { NoPermissionAlertComponent } from './no-permission-alert/no-permission-alert';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ModalComponent,
     ValidatorMessageComponent,
     UserCatalogComponent,
+    NoPermissionAlertComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +51,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     NgbToastModule,
     NgTemplateOutlet,
     NgxSpinnerModule,
+    NgbAlertModule,
   ],
   providers: [
     LayoutService,
@@ -67,6 +70,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     UserCatalogComponent,
     ToastContainerComponent,
     NgxSpinnerModule,
+    NgbAlertModule,
+    NoPermissionAlertComponent,
   ],
 })
 export class CoreModule {}

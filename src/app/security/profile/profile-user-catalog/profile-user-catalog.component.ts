@@ -43,6 +43,10 @@ export class ProfileUserCatalogComponent
     pageSize: 10,
   };
 
+  //permissions
+  @Input() canAssignUser: boolean = false;
+  @Input() canUnAssignUser: boolean = false;
+
   constructor(
     private profileService: ProfileService,
     private toastService: ToastService

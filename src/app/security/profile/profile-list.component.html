@@ -7,6 +7,7 @@
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(profile)"
           *ngIf="profile?.name != 'administrador'"
+          [disabled]="!canEdit"
         >
           <i class="bi bi-pencil"></i>
         </button>
@@ -14,6 +15,7 @@
           class="btn btn-outline-danger btn-icon"
           (click)="handleDelete(profile)"
           *ngIf="profile?.name != 'administrador'"
+          [disabled]="!canDelete"
         >
           <i class="bi bi-trash"></i>
         </button>
@@ -33,6 +35,7 @@
         <button
           class="btn btn-outline-info btn-icon"
           (click)="handleAddUser(profile)"
+          [disabled]="!canAssignUser && !canUnAssignUser"
         >
           <i class="bi bi-person-lines-fill"></i>
         </button>
@@ -40,13 +43,7 @@
     </div>
   </li>
 </ul>
-<select class="btn btn-outline-dark" (change)="handleSetPageToShow($event)">
-  <option value="10">mostrar 10</option>
-  <option value="50">mostrar 50</option>
-  <option value="100">mostrar 100</option>
-</select>
-
-<nav aria-label="Page Navigation">
+<nav aria-label="Page Navigation" style="padding: 10px">
   <ul style="display: flex">
     <li style="flex: 1">
       mostrando {{ data.options.filteredSize }} de
@@ -65,7 +62,7 @@
     </li>
     <li class="page-item">
       <select
-        class="btn btn-outline-dark"
+        class="btn btn-outline-dark show-more-drowpdown"
         (change)="handleSetPageToShow($event)"
       >
         <option value="10">mostrar 10</option>

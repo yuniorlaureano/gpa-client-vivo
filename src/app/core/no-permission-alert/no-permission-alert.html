@@ -1,0 +1,10 @@
+<ngb-alert
+  [dismissible]="false"
+  type="info"
+  class="alert"
+  *ngIf="visible"
+  style="margin-top: 5px"
+>
+  <i class="bi bi-exclamation-triangle text-danger"></i>
+  <ng-content></ng-content>
+</ngb-alert>

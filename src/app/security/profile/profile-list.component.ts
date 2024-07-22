@@ -29,6 +29,12 @@ export class ProfileListComponent {
   @Output() onView = new EventEmitter<ProfileModel>();
   @Output() onAddUser = new EventEmitter<ProfileModel>();
 
+  //permissions
+  @Input() canEdit: boolean = false;
+  @Input() canDelete: boolean = false;
+  @Input() canAssignUser: boolean = false;
+  @Input() canUnAssignUser: boolean = false;
+
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,

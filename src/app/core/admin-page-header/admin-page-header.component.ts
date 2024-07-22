@@ -9,13 +9,15 @@ import {
   combineLatest,
   catchError,
   of,
+  tap,
+  Subscription,
 } from 'rxjs';
 import { TokenService } from '../service/token.service';
 import { AuthService } from '../../security/service/auth.service';
 import { ToastService } from '../service/toast.service';
 import { TokenClaims } from '../models/token-claims.model';
 import { Store } from '@ngxs/store';
-import { AddError, RemoveError } from '../ng-xs-store/actions/app.actions';
+import { RemoveError, SetProfiles } from '../ng-xs-store/actions/app.actions';
 import { AppState } from '../ng-xs-store/states/app.state';
 
 @Component({
@@ -29,6 +31,8 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
   updateProfileSubject$ = new BehaviorSubject<string>('');
   errors$ = this.store.select(AppState.getErrors);
 
+  changeProfileSubscription$!: Subscription;
+
   constructor(
     private layoutService: LayoutService,
     private profileService: ProfileService,
@@ -38,22 +42,28 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
     private store: Store
   ) {}
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.changeProfileSubscription$?.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.subscribeToClaims();
   }
 
   changeProfile(profileId: string, profileName: string) {
-    this.authService.changeProfile(profileId).subscribe({
-      next: () => {
-        this.updateProfileSubject$.next(profileId);
-        this.toastService.showSucess(`Ha elegido el perifl de ${profileName}`);
-      },
-      error: (error) => {
-        this.toastService.showError(`Error al cambiar de perfil`);
-      },
-    });
+    this.changeProfileSubscription$ = this.authService
+      .changeProfile(profileId)
+      .subscribe({
+        next: () => {
+          this.updateProfileSubject$.next(profileId);
+          this.toastService.showSucess(
+            `Ha elegido el perifl de ${profileName}`
+          );
+        },
+        error: (error) => {
+          this.toastService.showError(`Error al cambiar de perfil`);
+        },
+      });
   }
 
   logOut() {
@@ -72,21 +82,28 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
     let claims = this.tokenService.getClaims();
     if (claims) {
       this.principal = claims;
-      this.profiles$ = combineLatest([
-        this.profileService.getProfilesByUserId(claims.userId),
-        this.updateProfileSubject$,
-      ]).pipe(
-        map(([profiles, u]) => {
-          for (let profile of profiles) {
-            profile.isCurrent = profile.id === (u || claims.profileId);
-          }
-          return profiles;
-        }),
-        catchError((error) => {
-          this.toastService.showError(`Error cargando permisos`);
-          return of([] as ProfileModel[]);
-        })
-      );
+      this.profiles$ = this.loadProfiles(claims);
     }
+  }
+
+  loadProfiles(claims: TokenClaims) {
+    return combineLatest([
+      this.profileService.getProfilesByUserId(claims.userId),
+      this.updateProfileSubject$,
+    ]).pipe(
+      map(([profiles, u]) => {
+        for (let profile of profiles) {
+          profile.isCurrent = profile.id === (u || claims.profileId);
+        }
+        return profiles;
+      }),
+      tap((profiles) => {
+        this.store.dispatch(new SetProfiles(profiles));
+      }),
+      catchError((error) => {
+        this.toastService.showError(`Error cargando permisos`);
+        return of([] as ProfileModel[]);
+      })
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastService } from '../../core/service/toast.service';
 import { ProfileService } from '../service/profile.service';
@@ -8,18 +8,41 @@ import { ModalService } from '../../core/service/modal.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { RawUserModel } from '../model/raw-user.model';
+import { Store } from '@ngxs/store';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'gpa-profile',
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
   reloadTable: number = 1;
   isProfileUserCatalogVisible: boolean = false;
   reloadProfileUserTable: number = 1;
   selectedProfile!: ProfileModel | null;
+  requiredPermissions: RequiredPermissionType = {};
+
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canCreate: boolean = false;
+  canDelete: boolean = false;
+  canEdit: boolean = false;
+  canAssignUser: boolean = false;
+  canUnAssignUser: boolean = false;
+
+  //form
+  profileForm = this.fb.group({
+    id: [''],
+    name: ['', Validators.required],
+  });
 
   constructor(
     private fb: FormBuilder,
@@ -27,13 +50,56 @@ export class ProfileComponent {
     private toastService: ToastService,
     private modalService: ModalService,
     private spinner: NgxSpinnerService,
-    private confirmService: ConfirmModalService
+    private confirmService: ConfirmModalService,
+    private store: Store
   ) {}
 
-  profileForm = this.fb.group({
-    id: [''],
-    name: ['', Validators.required],
-  });
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
+
+  ngOnInit(): void {
+    this.handlePermissionsLoad();
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select((state: any) => state.app.requiredPermissions.security.profile)
+      .subscribe({
+        next: (permissions) => {
+          this.requiredPermissions = permissions;
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canCreate = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Create
+    );
+    this.canDelete = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Delete
+    );
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
+    this.canAssignUser = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.AssignProfile
+    );
+    this.canUnAssignUser = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.UnAssignProfile
+    );
+  }
 
   onSubmit() {
     if (this.profileForm.valid) {
@@ -55,18 +121,21 @@ export class ProfileComponent {
       ...this.profileForm.value,
     };
     this.spinner.show('fullscreen');
-    this.profileService.addProfile(value as ProfileModel).subscribe({
-      next: () => {
-        this.handleReloadTable();
-        this.clearForm();
-        this.toastService.showSucess('Profile agregado');
-        this.spinner.hide('fullscreen');
-      },
-      error: (error) => {
-        this.spinner.hide('fullscreen');
-        this.toastService.showError('Error creado perfil');
-      },
-    });
+    const sub = this.profileService
+      .addProfile(value as ProfileModel)
+      .subscribe({
+        next: () => {
+          this.handleReloadTable();
+          this.clearForm();
+          this.toastService.showSucess('Profile agregado');
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error creado perfil');
+        },
+      });
+    this.subscriptions$.push(sub);
   }
 
   upateProfile() {
@@ -75,18 +144,21 @@ export class ProfileComponent {
     };
 
     this.spinner.show('fullscreen');
-    this.profileService.updateProfile(value as ProfileModel).subscribe({
-      next: () => {
-        this.handleReloadTable();
-        this.clearForm();
-        this.toastService.showSucess('Usuario actualizado');
-        this.spinner.hide('fullscreen');
-      },
-      error: (error) => {
-        this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al actualizar el usuario');
-      },
-    });
+    const sub = this.profileService
+      .updateProfile(value as ProfileModel)
+      .subscribe({
+        next: () => {
+          this.handleReloadTable();
+          this.clearForm();
+          this.toastService.showSucess('Usuario actualizado');
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al actualizar el usuario');
+        },
+      });
+    this.subscriptions$.push(sub);
   }
 
   handleCancel() {
@@ -115,7 +187,7 @@ export class ProfileComponent {
       .confirm('Perfil', 'Está seguro de eliminar el perfil:\n ' + model.name)
       .then(() => {
         this.spinner.show('fullscreen');
-        this.profileService.removeProfile(model.id!).subscribe({
+        const sub = this.profileService.removeProfile(model.id!).subscribe({
           next: () => {
             this.toastService.showSucess('Perfil eliminado');
             this.reloadTable = this.reloadTable * -1;
@@ -126,6 +198,7 @@ export class ProfileComponent {
             this.toastService.showError('Error elimiando perfil');
           },
         });
+        this.subscriptions$.push(sub);
       })
       .catch(() => {});
   }
@@ -155,17 +228,20 @@ export class ProfileComponent {
       )
       .then(() => {
         this.spinner.show('fullscreen');
-        this.profileService.assignUser(profile.id!, user.id!).subscribe({
-          next: () => {
-            this.toastService.showSucess('Usuario asignado');
-            this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
-            this.spinner.hide('fullscreen');
-          },
-          error: (error) => {
-            this.spinner.hide('fullscreen');
-            this.toastService.showError('Error asignando usuario');
-          },
-        });
+        const sub = this.profileService
+          .assignUser(profile.id!, user.id!)
+          .subscribe({
+            next: () => {
+              this.toastService.showSucess('Usuario asignado');
+              this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
+              this.spinner.hide('fullscreen');
+            },
+            error: (error) => {
+              this.spinner.hide('fullscreen');
+              this.toastService.showError('Error asignando usuario');
+            },
+          });
+        this.subscriptions$.push(sub);
       })
       .catch(() => {});
   }
@@ -188,17 +264,20 @@ export class ProfileComponent {
       )
       .then(() => {
         this.spinner.show('fullscreen');
-        this.profileService.removeUser(profile.id!, user.id!).subscribe({
-          next: () => {
-            this.toastService.showSucess('Usuario removido');
-            this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
-            this.spinner.hide('fullscreen');
-          },
-          error: (error) => {
-            this.spinner.hide('fullscreen');
-            this.toastService.showError('Error removiendo usuario');
-          },
-        });
+        const sub = this.profileService
+          .removeUser(profile.id!, user.id!)
+          .subscribe({
+            next: () => {
+              this.toastService.showSucess('Usuario removido');
+              this.reloadProfileUserTable = this.reloadProfileUserTable * -1;
+              this.spinner.hide('fullscreen');
+            },
+            error: (error) => {
+              this.spinner.hide('fullscreen');
+              this.toastService.showError('Error removiendo usuario');
+            },
+          });
+        this.subscriptions$.push(sub);
       })
       .catch(() => {});
   }

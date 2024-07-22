@@ -41,6 +41,7 @@
               class="btn btn-outline-info btn-icon"
               (click)="handleAdd(user)"
               *ngIf="!user.isAssigned"
+              [disabled]="!canAssignUser"
             >
               <i class="bi bi-plus"></i>
             </button>
@@ -48,6 +49,7 @@
               class="btn btn-outline-danger btn-icon"
               (click)="handleRemove(user)"
               *ngIf="user.isAssigned"
+              [disabled]="!canUnAssignUser"
             >
               <i class="bi bi-trash"></i>
             </button>
