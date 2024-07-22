@@ -25,7 +25,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isProfileUserCatalogVisible: boolean = false;
   reloadProfileUserTable: number = 1;
   selectedProfile!: ProfileModel | null;
-  requiredPermissions: RequiredPermissionType = {};
 
   //subscriptions
   subscriptions$: Subscription[] = [];
@@ -64,10 +63,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   handlePermissionsLoad() {
     const sub = this.store
-      .select((state: any) => state.app.requiredPermissions.security.profile)
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Security][
+            PermissionConstants.Components.Profile
+          ]
+      )
       .subscribe({
         next: (permissions) => {
-          this.requiredPermissions = permissions;
           this.setPermissions(permissions);
         },
       });

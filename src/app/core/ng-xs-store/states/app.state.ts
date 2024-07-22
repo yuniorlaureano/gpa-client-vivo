@@ -8,7 +8,10 @@ import {
 } from '../actions/app.actions';
 import { PermissionType } from '../../models/permission.type';
 import { Injectable } from '@angular/core';
-import { ModuleRequiredPermissionType } from '../../models/required-permission.type';
+import {
+  ModuleRequiredPermissionType,
+  RequiredPermissionType,
+} from '../../models/required-permission.type';
 import * as PermissionConstants from '../../models/profile.constants';
 import * as ProfileUtils from '../../utils/profile.utils';
 import { ProfileModel } from '../../../security/model/profile.model';
@@ -112,32 +115,58 @@ export class AppState {
 function getRequiredPermissions(): ModuleRequiredPermissionType {
   return {
     [PermissionConstants.Modules.Security]: {
-      [PermissionConstants.Components.Profile]: {
-        create: {
-          expected: PermissionConstants.Permission.Create,
-          valid: false,
-        },
-        update: {
-          expected: PermissionConstants.Permission.Update,
-          valid: false,
-        },
-        delete: {
-          expected: PermissionConstants.Permission.Delete,
-          valid: false,
-        },
-        read: {
-          expected: PermissionConstants.Permission.Read,
-          valid: false,
-        },
-        assignProfile: {
-          expected: PermissionConstants.Permission.AssignProfile,
-          valid: false,
-        },
-        unAssignProfile: {
-          expected: PermissionConstants.Permission.UnAssignProfile,
-          valid: false,
-        },
-      },
+      [PermissionConstants.Components.Profile]: profilePermission(),
+      [PermissionConstants.Components.User]: userPermission(),
+    },
+  };
+}
+
+function profilePermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+    assignProfile: {
+      expected: PermissionConstants.Permission.AssignProfile,
+      valid: false,
+    },
+    unAssignProfile: {
+      expected: PermissionConstants.Permission.UnAssignProfile,
+      valid: false,
+    },
+  };
+}
+
+function userPermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
+      valid: false,
     },
   };
 }

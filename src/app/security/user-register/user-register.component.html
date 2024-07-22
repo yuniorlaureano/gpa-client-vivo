@@ -19,6 +19,7 @@
           style="margin-right: 5px"
           (click)="onSubmit()"
           *ngIf="!isEdit"
+          [disabled]="!canCreate"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -41,6 +42,7 @@
           class="btn btn-outline-warning btn-rounded"
           style="margin-right: 5px"
           (click)="onSubmit()"
+          [disabled]="!canEdit"
         >
           <i class="bi bi-pencil-square"></i>
           Actualizar
@@ -78,6 +80,12 @@
     <div class="card-body">
       <!-- Comienza row de sergundo nivel! -->
       <div class="row">
+        <gpa-no-permission-alert [visible]="!canCreate">
+          No tiene permisos para crear usuarios
+        </gpa-no-permission-alert>
+        <gpa-no-permission-alert [visible]="!canEdit">
+          No tiene permisos para modificar usuarios
+        </gpa-no-permission-alert>
         <form [formGroup]="userForm" class="row">
           <div class="col-sm-2">
             <figure>
