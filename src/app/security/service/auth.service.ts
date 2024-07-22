@@ -17,7 +17,10 @@ export class AuthService {
   login(model: LoginModel): Observable<TokenModel> {
     return this.http.post<TokenModel>(`${this.url}/login`, model).pipe(
       tap({
-        next: (data) => this.tokenService.saveToken(data.token),
+        next: (data) => {
+          this.tokenService.saveToken(data.token);
+          this.tokenService.savePermissions(data.permissions);
+        },
       })
     );
   }
@@ -32,7 +35,10 @@ export class AuthService {
       .get<TokenModel>(`${this.url}/profile/${profileId}/change`)
       .pipe(
         tap({
-          next: (data) => this.tokenService.saveToken(data.token),
+          next: (data) => {
+            this.tokenService.saveToken(data.token);
+            this.tokenService.savePermissions(data.permissions);
+          },
         })
       );
   }
@@ -44,7 +50,9 @@ export class AuthService {
         tap({
           next: (data) => {
             this.tokenService.remoteToken();
+            this.tokenService.remotePermissions();
             this.tokenService.saveToken(data.token);
+            this.tokenService.savePermissions(data.permissions);
           },
         })
       );

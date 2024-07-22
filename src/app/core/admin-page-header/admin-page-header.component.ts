@@ -17,7 +17,11 @@ import { AuthService } from '../../security/service/auth.service';
 import { ToastService } from '../service/toast.service';
 import { TokenClaims } from '../models/token-claims.model';
 import { Store } from '@ngxs/store';
-import { RemoveError, SetProfiles } from '../ng-xs-store/actions/app.actions';
+import {
+  AddRequiredPermissions,
+  RemoveError,
+  SetProfiles,
+} from '../ng-xs-store/actions/app.actions';
 import { AppState } from '../ng-xs-store/states/app.state';
 
 @Component({
@@ -99,6 +103,10 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
       }),
       tap((profiles) => {
         this.store.dispatch(new SetProfiles(profiles));
+        let permissions = this.tokenService.getPermissions();
+        if (permissions) {
+          this.store.dispatch(new AddRequiredPermissions(permissions));
+        }
       }),
       catchError((error) => {
         this.toastService.showError(`Error cargando permisos`);
