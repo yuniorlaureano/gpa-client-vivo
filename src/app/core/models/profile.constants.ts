@@ -14,7 +14,7 @@ export class Permission {
   public static Cancel: string = 'cancel';
   public static AssignProfile: string = 'assignProfile';
   public static UnAssignProfile: string = 'unAssignProfile';
-  public static UpdateUserProfile: string = 'UpdateUserProfile';
+  public static UpdateUserProfile: string = 'updateUserProfile';
 }
 
 export class Apps {

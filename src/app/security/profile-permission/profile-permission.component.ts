@@ -2,10 +2,11 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Observable, of, switchMap } from 'rxjs';
+import { Observable, of, Subscription, switchMap } from 'rxjs';
 import { PermissionService } from '../service/permission.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../core/service/toast.service';
@@ -14,33 +15,74 @@ import * as profileUtils from '../../core/utils/profile.utils';
 import { ProfileService } from '../service/profile.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MasterProfileModel } from '../model/master-profile.mode';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-profile-permission',
   templateUrl: './profile-permission.component.html',
   styleUrl: './profile-permission.component.css',
 })
-export class ProfilePermissionComponent implements AfterViewInit, OnInit {
+export class ProfilePermissionComponent
+  implements AfterViewInit, OnInit, OnDestroy
+{
   profile: ProfileModel | null = null;
   permissions: string[] = [];
   profileUI: any = null;
   @ViewChild('profilecontainer') profilecontainer!: ElementRef;
   masterProfile$!: Observable<MasterProfileModel[]>;
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canEdit: boolean = false;
+
   constructor(
     private permissionService: PermissionService,
     private route: ActivatedRoute,
     private toastService: ToastService,
     private profileService: ProfileService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
 
   ngOnInit(): void {
     this.masterProfile$ = this.permissionService.getMasterProfile();
+    this.handlePermissionsLoad();
   }
 
   ngAfterViewInit() {
     this.loadPermission();
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Security][
+            PermissionConstants.Components.Profile
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
   }
 
   getNewProfile() {
@@ -62,7 +104,7 @@ export class ProfilePermissionComponent implements AfterViewInit, OnInit {
       value: JSON.stringify(newProfile),
     };
     this.spinner.show('fullscreen');
-    this.profileService
+    const sub = this.profileService
       .updateProfile(updatedProfile as ProfileModel)
       .subscribe({
         next: () => {
@@ -74,10 +116,11 @@ export class ProfilePermissionComponent implements AfterViewInit, OnInit {
           this.toastService.showError('Error al actualizar perfil. ');
         },
       });
+    this.subscriptions$.push(sub);
   }
 
   loadPermission() {
-    this.route.paramMap
+    const sub = this.route.paramMap
       .pipe(
         switchMap((params) => {
           this.spinner.show('fullscreen');
@@ -102,6 +145,7 @@ export class ProfilePermissionComponent implements AfterViewInit, OnInit {
           this.toastService.showError('Error al cargar perfil. ');
         },
       });
+    this.subscriptions$.push(sub);
   }
 
   setSelectedPermissions(value: string) {

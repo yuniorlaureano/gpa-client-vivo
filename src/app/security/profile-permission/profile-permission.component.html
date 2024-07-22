@@ -18,6 +18,7 @@
           class="btn btn-outline-success btn-rounded"
           style="margin-right: 5px"
           (click)="onSubmit()"
+          [disabled]="!canEdit"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -47,6 +48,9 @@
     <div class="card-body">
       <!-- Comienza row de sergundo nivel! -->
       <div class="row">
+        <gpa-no-permission-alert [visible]="!canEdit">
+          No tiene permisos para modificar perfiles
+        </gpa-no-permission-alert>
         <form class="row">
           <ul #profilecontainer>
             <li *ngFor="let app of masterProfile$ | async">

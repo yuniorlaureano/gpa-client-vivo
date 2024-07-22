@@ -1,19 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../service/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../core/service/toast.service';
 import { UserModel } from '../model/user.model';
-import { of, switchMap } from 'rxjs';
+import { of, Subscription, switchMap } from 'rxjs';
 import { AuthService } from '../service/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-user-profile-edit',
   templateUrl: './user-profile-edit.component.html',
   styleUrl: './user-profile-edit.component.css',
 })
-export class UserProfileEditComponent {
+export class UserProfileEditComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
 
   constructor(
@@ -23,12 +27,17 @@ export class UserProfileEditComponent {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private authService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
-  ngOnInit(): void {
-    this.loadUser();
-  }
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  updateUserProfile: boolean = false;
+
+  //form
   userForm = this.fb.group({
     id: [''],
     firstName: ['', Validators.required],
@@ -36,6 +45,37 @@ export class UserProfileEditComponent {
     email: ['', Validators.required],
     userName: ['', Validators.required],
   });
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
+  ngOnInit(): void {
+    this.loadUser();
+    this.handlePermissionsLoad();
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Common][
+            PermissionConstants.Components.Auth
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.updateUserProfile = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+  }
 
   onSubmit() {
     if (this.userForm.valid) {
@@ -53,7 +93,7 @@ export class UserProfileEditComponent {
     };
 
     this.spinner.show('fullscreen');
-    this.authService.editUserProfile(value as UserModel).subscribe({
+    const sub = this.authService.editUserProfile(value as UserModel).subscribe({
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Usuario actualizado');
@@ -65,6 +105,7 @@ export class UserProfileEditComponent {
         this.toastService.showError('Error al actualizar el usuario');
       },
     });
+    this.subscriptions$.push(sub);
   }
 
   handleCancel() {
@@ -78,7 +119,7 @@ export class UserProfileEditComponent {
   }
 
   loadUser() {
-    this.route.paramMap
+    const sub = this.route.paramMap
       .pipe(
         switchMap((params) => {
           this.spinner.show('fullscreen');
@@ -110,5 +151,6 @@ export class UserProfileEditComponent {
           this.toastService.showError('Error cargando usuario');
         },
       });
+    this.subscriptions$.push(sub);
   }
 }

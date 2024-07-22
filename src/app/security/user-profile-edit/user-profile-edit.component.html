@@ -6,19 +6,13 @@
         <h3>Perfil de usuario</h3>
       </div>
       <div class="right-button">
-        <a
-          routerLink="/auth/users/list"
-          class="btn btn-outline-info btn-rounded"
-          style="margin-right: 5px"
-        >
-          <i class="bi bi-card-list"></i> Usuarios
-        </a>
         <button
           *ngIf="isEdit"
           type="button"
           class="btn btn-outline-warning btn-rounded"
           style="margin-right: 5px"
           (click)="onSubmit()"
+          [disabled]="!updateUserProfile"
         >
           <i class="bi bi-pencil-square"></i>
           Actualizar
@@ -56,6 +50,9 @@
     <div class="card-body">
       <!-- Comienza row de sergundo nivel! -->
       <div class="row">
+        <gpa-no-permission-alert [visible]="!updateUserProfile">
+          No tiene permisos para editar su perfil
+        </gpa-no-permission-alert>
         <form [formGroup]="userForm" class="row">
           <div class="col-sm-2">
             <figure>

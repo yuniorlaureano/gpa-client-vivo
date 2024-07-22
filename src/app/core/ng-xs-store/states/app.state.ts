@@ -118,6 +118,9 @@ function getRequiredPermissions(): ModuleRequiredPermissionType {
       [PermissionConstants.Components.Profile]: profilePermission(),
       [PermissionConstants.Components.User]: userPermission(),
     },
+    [PermissionConstants.Modules.Common]: {
+      [PermissionConstants.Components.Auth]: authPermission(),
+    },
   };
 }
 
@@ -166,6 +169,31 @@ function userPermission(): RequiredPermissionType {
     },
     read: {
       expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+  };
+}
+
+function authPermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+    updateUserProfile: {
+      expected: PermissionConstants.Permission.UpdateUserProfile,
       valid: false,
     },
   };
