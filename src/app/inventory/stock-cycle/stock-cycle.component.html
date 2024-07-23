@@ -10,6 +10,7 @@
           routerLink="/inventory/stock/cycle/list"
           class="btn btn-outline-info btn-rounded"
           style="margin-right: 5px"
+          *ngIf="canRead"
         >
           <i class="bi bi-card-list"></i> Listado de ciclos
         </a>
@@ -18,6 +19,7 @@
           class="btn btn-outline-success btn-rounded"
           style="margin-right: 5px"
           (click)="onSubmit()"
+          [disabled]="!canCreate"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -67,6 +69,9 @@
 
       <!--  -->
       <div class="card-body">
+        <gpa-no-permission-alert [visible]="!canCreate">
+          No tiene permisos para crear ciclos de inventario
+        </gpa-no-permission-alert>
         <!-- Comienza row de sergundo nivel! -->
         <form [formGroup]="cycleForm">
           <div class="row">

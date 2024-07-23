@@ -2,33 +2,48 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { SearchModel } from '../../core/models/search.model';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { CategoryModel } from '../models/category.model';
 import { CategoryService } from '../service/category.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastService } from '../../core/service/toast.service';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-category-list-table',
   templateUrl: './category-list-table.component.html',
 })
-export class CategoryListTableComponent {
+export class CategoryListTableComponent implements OnInit, OnDestroy {
   @Output() onDelete = new EventEmitter<CategoryModel>();
   @Output() onEdit = new EventEmitter<CategoryModel>();
   @Input() reloadTable: number = 1;
+
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canDelete: boolean = false;
+  canEdit: boolean = false;
 
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,
     pageSize: 10,
   });
+
   public data: DataTableDataModel<CategoryModel> = {
     data: [],
     options: {
@@ -43,12 +58,52 @@ export class CategoryListTableComponent {
   constructor(
     private categoryService: CategoryService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private store: Store
   ) {}
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
 
   ngOnInit(): void {
+    this.handlePermissionsLoad();
+    this.loadCategories();
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Inventory][
+            PermissionConstants.Components.Category
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canDelete = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Delete
+    );
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
+  }
+
+  loadCategories() {
     let searchModel = new SearchModel();
-    this.pageOptionsSubject
+    const sub = this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
           this.spinner.show('table-spinner');
@@ -79,6 +134,7 @@ export class CategoryListTableComponent {
           this.toastService.showError('Error cargando categorias');
         },
       });
+    this.subscriptions$.push(sub);
   }
 
   handleEdit(model: CategoryModel) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -9,7 +9,15 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ProductModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, from, map, Observable, of, switchMap } from 'rxjs';
+import {
+  combineLatest,
+  from,
+  map,
+  Observable,
+  of,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
 import { UnitModel } from '../../common/model/unit.model';
 import { UnitService } from '../../common/service/unit.service';
@@ -19,13 +27,17 @@ import { ProductType } from '../../core/models/product-type.enum';
 import { AddonService } from '../service/addon.service';
 import { AddonModel } from '../models/addon.model';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-product',
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })
-export class ProductComponent implements OnInit {
+export class ProductComponent implements OnInit, OnDestroy {
   minDate: NgbDateStruct;
   products: ProductModel[] = [];
   uploadedImage: any = null;
@@ -42,7 +54,8 @@ export class ProductComponent implements OnInit {
     private unitService: UnitService,
     private categoryService: CategoryService,
     private addonService: AddonService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {
     // Esto es parte de la validacion general
     //sirve para que la fecha de expiracion no sea menor a la fecha actual
@@ -53,23 +66,39 @@ export class ProductComponent implements OnInit {
       day: today.getDate(),
     };
   }
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
+
   ngOnInit(): void {
     this.loadProduct();
+    this.handlePermissionsLoad();
 
     this.units$ = this.unitService.getUnits().pipe(map((data) => data.data));
     this.categories$ = this.categoryService
       .getCategory()
       .pipe(map((data) => data.data));
     if (!this.isEdit) {
-      this.addonService.getAddon().subscribe({
+      const sub = this.addonService.getAddon().subscribe({
         next: (data) => this.mapAddon(data.data),
         error: (error) => {
           this.toastService.showError('Error cargando agregados');
         },
       });
+      this.subscriptions$.push(sub);
     }
   }
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canCreate: boolean = false;
+  canEdit: boolean = false;
+
+  //form
   productForm = this.fb.group({
     id: [''],
     code: ['', Validators.required],
@@ -101,6 +130,37 @@ export class ProductComponent implements OnInit {
     );
   }
   //
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Inventory][
+            PermissionConstants.Components.Product
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canCreate = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Create
+    );
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
+  }
 
   onFileUploaded(file: any) {
     this.uploadedImage = file;
@@ -136,17 +196,20 @@ export class ProductComponent implements OnInit {
     };
 
     this.spinner.show('fullscreen');
-    this.productService.addProduct(value as ProductModel).subscribe({
-      next: () => {
-        this.clearForm();
-        this.toastService.showSucess('Producto agregado');
-        this.spinner.hide('fullscreen');
-      },
-      error: (error) => {
-        this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al agregar producto');
-      },
-    });
+    const sub = this.productService
+      .addProduct(value as ProductModel)
+      .subscribe({
+        next: () => {
+          this.clearForm();
+          this.toastService.showSucess('Producto agregado');
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al agregar producto');
+        },
+      });
+    this.subscriptions$.push(sub);
   }
 
   upateProduct() {
@@ -162,17 +225,20 @@ export class ProductComponent implements OnInit {
         .map((credit: any) => credit.id),
     };
     this.spinner.show('fullscreen');
-    this.productService.updateProduct(value as ProductModel).subscribe({
-      next: () => {
-        this.clearForm();
-        this.toastService.showSucess('Producto actualizado');
-        this.spinner.hide('fullscreen');
-      },
-      error: (error) => {
-        this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al actualizar el producto');
-      },
-    });
+    const sub = this.productService
+      .updateProduct(value as ProductModel)
+      .subscribe({
+        next: () => {
+          this.clearForm();
+          this.toastService.showSucess('Producto actualizado');
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al actualizar el producto');
+        },
+      });
+    this.subscriptions$.push(sub);
   }
 
   handleCancel() {
@@ -209,7 +275,7 @@ export class ProductComponent implements OnInit {
 
   loadProduct() {
     //this.addonService.getAddon()
-    this.route.paramMap
+    const sub = this.route.paramMap
       .pipe(
         switchMap((params) => {
           this.spinner.show('fullscreen');
@@ -260,5 +326,6 @@ export class ProductComponent implements OnInit {
           this.toastService.showError('Error al cargar el producto');
         },
       });
+    this.subscriptions$.push(sub);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable, of, Subscription, switchMap } from 'rxjs';
 import { StockService } from '../service/stock.service';
 import { ReasonModel } from '../models/reason.model';
 import { ReasonService } from '../service/reason.service';
@@ -16,6 +16,10 @@ import { StockStatusEnum } from '../../core/models/stock-status.enum';
 import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-stock-entry',
@@ -47,6 +51,20 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     stockDetails: this.formBuilder.array([]),
   });
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canCreate: boolean = false;
+  canUpdate: boolean = false;
+  canDelete: boolean = false;
+  canRead: boolean = false;
+  canEdit: boolean = false;
+  canRegisterInput: boolean = false;
+  canCancel: boolean = false;
+  canUpdateInput: boolean = false;
+  canReadProducts: boolean = false;
+
   constructor(
     private stockService: StockService,
     private reasonService: ReasonService,
@@ -55,10 +73,72 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     private router: Router,
     private toastService: ToastService,
     private confirmService: ConfirmModalService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
+    this.handlePermissionsLoad();
+    this.loadReasons();
+    this.getStock();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Inventory][
+            PermissionConstants.Components.Stock
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canCreate = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Create
+    );
+    this.canDelete = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Delete
+    );
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
+    this.canRegisterInput = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.RegisterInput
+    );
+    this.canCancel = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Cancel
+    );
+    this.canUpdateInput = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.UpdateInput
+    );
+    this.canReadProducts = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.ReadProducts
+    );
+  }
+
+  loadReasons() {
     this.reasons$ = this.reasonService
       .getReasons()
       .pipe(
@@ -75,11 +155,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           )
         )
       );
-
-    this.getStock();
   }
-
-  ngOnDestroy(): void {}
 
   handleShowProductCatalog(visible: boolean) {
     this.isProductCatalogVisible = visible;
@@ -131,7 +207,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
 
       if (this.isEdit) {
         this.spinner.show('fullscreen');
-        this.stockService
+        const sub = this.stockService
           .updateInput(<InventoryEntryCollectionModel>value)
           .subscribe({
             next: () => {
@@ -144,10 +220,11 @@ export class StockEntryComponent implements OnInit, OnDestroy {
               this.toastService.showError('Error modificando registro');
             },
           });
+        this.subscriptions$.push(sub);
       } else {
         this.spinner.show('fullscreen');
         value.id = null;
-        this.stockService
+        const sub = this.stockService
           .registerInput(<InventoryEntryCollectionModel>value)
           .subscribe({
             next: () => {
@@ -159,6 +236,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
               this.toastService.showError('Error agregando registro');
             },
           });
+        this.subscriptions$.push(sub);
       }
     }
   }
@@ -191,7 +269,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     const id = this.stockForm.get('id')?.value;
     if (this.isEdit && id) {
       this.spinner.show('fullscreen');
-      this.stockService.cancelStock(id).subscribe({
+      const sub = this.stockService.cancelStock(id).subscribe({
         next: () => {
           this.toastService.showSucess('Registro cancelado');
           this.clearForm();
@@ -202,6 +280,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
         },
       });
+      this.subscriptions$.push(sub);
     }
   }
 
@@ -269,7 +348,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   }
 
   getStock() {
-    this.route.paramMap
+    const sub = this.route.paramMap
       .pipe(
         switchMap((params) => {
           this.spinner.show('fullscreen');
@@ -322,6 +401,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           this.toastService.showError('Error al obtener la existencia');
         },
       });
+    this.subscriptions$.push(sub);
   }
 
   clearForm = () => {

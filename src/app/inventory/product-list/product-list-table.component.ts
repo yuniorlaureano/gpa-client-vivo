@@ -15,6 +15,11 @@ import { ProductService } from '../service/product.service';
 import { ProductType } from '../../core/models/product-type.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastService } from '../../core/service/toast.service';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { Subscription } from 'rxjs';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import * as ProfileUtils from '../../core/utils/profile.utils';
 
 @Component({
   selector: 'gpa-product-list-table',
@@ -39,17 +44,62 @@ export class ProductListTableComponent {
     },
   };
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canDelete: boolean = false;
+  canEdit: boolean = false;
+
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
   constructor(
     private productService: ProductService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
+    this.handlePermissionsLoad();
+    this.loadProducts();
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Inventory][
+            PermissionConstants.Components.Product
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
+    this.canDelete = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Delete
+    );
+  }
+
+  loadProducts() {
     let searchModel = new SearchModel();
-    this.pageOptionsSubject
+    const sub = this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
           this.spinner.show('table-spinner');
@@ -80,6 +130,7 @@ export class ProductListTableComponent {
           this.toastService.showError('Error al cargar productos');
         },
       });
+    this.subscriptions$.push(sub);
   }
 
   getTypeLabel(type: ProductType) {

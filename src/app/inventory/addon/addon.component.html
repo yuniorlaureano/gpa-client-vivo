@@ -10,6 +10,7 @@
           routerLink="/inventory/addon/list"
           class="btn btn-outline-info btn-rounded"
           style="margin-right: 5px"
+          *ngIf="canRead"
         >
           <i class="bi bi-card-list"></i> Lista de agregados
         </a>
@@ -19,6 +20,7 @@
           style="margin-right: 5px"
           (click)="form.ngSubmit.emit()"
           *ngIf="!isEdit"
+          [disabled]="!canCreate"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -41,6 +43,7 @@
           class="btn btn-outline-warning btn-rounded"
           style="margin-right: 5px"
           (click)="form.ngSubmit.emit()"
+          [disabled]="!canEdit"
         >
           <i class="bi bi-pencil-square"></i>
           Actualizar
@@ -78,6 +81,9 @@
     <!-- Card start -->
     <div class="card">
       <div class="card-body">
+        <gpa-no-permission-alert [visible]="!canCreate">
+          No tiene permisos para crear agregados
+        </gpa-no-permission-alert>
         <form #form="ngForm" (ngSubmit)="saveAddon()" [formGroup]="addonForm">
           <!-- Row start -->
           <div class="row">

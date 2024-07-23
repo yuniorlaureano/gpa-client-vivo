@@ -1,18 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, switchMap } from 'rxjs';
+import { of, Subscription, switchMap } from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
 import { AddonService } from '../service/addon.service';
 import { AddonModel } from '../models/addon.model';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-addon',
   templateUrl: './addon.component.html',
   styleUrl: './addon.component.css',
 })
-export class AddonComponent implements OnInit {
+export class AddonComponent implements OnInit, OnDestroy {
   isEdit = false;
   addonForm = this.formBuilder.group({
     id: [''],
@@ -22,17 +26,62 @@ export class AddonComponent implements OnInit {
     value: ['', Validators.required],
   });
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canCreate: boolean = false;
+  canEdit: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private addonService: AddonService,
     private route: ActivatedRoute,
     private toastService: ToastService,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
 
   ngOnInit(): void {
     this.loadAddon();
+    this.handlePermissionsLoad();
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Inventory][
+            PermissionConstants.Components.Addon
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canCreate = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Create
+    );
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
   }
 
   saveAddon() {
@@ -44,7 +93,7 @@ export class AddonComponent implements OnInit {
       };
       if (this.isEdit) {
         this.spinner.show('fullscreen');
-        this.addonService.updateAddon(<AddonModel>value).subscribe({
+        const sub = this.addonService.updateAddon(<AddonModel>value).subscribe({
           next: () => {
             this.clearForm();
             this.toastService.showSucess('Agregado modificado');
@@ -55,10 +104,11 @@ export class AddonComponent implements OnInit {
             this.toastService.showError('Error al modificar el agregado');
           },
         });
+        this.subscriptions$.push(sub);
       } else {
         value.id = null;
         this.spinner.show('fullscreen');
-        this.addonService.addAddon(<AddonModel>value).subscribe({
+        const sub = this.addonService.addAddon(<AddonModel>value).subscribe({
           next: () => {
             this.clearForm();
             this.toastService.showSucess('Agregado creada');
@@ -69,12 +119,13 @@ export class AddonComponent implements OnInit {
             this.toastService.showError('Error al crear el agregado');
           },
         });
+        this.subscriptions$.push(sub);
       }
     }
   }
 
   loadAddon() {
-    this.route.paramMap
+    const sub = this.route.paramMap
       .pipe(
         switchMap((params) => {
           this.spinner.show('fullscreen');
@@ -106,6 +157,7 @@ export class AddonComponent implements OnInit {
           this.toastService.showError('Error al cargar el agregado');
         },
       });
+    this.subscriptions$.push(sub);
   }
 
   handleCancel() {

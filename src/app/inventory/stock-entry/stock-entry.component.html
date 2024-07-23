@@ -26,7 +26,9 @@
         <button
           type="button"
           class="btn btn-outline-success btn-rounded"
-          [disabled]="isFormDisabled"
+          [disabled]="
+            isFormDisabled || !canCreate || !canRegisterInput || !canUpdateInput
+          "
           *ngIf="!isEdit || (isEdit && isDraft())"
           (click)="save()"
         >
@@ -52,6 +54,7 @@
           style="margin-left: 5px"
           (click)="saveDraft()"
           *ngIf="!isEdit || isDraft()"
+          [disabled]="!canCreate || !canRegisterInput || !canUpdateInput"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -77,6 +80,7 @@
           style="margin-left: 5px"
           *ngIf="showCancel()"
           (click)="handleCancelStock()"
+          [disabled]="!canCancel"
         >
           <i class="bi bi-x-lg"></i>
           Canelar
@@ -102,6 +106,14 @@
         <div class="card-title">Entra de inventario</div>
       </div>
       <div class="card-body">
+        <gpa-no-permission-alert [visible]="!canCreate || !canRegisterInput">
+          No tiene permisos para agreagr productos al inventario
+        </gpa-no-permission-alert>
+        <gpa-no-permission-alert
+          [visible]="isEdit && (!canUpdateInput || !canEdit)"
+        >
+          No tiene permisos para modificar productos del inventario
+        </gpa-no-permission-alert>
         <!-- Row start -->
         <form
           class="row row-cols-sm-auto"

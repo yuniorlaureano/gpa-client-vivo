@@ -51,6 +51,9 @@
         <gpa-no-permission-alert [visible]="!canEdit">
           No tiene permisos para modificar perfiles
         </gpa-no-permission-alert>
+        <gpa-no-permission-alert [visible]="!canRead">
+          No tiene permisos para ver permisos
+        </gpa-no-permission-alert>
         <form class="row">
           <ul #profilecontainer>
             <li *ngFor="let app of masterProfile$ | async">

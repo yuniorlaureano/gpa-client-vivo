@@ -1,3 +1,6 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver los ciclos de inventario
+</gpa-no-permission-alert>
 <gpa-data-table
   [onSetPageToShow]="handleSetPageToShow"
   [options]="data.options"
@@ -23,6 +26,7 @@
         <button
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(stockCycle)"
+          [disabled]="!canEdit"
         >
           <i class="bi bi-pencil"></i>
         </button>

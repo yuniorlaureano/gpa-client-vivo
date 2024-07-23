@@ -10,6 +10,7 @@
           routerLink="/inventory/product/list"
           class="btn btn-outline-info btn-rounded"
           style="margin-right: 5px"
+          *ngIf="canRead"
         >
           <i class="bi bi-card-list"></i> Lista de productos
         </a>
@@ -19,6 +20,7 @@
           style="margin-right: 5px"
           (click)="onSubmit()"
           *ngIf="!isEdit"
+          [disabled]="!canCreate"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -41,6 +43,7 @@
           class="btn btn-outline-warning btn-rounded"
           style="margin-right: 5px"
           (click)="onSubmit()"
+          [disabled]="!canEdit"
         >
           <i class="bi bi-pencil-square"></i>
           Actualizar
@@ -81,6 +84,9 @@
       <div class="card-body">
         <!-- Comienza row de sergundo nivel! -->
         <div class="row">
+          <gpa-no-permission-alert [visible]="!canCreate">
+            No tiene permisos para crear productos
+          </gpa-no-permission-alert>
           <div class="col-sm-6 col-12 info-container">
             <!-- Primer grupo del formlario -->
             <div class="card-border">

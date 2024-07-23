@@ -39,6 +39,7 @@ export class ProfilePermissionComponent
 
   //permissions
   canEdit: boolean = false;
+  canRead: boolean = false;
 
   constructor(
     private permissionService: PermissionService,
@@ -82,6 +83,10 @@ export class ProfilePermissionComponent
     this.canEdit = ProfileUtils.validateIfCan(
       requiredPermissions,
       PermissionConstants.Permission.Update
+    );
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
     );
   }
 
