@@ -20,6 +20,7 @@
           *ngIf="showReturn()"
           style="margin-right: 5px"
           (click)="handleCancelInvoice()"
+          [disabled]="!canReturn"
         >
           <i class="bi bi-arrow-counterclockwise"></i>
           Devolución
@@ -33,6 +34,7 @@
           [class.btn-outline-success]="!isEdit"
           style="margin-right: 5px"
           (click)="save()"
+          [disabled]="!canEdit"
         >
           <i
             class="bi"
@@ -48,6 +50,7 @@
           *ngIf="!isEdit || isDraft()"
           style="margin-right: 5px"
           (click)="saveAsDraft()"
+          [disabled]="!canCreate"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

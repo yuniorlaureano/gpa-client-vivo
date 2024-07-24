@@ -1,3 +1,6 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para facturas
+</gpa-no-permission-alert>
 <gpa-data-table
   [onSetPageToShow]="handleSetPageToShow"
   [options]="data.options"
@@ -30,12 +33,14 @@
         <button
           class="btn btn-outline-danger btn-icon"
           (click)="handleDelete(invoice)"
+          [disabled]="!canDelete"
         >
           <i class="bi bi-trash"></i>
         </button>
         <button
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(invoice)"
+          [disabled]="!canEdit"
         >
           <i class="bi bi-pencil"></i>
         </button>

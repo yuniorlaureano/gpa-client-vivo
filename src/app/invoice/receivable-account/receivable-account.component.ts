@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReceivableAccountService } from '../service/receivable-account.service';
 import { ActivatedRoute } from '@angular/router';
-import { of, Subject, switchMap } from 'rxjs';
+import { of, Subject, Subscription, switchMap } from 'rxjs';
 import { InvoiceWithReceivableAccountModel } from '../model/invoice-with-receivable-account';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -10,13 +10,17 @@ import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-receivable-account',
   templateUrl: './receivable-account.component.html',
   styleUrl: './receivable-account.component.css',
 })
-export class ReceivableAccountComponent implements OnInit {
+export class ReceivableAccountComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
   invoice: InvoiceWithReceivableAccountModel | null = null;
   invoiceIdSubject$ = new Subject<string | null>();
@@ -28,23 +32,74 @@ export class ReceivableAccountComponent implements OnInit {
     invoiceId: ['', Validators.required],
   });
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canCreate: boolean = false;
+  canDelete: boolean = false;
+  canEdit: boolean = false;
+
   constructor(
     private receivableAccountService: ReceivableAccountService,
     private route: ActivatedRoute,
     private form: FormBuilder,
     private toastService: ToastService,
     private confirmService: ConfirmModalService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
 
   ngOnInit(): void {
     this.getInvoice();
-    this.route.paramMap.subscribe({
+    this.handlePermissionsLoad();
+    const sub = this.route.paramMap.subscribe({
       next: (params) => {
         const id = params.get('id');
         this.invoiceIdSubject$.next(id);
       },
     });
+    this.subscriptions$.push(sub);
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Invoice][
+            PermissionConstants.Components.ReceivableAccount
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canCreate = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Create
+    );
+    this.canDelete = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Delete
+    );
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
   }
 
   handleSave() {
@@ -122,7 +177,7 @@ export class ReceivableAccountComponent implements OnInit {
   }
 
   getInvoice() {
-    this.invoiceIdSubject$
+    const sub = this.invoiceIdSubject$
       .pipe(
         switchMap((id) => {
           this.spinner.show('fullscreen');
@@ -155,5 +210,6 @@ export class ReceivableAccountComponent implements OnInit {
           this.toastService.showError('Error al cargar la factura');
         },
       });
+    this.subscriptions$.push(sub);
   }
 }

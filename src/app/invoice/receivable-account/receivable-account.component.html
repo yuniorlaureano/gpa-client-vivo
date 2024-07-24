@@ -19,6 +19,7 @@
           class="btn btn-outline-primary btn-rounded"
           style="margin-right: 5px"
           (click)="handleSave()"
+          [disabled]="!canEdit"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -187,6 +188,9 @@
           </div>
         </div>
         <hr />
+        <gpa-no-permission-alert [visible]="!canRead">
+          No tiene permisos para ver las cuentas por cobrar
+        </gpa-no-permission-alert>
         <h4>Historial de pagos</h4>
         <table class="table table-bordered">
           <thead>

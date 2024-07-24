@@ -1,3 +1,6 @@
+<gpa-no-permission-alert [visible]="!canReadExistence">
+  No tiene permisos para ver existencias
+</gpa-no-permission-alert>
 <gpa-data-table
   [onSetPageToShow]="handleSetPageToShow"
   [options]="data.options"

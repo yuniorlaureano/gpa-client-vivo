@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductCatalogModel } from '../../inventory/models/product-catalog.model';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ClientModel } from '../model/client.model';
@@ -6,7 +6,7 @@ import { SaleType } from '../../core/models/sale-type.enum';
 import { InvoiceService } from '../service/invoice.service';
 import { InvoiceModel, InvoiceDetailModel } from '../model/invoice.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, switchMap } from 'rxjs';
+import { of, Subscription, switchMap } from 'rxjs';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
@@ -17,13 +17,17 @@ import {
 import { ClientService } from '../service/client.service';
 import { getTotalClientFees } from '../../core/utils/client.utils';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-sale',
   templateUrl: './sale.component.html',
   styleUrl: './sale.component.css',
 })
-export class SaleComponent implements OnInit {
+export class SaleComponent implements OnInit, OnDestroy {
   payment: number = 0;
   paymentValue: number = 0;
   disableForm: boolean = false;
@@ -61,6 +65,16 @@ export class SaleComponent implements OnInit {
 
   isEdit = false;
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canCreate: boolean = false;
+  canDelete: boolean = false;
+  canEdit: boolean = false;
+  canReturn: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private invoiceService: InvoiceService,
@@ -69,11 +83,56 @@ export class SaleComponent implements OnInit {
     private toastService: ToastService,
     private confirmService: ConfirmModalService,
     private clientService: ClientService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
 
   ngOnInit(): void {
     this.getInvoice();
+    this.handlePermissionsLoad();
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Invoice][
+            PermissionConstants.Components.Invoicing
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canCreate = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Create
+    );
+    this.canDelete = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Delete
+    );
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
+    this.canReturn = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Return
+    );
   }
 
   handleShowProductCatalog(visible: boolean) {
@@ -203,7 +262,7 @@ export class SaleComponent implements OnInit {
   addInvoice(value: InvoiceModel) {
     this.spinner.show('fullscreen');
     value.id = null;
-    this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
+    const sub = this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
       next: (data) => {
         this.router.navigate(['/invoice/sale/edit/' + data.id]);
         this.toastService.showSucess('Venta realizada');
@@ -215,11 +274,12 @@ export class SaleComponent implements OnInit {
         this.toastService.showError('Error al realizar la venta');
       },
     });
+    this.subscriptions$.push(sub);
   }
 
   updateInvoice(value: InvoiceModel) {
     this.spinner.show('fullscreen');
-    this.invoiceService.updateInvoice(value).subscribe({
+    const sub = this.invoiceService.updateInvoice(value).subscribe({
       next: () => {
         this.router.navigate(['/invoice/sale/edit/' + value.id]);
         this.toastService.showSucess('Venta editada');
@@ -230,6 +290,7 @@ export class SaleComponent implements OnInit {
         this.toastService.showError('Error al editar la venta');
       },
     });
+    this.subscriptions$.push(sub);
   }
 
   getValue() {
@@ -266,7 +327,7 @@ export class SaleComponent implements OnInit {
   cancelInvoice() {
     this.spinner.hide('fullscreen');
     const id = this.saleForm.get('id')?.value;
-    this.invoiceService.cancelInvoice(id!).subscribe({
+    const sub = this.invoiceService.cancelInvoice(id!).subscribe({
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Devolución realizada');
@@ -277,6 +338,7 @@ export class SaleComponent implements OnInit {
         this.toastService.showError('Error al cancelar la factura');
       },
     });
+    this.subscriptions$.push(sub);
   }
 
   handlePayment(event: any) {
@@ -338,7 +400,7 @@ export class SaleComponent implements OnInit {
     this.spinner.show('fullscreen');
     this.saleForm.get('clientId')?.setValue(client.id);
     this.isClientCatalogVisible = false;
-    this.clientService.getClientById(client.id).subscribe({
+    const sub = this.clientService.getClientById(client.id).subscribe({
       next: (data) => {
         this.client = data;
         this.clientFees = getTotalClientFees(data);
@@ -349,10 +411,11 @@ export class SaleComponent implements OnInit {
         this.spinner.hide('fullscreen');
       },
     });
+    this.subscriptions$.push(sub);
   }
 
   getInvoice() {
-    this.route.paramMap
+    const sub = this.route.paramMap
       .pipe(
         switchMap((params) => {
           this.spinner.show('fullscreen');
@@ -394,6 +457,7 @@ export class SaleComponent implements OnInit {
           this.spinner.hide('fullscreen');
         },
       });
+    this.subscriptions$.push(sub);
   }
 
   setDisable(disable: boolean) {

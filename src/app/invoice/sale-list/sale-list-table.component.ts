@@ -2,6 +2,8 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -10,18 +12,22 @@ import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { InvoiceModel } from '../model/invoice.model';
 import { SearchModel } from '../../core/models/search.model';
 import { InvoiceService } from '../service/invoice.service';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastService } from '../../core/service/toast.service';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-sale-list-table',
   templateUrl: './sale-list-table.component.html',
   styleUrl: './sale-list-table.component.css',
 })
-export class SaleListTableComponent {
+export class SaleListTableComponent implements OnInit, OnDestroy {
   @Output() onDelete = new EventEmitter<InvoiceModel>();
   @Output() onEdit = new EventEmitter<InvoiceModel>();
   @Input() reloadTable: number = 1;
@@ -42,45 +48,63 @@ export class SaleListTableComponent {
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canCreate: boolean = false;
+  canDelete: boolean = false;
+  canEdit: boolean = false;
+
   constructor(
     private invoiceService: InvoiceService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private store: Store
   ) {}
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
 
   ngOnInit(): void {
-    let searchModel = new SearchModel();
-    this.pageOptionsSubject
-      .pipe(
-        switchMap((search) => {
-          this.spinner.show('table-spinner');
-          searchModel.page = search.page;
-          searchModel.pageSize = search.pageSize;
-          return this.invoiceService.getInvoices(searchModel);
-        })
+    this.handlePermissionsLoad();
+    this.loadInvoices();
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Invoice][
+            PermissionConstants.Components.ReceivableAccount
+          ]
       )
       .subscribe({
-        next: (data) => {
-          this.searchOptions = {
-            page: searchModel.page,
-            pageSize: searchModel.pageSize,
-            count: data.count,
-          };
-          this.data = {
-            data: data.data,
-            options: {
-              ...this.searchOptions,
-              search: searchModel.search,
-              filteredSize: data.data.length,
-            },
-          };
-          this.spinner.hide('table-spinner');
-        },
-        error: (error) => {
-          this.spinner.hide('table-spinner');
-          this.toastService.showError('Error al cargar las facturas');
+        next: (permissions) => {
+          this.setPermissions(permissions);
         },
       });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canCreate = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Create
+    );
+    this.canDelete = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Delete
+    );
+    this.canEdit = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Update
+    );
   }
 
   getStatusDescription(status: InvoiceStatusEnum) {
@@ -125,4 +149,40 @@ export class SaleListTableComponent {
   handleBackwardPage = (page: number): void => {
     this.pageOptionsSubject.next({ ...this.searchOptions, page: page });
   };
+
+  loadInvoices() {
+    let searchModel = new SearchModel();
+    const sub = this.pageOptionsSubject
+      .pipe(
+        switchMap((search) => {
+          this.spinner.show('table-spinner');
+          searchModel.page = search.page;
+          searchModel.pageSize = search.pageSize;
+          return this.invoiceService.getInvoices(searchModel);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.searchOptions = {
+            page: searchModel.page,
+            pageSize: searchModel.pageSize,
+            count: data.count,
+          };
+          this.data = {
+            data: data.data,
+            options: {
+              ...this.searchOptions,
+              search: searchModel.search,
+              filteredSize: data.data.length,
+            },
+          };
+          this.spinner.hide('table-spinner');
+        },
+        error: (error) => {
+          this.spinner.hide('table-spinner');
+          this.toastService.showError('Error al cargar las facturas');
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
 }

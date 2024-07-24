@@ -123,18 +123,15 @@ function getRequiredPermissions(): ModuleRequiredPermissionType {
     },
     [PermissionConstants.Modules.Inventory]: {
       [PermissionConstants.Components.Product]: productPermission(),
-    },
-    [PermissionConstants.Modules.Inventory]: {
       [PermissionConstants.Components.StockCycle]: stockCyclePermission(),
-    },
-    [PermissionConstants.Modules.Inventory]: {
       [PermissionConstants.Components.Category]: categoryPermission(),
-    },
-    [PermissionConstants.Modules.Inventory]: {
       [PermissionConstants.Components.Addon]: addonPermission(),
-    },
-    [PermissionConstants.Modules.Inventory]: {
       [PermissionConstants.Components.Stock]: stockPermission(),
+    },
+    [PermissionConstants.Modules.Invoice]: {
+      [PermissionConstants.Components.Invoicing]: invoicePermission(),
+      [PermissionConstants.Components.ReceivableAccount]:
+        receivabelAccountPermission(),
     },
   };
 }
@@ -342,6 +339,56 @@ function stockPermission(): RequiredPermissionType {
     },
     'read-existence': {
       expected: PermissionConstants.Permission.ReadExistence,
+      valid: false,
+    },
+    'read-transactions': {
+      expected: PermissionConstants.Permission.ReadTransactions,
+      valid: false,
+    },
+  };
+}
+
+function invoicePermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+    return: {
+      expected: PermissionConstants.Permission.Return,
+      valid: false,
+    },
+  };
+}
+
+function receivabelAccountPermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
       valid: false,
     },
   };

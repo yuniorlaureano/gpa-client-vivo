@@ -1,3 +1,6 @@
+<gpa-no-permission-alert [visible]="!canReadTransactions">
+  No tiene permisos para ver transacciones
+</gpa-no-permission-alert>
 <gpa-data-table
   [onSetPageToShow]="handleSetPageToShow"
   [options]="data.options"

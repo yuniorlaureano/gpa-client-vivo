@@ -12,9 +12,11 @@ export class Permission {
   public static Open: string = 'open';
   public static Close: string = 'close';
   public static Cancel: string = 'cancel';
-  public static AssignProfile: string = 'assignProfile';
-  public static UnAssignProfile: string = 'unAssignProfile';
-  public static UpdateUserProfile: string = 'updateUserProfile';
+  public static AssignProfile: string = 'assign-profile';
+  public static UnAssignProfile: string = 'unAssign-profile';
+  public static UpdateUserProfile: string = 'updateUser-profile';
+  public static ReadTransactions: string = 'read-transactions';
+  public static Return: string = 'return';
 }
 
 export class Apps {
@@ -40,7 +42,7 @@ export class Components {
   public static StockCycle: string = 'stockCycle';
   public static Stock: string = 'stock';
   public static Client: string = 'client';
-  public static Invoice: string = 'invoice';
+  public static Invoicing: string = 'invoicing';
   public static ReceivableAccount: string = 'receivable';
   public static User: string = 'user';
   public static Profile: string = 'profile';
