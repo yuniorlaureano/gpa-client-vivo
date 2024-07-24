@@ -132,6 +132,7 @@ function getRequiredPermissions(): ModuleRequiredPermissionType {
       [PermissionConstants.Components.Invoicing]: invoicePermission(),
       [PermissionConstants.Components.ReceivableAccount]:
         receivabelAccountPermission(),
+      [PermissionConstants.Components.Client]: clientPermission(),
     },
   };
 }
@@ -374,6 +375,27 @@ function invoicePermission(): RequiredPermissionType {
 }
 
 function receivabelAccountPermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+  };
+}
+
+function clientPermission(): RequiredPermissionType {
   return {
     create: {
       expected: PermissionConstants.Permission.Create,

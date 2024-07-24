@@ -1,3 +1,6 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver los clientes
+</gpa-no-permission-alert>
 <gpa-data-table
   [onSetPageToShow]="handleSetPageToShow"
   [options]="data.options"
@@ -19,12 +22,14 @@
         <button
           class="btn btn-outline-danger btn-icon"
           (click)="handleDelete(client)"
+          [disabled]="!canDelete"
         >
           <i class="bi bi-trash"></i>
         </button>
         <button
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(client)"
+          [disabled]="!canEdit"
         >
           <i class="bi bi-pencil"></i>
         </button>
