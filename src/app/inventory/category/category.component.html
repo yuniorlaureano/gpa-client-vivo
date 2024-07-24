@@ -83,6 +83,9 @@
         <gpa-no-permission-alert [visible]="!canCreate">
           No tiene permisos para crear categorias
         </gpa-no-permission-alert>
+        <gpa-no-permission-alert [visible]="isEdit && !canEdit">
+          No tiene permisos para modificar categorias
+        </gpa-no-permission-alert>
         <form
           #form="ngForm"
           (ngSubmit)="saveCategory()"

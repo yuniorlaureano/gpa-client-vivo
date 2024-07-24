@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { StockCycleService } from '../service/cycle.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { of, switchMap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { of, Subscription, switchMap } from 'rxjs';
 import {
   StockCycleModel,
   StockCycleDetailModel,
@@ -10,13 +10,17 @@ import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { ToastService } from '../../core/service/toast.service';
 import { CycleTypeEnum } from '../../core/models/cycle-type.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-stock-cycle-detail',
   templateUrl: './stock-cycle-detail.component.html',
   styleUrl: './stock-cycle-detail.component.css',
 })
-export class StockCycleDetailComponent implements OnInit {
+export class StockCycleDetailComponent implements OnInit, OnDestroy {
   stockCycle: {
     cycle: StockCycleModel;
     detail: {
@@ -26,16 +30,57 @@ export class StockCycleDetailComponent implements OnInit {
   } | null = null;
 
   cycleId?: string | null = null;
+
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canClose: boolean = false;
+
   constructor(
     private stockCycleService: StockCycleService,
     private route: ActivatedRoute,
     private confirmService: ConfirmModalService,
     private toast: ToastService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
 
   ngOnInit(): void {
     this.loadCycle();
+    this.handlePermissionsLoad();
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Security][
+            PermissionConstants.Components.User
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+    this.canClose = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Close
+    );
   }
 
   closeCycle() {
@@ -47,16 +92,19 @@ export class StockCycleDetailComponent implements OnInit {
       .confirm('Ciclo', 'Está seguro de cerrar el ciclo de inventario ')
       .then(() => {
         this.spinner.show('fullscreen');
-        this.stockCycleService.closeStockCycle(this.cycleId!).subscribe({
-          next: () => {
-            this.toast.showSucess('Cicle cerrado');
-            this.loadCycle();
-          },
-          error: (error) => {
-            this.spinner.show('fullscreen');
-            this.toast.showError('Error al cerrar el ciclo de inventario');
-          },
-        });
+        const sub = this.stockCycleService
+          .closeStockCycle(this.cycleId!)
+          .subscribe({
+            next: () => {
+              this.toast.showSucess('Cicle cerrado');
+              this.loadCycle();
+            },
+            error: (error) => {
+              this.spinner.show('fullscreen');
+              this.toast.showError('Error al cerrar el ciclo de inventario');
+            },
+          });
+        this.subscriptions$.push(sub);
       })
       .catch(() => {});
   }
@@ -66,7 +114,7 @@ export class StockCycleDetailComponent implements OnInit {
   }
 
   loadCycle() {
-    this.route.paramMap
+    const sub = this.route.paramMap
       .pipe(
         switchMap((route) => {
           this.spinner.show('fullscreen');
@@ -95,6 +143,7 @@ export class StockCycleDetailComponent implements OnInit {
           this.toast.showError('Error al cargar el ciclo de inventario');
         },
       });
+    this.subscriptions$.push(sub);
   }
 
   transformCycleDetail(details: StockCycleDetailModel[] | null) {

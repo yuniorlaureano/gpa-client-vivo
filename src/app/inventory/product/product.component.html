@@ -10,7 +10,6 @@
           routerLink="/inventory/product/list"
           class="btn btn-outline-info btn-rounded"
           style="margin-right: 5px"
-          *ngIf="canRead"
         >
           <i class="bi bi-card-list"></i> Lista de productos
         </a>
@@ -86,6 +85,9 @@
         <div class="row">
           <gpa-no-permission-alert [visible]="!canCreate">
             No tiene permisos para crear productos
+          </gpa-no-permission-alert>
+          <gpa-no-permission-alert [visible]="isEdit && !canEdit">
+            No tiene permisos para modificar productos
           </gpa-no-permission-alert>
           <div class="col-sm-6 col-12 info-container">
             <!-- Primer grupo del formlario -->

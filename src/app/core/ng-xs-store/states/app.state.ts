@@ -251,6 +251,14 @@ function stockCyclePermission(): RequiredPermissionType {
       expected: PermissionConstants.Permission.Read,
       valid: false,
     },
+    open: {
+      expected: PermissionConstants.Permission.Open,
+      valid: false,
+    },
+    close: {
+      expected: PermissionConstants.Permission.Close,
+      valid: false,
+    },
   };
 }
 

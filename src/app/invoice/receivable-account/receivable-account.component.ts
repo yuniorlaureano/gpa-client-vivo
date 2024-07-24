@@ -137,18 +137,21 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
         invoiceId: this.receivableForm.get('invoiceId')?.value ?? '',
       };
 
-      this.receivableAccountService.updateReceivableAccount(value).subscribe({
-        next: () => {
-          this.toastService.showSucess('Pago realizado');
-          this.receivableForm.reset();
-          this.invoiceIdSubject$.next(this.invoice?.invoiceId ?? null);
-          this.spinner.hide('fullscreen');
-        },
-        error: (error) => {
-          this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al realizar el pago');
-        },
-      });
+      const sub = this.receivableAccountService
+        .updateReceivableAccount(value)
+        .subscribe({
+          next: () => {
+            this.toastService.showSucess('Pago realizado');
+            this.receivableForm.reset();
+            this.invoiceIdSubject$.next(this.invoice?.invoiceId ?? null);
+            this.spinner.hide('fullscreen');
+          },
+          error: (error) => {
+            this.spinner.hide('fullscreen');
+            this.toastService.showError('Error al realizar el pago');
+          },
+        });
+      this.subscriptions$.push(sub);
     }
   }
 

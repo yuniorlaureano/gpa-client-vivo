@@ -83,7 +83,7 @@
         <gpa-no-permission-alert [visible]="!canCreate">
           No tiene permisos para crear usuarios
         </gpa-no-permission-alert>
-        <gpa-no-permission-alert [visible]="!canEdit">
+        <gpa-no-permission-alert [visible]="isEdit && !canEdit">
           No tiene permisos para modificar usuarios
         </gpa-no-permission-alert>
         <form [formGroup]="userForm" class="row">

@@ -19,6 +19,7 @@
           class="btn btn-outline-warning btn-rounded"
           style="margin-right: 5px"
           (click)="closeCycle()"
+          [disabled]="!canClose"
         >
           <i class="bi bi-pencil-square"></i>
           Cerrar ciclo
@@ -39,6 +40,9 @@
   <div class="col-sm-12 col-12">
     <div class="card">
       <div class="card-body">
+        <gpa-no-permission-alert [visible]="!isClose && !canClose">
+          No tiene permisos cerrar ciclos de inventario
+        </gpa-no-permission-alert>
         <div class="invoice-container">
           <!-- Row start -->
           <div class="row">

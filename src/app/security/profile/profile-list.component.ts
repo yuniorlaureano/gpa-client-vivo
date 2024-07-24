@@ -2,19 +2,21 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { SearchModel } from '../../core/models/search.model';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProfileModel } from '../model/profile.model';
 import { ProfileService } from '../service/profile.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { ToastService } from '../../core/service/toast.service';
-import { RawUserModel } from '../model/raw-user.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -22,7 +24,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './profile-list.component.html',
   styleUrl: './profile-list.component.css',
 })
-export class ProfileListComponent {
+export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() reloadTable: number = 1;
   @Output() onDelete = new EventEmitter<ProfileModel>();
   @Output() onEdit = new EventEmitter<ProfileModel>();
@@ -34,6 +36,9 @@ export class ProfileListComponent {
   @Input() canDelete: boolean = false;
   @Input() canAssignUser: boolean = false;
   @Input() canUnAssignUser: boolean = false;
+
+  //subscriptions
+  subscriptions$: Subscription[] = [];
 
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
@@ -57,6 +62,10 @@ export class ProfileListComponent {
     private toastService: ToastService,
     private spinner: NgxSpinnerService
   ) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
 
   ngOnInit(): void {
     this.loadProfiles();
@@ -114,7 +123,7 @@ export class ProfileListComponent {
 
   loadProfiles() {
     let searchModel = new SearchModel();
-    this.pageOptionsSubject
+    const sub = this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
           this.spinner.show('profile-spinner');
@@ -145,5 +154,6 @@ export class ProfileListComponent {
           this.toastService.showError('Error al cargar perfiles');
         },
       });
+    this.subscriptions$.push(sub);
   }
 }

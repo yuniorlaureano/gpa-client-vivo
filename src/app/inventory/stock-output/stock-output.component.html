@@ -29,6 +29,7 @@
           [disabled]="isFormDisabled"
           *ngIf="!isEdit || (isEdit && isDraft())"
           (click)="save()"
+          [disabled]="!canRegisterOutput"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -52,6 +53,7 @@
           style="margin-left: 5px"
           (click)="saveDraft()"
           *ngIf="!isEdit || isDraft()"
+          [disabled]="!canRegisterOutput"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

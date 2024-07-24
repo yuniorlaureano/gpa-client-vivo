@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable, of, Subscription, switchMap } from 'rxjs';
 import { StockService } from '../service/stock.service';
 import { ReasonModel } from '../models/reason.model';
 import { ReasonService } from '../service/reason.service';
@@ -14,6 +14,10 @@ import { StockStatusEnum } from '../../core/models/stock-status.enum';
 import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
+import { RequiredPermissionType } from '../../core/models/required-permission.type';
 
 @Component({
   selector: 'gpa-stock-output',
@@ -41,6 +45,14 @@ export class StockOutputComponent implements OnInit, OnDestroy {
     stockDetails: this.formBuilder.array([]),
   });
 
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canRegisterOutput: boolean = false;
+  canUpdateOutput: boolean = false;
+
   constructor(
     private stockService: StockService,
     private reasonService: ReasonService,
@@ -49,30 +61,50 @@ export class StockOutputComponent implements OnInit, OnDestroy {
     private router: Router,
     private toastService: ToastService,
     private confirmService: ConfirmModalService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
-    this.reasons$ = this.reasonService
-      .getReasons()
-      .pipe(
-        map((data) =>
-          data.data.filter(
-            (reason) =>
-              ![
-                ReasonEnum.Purchase,
-                ReasonEnum.Sale,
-                ReasonEnum.Return,
-                ReasonEnum.Manufactured,
-              ].includes(reason.id)
-          )
-        )
-      );
-
+    this.handlePermissionsLoad();
+    this.loadReasons();
     this.getStock();
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
+
+  handlePermissionsLoad() {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.Inventory][
+            PermissionConstants.Components.Stock
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRegisterOutput = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.RegisterOutput
+    );
+    this.canUpdateOutput = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.UpdateOutput
+    );
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
+  }
 
   handleShowProductCatalog(visible: boolean) {
     this.isProductCatalogVisible = visible;
@@ -116,7 +148,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
 
       if (this.isEdit) {
         this.spinner.show('fullscreen');
-        this.stockService
+        const sub = this.stockService
           .updateOutput(<InventoryOutputCollectionModel>value)
           .subscribe({
             next: () => {
@@ -129,10 +161,11 @@ export class StockOutputComponent implements OnInit, OnDestroy {
               this.toastService.showError('Error modificando registro');
             },
           });
+        this.subscriptions$.push(sub);
       } else {
         this.spinner.show('fullscreen');
         value.id = null;
-        this.stockService
+        const sub = this.stockService
           .registerOutput(<InventoryOutputCollectionModel>value)
           .subscribe({
             next: () => {
@@ -144,6 +177,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
               this.toastService.showError('Error agregando registro');
             },
           });
+        this.subscriptions$.push(sub);
       }
     }
   }
@@ -176,7 +210,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
     const id = this.stockForm.get('id')?.value;
     if (this.isEdit && id) {
       this.spinner.show('fullscreen');
-      this.stockService.cancelStock(id).subscribe({
+      const sub = this.stockService.cancelStock(id).subscribe({
         next: () => {
           this.toastService.showSucess('Registro cancelado');
           this.clearForm();
@@ -187,6 +221,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
           this.toastService.showError('Error cancelando registro');
         },
       });
+      this.subscriptions$.push(sub);
     }
   }
 
@@ -239,7 +274,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
   }
 
   getStock() {
-    this.route.paramMap
+    const sub = this.route.paramMap
       .pipe(
         switchMap((params) => {
           this.spinner.show('fullscreen');
@@ -285,6 +320,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
           this.toastService.showError('Error cargando registro');
         },
       });
+    this.subscriptions$.push(sub);
   }
 
   clearForm = () => {
@@ -321,5 +357,23 @@ export class StockOutputComponent implements OnInit, OnDestroy {
       this.stockForm.enable();
       this.isFormDisabled = false;
     }
+  }
+
+  loadReasons() {
+    this.reasons$ = this.reasonService
+      .getReasons()
+      .pipe(
+        map((data) =>
+          data.data.filter(
+            (reason) =>
+              ![
+                ReasonEnum.Purchase,
+                ReasonEnum.Sale,
+                ReasonEnum.Return,
+                ReasonEnum.Manufactured,
+              ].includes(reason.id)
+          )
+        )
+      );
   }
 }
