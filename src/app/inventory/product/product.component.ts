@@ -19,8 +19,8 @@ import {
   switchMap,
 } from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
-import { UnitModel } from '../../common/model/unit.model';
-import { UnitService } from '../../common/service/unit.service';
+import { UnitModel } from '../../general/model/unit.model';
+import { UnitService } from '../../general/service/unit.service';
 import { CategoryModel } from '../models/category.model';
 import { CategoryService } from '../service/category.service';
 import { ProductType } from '../../core/models/product-type.enum';

@@ -29,6 +29,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./report/report.module').then((m) => m.ReportModule),
   },
+  {
+    path: 'general',
+    loadChildren: () =>
+      import('./general/general.module').then((m) => m.GeneralModule),
+  },
 ];
 
 @NgModule({

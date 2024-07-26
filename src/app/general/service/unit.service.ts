@@ -8,7 +8,7 @@ import { UnitModel } from '../model/unit.model';
 
 @Injectable()
 export class UnitService {
-  url = `${environment.api_url}/common/units`;
+  url = `${environment.api_url}/general/units`;
   constructor(private http: HttpClient) {}
 
   getUnits(

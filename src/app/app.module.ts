@@ -20,7 +20,7 @@ import { InvoiceService } from './invoice/service/invoice.service';
 import { ReasonService } from './inventory/service/reason.service';
 import { CategoryService } from './inventory/service/category.service';
 import { ReceivableAccountService } from './invoice/service/receivable-account.service';
-import { UnitService } from './common/service/unit.service';
+import { UnitService } from './general/service/unit.service';
 import { StockCycleService } from './inventory/service/cycle.service';
 import { AddonService } from './inventory/service/addon.service';
 import { UserService } from './security/service/user.service';
@@ -30,6 +30,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsModule } from '@ngxs/store';
 import { AppState } from './core/ng-xs-store/states/app.state';
 import { ErrorService } from './core/service/error.service';
+import { EmailProviderService } from './general/service/email-provider.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -61,6 +62,7 @@ import { ErrorService } from './core/service/error.service';
     ProfileService,
     PermissionService,
     ErrorService,
+    EmailProviderService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
   ],
   bootstrap: [AppComponent],
