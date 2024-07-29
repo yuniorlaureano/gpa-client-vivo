@@ -56,12 +56,11 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
 
   handlePermissionsLoad() {
     const sub = this.store
-      .select(
-        (state: any) =>
-          state.app.requiredPermissions[PermissionConstants.Modules.Common][
-            PermissionConstants.Components.Auth
-          ]
-      )
+      .select((state: any) => {
+        return state.app.requiredPermissions[
+          PermissionConstants.Modules.General
+        ][PermissionConstants.Components.Auth];
+      })
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
@@ -73,7 +72,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
   setPermissions(requiredPermissions: RequiredPermissionType) {
     this.updateUserProfile = ProfileUtils.validateIfCan(
       requiredPermissions,
-      PermissionConstants.Permission.Read
+      PermissionConstants.Permission.UpdateUserProfile
     );
   }
 

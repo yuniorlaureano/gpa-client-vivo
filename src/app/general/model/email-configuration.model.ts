@@ -1,7 +1,8 @@
 export interface EmailConfigurationModel {
   id: string | null;
-  provider: string;
-  value: string;
+  value: string | null;
   from: string;
-  current: string;
+  identifier: string;
+  engine: string;
+  current: boolean;
 }

@@ -10,6 +10,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { EmailProviderService } from '../service/email-provider.service';
 import { EmailConfigurationModel } from '../model/email-configuration.model';
+import { EmailConstant } from '../../core/models/email.constants';
 
 @Component({
   selector: 'gpa-email-provider',
@@ -17,14 +18,22 @@ import { EmailConfigurationModel } from '../model/email-configuration.model';
   styleUrl: './email-provider.component.css',
 })
 export class EmailProviderComponent implements OnInit, OnDestroy {
+  emailConstant = EmailConstant;
   isEdit = false;
-  addonForm = this.formBuilder.group({
+  options: string | null | undefined = null;
+  emailProviderForm = this.formBuilder.group({
     id: [''],
-    concept: ['', Validators.required],
-    isDiscount: [true, Validators.required],
-    type: ['PERCENTAGE', Validators.required],
+    identifier: ['', Validators.required],
+    engine: ['', Validators.required],
+    from: ['', Validators.required],
+    current: [false, Validators.required],
     value: ['', Validators.required],
   });
+
+  engines = {
+    [EmailConstant.SMTP]: EmailConstant.SMTP,
+    [EmailConstant.SENGRID]: EmailConstant.SENGRID,
+  };
 
   //subscriptions
   subscriptions$: Subscription[] = [];
@@ -32,6 +41,7 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
   //permissions
   canRead: boolean = false;
   canCreate: boolean = false;
+  canDelete: boolean = false;
   canEdit: boolean = false;
 
   constructor(
@@ -49,7 +59,7 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadAddon();
+    this.loadEmailProvider();
     this.handlePermissionsLoad();
   }
 
@@ -57,8 +67,8 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
     const sub = this.store
       .select(
         (state: any) =>
-          state.app.requiredPermissions[PermissionConstants.Modules.Inventory][
-            PermissionConstants.Components.Addon
+          state.app.requiredPermissions[PermissionConstants.Modules.General][
+            PermissionConstants.Components.Email
           ]
       )
       .subscribe({
@@ -78,95 +88,122 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
       requiredPermissions,
       PermissionConstants.Permission.Create
     );
+    this.canDelete = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Delete
+    );
     this.canEdit = ProfileUtils.validateIfCan(
       requiredPermissions,
       PermissionConstants.Permission.Update
     );
   }
 
-  saveAddon() {
-    this.addonForm.markAllAsTouched();
-    if (this.addonForm.valid) {
+  get selectedEngine() {
+    return this.emailProviderForm.get('engine')?.value;
+  }
+
+  getEngines(): string[] {
+    return Object.keys(this.engines).map((x) => x);
+  }
+
+  handleOptionsChange(value: string) {
+    this.emailProviderForm.get('value')?.setValue(value);
+  }
+
+  save() {
+    this.emailProviderForm.markAllAsTouched();
+    if (this.emailProviderForm.valid) {
       const value = {
-        ...this.addonForm.value,
-        value: Number(this.addonForm.get('value')?.value),
+        ...this.emailProviderForm.value,
+        value: this.emailProviderForm.get('value')?.value,
       };
       if (this.isEdit) {
         this.spinner.show('fullscreen');
-        // const sub = this.addonService.updateAddon(<EmailConfigurationModel>value).subscribe({
-        //   next: () => {
-        //     this.clearForm();
-        //     this.toastService.showSucess('Agregado modificado');
-        //     this.spinner.hide('fullscreen');
-        //   },
-        //   error: (error) => {
-        //     this.spinner.hide('fullscreen');
-        //     this.toastService.showError('Error al modificar el agregado');
-        //   },
-        // });
-        // this.subscriptions$.push(sub);
+        const sub = this.emailProviderService
+          .updateEmailProvider(<EmailConfigurationModel>value)
+          .subscribe({
+            next: () => {
+              this.clearForm();
+              this.toastService.showSucess('Proveedor de email modificado');
+              this.spinner.hide('fullscreen');
+              this.router.navigate(['/general/emails']);
+            },
+            error: (error) => {
+              this.spinner.hide('fullscreen');
+              this.toastService.showError(
+                'Error al modificar el proveedor de email'
+              );
+            },
+          });
+        this.subscriptions$.push(sub);
       } else {
         value.id = null;
         this.spinner.show('fullscreen');
-        // const sub = this.addonService.addAddon(<EmailConfigurationModel>value).subscribe({
-        //   next: () => {
-        //     this.clearForm();
-        //     this.toastService.showSucess('Agregado creada');
-        //     this.spinner.hide('fullscreen');
-        //   },
-        //   error: (error) => {
-        //     this.spinner.hide('fullscreen');
-        //     this.toastService.showError('Error al crear el agregado');
-        //   },
-        // });
-        // this.subscriptions$.push(sub);
+        const sub = this.emailProviderService
+          .addEmailProvider(<EmailConfigurationModel>value)
+          .subscribe({
+            next: () => {
+              this.clearForm();
+              this.toastService.showSucess('Proveedor de email creado');
+              this.spinner.hide('fullscreen');
+            },
+            error: (error) => {
+              this.spinner.hide('fullscreen');
+              this.toastService.showError(
+                'Error al crear el proveedor de email'
+              );
+            },
+          });
+        this.subscriptions$.push(sub);
       }
     }
   }
 
-  loadAddon() {
-    // const sub = this.route.paramMap
-    //   .pipe(
-    //     switchMap((params) => {
-    //       this.spinner.show('fullscreen');
-    //       const id = params.get('id');
-    //       if (id) {
-    //         this.isEdit = true;
-    //         return this.addonService.getAddonById(id);
-    //       } else {
-    //         this.isEdit = false;
-    //         return of(null);
-    //       }
-    //     })
-    //   )
-    //   .subscribe({
-    //     next: (addon) => {
-    //       if (addon) {
-    //         this.addonForm.setValue({
-    //           id: addon.id,
-    //           concept: addon.concept,
-    //           isDiscount: addon.isDiscount,
-    //           type: addon.type,
-    //           value: addon.value.toString(),
-    //         });
-    //       }
-    //       this.spinner.hide('fullscreen');
-    //     },
-    //     error: (error) => {
-    //       this.spinner.hide('fullscreen');
-    //       this.toastService.showError('Error al cargar el agregado');
-    //     },
-    //   });
-    // this.subscriptions$.push(sub);
+  loadEmailProvider() {
+    const sub = this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          this.spinner.show('fullscreen');
+          const id = params.get('id');
+          if (id) {
+            this.isEdit = true;
+            return this.emailProviderService.getEmailProviderById(id);
+          } else {
+            this.isEdit = false;
+            return of(null);
+          }
+        })
+      )
+      .subscribe({
+        next: (emailProvider) => {
+          if (emailProvider) {
+            this.emailProviderForm.setValue({
+              id: emailProvider.id,
+              identifier: emailProvider.identifier,
+              engine: emailProvider.engine,
+              from: emailProvider.from,
+              current: emailProvider.current,
+              value: emailProvider.value,
+            });
+            this.options = emailProvider.value;
+          }
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al cargar el proveedor de email');
+        },
+      });
+    this.subscriptions$.push(sub);
   }
 
   handleCancel() {
     this.clearForm();
-    this.router.navigate(['/inventory/addon']);
+    this.router.navigate(['/general/emails']);
   }
 
   clearForm() {
-    this.addonForm.reset();
+    this.emailProviderForm.reset();
     this.isEdit = false;
   }
 }

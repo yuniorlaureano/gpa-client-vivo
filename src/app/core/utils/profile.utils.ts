@@ -282,12 +282,18 @@ export function hasPermissionByRequiredPermissionForModules(
     Object.keys(requiredPermissions[module]).forEach((component) => {
       Object.keys(requiredPermissions[module][component]).forEach(
         (requiredPermission) => {
-          requiredPermissions[module][component][requiredPermission].valid =
-            permissions[app][module][component][
-              requiredPermissions[module][component][
-                requiredPermission
-              ].expected
-            ];
+          try {
+            requiredPermissions[module][component][requiredPermission].valid =
+              permissions[app][module][component][
+                requiredPermissions[module][component][
+                  requiredPermission
+                ].expected
+              ];
+          } catch (error) {
+            console.log(module);
+            console.log(component);
+            console.log(requiredPermission);
+          }
         }
       );
     });

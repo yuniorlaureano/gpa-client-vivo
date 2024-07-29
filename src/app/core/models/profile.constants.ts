@@ -14,7 +14,7 @@ export class Permission {
   public static Cancel: string = 'cancel';
   public static AssignProfile: string = 'assign-profile';
   public static UnAssignProfile: string = 'unAssign-profile';
-  public static UpdateUserProfile: string = 'updateUser-profile';
+  public static UpdateUserProfile: string = 'update-user-profile';
   public static ReadTransactions: string = 'read-transactions';
   public static Return: string = 'return';
 }
@@ -28,8 +28,7 @@ export class Modules {
   public static Invoice: string = 'invoice';
   public static Security: string = 'security';
   public static Report: string = 'report';
-  public static Common: string = 'common';
-  public static Auth: string = 'common';
+  public static General: string = 'general';
 }
 
 export class Components {
@@ -47,4 +46,5 @@ export class Components {
   public static User: string = 'user';
   public static Profile: string = 'profile';
   public static Auth: string = 'auth';
+  public static Email: string = 'email';
 }

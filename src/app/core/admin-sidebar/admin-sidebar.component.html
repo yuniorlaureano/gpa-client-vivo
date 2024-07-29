@@ -207,17 +207,21 @@
               <li routerLinkActive="active">
                 <a
                   href="#"
+                  routerLink="/general/emails"
                   routerLinkActive="current-page"
                   class="menu-item-list"
-                  >Venta</a
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  >Emails</a
                 >
               </li>
               <li routerLinkActive="active">
                 <a
                   href="#"
+                  routerLink="/general/emails/list"
                   routerLinkActive="current-page"
                   class="menu-item-list"
-                  >Compra</a
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  >Lista de proveedores</a
                 >
               </li>
             </ul>

@@ -1,0 +1,42 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver proveedores de email
+</gpa-no-permission-alert>
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Identificador</th>
+    <th>Remitente</th>
+    <th>Proveedor</th>
+    <th>Es por defecto</th>
+    <!-- <th></th> -->
+  </tr>
+  <tbody body>
+    <tr *ngFor="let emailProvider of data.data">
+      <td>{{ emailProvider.identifier }}</td>
+      <td>{{ emailProvider.from }}</td>
+      <td>{{ emailProvider.engine }}</td>
+      <td>{{ emailProvider.current ? "Sí" : "No" }}</td>
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(emailProvider)"
+          [disabled]="!canDelete"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(emailProvider)"
+          [disabled]="!canEdit"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>
