@@ -39,9 +39,9 @@ export class TOTPCodeComponent implements OnDestroy {
         .subscribe({
           next: () => {
             this.errors = [];
-            this.spinner.hide('fullscreen');
-            this.messasge.push('Código enviado verfique su correo');
+            this.messasge.push('Código enviado verifique su correo.');
             setTimeout(() => {
+              this.spinner.hide('fullscreen');
               this.router.navigate(['/auth/reset-password']);
             }, 2000);
           },

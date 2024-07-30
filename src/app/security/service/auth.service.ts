@@ -7,6 +7,7 @@ import { TokenModel } from '../model/token.model';
 import { TokenService } from '../../core/service/token.service';
 import { UserModel } from '../model/user.model';
 import { SignUpModel } from '../model/sign-up.model';
+import { ResetPasswordModel } from '../model/reset-password.model';
 
 @Injectable()
 export class AuthService {
@@ -64,5 +65,9 @@ export class AuthService {
 
   sendTOTPCode(email: string): Observable<void> {
     return this.http.get<void>(`${this.url}/totp/send/${email}`);
+  }
+
+  resetPassword(passwordReset: ResetPasswordModel): Observable<void> {
+    return this.http.post<void>(`${this.url}/reset-password`, passwordReset);
   }
 }
