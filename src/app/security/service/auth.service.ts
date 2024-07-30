@@ -61,4 +61,8 @@ export class AuthService {
   signUp(model: SignUpModel): Observable<void> {
     return this.http.post<void>(`${this.url}/signup`, model);
   }
+
+  sendTOTPCode(email: string): Observable<void> {
+    return this.http.get<void>(`${this.url}/totp/send/${email}`);
+  }
 }

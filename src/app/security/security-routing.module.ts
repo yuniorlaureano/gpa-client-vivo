@@ -9,6 +9,8 @@ import { UserRegisterComponent } from './user-register/user-register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfilePermissionComponent } from './profile-permission/profile-permission.component';
 import { UserProfileEditComponent } from './user-profile-edit/user-profile-edit.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { TOTPCodeComponent } from './totp-code/totp-code.component';
 
 const routes: Routes = [
   {
@@ -17,6 +19,8 @@ const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: SignUpComponent },
+      { path: 'totp-code', component: TOTPCodeComponent },
+      { path: 'reset-password', component: ResetPasswordComponent },
     ],
   },
   {

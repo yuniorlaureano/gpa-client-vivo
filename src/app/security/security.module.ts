@@ -16,6 +16,8 @@ import { ProfilePermissionComponent } from './profile-permission/profile-permiss
 import { CoreModule } from '../core/core.module';
 import { ProfileUserCatalogComponent } from './profile/profile-user-catalog/profile-user-catalog.component';
 import { UserProfileEditComponent } from './user-profile-edit/user-profile-edit.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { TOTPCodeComponent } from './totp-code/totp-code.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { UserProfileEditComponent } from './user-profile-edit/user-profile-edit.
     ProfilePermissionComponent,
     ProfileUserCatalogComponent,
     UserProfileEditComponent,
+    ResetPasswordComponent,
+    TOTPCodeComponent,
   ],
   imports: [
     CommonModule,

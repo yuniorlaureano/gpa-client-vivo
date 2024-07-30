@@ -13,7 +13,11 @@ export const JwtAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const token = tokenService.getToken();
   let headers = req.headers;
 
-  if (!req.url.endsWith('/security/auth/signup')) {
+  if (
+    !req.url.endsWith('/security/auth/signup') &&
+    !req.url.endsWith('/security/auth/reset-password') &&
+    !req.url.includes('/security/auth/totp/send/')
+  ) {
     if (!token) {
       router.navigate(['/auth/login']);
     } else {

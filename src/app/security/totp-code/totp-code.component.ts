@@ -1,22 +1,21 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth.service';
-import { LoginModel } from '../model/login.model';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
-  selector: 'gpa-login',
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  selector: 'gpa-reset-password',
+  templateUrl: './totp-code.component.html',
+  styleUrl: './totp-code.component.css',
 })
-export class LoginComponent implements OnDestroy {
+export class TOTPCodeComponent implements OnDestroy {
   errors: string[] = [];
+  messasge: string[] = [];
   loginSubscription!: Subscription;
-  loginForm = this.formBuilder.group({
-    userName: ['', Validators.required],
-    password: ['', Validators.required],
+  resetForm = this.formBuilder.group({
+    email: ['', [Validators.required, Validators.email]],
   });
 
   constructor(
@@ -32,25 +31,28 @@ export class LoginComponent implements OnDestroy {
     }
   }
 
-  login() {
-    if (this.loginForm.valid) {
+  sendCode() {
+    if (this.resetForm.valid) {
       this.spinner.show('fullscreen');
       this.loginSubscription = this.authService
-        .login(this.loginForm.value as LoginModel)
+        .sendTOTPCode(this.resetForm.value.email!)
         .subscribe({
           next: () => {
             this.errors = [];
             this.spinner.hide('fullscreen');
-            this.router.navigate(['']);
+            this.messasge.push('Código enviado verfique su correo');
+            setTimeout(() => {
+              this.router.navigate(['/auth/reset-password']);
+            }, 2000);
           },
           error: ({ error }) => {
+            this.spinner.hide('fullscreen');
             const errors = Object.keys(error).map((err) => error[err]);
             let concatenatedErrors: string[] = [];
             for (let err of errors) {
               concatenatedErrors = concatenatedErrors.concat(err);
             }
             this.errors = concatenatedErrors;
-            this.spinner.hide('fullscreen');
           },
         });
     }
