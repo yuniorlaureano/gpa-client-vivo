@@ -31,6 +31,7 @@ import { NgxsModule } from '@ngxs/store';
 import { AppState } from './core/ng-xs-store/states/app.state';
 import { ErrorService } from './core/service/error.service';
 import { EmailProviderService } from './general/service/email-provider.service';
+import { AuthState } from './core/ng-xs-store/states/auth.state';
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,7 +41,7 @@ import { EmailProviderService } from './general/service/email-provider.service';
     CoreModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NgxsModule.forRoot([AppState], {
+    NgxsModule.forRoot([AppState, AuthState], {
       developmentMode: true,
     }),
   ],

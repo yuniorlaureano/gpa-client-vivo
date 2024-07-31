@@ -40,13 +40,26 @@ export class SignUpComponent {
   bothPasswordAreInvalid(control: FormControl): ValidationErrors | null {
     const password = control.parent?.get('password')?.value;
     const confirmPassword = control.parent?.get('confirmPassword')?.value;
+    if (password != confirmPassword) {
+      control.parent
+        ?.get('confirmPassword')
+        ?.setErrors({ bothPasswordAreInvalid: true });
+    }
     return password == confirmPassword
       ? null
       : { bothPasswordAreInvalid: true };
   }
 
-  save() {
+  markAllAsTouched() {
+    const confirmPassword = this.signUpForm.get(
+      'confirmPassword'
+    ) as FormControl;
+    this.bothPasswordAreInvalid(confirmPassword);
     this.signUpForm.markAllAsTouched();
+  }
+
+  save() {
+    this.markAllAsTouched();
     if (this.signUpForm.valid) {
       this.spinner.show('fullscreen');
       this.authService.signUp(<SignUpModel>this.signUpForm.value).subscribe({

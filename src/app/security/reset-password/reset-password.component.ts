@@ -10,6 +10,12 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ResetPasswordModel } from '../model/reset-password.model';
+import { Store } from '@ngxs/store';
+import {
+  AddMessages,
+  ReplaceMessages,
+} from '../../core/ng-xs-store/actions/auth.actions';
+import { AuthState } from '../../core/ng-xs-store/states/auth.state';
 
 @Component({
   selector: 'gpa-reset-password',
@@ -18,20 +24,28 @@ import { ResetPasswordModel } from '../model/reset-password.model';
 })
 export class ResetPasswordComponent implements OnDestroy {
   errors: string[] = [];
-  messasge: string[] = [];
   loginSubscription!: Subscription;
+  messages$ = this.store.select(AuthState.getMessages);
   resetForm = this.formBuilder.group({
     userName: ['', [Validators.required, Validators.maxLength(30)]],
     code: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.maxLength(128)]],
-    confirmPassword: ['', [Validators.required, this.bothPasswordAreInvalid]],
+    confirmPassword: [
+      '',
+      [
+        Validators.required,
+        this.bothPasswordAreInvalid,
+        Validators.maxLength(128),
+      ],
+    ],
   });
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
 
   ngOnDestroy(): void {
@@ -43,29 +57,50 @@ export class ResetPasswordComponent implements OnDestroy {
   bothPasswordAreInvalid(control: FormControl): ValidationErrors | null {
     const password = control.parent?.get('password')?.value;
     const confirmPassword = control.parent?.get('confirmPassword')?.value;
+    if (password != confirmPassword) {
+      control.parent
+        ?.get('confirmPassword')
+        ?.setErrors({ bothPasswordAreInvalid: true });
+    }
     return password == confirmPassword
       ? null
       : { bothPasswordAreInvalid: true };
   }
 
+  markAllAsTouched() {
+    const confirmPassword = this.resetForm.get(
+      'confirmPassword'
+    ) as FormControl;
+    this.bothPasswordAreInvalid(confirmPassword);
+    this.resetForm.markAllAsTouched();
+  }
+
   changePassword() {
+    this.markAllAsTouched();
     if (this.resetForm.valid) {
       this.spinner.show('fullscreen');
-
       this.loginSubscription = this.authService
         .resetPassword(this.resetForm.value as ResetPasswordModel)
         .subscribe({
           next: () => {
             this.errors = [];
-            this.messasge.push('Contraseña cambiada correctamente.');
-            setTimeout(() => {
-              this.router.navigate(['/auth/login']);
-              this.spinner.hide('fullscreen');
-            }, 500);
+            this.spinner.hide('fullscreen');
+            this.store.dispatch(
+              new ReplaceMessages([
+                'Contraseña cambiada correctamente.',
+                'Inicia sesión con tu nueva contraseña.',
+              ])
+            );
+            this.router.navigate(['/auth/login']);
           },
           error: ({ error }) => {
             this.spinner.hide('fullscreen');
-            const errors = Object.keys(error).map((err) => error[err]);
+            let errors = [];
+            if (typeof error === 'string') {
+              errors.push(error);
+            } else {
+              errors = Object.keys(error).map((err) => error[err]);
+            }
             let concatenatedErrors: string[] = [];
             for (let err of errors) {
               concatenatedErrors = concatenatedErrors.concat(err);

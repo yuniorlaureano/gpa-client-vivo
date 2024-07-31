@@ -4,6 +4,8 @@ import { AuthService } from '../service/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Store } from '@ngxs/store';
+import { ReplaceMessages } from '../../core/ng-xs-store/actions/auth.actions';
 
 @Component({
   selector: 'gpa-reset-password',
@@ -12,7 +14,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class TOTPCodeComponent implements OnDestroy {
   errors: string[] = [];
-  messasge: string[] = [];
   loginSubscription!: Subscription;
   resetForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -22,7 +23,8 @@ export class TOTPCodeComponent implements OnDestroy {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
 
   ngOnDestroy(): void {
@@ -39,15 +41,23 @@ export class TOTPCodeComponent implements OnDestroy {
         .subscribe({
           next: () => {
             this.errors = [];
-            this.messasge.push('Código enviado verifique su correo.');
-            setTimeout(() => {
-              this.spinner.hide('fullscreen');
-              this.router.navigate(['/auth/reset-password']);
-            }, 2000);
+            this.spinner.hide('fullscreen');
+            this.store.dispatch(
+              new ReplaceMessages([
+                'Código enviado verifique su correo.',
+                'Complete el formulario para continuar.',
+              ])
+            );
+            this.router.navigate(['/auth/reset-password']);
           },
           error: ({ error }) => {
             this.spinner.hide('fullscreen');
-            const errors = Object.keys(error).map((err) => error[err]);
+            let errors = [];
+            if (typeof error === 'string') {
+              errors.push(error);
+            } else {
+              errors = Object.keys(error).map((err) => error[err]);
+            }
             let concatenatedErrors: string[] = [];
             for (let err of errors) {
               concatenatedErrors = concatenatedErrors.concat(err);

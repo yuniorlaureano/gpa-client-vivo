@@ -108,7 +108,7 @@
           [control]="signUpForm.get('password')"
           [touched]="signUpForm.touched"
           validation="maxlength"
-          message="La Contraseña es requerida"
+          message="Ha excedido el límite de 128 caracteres"
         />
       </div>
       <div class="mb-3">
@@ -138,7 +138,7 @@
           [control]="signUpForm.get('confirmPassword')"
           [touched]="signUpForm.touched"
           validation="maxlength"
-          message="Las contraseñas no coinciden"
+          message="Ha excedido el límite de 128 caracteres"
         />
       </div>
       <div class="login-form-actions">

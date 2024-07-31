@@ -14,11 +14,6 @@
           <li *ngFor="let error of errors">{{ error }}</li>
         </ul>
       </div>
-      <div class="alert alert-success" role="alert" *ngIf="messasge.length">
-        <ul>
-          <li *ngFor="let mgs of messasge">{{ mgs }}</li>
-        </ul>
-      </div>
       <div class="mb-3">
         <label class="form-label">Correo</label>
         <input type="text" class="form-control" formControlName="email" />
