@@ -8,14 +8,12 @@
       <div class="login-welcome">
         Bienvenido <br />Sistema de gestión de planta de agua.
       </div>
-      <div
-        class="alert alert-success"
-        role="alert"
-        *ngIf="messages$ | async as messages"
-      >
-        <ul>
-          <li *ngFor="let mgs of messages">{{ mgs }}</li>
-        </ul>
+      <div *ngIf="messages$ | async as messages">
+        <div class="alert alert-success" role="alert" *ngIf="messages.length">
+          <ul>
+            <li *ngFor="let mgs of messages">{{ mgs }}</li>
+          </ul>
+        </div>
       </div>
       <div class="alert alert-danger" role="alert" *ngIf="errors.length">
         <ul>
