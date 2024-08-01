@@ -28,12 +28,14 @@ export class InvoiceCatalogComponent implements OnInit, OnDestroy {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   });
   invoices: InvoiceModel[] = [];
   options: SearchOptionsModel = {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   };
 
   constructor(

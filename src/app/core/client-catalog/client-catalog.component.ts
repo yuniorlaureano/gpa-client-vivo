@@ -20,12 +20,14 @@ export class ClientCatalogComponent {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   });
   clients!: ClientModel[];
   options: SearchOptionsModel = {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   };
 
   constructor(

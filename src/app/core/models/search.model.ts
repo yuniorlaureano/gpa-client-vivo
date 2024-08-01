@@ -13,7 +13,9 @@ export class SearchModel {
     this.search = search;
   }
   asQueryString(): string {
-    // return `?page=${this.page}&pageSize=${this.pageSize}&search=${this.search}`;
-    return `?page=${this.page}&pageSize=${this.pageSize}`;
+    if (this.search) {
+      this.search = btoa(this.search).replaceAll('=', '');
+    }
+    return `?page=${this.page}&pageSize=${this.pageSize}&search="${this.search}"`;
   }
 }

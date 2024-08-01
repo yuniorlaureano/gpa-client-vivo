@@ -35,12 +35,14 @@ export class ProfileUserCatalogComponent
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   });
   users!: RawUserModel[];
   options: SearchOptionsModel = {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   };
 
   //permissions

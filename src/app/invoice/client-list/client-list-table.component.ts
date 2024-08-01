@@ -35,6 +35,7 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   });
   public data: DataTableDataModel<ClientModel> = {
     data: [],
@@ -154,6 +155,7 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
             page: searchModel.page,
             pageSize: searchModel.pageSize,
             count: data.count,
+            search: searchModel.search,
           };
           this.data = {
             data: data.data,

@@ -31,12 +31,14 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   });
   users!: UserModel[];
   options: SearchOptionsModel = {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   };
 
   constructor(

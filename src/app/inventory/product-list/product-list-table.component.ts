@@ -8,7 +8,7 @@ import {
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { SearchModel } from '../../core/models/search.model';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, Subject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProductModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
@@ -34,6 +34,7 @@ export class ProductListTableComponent {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   });
   public data: DataTableDataModel<ProductModel> = {
     data: [],
@@ -53,6 +54,7 @@ export class ProductListTableComponent {
   canEdit: boolean = false;
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
+  searchTerms = new Subject<string>();
 
   constructor(
     private productService: ProductService,
@@ -64,6 +66,7 @@ export class ProductListTableComponent {
   ngOnInit(): void {
     this.handlePermissionsLoad();
     this.loadProducts();
+    this.initSearch();
   }
 
   handlePermissionsLoad() {
@@ -97,6 +100,21 @@ export class ProductListTableComponent {
     );
   }
 
+  handleSearch(search: any) {
+    this.searchTerms.next(search.target.value);
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.searchOptions, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
+
   loadProducts() {
     let searchModel = new SearchModel();
     const sub = this.pageOptionsSubject
@@ -105,6 +123,7 @@ export class ProductListTableComponent {
           this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
+          searchModel.search = search.search;
           return this.productService.getProducts(searchModel);
         })
       )
@@ -114,6 +133,7 @@ export class ProductListTableComponent {
             page: searchModel.page,
             pageSize: searchModel.pageSize,
             count: data.count,
+            search: searchModel.search,
           };
           this.data = {
             data: data.data,

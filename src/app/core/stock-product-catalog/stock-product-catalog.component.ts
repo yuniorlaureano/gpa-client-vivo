@@ -28,12 +28,14 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   });
   products!: ProductCatalogModel[];
   options: SearchOptionsModel = {
     count: 0,
     page: 1,
     pageSize: 10,
+    search: null,
   };
 
   constructor(
