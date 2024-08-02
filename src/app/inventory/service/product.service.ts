@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ProductModel } from '../models/product.model';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 
 @Injectable()
 export class ProductService {
@@ -12,7 +12,7 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   getProducts(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<ProductModel>> {
     return this.http.get<ResponseModel<ProductModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`

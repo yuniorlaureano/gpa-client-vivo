@@ -3,7 +3,7 @@ import { SelectModel } from '../../core/models/select-model';
 import { ProviderModel } from '../models/provider.model';
 import { ProviderService } from '../service/provider.service';
 import { BehaviorSubject, switchMap } from 'rxjs';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { ToastService } from '../../core/service/toast.service';
 
 @Component({
@@ -72,7 +72,7 @@ export class ProviderDynamicSearchComponent implements OnInit {
           this.options = options;
 
           return this.providerService.getProviders(
-            new SearchModel(options.page, options.pageSize)
+            new FilterModel(options.page, options.pageSize)
           );
         })
       )

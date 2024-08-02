@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { environment } from '../../../environments/environment';
 import { ClientModel } from '../model/client.model';
 
@@ -12,7 +12,7 @@ export class ClientService {
   constructor(private http: HttpClient) {}
 
   getClients(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<ClientModel>> {
     return this.http.get<ResponseModel<ClientModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`

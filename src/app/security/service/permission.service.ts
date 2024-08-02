@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { environment } from '../../../environments/environment';
 import { ProfileModel } from '../model/profile.model';
 import { MasterProfileModel } from '../model/master-profile.mode';
@@ -14,7 +14,7 @@ export class PermissionService {
   constructor(private http: HttpClient) {}
 
   getPermissions(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<ProfileModel>> {
     return this.http.get<ResponseModel<ProfileModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`

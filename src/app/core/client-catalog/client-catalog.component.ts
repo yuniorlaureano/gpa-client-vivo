@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
-import { SearchModel } from '../models/search.model';
+import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { ClientService } from '../../invoice/service/client.service';
 import { ClientModel } from '../../invoice/model/client.model';
@@ -70,7 +70,7 @@ export class ClientCatalogComponent {
   }
 
   loadClients() {
-    const search = new SearchModel();
+    const search = new FilterModel();
     this.clientSubscription = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {

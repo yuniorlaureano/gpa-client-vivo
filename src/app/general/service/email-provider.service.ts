@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { EmailConfigurationModel } from '../model/email-configuration.model';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class EmailProviderService {
   constructor(private http: HttpClient) {}
 
   getEmailProvider(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<EmailConfigurationModel>> {
     return this.http.get<ResponseModel<EmailConfigurationModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`

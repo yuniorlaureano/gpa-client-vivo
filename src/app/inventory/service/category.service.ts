@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { CategoryModel } from '../models/category.model';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class CategoryService {
   constructor(private http: HttpClient) {}
 
   getCategory(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<CategoryModel>> {
     return this.http.get<ResponseModel<CategoryModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`

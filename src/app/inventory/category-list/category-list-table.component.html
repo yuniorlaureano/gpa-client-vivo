@@ -7,6 +7,18 @@
   [onForwardPage]="handleForwardPage"
   [onBackwardPage]="handleBackwardPage"
 >
+  <div search>
+    <div class="input-group">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar por Nombre"
+        style="margin-right: 20px; width: 300px"
+        (input)="handleSearch($event)"
+      />
+    </div>
+  </div>
   <h3 class="card-title" caption></h3>
   <tr header>
     <th>Nombre</th>

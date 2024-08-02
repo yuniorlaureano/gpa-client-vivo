@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { environment } from '../../../environments/environment';
 import { InvoiceModel } from '../model/invoice.model';
 
@@ -12,7 +12,7 @@ export class InvoiceService {
   constructor(private http: HttpClient) {}
 
   getInvoices(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<InvoiceModel>> {
     return this.http.get<ResponseModel<InvoiceModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`

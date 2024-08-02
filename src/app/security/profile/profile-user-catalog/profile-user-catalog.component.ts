@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../../core/models/search-options.model';
-import { SearchModel } from '../../../core/models/search.model';
+import { FilterModel } from '../../../core/models/filter.model';
 import { ProfileService } from '../../service/profile.service';
 import { RawUserModel } from '../../model/raw-user.model';
 import { ProfileModel } from '../../model/profile.model';
@@ -106,7 +106,7 @@ export class ProfileUserCatalogComponent
   }
 
   loadUsers() {
-    const search = new SearchModel();
+    const search = new FilterModel();
     this.userSubscription = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {

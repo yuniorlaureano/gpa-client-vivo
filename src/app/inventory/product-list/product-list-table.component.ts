@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { BehaviorSubject, debounceTime, Subject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProductModel } from '../models/product.model';
@@ -116,7 +116,7 @@ export class ProductListTableComponent {
   }
 
   loadProducts() {
-    let searchModel = new SearchModel();
+    let searchModel = new FilterModel();
     const sub = this.pageOptionsSubject
       .pipe(
         switchMap((search) => {

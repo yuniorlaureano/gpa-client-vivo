@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { ProductCatalogModel } from '../models/product-catalog.model';
 import {
   InventoryEntryCollectionModel,
@@ -18,7 +18,7 @@ export class StockService {
   constructor(private http: HttpClient) {}
 
   getStockMaster(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<StockModel>> {
     return this.http.get<ResponseModel<StockModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`
@@ -30,7 +30,7 @@ export class StockService {
   }
 
   getProductCatalog(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<ProductCatalogModel>> {
     return this.http.get<ResponseModel<ProductCatalogModel>>(
       `${this.url}/products${search ? search.asQueryString() : ''}`
@@ -38,7 +38,7 @@ export class StockService {
   }
 
   getExistence(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<ExistenceModel>> {
     return this.http.get<ResponseModel<ExistenceModel>>(
       `${this.url}/existance${search ? search.asQueryString() : ''}`

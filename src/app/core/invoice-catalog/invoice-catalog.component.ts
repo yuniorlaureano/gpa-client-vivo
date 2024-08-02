@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
-import { SearchModel } from '../models/search.model';
+import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { InvoiceModel } from '../../invoice/model/invoice.model';
 import { InvoiceService } from '../../invoice/service/invoice.service';
@@ -85,7 +85,7 @@ export class InvoiceCatalogComponent implements OnInit, OnDestroy {
   }
 
   loadInvoices() {
-    const search = new SearchModel();
+    const search = new FilterModel();
     this.invoiceSubscription = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {

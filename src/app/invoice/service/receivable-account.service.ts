@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { environment } from '../../../environments/environment';
 import { ReceivableAccountModel } from '../model/receivable-account.model';
 import { InvoiceWithReceivableAccountModel } from '../model/invoice-with-receivable-account';
@@ -14,7 +14,7 @@ export class ReceivableAccountService {
   constructor(private http: HttpClient) {}
 
   getReceivableAccounts(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<ReceivableAccountModel>> {
     return this.http.get<ResponseModel<ReceivableAccountModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`
@@ -22,7 +22,7 @@ export class ReceivableAccountService {
   }
 
   getReceivableAccountSummary(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<ReceivableAccountSummaryModel>> {
     return this.http.get<ResponseModel<ReceivableAccountSummaryModel>>(
       `${this.url}/summary${search ? search.asQueryString() : ''}`

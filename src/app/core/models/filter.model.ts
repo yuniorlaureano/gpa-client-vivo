@@ -1,4 +1,4 @@
-export class SearchModel {
+export class FilterModel {
   page: number = 1;
   pageSize: number = 10;
   search: string | null = null;
@@ -14,8 +14,10 @@ export class SearchModel {
   }
   asQueryString(): string {
     if (this.search) {
-      this.search = btoa(this.search).replaceAll('=', '');
+      this.search = btoa(this.search);
+    } else {
+      this.search = '';
     }
-    return `?page=${this.page}&pageSize=${this.pageSize}&search="${this.search}"`;
+    return `?page=${this.page}&pageSize=${this.pageSize}&search=${this.search}`;
   }
 }

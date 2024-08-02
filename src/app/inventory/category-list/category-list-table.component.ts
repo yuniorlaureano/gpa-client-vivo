@@ -9,8 +9,14 @@ import {
 } from '@angular/core';
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
-import { SearchModel } from '../../core/models/search.model';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import { FilterModel } from '../../core/models/filter.model';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { CategoryModel } from '../models/category.model';
 import { CategoryService } from '../service/category.service';
@@ -55,6 +61,7 @@ export class CategoryListTableComponent implements OnInit, OnDestroy {
   };
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
+  searchTerms = new Subject<string>();
 
   constructor(
     private categoryService: CategoryService,
@@ -62,6 +69,7 @@ export class CategoryListTableComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private store: Store
   ) {}
+
   ngOnDestroy(): void {
     this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
@@ -69,6 +77,7 @@ export class CategoryListTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad();
     this.loadCategories();
+    this.initSearch();
   }
 
   handlePermissionsLoad() {
@@ -102,14 +111,30 @@ export class CategoryListTableComponent implements OnInit, OnDestroy {
     );
   }
 
+  handleSearch(search: any) {
+    this.searchTerms.next(search.target.value);
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.searchOptions, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
+
   loadCategories() {
-    let searchModel = new SearchModel();
+    let searchModel = new FilterModel();
     const sub = this.pageOptionsSubject
       .pipe(
         switchMap((search) => {
           this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
+          searchModel.search = search.search;
           return this.categoryService.getCategory(searchModel);
         })
       )

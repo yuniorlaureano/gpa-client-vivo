@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
-import { SearchModel } from '../../core/models/search.model';
+import { FilterModel } from '../../core/models/filter.model';
 import { environment } from '../../../environments/environment';
 import { ProfileModel } from '../model/profile.model';
 import { RawUserModel } from '../model/raw-user.model';
@@ -13,7 +13,7 @@ export class ProfileService {
   constructor(private http: HttpClient) {}
 
   getProfiles(
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<ProfileModel>> {
     return this.http.get<ResponseModel<ProfileModel>>(
       `${this.url}${search ? search.asQueryString() : ''}`
@@ -26,7 +26,7 @@ export class ProfileService {
 
   getUsers(
     profileId: string,
-    search: SearchModel | null = null
+    search: FilterModel | null = null
   ): Observable<ResponseModel<RawUserModel>> {
     return this.http.get<ResponseModel<RawUserModel>>(
       `${this.url}/${profileId}/users${search ? search.asQueryString() : ''}`

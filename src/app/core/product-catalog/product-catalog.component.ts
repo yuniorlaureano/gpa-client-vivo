@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
-import { SearchModel } from '../models/search.model';
+import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { ProductService } from '../../inventory/service/product.service';
 import { ProductModel } from '../../inventory/models/product.model';
@@ -88,7 +88,7 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
   }
 
   loadProducts() {
-    const search = new SearchModel();
+    const search = new FilterModel();
     this.productSubscription = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {

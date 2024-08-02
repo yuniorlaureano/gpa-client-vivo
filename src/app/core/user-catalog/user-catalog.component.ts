@@ -9,7 +9,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
-import { SearchModel } from '../models/search.model';
+import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { UserModel } from '../../security/model/user.model';
 import { UserService } from '../../security/service/user.service';
@@ -94,7 +94,7 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   loadUsers() {
-    const search = new SearchModel();
+    const search = new FilterModel();
     this.userSubscription = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {
