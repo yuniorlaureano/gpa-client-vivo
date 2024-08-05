@@ -7,6 +7,64 @@
   [onForwardPage]="handleForwardPage"
   [onBackwardPage]="handleBackwardPage"
 >
+  <div search style="width: 100%">
+    <form [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-sm-3 col-12">
+          <label class="form-label" style="margin-bottom: 23px"></label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por Concepto"
+              formControlName="concept"
+              (input)="handleSearch()"
+              style="margin-right: 2px; width: 100px"
+            />
+          </div>
+        </div>
+        <div class="col-sm-2 col-12">
+          <label class="form-label">Estado</label>
+          <select
+            class="form-control"
+            (change)="handleSearch()"
+            formControlName="isDiscount"
+          >
+            <option value="">Todos</option>
+            <option value="false">Borrador</option>
+            <option value="true">Guardado</option>
+            <option value="true">Cancelado</option>
+          </select>
+        </div>
+        <div class="col-sm-2 col-12">
+          <label class="form-label">Tipo de operación</label>
+          <select
+            class="form-control"
+            (change)="handleSearch()"
+            formControlName="type"
+          >
+            <option value="">Todos</option>
+            <option value="AMOUNT">Entrada</option>
+            <option value="PERCENTAGE">Salida</option>
+          </select>
+        </div>
+        <div class="col-sm-3 col-12">
+          <label class="form-label">Motivo</label>
+          <select
+            class="form-control"
+            (change)="handleSearch()"
+            formControlName="type"
+          >
+            <option value="">Todos</option>
+            <option [value]="reason.value" *ngFor="let reason of reasons">
+              {{ reason.text }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
   <h3 class="card-title" caption></h3>
   <tr header>
     <th>Estado</th>

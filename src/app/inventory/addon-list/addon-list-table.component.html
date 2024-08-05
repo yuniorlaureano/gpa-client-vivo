@@ -7,9 +7,53 @@
   [onForwardPage]="handleForwardPage"
   [onBackwardPage]="handleBackwardPage"
 >
+  <div search style="width: 100%">
+    <form [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-sm-4 col-12">
+          <label class="form-label" style="margin-bottom: 23px"></label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por Concepto"
+              formControlName="concept"
+              (input)="handleSearch()"
+              style="margin-right: 2px; width: 100px"
+            />
+          </div>
+        </div>
+        <div class="col-sm-3 col-12">
+          <label class="form-label">Tipo de cálculo</label>
+          <select
+            class="form-control"
+            (change)="handleSearch()"
+            formControlName="isDiscount"
+          >
+            <option value="">Todos</option>
+            <option value="false">Agregado</option>
+            <option value="true">Descuento</option>
+          </select>
+        </div>
+        <div class="col-sm-3 col-12">
+          <label class="form-label">Tipo</label>
+          <select
+            class="form-control"
+            (change)="handleSearch()"
+            formControlName="type"
+          >
+            <option value="">Todos</option>
+            <option value="AMOUNT">Cantidad</option>
+            <option value="PERCENTAGE">Porcentaje</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
   <h3 class="card-title" caption></h3>
   <tr header>
-    <th>Concept</th>
+    <th>Concepto</th>
     <th>Tipo de cáculo</th>
     <th>Tipo</th>
     <th>Valor</th>
@@ -19,7 +63,7 @@
     <tr *ngFor="let addon of data.data">
       <td>{{ addon.concept }}</td>
       <td>{{ addon.isDiscount ? "Descuento" : "Agregado" }}</td>
-      <td>{{ addon.type }}</td>
+      <td>{{ getTypeDescription(addon.type) }}</td>
       <td>{{ addon.value }}</td>
       <td style="width: 100px">
         <button

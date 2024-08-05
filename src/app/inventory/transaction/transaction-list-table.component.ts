@@ -10,7 +10,13 @@ import {
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { FilterModel } from '../../core/models/filter.model';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { StockService } from '../service/stock.service';
 import { StockModel } from '../models/stock.model';
@@ -21,6 +27,9 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { FormBuilder } from '@angular/forms';
+import { ReasonEnum } from '../../core/models/reason.enum';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'gpa-transaction-list-table',
@@ -51,15 +60,22 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
 
   //subscriptions
   subscriptions$: Subscription[] = [];
-
+  reasons: any[] = [];
   //permissions
   canReadTransactions: boolean = false;
+  searchTerms = new Subject<string>();
+  filterForm = this.fb.group({
+    concept: [''],
+    isDiscount: [''],
+    type: [''],
+  });
 
   constructor(
     private stockService: StockService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private store: Store
+    private store: Store,
+    private fb: FormBuilder
   ) {}
 
   ngOnDestroy(): void {
@@ -69,6 +85,8 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad();
     this.loadTransactions();
+    this.initSearch();
+    this.reasons = this.getReasons();
   }
 
   handlePermissionsLoad() {
@@ -136,6 +154,36 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
   handleBackwardPage = (page: number): void => {
     this.pageOptionsSubject.next({ ...this.searchOptions, page: page });
   };
+
+  handleSearch() {
+    this.searchTerms.next(
+      JSON.stringify({
+        ...this.filterForm.value,
+      })
+    );
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.searchOptions, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  getReasons() {
+    let reasons = [];
+    var keys = Object.keys(ReasonEnum);
+    for (var k of keys) {
+      if (!isNaN(Number(k))) {
+        reasons.push({ value: k, text: ReasonEnum[parseInt(k)] });
+      }
+    }
+    return reasons;
+  }
 
   loadTransactions() {
     let searchModel = new FilterModel();

@@ -10,7 +10,7 @@ import {
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { FilterModel } from '../../core/models/filter.model';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, from, Subject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { StockCycleService } from '../service/cycle.service';
 import { StockCycleModel } from '../models/stock-cycle.model';
@@ -21,6 +21,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'gpa-stock-cycle-list-table',
@@ -46,14 +47,22 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
       count: 0,
     },
   };
-
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
+  dateTypeFilter: string = 'init';
+
+  filterForm = this.fb.group({
+    dateTypeFilter: ['init'],
+    from: [''],
+    to: [''],
+    isClose: [''],
+  });
 
   constructor(
     private stockCycleService: StockCycleService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private store: Store
+    private store: Store,
+    private fb: FormBuilder
   ) {}
 
   ngOnDestroy(): void {
@@ -62,6 +71,7 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
 
   //subscriptions
   subscriptions$: Subscription[] = [];
+  searchTerms = new Subject<string>();
 
   //permissions
   canRead: boolean = false;
@@ -71,6 +81,7 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad();
     this.loadStockCycles();
+    this.initSearch();
   }
 
   handlePermissionsLoad() {
@@ -104,6 +115,40 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
     );
   }
 
+  handleDateTypeFilter(e: any) {
+    this.dateTypeFilter = e.target.value;
+    this.filterForm.reset();
+    this.filterForm.get('dateTypeFilter')?.setValue(this.dateTypeFilter);
+  }
+
+  handleSearch() {
+    if (
+      (this.filterForm.get('from')?.value &&
+        !this.filterForm.get('to')?.value) ||
+      (!this.filterForm.get('from')?.value && this.filterForm.get('to')?.value)
+    ) {
+      return;
+    }
+
+    this.searchTerms.next(
+      JSON.stringify({
+        ...this.filterForm.value,
+        isClose: parseInt(this.filterForm.get('isClose')?.value ?? '-1'),
+      })
+    );
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.searchOptions, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
+
   loadStockCycles() {
     let searchModel = new FilterModel();
     const sub = this.pageOptionsSubject
@@ -112,6 +157,7 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
           this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
+          searchModel.search = search.search;
           return this.stockCycleService.getStockCycle(searchModel);
         })
       )
