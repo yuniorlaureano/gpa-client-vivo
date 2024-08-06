@@ -12,7 +12,13 @@ import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { InvoiceModel } from '../model/invoice.model';
 import { FilterModel } from '../../core/models/filter.model';
 import { InvoiceService } from '../service/invoice.service';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -21,6 +27,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'gpa-sale-list-table',
@@ -48,6 +55,13 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
   };
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
+  searchTerms = new Subject<string>();
+  filterForm = this.fb.group({
+    term: [''],
+    status: ['-1'],
+    transactionType: ['-1'],
+    reason: ['-1'],
+  });
 
   //subscriptions
   subscriptions$: Subscription[] = [];
@@ -62,7 +76,8 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
     private invoiceService: InvoiceService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private store: Store
+    private store: Store,
+    private fb: FormBuilder
   ) {}
   ngOnDestroy(): void {
     this.subscriptions$.forEach((sub) => sub.unsubscribe());
@@ -150,6 +165,30 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
   handleBackwardPage = (page: number): void => {
     this.pageOptionsSubject.next({ ...this.searchOptions, page: page });
   };
+
+  handleSearch() {
+    this.searchTerms.next(
+      JSON.stringify({
+        ...this.filterForm.value,
+        status: parseInt(this.filterForm.get('status')?.value ?? '-1'),
+        transactionType: parseInt(
+          this.filterForm.get('transactionType')?.value ?? '-1'
+        ),
+        reason: parseInt(this.filterForm.get('reason')?.value ?? '-1'),
+      })
+    );
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.searchOptions, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
 
   loadInvoices() {
     let searchModel = new FilterModel();
