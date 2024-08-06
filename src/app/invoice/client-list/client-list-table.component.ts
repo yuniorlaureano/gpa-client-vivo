@@ -10,7 +10,13 @@ import {
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { FilterModel } from '../../core/models/filter.model';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ClientModel } from '../model/client.model';
 import { ClientService } from '../service/client.service';
@@ -20,6 +26,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'gpa-client-list-table',
@@ -46,6 +53,10 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
     },
   };
 
+  searchTerms = new Subject<string>();
+  filterForm = this.fb.group({
+    term: [''],
+  });
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
   //subscriptions
@@ -61,7 +72,8 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
     private clientService: ClientService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private store: Store
+    private store: Store,
+    private fb: FormBuilder
   ) {}
 
   ngOnDestroy(): void {
@@ -71,6 +83,7 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad();
     this.loadClients();
+    this.initSearch();
   }
 
   handlePermissionsLoad() {
@@ -138,6 +151,21 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
     this.pageOptionsSubject.next({ ...this.searchOptions, page: page });
   };
 
+  handleSearch() {
+    this.searchTerms.next(this.filterForm.get('term')?.value ?? '');
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.searchOptions, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
+
   loadClients() {
     let searchModel = new FilterModel();
     const sub = this.pageOptionsSubject
@@ -146,6 +174,7 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
           this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
+          searchModel.search = search.search;
           return this.clientService.getClients(searchModel);
         })
       )

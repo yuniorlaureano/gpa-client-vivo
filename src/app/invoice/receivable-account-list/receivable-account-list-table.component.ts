@@ -10,7 +10,13 @@ import {
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { FilterModel } from '../../core/models/filter.model';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ReceivableAccountService } from '../service/receivable-account.service';
 import { ReceivableAccountSummaryModel } from '../model/receivable-account-summary.model';
@@ -20,6 +26,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'gpa-receivable-account-list-table',
@@ -51,6 +58,10 @@ export class ReceivableAccountListTableComponent implements OnInit, OnDestroy {
 
   //subscriptions
   subscriptions$: Subscription[] = [];
+  searchTerms = new Subject<string>();
+  filterForm = this.fb.group({
+    term: [''],
+  });
 
   //permissions
   canRead: boolean = false;
@@ -62,7 +73,8 @@ export class ReceivableAccountListTableComponent implements OnInit, OnDestroy {
     private receivableAccountService: ReceivableAccountService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private store: Store
+    private store: Store,
+    private fb: FormBuilder
   ) {}
 
   ngOnDestroy(): void {
@@ -72,6 +84,7 @@ export class ReceivableAccountListTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad();
     this.loadReceivableAccounts();
+    this.initSearch();
   }
 
   handlePermissionsLoad() {
@@ -143,6 +156,21 @@ export class ReceivableAccountListTableComponent implements OnInit, OnDestroy {
     this.pageOptionsSubject.next({ ...this.searchOptions, page: page });
   };
 
+  handleSearch() {
+    this.searchTerms.next(this.filterForm.get('term')?.value ?? '');
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.searchOptions, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
+
   loadReceivableAccounts() {
     let searchModel = new FilterModel();
     const sub = this.pageOptionsSubject
@@ -151,6 +179,7 @@ export class ReceivableAccountListTableComponent implements OnInit, OnDestroy {
           this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
+          searchModel.search = search.search;
           return this.receivableAccountService.getReceivableAccountSummary(
             searchModel
           );

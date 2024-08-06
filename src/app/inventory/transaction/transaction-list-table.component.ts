@@ -65,9 +65,10 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
   canReadTransactions: boolean = false;
   searchTerms = new Subject<string>();
   filterForm = this.fb.group({
-    concept: [''],
-    isDiscount: [''],
-    type: [''],
+    term: [''],
+    status: ['-1'],
+    transactionType: ['-1'],
+    reason: ['-1'],
   });
 
   constructor(
@@ -159,6 +160,11 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
     this.searchTerms.next(
       JSON.stringify({
         ...this.filterForm.value,
+        status: parseInt(this.filterForm.get('status')?.value ?? '-1'),
+        transactionType: parseInt(
+          this.filterForm.get('transactionType')?.value ?? '-1'
+        ),
+        reason: parseInt(this.filterForm.get('reason')?.value ?? '-1'),
       })
     );
   }
@@ -193,6 +199,7 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
           this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
+          searchModel.search = search.search;
           return this.stockService.getStockMaster(searchModel);
         })
       )

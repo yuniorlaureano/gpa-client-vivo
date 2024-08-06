@@ -7,6 +7,26 @@
   [onForwardPage]="handleForwardPage"
   [onBackwardPage]="handleBackwardPage"
 >
+  <div search style="width: 100%">
+    <form [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-sm-6 col-12">
+          <label class="form-label" style="margin-bottom: 23px"></label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por Nombre o Identificación"
+              formControlName="term"
+              (input)="handleSearch()"
+              style="margin-right: 2px; width: 100px"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
   <h3 class="card-title" caption></h3>
   <tr header>
     <th>Nombre</th>
