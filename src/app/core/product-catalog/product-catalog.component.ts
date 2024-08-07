@@ -6,7 +6,13 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { ProductService } from '../../inventory/service/product.service';
@@ -39,6 +45,8 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
     pageSize: 10,
     search: null,
   };
+  searchTerms = new Subject<string>();
+  subscriptions$: Subscription[] = [];
 
   constructor(
     private productService: ProductService,
@@ -47,6 +55,7 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadProducts();
+    this.initSearch();
   }
 
   ngOnDestroy(): void {
@@ -87,12 +96,28 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
     this.onSelectedProduct.emit(product);
   }
 
+  handleSearch(event: any) {
+    this.searchTerms.next(event.target.value);
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.options, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
+
   loadProducts() {
     const search = new FilterModel();
     this.productSubscription = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {
           search.page = options.page;
+          search.search = options.search;
           return this.productService.getProducts(search);
         })
       )

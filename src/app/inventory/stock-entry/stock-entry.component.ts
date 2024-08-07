@@ -325,7 +325,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   handleSelectedProvider = (model: ProviderModel | null) => {
     if (model) {
       this.selectedProvider = {
-        text: model.name + ' ' + model.rnc,
+        text: model.name + ' ' + model.identification,
         value: model,
       };
       this.stockForm.get('providerId')?.setValue(model.id);
@@ -378,11 +378,15 @@ export class StockEntryComponent implements OnInit, OnDestroy {
             this.mapStockToForm(stock.stockDetails);
             this.selectedProvider = stock.providerName
               ? {
-                  text: stock.providerName + ' ' + stock.providerRnc,
+                  text: stock.providerName + ' ' + stock.providerIdentification,
                   value: {
                     id: stock.providerId,
                     name: stock.providerName,
-                    rnc: stock.providerRnc,
+                    identification: stock.providerIdentification,
+                    phone: null,
+                    email: null,
+                    lastName: null,
+                    identificationType: null,
                   },
                 }
               : null;

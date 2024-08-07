@@ -5,6 +5,8 @@ import { ProviderService } from '../service/provider.service';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { FilterModel } from '../../core/models/filter.model';
 import { ToastService } from '../../core/service/toast.service';
+import { SearchOptionsModel } from '../../core/models/search-options.model';
+import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 
 @Component({
   selector: 'gpa-provider-dynamic-search',
@@ -16,17 +18,8 @@ export class ProviderDynamicSearchComponent implements OnInit {
   @Input() selectedItem: SelectModel<ProviderModel> | null = null;
   items: SelectModel<ProviderModel>[] = [];
   search: string = '';
-  options: { count: number; page: number; pageSize: number } = {
-    count: 0,
-    page: 1,
-    pageSize: 10,
-  };
-
-  optionsSubject = new BehaviorSubject<{
-    count: number;
-    page: number;
-    pageSize: number;
-  }>(this.options);
+  options: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
+  optionsSubject = new BehaviorSubject<SearchOptionsModel>(this.options);
 
   constructor(
     private providerService: ProviderService,
@@ -35,7 +28,6 @@ export class ProviderDynamicSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProviders();
-    //this.search
   }
 
   handleSelectedItem = (model: SelectModel<ProviderModel> | null) => {
@@ -43,11 +35,10 @@ export class ProviderDynamicSearchComponent implements OnInit {
   };
 
   handleSearch = (search: string) => {
-    this.search = search;
+    this.options.search = search;
     this.optionsSubject.next({
       ...this.options,
     });
-    //search  todo: pass the search to this when implemented
   };
 
   handleNext = (page: number) => {
@@ -62,25 +53,25 @@ export class ProviderDynamicSearchComponent implements OnInit {
       ...this.options,
       page: page,
     });
-    //this.search
   };
 
   loadProviders() {
+    let searchModel = new FilterModel();
     this.optionsSubject
       .pipe(
         switchMap((options) => {
           this.options = options;
-
-          return this.providerService.getProviders(
-            new FilterModel(options.page, options.pageSize)
-          );
+          searchModel.page = options.page;
+          searchModel.pageSize = options.pageSize;
+          searchModel.search = options.search;
+          return this.providerService.getProviders(searchModel);
         })
       )
       .subscribe({
         next: (data) => {
           this.items = data.data.map((provider) => {
             return {
-              text: provider.name + ' - ' + provider.rnc,
+              text: provider.name + ' - ' + provider.lastName,
               value: provider,
             };
           });

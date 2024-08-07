@@ -8,7 +8,7 @@ export interface StockModel {
   providerId: string;
   status: StockStatusEnum;
   providerName: string;
-  providerRnc: string;
+  providerIdentification: string;
   storeId: string;
   storeName: string;
   reasonId: number;
