@@ -24,6 +24,7 @@ import { ModalComponent } from './modal/modal.component';
 import { UserCatalogComponent } from './user-catalog/user-catalog.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NoPermissionAlertComponent } from './no-permission-alert/no-permission-alert';
+import { ProviderCatalogComponent } from './provider-catalog/provider-catalog.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { NoPermissionAlertComponent } from './no-permission-alert/no-permission-
     ValidatorMessageComponent,
     UserCatalogComponent,
     NoPermissionAlertComponent,
+    ProviderCatalogComponent,
   ],
   imports: [
     CommonModule,
@@ -72,6 +74,7 @@ import { NoPermissionAlertComponent } from './no-permission-alert/no-permission-
     NgxSpinnerModule,
     NgbAlertModule,
     NoPermissionAlertComponent,
+    ProviderCatalogComponent,
   ],
 })
 export class CoreModule {}

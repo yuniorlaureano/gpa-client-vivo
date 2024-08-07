@@ -27,11 +27,14 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
   styleUrl: './stock-entry.component.css',
 })
 export class StockEntryComponent implements OnInit, OnDestroy {
+  isProviderCatalogVisible: boolean = false;
+  selectedProviders: { [key: string]: boolean } = {};
+
   isEdit = false;
   isFormDisabled: boolean = false;
   selectedProducts: { [key: string]: boolean } = {};
   isProductCatalogVisible: boolean = false;
-  selectedProvider: SelectModel<ProviderModel> | null = null;
+  selectedProvider: ProviderModel | null = null;
   productCatalogAggregate: {
     totalPrice: number;
     totalQuantity: number;
@@ -161,6 +164,10 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     this.isProductCatalogVisible = visible;
   }
 
+  handleShowProviderCatalog(visible: boolean) {
+    this.isProviderCatalogVisible = visible;
+  }
+
   removeProductFromCatalog(index: number, productId: string) {
     this.formProducts.removeAt(index);
     delete this.selectedProducts[productId];
@@ -186,6 +193,20 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       this.formProducts?.push(this.newProduct(product));
       this.calculateSelectedProductCatalogAggregate();
     }
+  }
+
+  handleSelectedProviderFromCatalog(provider: ProviderModel) {
+    this.selectedProducts = { [provider.id]: true };
+    this.selectedProvider = provider;
+    this.isProviderCatalogVisible = false;
+    this.stockForm.get('providerId')?.setValue(provider.id);
+  }
+
+  removeSelectedProvider() {
+    this.selectedProducts = {};
+    this.selectedProvider = null;
+    this.isProviderCatalogVisible = false;
+    this.stockForm.get('providerId')?.setValue(null);
   }
 
   addProducts() {
@@ -322,19 +343,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     return this.stockForm.get('stockDetails') as FormArray;
   }
 
-  handleSelectedProvider = (model: ProviderModel | null) => {
-    if (model) {
-      this.selectedProvider = {
-        text: model.name + ' ' + model.identification,
-        value: model,
-      };
-      this.stockForm.get('providerId')?.setValue(model.id);
-    } else {
-      this.selectedProvider = null;
-      this.stockForm.get('providerId')?.setValue(null);
-    }
-  };
-
   newProduct(product: ProductModel) {
     return this.formBuilder.group({
       id: [product.id],
@@ -378,16 +386,13 @@ export class StockEntryComponent implements OnInit, OnDestroy {
             this.mapStockToForm(stock.stockDetails);
             this.selectedProvider = stock.providerName
               ? {
-                  text: stock.providerName + ' ' + stock.providerIdentification,
-                  value: {
-                    id: stock.providerId,
-                    name: stock.providerName,
-                    identification: stock.providerIdentification,
-                    phone: null,
-                    email: null,
-                    lastName: null,
-                    identificationType: null,
-                  },
+                  id: stock.providerId,
+                  name: stock.providerName,
+                  identification: stock.providerIdentification,
+                  phone: null,
+                  email: null,
+                  lastName: null,
+                  identificationType: null,
                 }
               : null;
             this.calculateSelectedProductCatalogAggregate();

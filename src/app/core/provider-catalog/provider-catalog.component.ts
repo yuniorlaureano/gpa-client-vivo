@@ -15,31 +15,28 @@ import {
 } from 'rxjs';
 import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
-import { ProductService } from '../../inventory/service/product.service';
-import { ProductModel } from '../../inventory/models/product.model';
-import { getProductTypeDescription } from '../utils/product.util';
-import { ProductType } from '../models/product-type.enum';
 import { ToastService } from '../service/toast.service';
+import { ProviderModel } from '../../inventory/models/provider.model';
+import { ProviderService } from '../../inventory/service/provider.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
-  selector: 'gpa-product-catalog',
-  templateUrl: './product-catalog.component.html',
-  styleUrl: './product-catalog.component.css',
+  selector: 'gpa-provider-catalog',
+  templateUrl: './provider-catalog.component.html',
+  styleUrl: './provider-catalog.component.css',
 })
-export class ProductCatalogComponent implements OnInit, OnDestroy {
-  @Input() selectedProducts: { [key: string]: boolean } = {};
+export class ProviderCatalogComponent implements OnInit, OnDestroy {
+  @Input() selectedProviders: { [key: string]: boolean } = {};
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() onSelectedProduct = new EventEmitter<ProductModel>();
-  productSubscription!: Subscription;
+  @Output() onSelectedProvider = new EventEmitter<ProviderModel>();
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,
     pageSize: 10,
     search: null,
   });
-  products!: ProductModel[];
+  providers!: ProviderModel[];
   options: SearchOptionsModel = {
     count: 0,
     page: 1,
@@ -50,22 +47,22 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
   subscriptions$: Subscription[] = [];
 
   constructor(
-    private productService: ProductService,
+    private providerService: ProviderService,
     private toastService: ToastService,
     private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.loadProviders();
     this.initSearch();
   }
 
   ngOnDestroy(): void {
-    this.handleShowProductCatalog(false);
-    this.productSubscription.unsubscribe();
+    this.handleShowProviderCatalog(false);
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
 
-  handleShowProductCatalog(visible: boolean) {
+  handleShowProviderCatalog(visible: boolean) {
     if (!visible) {
       this.visibleChange.emit(visible);
     }
@@ -92,10 +89,9 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
       this.pageOptionsSubject.next(this.options);
     }
   }
-  productType = (type: ProductType) => getProductTypeDescription(type);
 
-  handleSelectedProductFromCatalog(product: ProductModel) {
-    this.onSelectedProduct.emit(product);
+  handleSelectedProviderFromCatalog(provider: ProviderModel) {
+    this.onSelectedProvider.emit(provider);
   }
 
   handleSearch(event: any) {
@@ -113,30 +109,31 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
-  loadProducts() {
+  loadProviders() {
     const search = new FilterModel();
-    this.productSubscription = this.pageOptionsSubject
+    const sub = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {
-          this.spinner.show('product-catalog-spinner');
+          this.spinner.show('provider-catalog-spinner');
           search.page = options.page;
           search.search = options.search;
-          return this.productService.getProducts(search);
+          return this.providerService.getProviders(search);
         })
       )
       .subscribe({
         next: (model) => {
-          this.products = model.data;
+          this.providers = model.data;
           this.options = {
             ...this.options,
             count: model.count,
           };
-          this.spinner.hide('product-catalog-spinner');
+          this.spinner.hide('provider-catalog-spinner');
         },
         error: (error) => {
-          this.toastService.showError('Error cargando productos');
-          this.spinner.hide('product-catalog-spinner');
+          this.toastService.showError('Error cargando proveedores');
+          this.spinner.hide('provider-catalog-spinner');
         },
       });
+    this.subscriptions$.push(sub);
   }
 }

@@ -147,16 +147,6 @@
           </div>
           <div class="col-12 col-sm-4">
             <div class="mb-3">
-              <label for="inputNumber" class="form-label">Proveedor</label>
-              <gpa-provider-dynamic-search
-                [selectedItem]="selectedProvider"
-                [onSelectedItem]="handleSelectedProvider"
-                [disabled]="isFormDisabled"
-              />
-            </div>
-          </div>
-          <div class="col-12 col-sm-4">
-            <div class="mb-3">
               <label for="inputEmail" class="form-label"
                 ><span class="text-danger require-sign">*</span>Fecha</label
               >
@@ -241,9 +231,41 @@
               >
                 <i class="bi bi-plus-lg"></i> Agregar producto
               </button>
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                [disabled]="isFormDisabled"
+                (click)="handleShowProviderCatalog(true)"
+                style="margin-left: 5px"
+              >
+                <i class="bi bi-plus-lg"></i> Agregar proveedor
+              </button>
             </div>
           </div>
-
+          <div>
+            <ol
+              style="list-style-type: none; margin-left: 0; padding-left: 0"
+              *ngIf="selectedProvider"
+            >
+              <li>
+                Proveedor:
+                <button class="btn" (click)="removeSelectedProvider()">
+                  <i class="bi bi-x"></i>
+                </button>
+              </li>
+              <ol style="list-style-type: none">
+                <li>
+                  <span style="margin-right: 8px">Nombre:</span
+                  >{{ selectedProvider.name }}
+                  {{ selectedProvider.lastName }}
+                </li>
+                <li>
+                  <span style="margin-right: 8px">Identificación:</span>
+                  {{ selectedProvider.identification }}
+                </li>
+              </ol>
+            </ol>
+          </div>
           <div class="col-12 col-sm-12">
             <gpa-validator-message
               [control]="{ errors: { required: true } }"
@@ -326,6 +348,11 @@
         [selectedProducts]="selectedProducts"
         (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
       ></gpa-product-catalog>
+      <gpa-provider-catalog
+        [(visible)]="isProviderCatalogVisible"
+        [selectedProviders]="selectedProviders"
+        (onSelectedProvider)="handleSelectedProviderFromCatalog($event)"
+      ></gpa-provider-catalog>
     </div>
     <!-- Card end -->
   </div>
