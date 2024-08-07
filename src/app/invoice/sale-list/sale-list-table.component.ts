@@ -59,8 +59,9 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
   filterForm = this.fb.group({
     term: [''],
     status: ['-1'],
-    transactionType: ['-1'],
-    reason: ['-1'],
+    saleType: ['-1'],
+    from: [null],
+    to: [null],
   });
 
   //subscriptions
@@ -86,6 +87,7 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad();
     this.loadInvoices();
+    this.initSearch();
   }
 
   handlePermissionsLoad() {
@@ -167,14 +169,19 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
   };
 
   handleSearch() {
+    if (
+      (this.filterForm.get('from')?.value &&
+        !this.filterForm.get('to')?.value) ||
+      (!this.filterForm.get('from')?.value && this.filterForm.get('to')?.value)
+    ) {
+      return;
+    }
+
     this.searchTerms.next(
       JSON.stringify({
         ...this.filterForm.value,
         status: parseInt(this.filterForm.get('status')?.value ?? '-1'),
-        transactionType: parseInt(
-          this.filterForm.get('transactionType')?.value ?? '-1'
-        ),
-        reason: parseInt(this.filterForm.get('reason')?.value ?? '-1'),
+        saleType: parseInt(this.filterForm.get('saleType')?.value ?? '-1'),
       })
     );
   }
@@ -198,6 +205,7 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
           this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
+          searchModel.search = search.search;
           return this.invoiceService.getInvoices(searchModel);
         })
       )

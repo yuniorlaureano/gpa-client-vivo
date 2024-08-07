@@ -10,21 +10,21 @@
   <div search style="width: 100%">
     <form [formGroup]="filterForm">
       <div class="row">
-        <div class="col-sm-3 col-12">
+        <div class="col-sm-3 col-6">
           <label class="form-label" style="margin-bottom: 23px"></label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-search"></i></span>
             <input
               type="text"
               class="form-control"
-              placeholder="Buscar por proveedor"
+              placeholder="Buscar por cliente"
               formControlName="term"
               (input)="handleSearch()"
               style="margin-right: 2px; width: 100px"
             />
           </div>
         </div>
-        <div class="col-sm-2 col-12">
+        <div class="col-sm-2 col-6">
           <label class="form-label">Estado</label>
           <select
             class="form-control"
@@ -38,26 +38,58 @@
           </select>
         </div>
         <div class="col-sm-2 col-12">
-          <label class="form-label">Tipo de operación</label>
+          <label class="form-label">Tipo</label>
           <select
             class="form-control"
             (change)="handleSearch()"
-            formControlName="transactionType"
+            formControlName="saleType"
           >
             <option value="-1">Todos</option>
-            <option value="0">Entrada</option>
-            <option value="1">Salida</option>
+            <option value="0">A crédigo</option>
+            <option value="1">Al contado</option>
           </select>
         </div>
-        <div class="col-sm-3 col-12">
-          <label class="form-label">Motivo</label>
-          <select
-            class="form-control"
-            (change)="handleSearch()"
-            formControlName="reason"
-          >
-            <option value="-1">Todos</option>
-          </select>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 col-4">
+          <div class="mb-3">
+            <label class="form-label">Desde</label>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                ngbDatepicker
+                #fromDate="ngbDatepicker"
+                formControlName="from"
+                (dateSelect)="handleSearch()"
+              />
+              <button
+                class="btn btn-outline-secondary bi bi-calendar3"
+                (click)="fromDate.toggle()"
+                type="button"
+              ></button>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3 col-4">
+          <div class="mb-3">
+            <label class="form-label">Hasta</label>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                ngbDatepicker
+                #toDate="ngbDatepicker"
+                formControlName="to"
+                (dateSelect)="handleSearch()"
+              />
+              <button
+                class="btn btn-outline-secondary bi bi-calendar3"
+                (click)="toDate.toggle()"
+                type="button"
+              ></button>
+            </div>
+          </div>
         </div>
       </div>
     </form>
