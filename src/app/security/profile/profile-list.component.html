@@ -1,3 +1,15 @@
+<div search>
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar por Nombre, Email o Usuario"
+      style="margin-right: 20px; width: 300px"
+      (input)="handleSearch($event)"
+    />
+  </div>
+</div>
 <ul class="list-group">
   <li class="list-group-item" *ngFor="let profile of data.data">
     <div class="row">

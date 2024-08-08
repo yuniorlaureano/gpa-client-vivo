@@ -11,7 +11,13 @@ import {
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { FilterModel } from '../../core/models/filter.model';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProfileModel } from '../model/profile.model';
 import { ProfileService } from '../service/profile.service';
@@ -56,10 +62,10 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
   };
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
+  searchTerms = new Subject<string>();
 
   constructor(
     private profileService: ProfileService,
-    private confirmService: ConfirmModalService,
     private toastService: ToastService,
     private spinner: NgxSpinnerService
   ) {}
@@ -70,6 +76,7 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.loadProfiles();
+    this.initSearch();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -97,6 +104,21 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
         page: this.data.options.page - 1,
       });
     }
+  }
+
+  handleSearch(search: any) {
+    this.searchTerms.next(search.target.value);
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.searchOptions, search: search });
+      });
+    this.subscriptions$.push(sub);
   }
 
   handleSetPageToShow(value: any) {
@@ -130,6 +152,7 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
           this.spinner.show('profile-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
+          searchModel.search = search.search;
           return this.profileService.getProfiles(searchModel);
         })
       )
