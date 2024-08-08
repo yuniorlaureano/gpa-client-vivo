@@ -10,7 +10,13 @@ import {
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { DataTableDataModel } from '../../core/models/data-table-data.model';
 import { FilterModel } from '../../core/models/filter.model';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { UserModel } from '../model/user.model';
 import { UserService } from '../service/user.service';
@@ -47,6 +53,7 @@ export class UserListTableComponent implements OnInit, OnDestroy {
   };
 
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
+  searchTerms = new Subject<string>();
 
   //subscriptions
   subscriptions$: Subscription[] = [];
@@ -71,6 +78,22 @@ export class UserListTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad();
     this.loadData();
+    this.initSearch();
+  }
+
+  handleSearch(search: any) {
+    this.searchTerms.next(search.target.value);
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.searchOptions, search: search });
+      });
+    this.subscriptions$.push(sub);
   }
 
   loadData() {
@@ -81,6 +104,7 @@ export class UserListTableComponent implements OnInit, OnDestroy {
           this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
+          searchModel.search = search.search;
           return this.userService.getUsers(searchModel);
         })
       )
