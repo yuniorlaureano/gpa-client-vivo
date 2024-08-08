@@ -48,11 +48,11 @@ function profilePermission(): RequiredPermissionType {
       expected: PermissionConstants.Permission.Read,
       valid: false,
     },
-    assignProfile: {
+    [PermissionConstants.Permission.AssignProfile]: {
       expected: PermissionConstants.Permission.AssignProfile,
       valid: false,
     },
-    unAssignProfile: {
+    [PermissionConstants.Permission.UnAssignProfile]: {
       expected: PermissionConstants.Permission.UnAssignProfile,
       valid: false,
     },
