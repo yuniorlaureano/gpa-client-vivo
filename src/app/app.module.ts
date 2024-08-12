@@ -32,6 +32,7 @@ import { AppState } from './core/ng-xs-store/states/app.state';
 import { ErrorService } from './core/service/error.service';
 import { EmailProviderService } from './general/service/email-provider.service';
 import { AuthState } from './core/ng-xs-store/states/auth.state';
+import { BlobStorageProviderService } from './general/service/blob-storage-provider.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -64,6 +65,7 @@ import { AuthState } from './core/ng-xs-store/states/auth.state';
     PermissionService,
     ErrorService,
     EmailProviderService,
+    BlobStorageProviderService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
   ],
   bootstrap: [AppComponent],

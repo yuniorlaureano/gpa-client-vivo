@@ -13,6 +13,7 @@ export function getRequiredPermissions(): ModuleRequiredPermissionType {
     [PermissionConstants.Modules.General]: {
       [PermissionConstants.Components.Auth]: authPermission(),
       [PermissionConstants.Components.Email]: emailPermission(),
+      [PermissionConstants.Components.Blob]: blobPermission(),
     },
     [PermissionConstants.Modules.Inventory]: {
       [PermissionConstants.Components.Product]: productPermission(),
@@ -317,6 +318,31 @@ function emailPermission(): RequiredPermissionType {
     },
     read: {
       expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+  };
+}
+
+function blobPermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+    upload: {
+      expected: PermissionConstants.Permission.Upload,
       valid: false,
     },
   };

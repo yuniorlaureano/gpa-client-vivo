@@ -17,6 +17,7 @@ export class Permission {
   public static UpdateUserProfile: string = 'update-user-profile';
   public static ReadTransactions: string = 'read-transactions';
   public static Return: string = 'return';
+  public static Upload: string = 'upload';
 }
 
 export class Apps {
@@ -47,4 +48,5 @@ export class Components {
   public static Profile: string = 'profile';
   public static Auth: string = 'auth';
   public static Email: string = 'email';
+  public static Blob: string = 'blob';
 }

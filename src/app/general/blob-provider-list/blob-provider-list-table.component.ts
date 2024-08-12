@@ -18,16 +18,16 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
-import { EmailConfigurationModel } from '../model/email-configuration.model';
-import { EmailProviderService } from '../service/email-provider.service';
+import { BlobStorageConfigurationModel } from '../model/blob-storage-configuration.model';
+import { BlobStorageProviderService } from '../service/blob-storage-provider.service';
 
 @Component({
-  selector: 'gpa-email-provider-list-table',
-  templateUrl: './email-provider-list-table.component.html',
+  selector: 'gpa-blob-provider-list-table',
+  templateUrl: './blob-provider-list-table.component.html',
 })
-export class EmailProviderListTableComponent implements OnInit, OnDestroy {
-  @Output() onDelete = new EventEmitter<EmailConfigurationModel>();
-  @Output() onEdit = new EventEmitter<EmailConfigurationModel>();
+export class BlobProviderListTableComponent implements OnInit, OnDestroy {
+  @Output() onDelete = new EventEmitter<BlobStorageConfigurationModel>();
+  @Output() onEdit = new EventEmitter<BlobStorageConfigurationModel>();
   @Input() reloadTable: number = 1;
 
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
@@ -36,7 +36,7 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
     pageSize: 10,
     search: null,
   });
-  public data: DataTableDataModel<EmailConfigurationModel> = {
+  public data: DataTableDataModel<BlobStorageConfigurationModel> = {
     data: [],
     options: {
       ...DEFAULT_SEARCH_PARAMS,
@@ -56,7 +56,7 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
   searchOptions: SearchOptionsModel = { ...DEFAULT_SEARCH_PARAMS, count: 0 };
 
   constructor(
-    private emailProviderService: EmailProviderService,
+    private blobStorageProviderService: BlobStorageProviderService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
     private store: Store
@@ -68,7 +68,7 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.handlePermissionsLoad();
-    this.loadEmailProvider();
+    this.loadBlobProvider();
   }
 
   handlePermissionsLoad() {
@@ -76,7 +76,7 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
       .select(
         (state: any) =>
           state.app.requiredPermissions[PermissionConstants.Modules.General][
-            PermissionConstants.Components.Email
+            PermissionConstants.Components.Blob
           ]
       )
       .subscribe({
@@ -102,7 +102,7 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadEmailProvider() {
+  loadBlobProvider() {
     let searchModel = new FilterModel();
     const sub = this.pageOptionsSubject
       .pipe(
@@ -110,7 +110,7 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
           this.spinner.show('table-spinner');
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
-          return this.emailProviderService.getEmailProvider(searchModel);
+          return this.blobStorageProviderService.getBlobProvider(searchModel);
         })
       )
       .subscribe({
@@ -134,18 +134,18 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.spinner.hide('table-spinner');
           this.toastService.showError(
-            'Error al cargar los proveedores de email.'
+            'Error al cargar los proveedores de archivos'
           );
         },
       });
     this.subscriptions$.push(sub);
   }
 
-  handleEdit(model: EmailConfigurationModel) {
+  handleEdit(model: BlobStorageConfigurationModel) {
     this.onEdit.emit(model);
   }
 
-  handleDelete(model: EmailConfigurationModel) {
+  handleDelete(model: BlobStorageConfigurationModel) {
     this.onDelete.emit(model);
   }
 

@@ -12,6 +12,10 @@ import { SmtpComponent } from './email-provider/providers/smtp.component';
 import { EmailProviderListTableComponent } from './email-provider-list/email-provider-list-table.component';
 import { EmailProviderListComponent } from './email-provider-list/email-provider-list.component';
 import { SendgridComponent } from './email-provider/providers/sendgrid.component';
+import { AwsBlobComponent } from './blob-provider/providers/aws-blob.component';
+import { BlobProviderComponent } from './blob-provider/blob-provider.component';
+import { BlobProviderListComponent } from './blob-provider-list/blob-provider-list.component';
+import { BlobProviderListTableComponent } from './blob-provider-list/blob-provider-list-table.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +24,10 @@ import { SendgridComponent } from './email-provider/providers/sendgrid.component
     SendgridComponent,
     EmailProviderListTableComponent,
     EmailProviderListComponent,
+    AwsBlobComponent,
+    BlobProviderComponent,
+    BlobProviderListComponent,
+    BlobProviderListTableComponent,
   ],
   imports: [
     CoreModule,
