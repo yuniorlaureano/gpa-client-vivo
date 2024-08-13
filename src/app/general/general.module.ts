@@ -16,6 +16,8 @@ import { AwsBlobComponent } from './blob-provider/providers/aws-blob.component';
 import { BlobProviderComponent } from './blob-provider/blob-provider.component';
 import { BlobProviderListComponent } from './blob-provider-list/blob-provider-list.component';
 import { BlobProviderListTableComponent } from './blob-provider-list/blob-provider-list-table.component';
+import { GcpBlobComponent } from './blob-provider/providers/gcp-blob.component';
+import { AzureBlobComponent } from './blob-provider/providers/azure-blob.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import { BlobProviderListTableComponent } from './blob-provider-list/blob-provid
     BlobProviderComponent,
     BlobProviderListComponent,
     BlobProviderListTableComponent,
+    GcpBlobComponent,
+    AzureBlobComponent,
   ],
   imports: [
     CoreModule,

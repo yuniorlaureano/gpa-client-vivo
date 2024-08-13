@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-sm-12 col-12">
+    <!-- Card start -->
+    <div class="card">
+      <div class="card-body">
+        <form #form="ngForm" [formGroup]="gcpForm">
+          <!-- Row start -->
+          <div class="row">
+            <div class="col-sm-12 col-12">
+              <div class="mb-3">
+                <label for="bucket" class="form-label"
+                  ><span class="text-red">*</span> Bucket</label
+                >
+                <input
+                  class="form-control"
+                  type="text"
+                  formControlName="bucket"
+                  (change)="handleInputChange()"
+                />
+                <gpa-validator-message
+                  [control]="gcpForm.get('bucket')"
+                  [touched]="gcpForm.touched"
+                  validation="required"
+                  message="El bucket es obligatorio"
+                />
+              </div>
+            </div>
+            <div class="col-sm-12 col-12">
+              <div class="mb-3">
+                <label for="jsonCredentials" class="form-label"
+                  ><span class="text-red">*</span> Credenciales en formato
+                  JSON</label
+                >
+                <textarea
+                  class="form-control"
+                  formControlName="jsonCredentials"
+                  rows="10"
+                  (change)="handleInputChange()"
+                ></textarea>
+                <gpa-validator-message
+                  [control]="gcpForm.get('jsonCredentials')"
+                  [touched]="gcpForm.touched"
+                  validation="required"
+                  message="Las credenciales en formato JSON son obligatorias"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Card end -->
+  </div>
+</div>
+<!-- Row end -->

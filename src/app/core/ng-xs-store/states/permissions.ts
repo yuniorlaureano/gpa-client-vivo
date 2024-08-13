@@ -345,5 +345,9 @@ function blobPermission(): RequiredPermissionType {
       expected: PermissionConstants.Permission.Upload,
       valid: false,
     },
+    download: {
+      expected: PermissionConstants.Permission.Download,
+      valid: false,
+    },
   };
 }

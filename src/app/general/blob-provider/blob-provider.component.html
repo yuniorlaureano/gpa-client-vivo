@@ -147,6 +147,16 @@
                 [options]="options"
                 (onOptionsChange)="handleOptionsChange($event)"
               ></gpa-aws-blob>
+              <gpa-gcp-blob
+                *ngIf="selectedEngine == blobStorageConstant.GCP"
+                [options]="options"
+                (onOptionsChange)="handleOptionsChange($event)"
+              ></gpa-gcp-blob>
+              <gpa-azure-blob
+                *ngIf="selectedEngine == blobStorageConstant.AZURE"
+                [options]="options"
+                (onOptionsChange)="handleOptionsChange($event)"
+              ></gpa-azure-blob>
             </div>
           </div>
         </form>

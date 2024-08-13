@@ -31,7 +31,7 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
 
   providers = {
     [BlobStorageConstant.AWS]: BlobStorageConstant.AWS,
-    [BlobStorageConstant.GOOGLE]: BlobStorageConstant.GOOGLE,
+    [BlobStorageConstant.GCP]: BlobStorageConstant.GCP,
     [BlobStorageConstant.AZURE]: BlobStorageConstant.AZURE,
   };
 

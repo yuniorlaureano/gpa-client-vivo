@@ -17,7 +17,7 @@ const routes: Routes = [
 
       { path: 'blobs', component: BlobProviderComponent },
       { path: 'blobs/list', component: BlobProviderListComponent },
-      { path: 'blobs/edit/:id', component: EmailProviderComponent },
+      { path: 'blobs/edit/:id', component: BlobProviderComponent },
     ],
   },
 ];

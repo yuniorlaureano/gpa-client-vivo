@@ -18,6 +18,7 @@ export class Permission {
   public static ReadTransactions: string = 'read-transactions';
   public static Return: string = 'return';
   public static Upload: string = 'upload';
+  public static Download: string = 'download';
 }
 
 export class Apps {
