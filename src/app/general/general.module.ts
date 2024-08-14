@@ -18,6 +18,7 @@ import { BlobProviderListComponent } from './blob-provider-list/blob-provider-li
 import { BlobProviderListTableComponent } from './blob-provider-list/blob-provider-list-table.component';
 import { GcpBlobComponent } from './blob-provider/providers/gcp-blob.component';
 import { AzureBlobComponent } from './blob-provider/providers/azure-blob.component';
+import { IntegrationsComponent } from './integrations/integrations.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { AzureBlobComponent } from './blob-provider/providers/azure-blob.compone
     BlobProviderListTableComponent,
     GcpBlobComponent,
     AzureBlobComponent,
+    IntegrationsComponent,
   ],
   imports: [
     CoreModule,

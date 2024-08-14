@@ -10,7 +10,12 @@ export class BlobProviderListComponent {
   constructor(private router: Router) {}
 
   handleEdit(blobProvider: BlobStorageConfigurationModel) {
-    this.router.navigate(['/general/blobs/edit/' + blobProvider.id]);
+    this.router.navigate([
+      '/general/blobs/integrations/' +
+        blobProvider.provider +
+        '/edit/' +
+        blobProvider.id,
+    ]);
   }
 
   handleDelete(blobProvider: BlobStorageConfigurationModel) {

@@ -127,18 +127,6 @@
                 message="EDebe elegir Descuento o Agregado"
               />
             </div>
-            <div class="col-sm-12 col-12">
-              <div class="mb-3">
-                <label for="name" class="form-label"
-                  ><span class="text-red">*</span> Proveedor de archivo</label
-                >
-                <select class="form-control" formControlName="provider">
-                  <option [value]="pro" *ngFor="let pro of getProviders()">
-                    {{ pro }}
-                  </option>
-                </select>
-              </div>
-            </div>
             <div>
               <h6>Detalles del proveedor de archivo</h6>
               <!-- proveedores de archivo -->

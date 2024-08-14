@@ -1,0 +1,22 @@
+<h3>Integraciones</h3>
+<hr />
+<div *ngFor="let integration of integrations" class="integration">
+  <div class="integration-header">
+    <h4>{{ integration.text }}</h4>
+    <a [routerLink]="getListLink(integration.type)" class="btn btn-outline-info"
+      ><i class="bi bi-card-list"></i>Listado</a
+    >
+  </div>
+  <div class="image-gallery">
+    <div *ngFor="let provider of getProviders(integration.privders)">
+      <a [routerLink]="getLink(provider, integration.type)">
+        <img
+          [src]="
+            'assets/images/integrations/' + integration.privders[provider].img
+          "
+          class="image-gallery-img"
+        />
+      </a>
+    </div>
+  </div>
+</div>

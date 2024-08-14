@@ -102,10 +102,6 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
     return this.blobProviderForm.get('provider')?.value;
   }
 
-  getProviders(): string[] {
-    return Object.keys(this.providers).map((x) => x);
-  }
-
   handleOptionsChange(value: string) {
     this.blobProviderForm.get('value')?.setValue(value);
   }
@@ -165,6 +161,9 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
         switchMap((params) => {
           this.spinner.show('fullscreen');
           const id = params.get('id');
+          this.blobProviderForm
+            .get('provider')
+            ?.setValue(params.get('provider'));
           if (id) {
             this.isEdit = true;
             return this.blobStorageProviderService.getBlobProviderById(id);

@@ -10,7 +10,12 @@ export class EmailProviderListComponent {
   constructor(private router: Router) {}
 
   handleEdit(emailProvider: EmailConfigurationModel) {
-    this.router.navigate(['/general/emails/edit/' + emailProvider.id]);
+    this.router.navigate([
+      '/general/emails/integrations/' +
+        emailProvider.engine +
+        '/edit/' +
+        emailProvider.id,
+    ]);
   }
 
   handleDelete(emailProvider: EmailConfigurationModel) {

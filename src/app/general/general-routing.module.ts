@@ -5,19 +5,34 @@ import { EmailProviderComponent } from './email-provider/email-provider.componen
 import { EmailProviderListComponent } from './email-provider-list/email-provider-list.component';
 import { BlobProviderComponent } from './blob-provider/blob-provider.component';
 import { BlobProviderListComponent } from './blob-provider-list/blob-provider-list.component';
+import { IntegrationsComponent } from './integrations/integrations.component';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminTemplateComponent,
     children: [
-      { path: 'emails', component: EmailProviderComponent },
-      { path: 'emails/list', component: EmailProviderListComponent },
-      { path: 'emails/edit/:id', component: EmailProviderComponent },
+      { path: 'integrations', component: IntegrationsComponent },
 
-      { path: 'blobs', component: BlobProviderComponent },
+      {
+        path: 'emails/integrations/:provider',
+        component: EmailProviderComponent,
+      },
+      { path: 'emails/list', component: EmailProviderListComponent },
+      {
+        path: 'emails/integrations/:provider/edit/:id',
+        component: EmailProviderComponent,
+      },
+
+      {
+        path: 'blobs/integrations/:provider',
+        component: BlobProviderComponent,
+      },
       { path: 'blobs/list', component: BlobProviderListComponent },
-      { path: 'blobs/edit/:id', component: BlobProviderComponent },
+      {
+        path: 'blobs/integrations/:provider/edit/:id',
+        component: BlobProviderComponent,
+      },
     ],
   },
 ];

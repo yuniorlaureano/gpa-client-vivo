@@ -102,10 +102,6 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
     return this.emailProviderForm.get('engine')?.value;
   }
 
-  getEngines(): string[] {
-    return Object.keys(this.engines).map((x) => x);
-  }
-
   handleOptionsChange(value: string) {
     this.emailProviderForm.get('value')?.setValue(value);
   }
@@ -165,6 +161,9 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
         switchMap((params) => {
           this.spinner.show('fullscreen');
           const id = params.get('id');
+          this.emailProviderForm
+            .get('engine')
+            ?.setValue(params.get('provider'));
           if (id) {
             this.isEdit = true;
             return this.emailProviderService.getEmailProviderById(id);
