@@ -25,3 +25,9 @@
   border-radius: 70px;
   border: inset 1px lightgreen;
 }
+
+.image-upload-product {
+  width: 250px;
+  max-width: 250px;
+  cursor: pointer;
+}

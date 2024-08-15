@@ -23,11 +23,15 @@ export class ProductService {
     return this.http.get<ProductModel>(`${this.url}/${id}`);
   }
 
-  addProduct(model: ProductModel): Observable<void> {
-    return this.http.post<void>(`${this.url}`, model);
+  addProduct(model: ProductModel): Observable<ProductModel> {
+    return this.http.post<ProductModel>(`${this.url}`, model);
   }
 
   updateProduct(model: ProductModel): Observable<void> {
     return this.http.put<void>(`${this.url}`, model);
+  }
+
+  uploadFile(model: FormData): Observable<void> {
+    return this.http.post<void>(`${this.url}/photo/upload`, model);
   }
 }

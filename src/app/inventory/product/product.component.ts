@@ -11,7 +11,6 @@ import { ProductService } from '../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   combineLatest,
-  from,
   map,
   Observable,
   of,
@@ -40,10 +39,13 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 export class ProductComponent implements OnInit, OnDestroy {
   minDate: NgbDateStruct;
   products: ProductModel[] = [];
-  uploadedImage: any = null;
   isEdit: boolean = false;
   units$!: Observable<UnitModel[]>;
   categories$!: Observable<CategoryModel[]>;
+  processFileEventListenner: any = null;
+  photo: File | null = null;
+  imageUrl: string | ArrayBuffer | null =
+    'assets/images/default-placeholder.png';
 
   constructor(
     private fb: FormBuilder,
@@ -162,11 +164,6 @@ export class ProductComponent implements OnInit, OnDestroy {
     );
   }
 
-  onFileUploaded(file: any) {
-    this.uploadedImage = file;
-    // this.productForm.patchValue({ image: file.dataURL });
-  }
-
   onSubmit() {
     if (this.productForm.valid) {
       if (!this.isEdit) {
@@ -199,10 +196,18 @@ export class ProductComponent implements OnInit, OnDestroy {
     const sub = this.productService
       .addProduct(value as ProductModel)
       .subscribe({
-        next: () => {
-          this.clearForm();
-          this.toastService.showSucess('Producto agregado');
-          this.spinner.hide('fullscreen');
+        next: (product) => {
+          if (this.photo) {
+            this.uploadFile(product.id!, () => {
+              this.clearForm();
+              this.toastService.showSucess('Producto agregado');
+              this.spinner.hide('fullscreen');
+            });
+          } else {
+            this.clearForm();
+            this.toastService.showSucess('Producto agregado');
+            this.spinner.hide('fullscreen');
+          }
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
@@ -210,6 +215,23 @@ export class ProductComponent implements OnInit, OnDestroy {
         },
       });
     this.subscriptions$.push(sub);
+  }
+
+  uploadFile(productId: string, func: () => void) {
+    if (this.photo) {
+      const formData = new FormData();
+      formData.append('ProductId', productId);
+      formData.append('Photo', this.photo);
+      const sub = this.productService.uploadFile(formData).subscribe({
+        next: () => {
+          func();
+        },
+        error: () => {
+          func();
+        },
+      });
+      this.subscriptions$.push(sub);
+    }
   }
 
   upateProduct() {
@@ -249,6 +271,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   clearForm() {
     this.productForm.reset();
     this.isEdit = false;
+    this.imageUrl = 'assets/images/default-placeholder.png';
   }
 
   get addonsForm() {
@@ -270,6 +293,20 @@ export class ProductComponent implements OnInit, OnDestroy {
           })
         );
       }
+    }
+  }
+
+  processFileUpload(event: Event) {
+    const fileElement = event.currentTarget as HTMLInputElement;
+    this.photo = fileElement.files ? fileElement.files[0] : null;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.imageUrl = reader.result;
+    };
+    if (this.photo) {
+      reader.readAsDataURL(this.photo);
+    } else {
+      this.imageUrl = 'assets/images/default-placeholder.png';
     }
   }
 

@@ -96,96 +96,119 @@
               <div class="card-border-body">
                 <form [formGroup]="productForm" class="row">
                   <!--  -->
-                  <div class="col-sm-3 col-12">
-                    <div class="mb-3">
-                      <label class="form-label"
-                        >Código<span class="text-red">*</span></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        formControlName="code"
-                        placeholder="Ingrese el código del producto"
-                      />
-                      <div *ngIf="isFieldInvalid('code')" class="text-danger">
-                        El código es obligatorio.
+                  <div class="col-sm-2 col-2">
+                    <img
+                      [src]="this.imageUrl"
+                      class="img-thumbnail image-upload-product"
+                      (click)="fileUpload.click()"
+                    />
+                    <input
+                      type="file"
+                      style="display: none"
+                      #fileUpload
+                      (change)="processFileUpload($event)"
+                    />
+                  </div>
+                  <div class="col-sm-8 col-8">
+                    <div class="row">
+                      <div class="col-sm-3 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Código<span class="text-red">*</span></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="code"
+                            placeholder="Ingrese el código del producto"
+                          />
+                          <div
+                            *ngIf="isFieldInvalid('code')"
+                            class="text-danger"
+                          >
+                            El código es obligatorio.
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <!--  -->
-                  <div class="col-sm-3 col-12">
-                    <div class="mb-3">
-                      <label class="form-label"
-                        >Nombre<span class="text-red">*</span></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        formControlName="name"
-                        placeholder="Ingrese el nombre del producto"
-                      />
-                      <div *ngIf="isFieldInvalid('name')" class="text-danger">
-                        El nombre es obligatorio.
+                      <!--  -->
+                      <div class="col-sm-3 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Nombre<span class="text-red">*</span></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="name"
+                            placeholder="Ingrese el nombre del producto"
+                          />
+                          <div
+                            *ngIf="isFieldInvalid('name')"
+                            class="text-danger"
+                          >
+                            El nombre es obligatorio.
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <!--  -->
-                  <div class="col-sm-3 col-12">
-                    <div class="mb-3">
-                      <label class="form-label"
-                        >Categoría<span class="text-red">*</span></label
-                      >
-                      <select
-                        name="categoryId"
-                        class="form-select"
-                        formControlName="categoryId"
-                      >
-                        <option
-                          *ngFor="let category of categories$ | async"
-                          value="{{ category.id }}"
-                        >
-                          {{ category.name }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                  <!--  -->
-                  <div class="col-sm-3 col-12">
-                    <div class="mb-3">
-                      <label class="form-label"
-                        >Precio<span class="text-red">*</span></label
-                      >
-                      <input
-                        type="number"
-                        class="form-control"
-                        formControlName="price"
-                        placeholder="Ingrese el precio del producto"
-                      />
-                    </div>
-                  </div>
-                  <!--  -->
-                  <!-- Este es el input para la fecha, cree una pequeña "validación"
-                  que evita que sean ingresadas fechas anteriores a la actual -->
-                  <div class="col-sm-4 col-12">
-                    <div class="mb-3">
-                      <label for="expirationDate" class="form-label"
-                        >Fecha de expiración</label
-                      >
-                      <div class="input-group">
-                        <input
-                          class="form-control"
-                          placeholder="yyyy-mm-dd"
-                          id="expirationDate"
-                          formControlName="expirationDate"
-                          [minDate]="minDate"
-                          ngbDatepicker
-                          #expirationDate="ngbDatepicker"
-                        />
-                        <button
-                          class="btn btn-outline-secondary bi bi-calendar3"
-                          (click)="expirationDate.toggle()"
-                          type="button"
-                        ></button>
+                      <!--  -->
+                      <div class="col-sm-3 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Categoría<span class="text-red">*</span></label
+                          >
+                          <select
+                            name="categoryId"
+                            class="form-select"
+                            formControlName="categoryId"
+                          >
+                            <option
+                              *ngFor="let category of categories$ | async"
+                              value="{{ category.id }}"
+                            >
+                              {{ category.name }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <!--  -->
+                      <div class="col-sm-3 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Precio<span class="text-red">*</span></label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            formControlName="price"
+                            placeholder="Ingrese el precio del producto"
+                          />
+                        </div>
+                      </div>
+                      <!--  -->
+                      <!-- Este es el input para la fecha, cree una pequeña "validación"
+                      que evita que sean ingresadas fechas anteriores a la actual -->
+                      <div class="col-sm-4 col-12">
+                        <div class="mb-3">
+                          <label for="expirationDate" class="form-label"
+                            >Fecha de expiración</label
+                          >
+                          <div class="input-group">
+                            <input
+                              class="form-control"
+                              placeholder="yyyy-mm-dd"
+                              id="expirationDate"
+                              formControlName="expirationDate"
+                              [minDate]="minDate"
+                              ngbDatepicker
+                              #expirationDate="ngbDatepicker"
+                            />
+                            <button
+                              class="btn btn-outline-secondary bi bi-calendar3"
+                              (click)="expirationDate.toggle()"
+                              type="button"
+                            ></button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -293,21 +316,6 @@
                       </div>
                     </div>
                   </div>
-
-                  <!--  -->
-                  <div class="col-sm-12 col-12 dropzone-area">
-                    <div class="card-border">
-                      <div class="card-border-title">Imagenes del producto</div>
-                      <div class="card-border-body">
-                        <!-- DropZone -->
-                        <gpa-dropzone
-                          (fileUploaded)="onFileUploaded($event)"
-                        ></gpa-dropzone>
-                        <!-- Fin del DropZone -->
-                      </div>
-                    </div>
-                  </div>
-                  <!--  -->
                 </form>
               </div>
             </div>
