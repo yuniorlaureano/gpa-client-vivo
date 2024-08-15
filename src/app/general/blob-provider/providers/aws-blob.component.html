@@ -46,17 +46,36 @@
             </div>
             <div class="col-sm-6 col-6">
               <div class="mb-3">
-                <label for="bucket" class="form-label"
-                  ><span class="text-red">*</span> Bucket</label
+                <label for="publicBucket" class="form-label"
+                  ><span class="text-red">*</span>Bucket publico</label
                 >
                 <input
                   class="form-control"
                   type="password"
-                  formControlName="bucket"
+                  formControlName="publicBucket"
                   (change)="handleInputChange()"
                 />
                 <gpa-validator-message
-                  [control]="s3Form.get('bucket')"
+                  [control]="s3Form.get('publicBucket')"
+                  [touched]="s3Form.touched"
+                  validation="required"
+                  message="El bucket es obligatorio"
+                />
+              </div>
+            </div>
+            <div class="col-sm-6 col-6">
+              <div class="mb-3">
+                <label for="privateBucket" class="form-label"
+                  ><span class="text-red">*</span>Bucket privado</label
+                >
+                <input
+                  class="form-control"
+                  type="password"
+                  formControlName="privateBucket"
+                  (change)="handleInputChange()"
+                />
+                <gpa-validator-message
+                  [control]="s3Form.get('privateBucket')"
                   [touched]="s3Form.touched"
                   validation="required"
                   message="El bucket es obligatorio"

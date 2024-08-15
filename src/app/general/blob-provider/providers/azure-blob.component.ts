@@ -20,7 +20,8 @@ export class AzureBlobComponent implements OnChanges {
   isEdit = false;
   azureForm = this.formBuilder.group({
     connectionString: ['', Validators.required],
-    container: ['', Validators.required],
+    publicContainer: ['', Validators.required],
+    privateContainer: ['', Validators.required],
   });
 
   constructor(private formBuilder: FormBuilder) {}

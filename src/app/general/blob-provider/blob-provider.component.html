@@ -89,7 +89,7 @@
           <div class="row">
             <div class="col-sm-12 col-12">
               <div class="mb-3">
-                <label for="name" class="form-label"
+                <label for="identifier" class="form-label"
                   ><span class="text-red">*</span> Identificador</label
                 >
                 <input
@@ -99,6 +99,24 @@
                 />
                 <gpa-validator-message
                   [control]="blobProviderForm.get('identifier')"
+                  [touched]="blobProviderForm.touched"
+                  validation="required"
+                  message="El identificador es requerido"
+                />
+              </div>
+            </div>
+            <div class="col-sm-12 col-12">
+              <div class="mb-3">
+                <label for="publicUrl" class="form-label"
+                  ><span class="text-red">*</span> Url pública</label
+                >
+                <input
+                  class="form-control"
+                  type="text"
+                  formControlName="publicUrl"
+                />
+                <gpa-validator-message
+                  [control]="blobProviderForm.get('publicUrl')"
                   [touched]="blobProviderForm.touched"
                   validation="required"
                   message="El identificador es requerido"

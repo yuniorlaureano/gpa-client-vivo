@@ -24,6 +24,7 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
   blobProviderForm = this.formBuilder.group({
     id: [''],
     identifier: ['', Validators.required],
+    publicUrl: ['', Validators.required],
     provider: ['', Validators.required],
     current: [false, Validators.required],
     value: ['', Validators.required],
@@ -180,6 +181,7 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
               id: blobProvider.id,
               identifier: blobProvider.identifier,
               provider: blobProvider.provider,
+              publicUrl: blobProvider.publicUrl,
               current: blobProvider.current,
               value: blobProvider.value,
             });

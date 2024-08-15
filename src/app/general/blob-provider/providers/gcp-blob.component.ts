@@ -20,7 +20,8 @@ export class GcpBlobComponent implements OnChanges {
   isEdit = false;
   gcpForm = this.formBuilder.group({
     jsonCredentials: ['', Validators.required],
-    bucket: ['', Validators.required],
+    publicBucket: ['', Validators.required],
+    privateBucket: ['', Validators.required],
   });
 
   constructor(private formBuilder: FormBuilder) {}

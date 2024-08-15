@@ -21,7 +21,8 @@ export class AwsBlobComponent implements OnChanges {
   s3Form = this.formBuilder.group({
     accessKeyId: ['', Validators.required],
     secretAccessKey: ['', Validators.required],
-    bucket: ['', Validators.required],
+    publicBucket: ['', Validators.required],
+    privatgeBucket: ['', Validators.required],
     region: ['', Validators.required],
   });
 

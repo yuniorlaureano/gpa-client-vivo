@@ -42,7 +42,6 @@ export class ProductComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
   units$!: Observable<UnitModel[]>;
   categories$!: Observable<CategoryModel[]>;
-  processFileEventListenner: any = null;
   photo: File | null = null;
   imageUrl: string | ArrayBuffer | null =
     'assets/images/default-placeholder.png';
@@ -217,23 +216,6 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
-  uploadFile(productId: string, func: () => void) {
-    if (this.photo) {
-      const formData = new FormData();
-      formData.append('ProductId', productId);
-      formData.append('Photo', this.photo);
-      const sub = this.productService.uploadFile(formData).subscribe({
-        next: () => {
-          func();
-        },
-        error: () => {
-          func();
-        },
-      });
-      this.subscriptions$.push(sub);
-    }
-  }
-
   upateProduct() {
     const value = {
       ...this.productForm.value,
@@ -307,6 +289,33 @@ export class ProductComponent implements OnInit, OnDestroy {
       reader.readAsDataURL(this.photo);
     } else {
       this.imageUrl = 'assets/images/default-placeholder.png';
+    }
+
+    //automaticaly upload the file if the product is being edited
+    if (this.isEdit && this.productForm.get('id')?.value) {
+      this.spinner.show('fullscreen');
+      this.uploadFile(this.productForm.get('id')?.value!, () => {
+        this.clearForm();
+        this.toastService.showSucess('Foto actualizada');
+        this.spinner.hide('fullscreen');
+      });
+    }
+  }
+
+  uploadFile(productId: string, func: () => void) {
+    if (this.photo) {
+      const formData = new FormData();
+      formData.append('ProductId', productId);
+      formData.append('Photo', this.photo);
+      const sub = this.productService.uploadFile(formData).subscribe({
+        next: () => {
+          func();
+        },
+        error: () => {
+          func();
+        },
+      });
+      this.subscriptions$.push(sub);
     }
   }
 
