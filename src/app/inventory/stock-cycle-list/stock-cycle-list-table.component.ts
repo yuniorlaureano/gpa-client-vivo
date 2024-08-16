@@ -52,8 +52,8 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
 
   filterForm = this.fb.group({
     dateTypeFilter: ['init'],
-    from: [''],
-    to: [''],
+    from: [null],
+    to: [null],
     isClose: [''],
   });
 
@@ -133,6 +133,8 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
     this.searchTerms.next(
       JSON.stringify({
         ...this.filterForm.value,
+        from: this.filterForm.get('from')?.value,
+        to: this.filterForm.get('to')?.value,
         isClose: parseInt(this.filterForm.get('isClose')?.value ?? '-1'),
       })
     );

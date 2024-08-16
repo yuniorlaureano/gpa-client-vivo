@@ -34,4 +34,8 @@ export class StockCycleService {
   updateStockCycle(model: StockCycleModel): Observable<void> {
     return this.http.put<void>(`${this.url}`, model);
   }
+
+  removeStockCycle(stockId: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${stockId}`);
+  }
 }

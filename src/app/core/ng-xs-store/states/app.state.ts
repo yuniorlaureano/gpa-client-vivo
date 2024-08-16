@@ -3,6 +3,7 @@ import {
   AddError,
   AddPermissions,
   AddRequiredPermissions,
+  CleanError,
   RemoveError,
   SetBlobProviders,
   SetCurrentMenu,
@@ -78,6 +79,13 @@ export class AppState {
     const state = getState();
     patchState({
       errors: [...state.errors.filter((error) => error !== payload.error)],
+    });
+  }
+
+  @Action(CleanError)
+  cleanError({ patchState }: StateContext<AppStateModel>, payload: CleanError) {
+    patchState({
+      errors: [],
     });
   }
 

@@ -12,6 +12,11 @@ export class RemoveError {
   constructor(public error: string) {}
 }
 
+export class CleanError {
+  static readonly type = '[App] CleanError';
+  constructor() {}
+}
+
 export class AddPermissions {
   static readonly type = '[App] AddPermissions';
   constructor(public permissions: PermissionType) {}

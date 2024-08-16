@@ -115,7 +115,14 @@
         {{ stockCycle.isClose ? "Cerrado" : "Abierto" }}
       </td>
       <td>{{ stockCycle.note }}</td>
-      <td style="width: 50px">
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(stockCycle)"
+          [disabled]="!canDelete"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
         <button
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(stockCycle)"

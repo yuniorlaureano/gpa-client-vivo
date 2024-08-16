@@ -60,8 +60,8 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
     const sub = this.store
       .select(
         (state: any) =>
-          state.app.requiredPermissions[PermissionConstants.Modules.Security][
-            PermissionConstants.Components.User
+          state.app.requiredPermissions[PermissionConstants.Modules.Inventory][
+            PermissionConstants.Components.StockCycle
           ]
       )
       .subscribe({
@@ -127,15 +127,7 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (data) => {
-          if (data) {
-            this.stockCycle = {
-              cycle: {
-                ...data,
-              },
-              detail: this.transformCycleDetail(data.stockCycleDetails),
-            };
-            this.cycleId = data?.id;
-          }
+          this.mapStockCycle(data);
           this.spinner.hide('fullscreen');
         },
         error: (error) => {
@@ -144,6 +136,18 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
         },
       });
     this.subscriptions$.push(sub);
+  }
+
+  mapStockCycle(data: StockCycleModel | null) {
+    if (data) {
+      this.stockCycle = {
+        cycle: {
+          ...data,
+        },
+        detail: this.transformCycleDetail(data.stockCycleDetails),
+      };
+      this.cycleId = data?.id;
+    }
   }
 
   transformCycleDetail(details: StockCycleDetailModel[] | null) {

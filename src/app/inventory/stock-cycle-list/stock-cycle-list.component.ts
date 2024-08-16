@@ -1,21 +1,62 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProductCatalogModel } from '../models/product-catalog.model';
 import { StockCycleModel } from '../models/stock-cycle.model';
+import { ConfirmModalService } from '../../core/service/confirm-modal.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastService } from '../../core/service/toast.service';
+import { Subscription } from 'rxjs';
+import { StockCycleService } from '../service/cycle.service';
 
 @Component({
   selector: 'gpa-stock-list',
   templateUrl: './stock-cycle-list.component.html',
   styleUrl: './stock-cycle-list.component.css',
 })
-export class StockCycleListComponent {
-  constructor(private router: Router) {}
+export class StockCycleListComponent implements OnDestroy {
+  reloadTable: number = 1;
+  subscriptions$: Subscription[] = [];
+
+  constructor(
+    private router: Router,
+    private confirmService: ConfirmModalService,
+    private spinner: NgxSpinnerService,
+    private toastService: ToastService,
+    private stockCycleService: StockCycleService
+  ) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
 
   handleEdit(cycle: StockCycleModel) {
     this.router.navigate(['inventory/stock/cycle/' + cycle.id + '/detail']);
   }
 
   handleDelete(cycle: StockCycleModel) {
-    // this.router.navigate(['/invoice/sale/edit/' + invoice.id]);
+    this.confirmService
+      .confirm(
+        'Ciclo de inventario',
+        'Está seguro de eliminar el ciclo de inventario:\n ' + cycle.note
+      )
+      .then(() => {
+        this.spinner.show('fullscreen');
+        const sub = this.stockCycleService
+          .removeStockCycle(cycle.id!)
+          .subscribe({
+            next: () => {
+              this.toastService.showSucess('Ciclo de inventario eliminado');
+              this.reloadTable = this.reloadTable * -1;
+              this.spinner.hide('fullscreen');
+            },
+            error: (error) => {
+              this.spinner.hide('fullscreen');
+              this.toastService.showError(
+                'Error elimiando ciclo de inventario'
+              );
+            },
+          });
+        this.subscriptions$.push(sub);
+      })
+      .catch(() => {});
   }
 }

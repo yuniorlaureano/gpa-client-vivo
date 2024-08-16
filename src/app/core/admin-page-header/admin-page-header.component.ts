@@ -18,6 +18,7 @@ import { TokenClaims } from '../models/token-claims.model';
 import { Store } from '@ngxs/store';
 import {
   AddRequiredPermissions,
+  CleanError,
   RemoveError,
   SetProfiles,
 } from '../ng-xs-store/actions/app.actions';
@@ -66,6 +67,7 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
   }
 
   changeProfile(profileId: string, profileName: string) {
+    this.store.dispatch(new CleanError());
     const sub = this.authService.changeProfile(profileId).subscribe({
       next: () => {
         this.updateProfileSubject$.next(profileId);
@@ -100,10 +102,12 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
       this.updateProfileSubject$,
     ]).pipe(
       map(([profiles, u]) => {
-        for (let profile of profiles) {
-          profile.isCurrent = profile.id === (u || claims.profileId);
-        }
-        return profiles;
+        return profiles.map((p) => {
+          return {
+            ...p,
+            isCurrent: p.id === (u || claims.profileId),
+          };
+        });
       }),
       tap((profiles) => {
         this.store.dispatch(new SetProfiles(profiles));

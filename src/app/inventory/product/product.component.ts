@@ -10,6 +10,7 @@ import { ProductModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {
+  BehaviorSubject,
   combineLatest,
   map,
   Observable,
@@ -46,6 +47,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   photo: File | null = null;
   imageUrl: string | ArrayBuffer | null =
     'assets/images/default-placeholder.png';
+  triggerLoadAddons$ = new BehaviorSubject<boolean>(false);
 
   subscriptions$: Subscription[] = [];
 
@@ -233,6 +235,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.productForm.reset();
     this.isEdit = false;
     this.imageUrl = 'assets/images/default-placeholder.png';
+    this.triggerLoadAddons$.next(true);
   }
 
   get addonsForm() {
@@ -241,6 +244,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   mapAddon(addons?: AddonModel[], callback = (id: string) => false) {
     if (addons) {
+      this.addonsForm.clear();
       for (let addon of addons) {
         this.addonsForm.push(
           this.fb.group({
@@ -358,12 +362,18 @@ export class ProductComponent implements OnInit, OnDestroy {
     if (!this.isEdit) {
       const filder = new FilterModel();
       filder.pageSize = 1000;
-      const sub = this.addonService.getAddon(filder).subscribe({
-        next: (data) => this.mapAddon(data.data),
-        error: (error) => {
-          this.toastService.showError('Error cargando agregados');
-        },
-      });
+      const sub = this.triggerLoadAddons$
+        .pipe(
+          switchMap(() => {
+            return this.addonService.getAddon(filder);
+          })
+        )
+        .subscribe({
+          next: (data) => this.mapAddon(data.data),
+          error: (error) => {
+            this.toastService.showError('Error cargando agregados');
+          },
+        });
       this.subscriptions$.push(sub);
     }
   }
