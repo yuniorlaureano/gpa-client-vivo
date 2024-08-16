@@ -8,7 +8,6 @@ export interface ProductModel {
   photo: string | null;
   price: number;
   description: string;
-  barCode: string;
   expirationDate: string | null;
   unitId: string;
   unit: string;

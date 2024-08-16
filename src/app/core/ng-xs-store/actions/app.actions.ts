@@ -1,3 +1,4 @@
+import { BlobStorageConfigurationModel } from '../../../general/model/blob-storage-configuration.model';
 import { ProfileModel } from '../../../security/model/profile.model';
 import { PermissionType } from '../../models/permission.type';
 
@@ -24,4 +25,9 @@ export class AddRequiredPermissions {
 export class SetProfiles {
   static readonly type = '[App] SetProfiles';
   constructor(public profiles: ProfileModel[]) {}
+}
+
+export class SetBlobProviders {
+  static readonly type = '[App] SetBlobProviders';
+  constructor(public profiles?: BlobStorageConfigurationModel) {}
 }

@@ -19,7 +19,6 @@ import { CategoryListTableComponent } from './category-list/category-list-table.
 import { CategoryListComponent } from './category-list/category-list.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductListTableComponent } from './product-list/product-list-table.component';
-import { DropzoneComponent } from './product/dropzone/dropzone.component';
 import { StockCycleComponent } from './stock-cycle/stock-cycle.component';
 import { StockCycleDetailComponent } from './stock-cycle-detail/stock-cycle-detail.component';
 import { StockCycleListComponent } from './stock-cycle-list/stock-cycle-list.component';
@@ -43,7 +42,6 @@ import { AddonListTableComponent } from './addon-list/addon-list-table.component
     CategoryListComponent,
     ProductListComponent,
     ProductListTableComponent,
-    DropzoneComponent,
     StockCycleComponent,
     StockCycleDetailComponent,
     StockCycleListComponent,

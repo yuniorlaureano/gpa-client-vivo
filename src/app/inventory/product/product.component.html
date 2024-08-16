@@ -210,64 +210,49 @@
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <!--  -->
-                  <div class="col-sm-4 col-12">
-                    <div class="mb-3">
-                      <label class="form-label"
-                        >Código de barra<span class="text-red">*</span></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        formControlName="barCode"
-                        placeholder="Ingrese el codigo del producto"
-                      />
-                      <div
-                        *ngIf="isFieldInvalid('barCode')"
-                        class="text-danger"
-                      >
-                        El código de barra es obligatorio.
+
+                      <div class="col-sm-4 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Unidad<span class="text-red">*</span></label
+                          >
+                          <select
+                            name="unitId"
+                            class="form-select"
+                            formControlName="unitId"
+                          >
+                            <option
+                              *ngFor="let unit of units$ | async"
+                              value="{{ unit.id }}"
+                            >
+                              {{ unit.name }}
+                            </option>
+                          </select>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <!--  -->
-                  <div class="col-sm-3 col-12">
-                    <div class="mb-3">
-                      <label class="form-label"
-                        >Unidad<span class="text-red">*</span></label
-                      >
-                      <select
-                        name="unitId"
-                        class="form-select"
-                        formControlName="unitId"
-                      >
-                        <option
-                          *ngFor="let unit of units$ | async"
-                          value="{{ unit.id }}"
-                        >
-                          {{ unit.name }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                  <!--  -->
-                  <div class="col-sm-4 col-12">
-                    <div class="mb-3">
-                      <label class="form-label"
-                        >Tipo de producto<span class="text-red">*</span></label
-                      >
-                      <select
-                        name="categoryId"
-                        class="form-select"
-                        formControlName="type"
-                      >
-                        <option value="1">Producto terminado</option>
-                        <option value="2">Materia prima</option>
-                      </select>
-                      <div *ngIf="isFieldInvalid('type')" class="text-danger">
-                        El tipo es obligatorio
+                      <!--  -->
+                      <div class="col-sm-4 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Tipo de producto<span class="text-red"
+                              >*</span
+                            ></label
+                          >
+                          <select
+                            name="categoryId"
+                            class="form-select"
+                            formControlName="type"
+                          >
+                            <option value="1">Producto terminado</option>
+                            <option value="2">Materia prima</option>
+                          </select>
+                          <div
+                            *ngIf="isFieldInvalid('type')"
+                            class="text-danger"
+                          >
+                            El tipo es obligatorio
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

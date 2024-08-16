@@ -4,6 +4,7 @@ import {
   AddPermissions,
   AddRequiredPermissions,
   RemoveError,
+  SetBlobProviders,
   SetProfiles,
 } from '../actions/app.actions';
 import { PermissionType } from '../../models/permission.type';
@@ -13,12 +14,14 @@ import * as PermissionConstants from '../../models/profile.constants';
 import * as ProfileUtils from '../../utils/profile.utils';
 import { ProfileModel } from '../../../security/model/profile.model';
 import { getRequiredPermissions } from './permissions';
+import { BlobStorageConfigurationModel } from '../../../general/model/blob-storage-configuration.model';
 
 export interface AppStateModel {
   errors: string[];
   permissions: PermissionType;
   profiles: ProfileModel[];
   requiredPermissions: ModuleRequiredPermissionType;
+  blobProvider?: BlobStorageConfigurationModel;
 }
 
 const ZOO_STATE_TOKEN = new StateToken<AppStateModel>('app');
@@ -30,6 +33,7 @@ const ZOO_STATE_TOKEN = new StateToken<AppStateModel>('app');
     permissions: {},
     profiles: [],
     requiredPermissions: getRequiredPermissions(),
+    blobProvider: {} as BlobStorageConfigurationModel,
   },
 })
 @Injectable()
@@ -107,5 +111,17 @@ export class AppState {
       requiredPermissions: requiredPermissions,
       permissions: { ...payload.permissions },
     });
+  }
+
+  @Action(SetBlobProviders)
+  setBlobProvider(
+    { patchState }: StateContext<AppStateModel>,
+    payload: SetBlobProviders
+  ) {
+    if (payload.profiles) {
+      patchState({
+        blobProvider: { ...payload.profiles },
+      });
+    }
   }
 }

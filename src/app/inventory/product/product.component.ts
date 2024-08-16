@@ -8,7 +8,7 @@ import {
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ProductModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {
   combineLatest,
   map,
@@ -37,7 +37,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
   styleUrl: './product.component.css',
 })
 export class ProductComponent implements OnInit, OnDestroy {
-  minDate: NgbDateStruct;
+  minDate!: NgbDateStruct;
   products: ProductModel[] = [];
   isEdit: boolean = false;
   units$!: Observable<UnitModel[]>;
@@ -46,52 +46,6 @@ export class ProductComponent implements OnInit, OnDestroy {
   imageUrl: string | ArrayBuffer | null =
     'assets/images/default-placeholder.png';
 
-  constructor(
-    private fb: FormBuilder,
-    private productService: ProductService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private toastService: ToastService,
-    private unitService: UnitService,
-    private categoryService: CategoryService,
-    private addonService: AddonService,
-    private spinner: NgxSpinnerService,
-    private store: Store
-  ) {
-    // Esto es parte de la validacion general
-    //sirve para que la fecha de expiracion no sea menor a la fecha actual
-    const today = new Date();
-    this.minDate = {
-      year: today.getFullYear(),
-      month: today.getMonth() + 1,
-      day: today.getDate(),
-    };
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions$.forEach((sub) => sub.unsubscribe());
-  }
-
-  ngOnInit(): void {
-    this.loadProduct();
-    this.handlePermissionsLoad();
-
-    this.units$ = this.unitService.getUnits().pipe(map((data) => data.data));
-    this.categories$ = this.categoryService
-      .getCategory()
-      .pipe(map((data) => data.data));
-    if (!this.isEdit) {
-      const sub = this.addonService.getAddon().subscribe({
-        next: (data) => this.mapAddon(data.data),
-        error: (error) => {
-          this.toastService.showError('Error cargando agregados');
-        },
-      });
-      this.subscriptions$.push(sub);
-    }
-  }
-
-  //subscriptions
   subscriptions$: Subscription[] = [];
 
   //permissions
@@ -106,7 +60,6 @@ export class ProductComponent implements OnInit, OnDestroy {
     name: ['', Validators.required],
     price: [0.0, [Validators.required]],
     description: ['', Validators.required],
-    barCode: ['', Validators.required],
     expirationDate: ['', Validators.required],
     unitId: ['', Validators.required],
     categoryId: ['', Validators.required],
@@ -117,9 +70,33 @@ export class ProductComponent implements OnInit, OnDestroy {
     addons: this.fb.array([]),
   });
 
-  //Validaciones generales para los campos del formulario
-  currentDate: Date = new Date();
-  //
+  constructor(
+    private fb: FormBuilder,
+    private productService: ProductService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastService: ToastService,
+    private unitService: UnitService,
+    private categoryService: CategoryService,
+    private addonService: AddonService,
+    private spinner: NgxSpinnerService,
+    private store: Store
+  ) {
+    this.loadMinDate();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+  }
+
+  ngOnInit(): void {
+    this.loadProduct();
+    this.handlePermissionsLoad();
+    this.loadUnits();
+    this.loadCategories();
+    this.loadAddons();
+  }
+
   isFieldInvalid(field: string): boolean {
     const control = this.productForm.get(field) as FormControl;
     return (
@@ -130,7 +107,6 @@ export class ProductComponent implements OnInit, OnDestroy {
       control.errors['required']
     );
   }
-  //
 
   handlePermissionsLoad() {
     const sub = this.store
@@ -177,9 +153,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  createProduct() {
-    this.productForm.get('id')?.setValue(null);
-    const value = {
+  getProductValueFromForm() {
+    return {
       ...this.productForm.value,
       unit: '',
       category: '',
@@ -190,6 +165,17 @@ export class ProductComponent implements OnInit, OnDestroy {
         .filter((creadit: any) => creadit.selected)
         .map((credit: any) => credit.id),
     };
+  }
+
+  clearFormOnCreate() {
+    this.clearForm();
+    this.toastService.showSucess('Producto agregado');
+    this.spinner.hide('fullscreen');
+  }
+
+  createProduct() {
+    this.productForm.get('id')?.setValue(null);
+    const value = this.getProductValueFromForm();
 
     this.spinner.show('fullscreen');
     const sub = this.productService
@@ -198,14 +184,12 @@ export class ProductComponent implements OnInit, OnDestroy {
         next: (product) => {
           if (this.photo) {
             this.uploadFile(product.id!, () => {
-              this.clearForm();
-              this.toastService.showSucess('Producto agregado');
-              this.spinner.hide('fullscreen');
+              this.clearFormOnCreate();
+              this.router.navigate(['/inventory/product/' + product.id]);
             });
           } else {
-            this.clearForm();
-            this.toastService.showSucess('Producto agregado');
-            this.spinner.hide('fullscreen');
+            this.clearFormOnCreate();
+            this.router.navigate(['/inventory/product/' + product.id]);
           }
         },
         error: (error) => {
@@ -216,26 +200,20 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
+  clearFormOnUpdate() {
+    this.clearForm();
+    this.toastService.showSucess('Producto actualizado');
+    this.spinner.hide('fullscreen');
+  }
+
   upateProduct() {
-    const value = {
-      ...this.productForm.value,
-      unit: '',
-      category: '',
-      photo: '',
-      productLocation: '',
-      productLocationId: null,
-      addons: this.addonsForm.value
-        .filter((creadit: any) => creadit.selected)
-        .map((credit: any) => credit.id),
-    };
+    const value = this.getProductValueFromForm();
     this.spinner.show('fullscreen');
     const sub = this.productService
       .updateProduct(value as ProductModel)
       .subscribe({
         next: () => {
-          this.clearForm();
-          this.toastService.showSucess('Producto actualizado');
-          this.spinner.hide('fullscreen');
+          this.clearFormOnUpdate();
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
@@ -258,10 +236,6 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   get addonsForm() {
     return this.productForm.get('addons') as FormArray;
-  }
-
-  onAddonChange() {
-    console.log(this.addonsForm.value);
   }
 
   mapAddon(addons?: AddonModel[], callback = (id: string) => false) {
@@ -292,12 +266,17 @@ export class ProductComponent implements OnInit, OnDestroy {
     }
 
     //automaticaly upload the file if the product is being edited
+    this.uploadFIleOnUpdate();
+  }
+
+  uploadFIleOnUpdate() {
     if (this.isEdit && this.productForm.get('id')?.value) {
       this.spinner.show('fullscreen');
       this.uploadFile(this.productForm.get('id')?.value!, () => {
         this.clearForm();
         this.toastService.showSucess('Foto actualizada');
         this.spinner.hide('fullscreen');
+        this.router.navigate(['/inventory/product']);
       });
     }
   }
@@ -319,51 +298,103 @@ export class ProductComponent implements OnInit, OnDestroy {
     }
   }
 
+  setPhoto(photo: string | null) {
+    if (photo) {
+      try {
+        var fileUrl = JSON.parse(photo).fileUrl;
+        this.imageUrl = fileUrl;
+      } catch {}
+    }
+  }
+
+  setProduct(product: ProductModel | null, addons: AddonModel[] | null) {
+    if (product == null) return;
+
+    this.setFormValues(product);
+    this.setAddonsToFrom(product.addons, addons!);
+  }
+
+  setAddonsToFrom(productAddons: AddonModel[], addons: AddonModel[]) {
+    let selectedAddon: any = {};
+    if (addons) {
+      productAddons.forEach((addon) => (selectedAddon[addon.id!] = true));
+    }
+    this.mapAddon(addons!, (id) => (selectedAddon[id] ? true : false));
+  }
+
+  setFormValues(product: ProductModel) {
+    this.productForm.setValue({
+      id: product.id,
+      code: product.code,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      expirationDate: product.expirationDate,
+      unitId: product.unitId,
+      categoryId: product.categoryId,
+      type: product.type,
+      addons: [],
+    });
+  }
+
+  loadUnits() {
+    this.units$ = this.unitService.getUnits().pipe(map((data) => data.data));
+  }
+
+  loadCategories() {
+    this.categories$ = this.categoryService
+      .getCategory()
+      .pipe(map((data) => data.data));
+  }
+
+  loadAddons() {
+    if (!this.isEdit) {
+      const sub = this.addonService.getAddon().subscribe({
+        next: (data) => this.mapAddon(data.data),
+        error: (error) => {
+          this.toastService.showError('Error cargando agregados');
+        },
+      });
+      this.subscriptions$.push(sub);
+    }
+  }
+
+  loadMinDate() {
+    // Esto es parte de la validacion general
+    //sirve para que la fecha de expiracion no sea menor a la fecha actual
+    const today = new Date();
+    this.minDate = {
+      year: today.getFullYear(),
+      month: today.getMonth() + 1,
+      day: today.getDate(),
+    };
+  }
+
+  getIdFromParamsAndLoadProduct() {
+    return switchMap((params: ParamMap) => {
+      this.spinner.show('fullscreen');
+      const id = params.get('id');
+      if (id) {
+        this.isEdit = true;
+        return combineLatest([
+          this.productService.getProductById(id),
+          this.addonService.getAddon().pipe(map((data) => data.data)),
+        ]);
+      } else {
+        this.isEdit = false;
+        return of([null, null]);
+      }
+    });
+  }
+
   loadProduct() {
-    //this.addonService.getAddon()
     const sub = this.route.paramMap
-      .pipe(
-        switchMap((params) => {
-          this.spinner.show('fullscreen');
-          const id = params.get('id');
-          if (id) {
-            this.isEdit = true;
-            return combineLatest([
-              this.productService.getProductById(id),
-              this.addonService.getAddon().pipe(map((data) => data.data)),
-            ]);
-          } else {
-            this.isEdit = false;
-            return of([null, null]);
-          }
-        })
-      )
+      .pipe(this.getIdFromParamsAndLoadProduct())
       .subscribe({
         next: ([product, addons]) => {
           if (product) {
-            this.productForm.setValue({
-              id: product.id,
-              code: product.code,
-              name: product.name,
-              price: product.price,
-              description: product.description,
-              barCode: product.barCode,
-              expirationDate: product.expirationDate,
-              unitId: product.unitId,
-              categoryId: product.categoryId,
-              type: product.type,
-              addons: [],
-            });
-
-            if (product.addons) {
-              let selectedAddon: any = {};
-              product.addons.forEach(
-                (addon) => (selectedAddon[addon.id!] = true)
-              );
-              this.mapAddon(addons!, (id) =>
-                selectedAddon[id] ? true : false
-              );
-            }
+            this.setPhoto(product.photo);
+            this.setProduct(product, addons);
           }
           this.spinner.hide('fullscreen');
         },

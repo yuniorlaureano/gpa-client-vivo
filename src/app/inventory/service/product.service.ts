@@ -31,6 +31,10 @@ export class ProductService {
     return this.http.put<void>(`${this.url}`, model);
   }
 
+  deleteProduct(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
+  }
+
   uploadFile(model: FormData): Observable<void> {
     return this.http.post<void>(`${this.url}/photo/upload`, model);
   }
