@@ -36,3 +36,8 @@ export class SetCurrentMenu {
   static readonly type = '[App] SetCurrentMenu';
   constructor(public menu: string) {}
 }
+
+export class SetCurrentSubMenu {
+  static readonly type = '[App] SetCurrentSubMenu';
+  constructor(public submenu: string) {}
+}

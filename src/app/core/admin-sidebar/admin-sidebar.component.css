@@ -75,7 +75,7 @@
 .sidebar-wrapper .sidebar-menu ul li a {
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: center;
   flex-direction: column;
   position: relative;
   padding: 20px 15px 20px 15px;

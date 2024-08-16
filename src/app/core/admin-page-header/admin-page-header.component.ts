@@ -33,8 +33,8 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
   profiles$!: Observable<ProfileModel[]>;
   updateProfileSubject$ = new BehaviorSubject<string>('');
   errors$ = this.store.select(AppState.getErrors);
-
-  changeProfileSubscription$!: Subscription;
+  submenu = '';
+  subscriptions$: Subscription[] = [];
 
   constructor(
     private profileService: ProfileService,
@@ -45,27 +45,37 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    this.changeProfileSubscription$?.unsubscribe();
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
 
   ngOnInit(): void {
     this.subscribeToClaims();
+    this.handleSubmenu();
+  }
+
+  handleSubmenu() {
+    const sub = this.store
+      .select((state: any) => state.app.submenu)
+      .subscribe({
+        next: (submenu) => {
+          this.submenu = submenu;
+        },
+      });
+
+    this.subscriptions$.push(sub);
   }
 
   changeProfile(profileId: string, profileName: string) {
-    this.changeProfileSubscription$ = this.authService
-      .changeProfile(profileId)
-      .subscribe({
-        next: () => {
-          this.updateProfileSubject$.next(profileId);
-          this.toastService.showSucess(
-            `Ha elegido el perifl de ${profileName}`
-          );
-        },
-        error: (error) => {
-          this.toastService.showError(`Error al cambiar de perfil`);
-        },
-      });
+    const sub = this.authService.changeProfile(profileId).subscribe({
+      next: () => {
+        this.updateProfileSubject$.next(profileId);
+        this.toastService.showSucess(`Ha elegido el perifl de ${profileName}`);
+      },
+      error: (error) => {
+        this.toastService.showError(`Error al cambiar de perfil`);
+      },
+    });
+    this.subscriptions$.push(sub);
   }
 
   logOut() {

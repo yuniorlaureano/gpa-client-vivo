@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
-import { SetCurrentMenu } from '../ng-xs-store/actions/app.actions';
+import {
+  SetCurrentMenu,
+  SetCurrentSubMenu,
+} from '../ng-xs-store/actions/app.actions';
 
 declare let jQuery: any;
 
@@ -15,12 +18,10 @@ export class AdminSidebarComponent implements OnInit, OnDestroy {
   subscription$: Subscription | null = null;
 
   constructor(private store: Store) {
-    console.log('AdminSidebarMenuItemComponent ngOnInit');
     this.subscription$ = this.store
       .select((state: any) => state.app.menu)
       .subscribe({
         next: (menu) => {
-          console.log('AdminSidebarMenuItemComponent menu', menu);
           this.menu = menu;
         },
       });
@@ -45,5 +46,9 @@ export class AdminSidebarComponent implements OnInit, OnDestroy {
 
   handleMenuSelected(menu: string) {
     this.store.dispatch(new SetCurrentMenu(menu));
+  }
+
+  handleSubMenuSelected(menu: string) {
+    this.store.dispatch(new SetCurrentSubMenu(menu));
   }
 }

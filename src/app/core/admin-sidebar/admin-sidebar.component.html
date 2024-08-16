@@ -30,6 +30,7 @@
                   routerLinkActive="current-page"
                   class="menu-item-list"
                   [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Productos')"
                   ><i class="bi bi-bag-plus"></i> Productos</a
                 >
               </li>
@@ -38,6 +39,7 @@
                   routerLink="/inventory/product/list"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('List de productos')"
                   >List de productos</a
                 >
               </li>
@@ -46,6 +48,7 @@
                   routerLink="/inventory/stock/cycle"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Ciclos de inventario')"
                   >Ciclos de inventario</a
                 >
               </li>
@@ -55,6 +58,7 @@
                   routerLinkActive="current-page"
                   class="menu-item-list"
                   [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Category')"
                   >Category</a
                 >
               </li>
@@ -64,6 +68,7 @@
                   routerLinkActive="current-page"
                   class="menu-item-list"
                   [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Agregados')"
                   >Agregados</a
                 >
               </li>
@@ -72,6 +77,7 @@
                   routerLink="/inventory/category/list"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Category List')"
                   >Category List</a
                 >
               </li>
@@ -80,6 +86,7 @@
                   routerLink="/inventory/entry"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Entrada')"
                 >
                   Entrada</a
                 >
@@ -89,6 +96,7 @@
                   routerLink="/inventory/output"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Salida')"
                 >
                   Salida</a
                 >
@@ -98,6 +106,7 @@
                   routerLink="/inventory/existence/list"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Existencia')"
                   ><i class="bi bi-list"></i> Existencia</a
                 >
               </li>
@@ -106,6 +115,7 @@
                   routerLink="/inventory/transaction/list"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Transacciones')"
                   ><i class="bi bi-list"></i> Transacciones</a
                 >
               </li>
@@ -128,6 +138,7 @@
                   routerLinkActive="current-page"
                   [routerLinkActiveOptions]="{ exact: true }"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Venta')"
                 >
                   <i class="bi bi-pencil" style="font-size: 15px"></i> Venta</a
                 >
@@ -138,6 +149,7 @@
                   routerLinkActive="current-page"
                   [routerLinkActiveOptions]="{ exact: true }"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Cuentas por cobrar')"
                 >
                   <i class="bi bi-currency-exchange"></i> Cuentas por cobrar</a
                 >
@@ -149,6 +161,7 @@
                   routerLinkActive="current-page"
                   [routerLinkActiveOptions]="{ exact: true }"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Lista de ventas')"
                   ><i class="bi bi-list"></i> Lista de ventas</a
                 >
               </li>
@@ -158,6 +171,7 @@
                   routerLinkActive="current-page"
                   [routerLinkActiveOptions]="{ exact: true }"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Cliente')"
                 >
                   <i class="bi bi-pencil" style="font-size: 15px"></i>
                   Cliente</a
@@ -169,6 +183,7 @@
                   routerLinkActive="current-page"
                   [routerLinkActiveOptions]="{ exact: true }"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Listado de clientes')"
                 >
                   <i class="bi bi-pencil" style="font-size: 15px"></i>Listado de
                   clientes</a
@@ -192,6 +207,7 @@
                   href="#"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Venta')"
                   >Venta</a
                 >
               </li>
@@ -200,6 +216,7 @@
                   href="#"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Compra')"
                   >Compra</a
                 >
               </li>
@@ -222,6 +239,7 @@
                   routerLink="/general/integrations"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Integraciones')"
                   [routerLinkActiveOptions]="{ exact: true }"
                   >Integraciones</a
                 >
@@ -244,6 +262,7 @@
                   routerLink="/auth/users/list"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Usuarios')"
                   >Usuarios</a
                 >
               </li>
@@ -252,6 +271,7 @@
                   routerLink="/auth/users/register"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Registrar usuario')"
                   >Registrar usuario</a
                 >
               </li>
@@ -260,6 +280,7 @@
                   routerLink="/auth/profiles"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  (click)="handleSubMenuSelected('Perfiles')"
                   >Perfiles</a
                 >
               </li>

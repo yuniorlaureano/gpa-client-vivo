@@ -6,6 +6,7 @@ import {
   RemoveError,
   SetBlobProviders,
   SetCurrentMenu,
+  SetCurrentSubMenu,
   SetProfiles,
 } from '../actions/app.actions';
 import { PermissionType } from '../../models/permission.type';
@@ -24,6 +25,7 @@ export interface AppStateModel {
   requiredPermissions: ModuleRequiredPermissionType;
   blobProvider?: BlobStorageConfigurationModel;
   menu: string;
+  submenu: string;
 }
 
 const ZOO_STATE_TOKEN = new StateToken<AppStateModel>('app');
@@ -37,6 +39,7 @@ const ZOO_STATE_TOKEN = new StateToken<AppStateModel>('app');
     requiredPermissions: getRequiredPermissions(),
     blobProvider: {} as BlobStorageConfigurationModel,
     menu: '',
+    submenu: '',
   },
 })
 @Injectable()
@@ -143,5 +146,15 @@ export class AppState {
         menu: payload.menu,
       });
     }
+  }
+
+  @Action(SetCurrentSubMenu)
+  setCurrentSubMenu(
+    { patchState }: StateContext<AppStateModel>,
+    payload: SetCurrentSubMenu
+  ) {
+    patchState({
+      submenu: payload.submenu,
+    });
   }
 }
