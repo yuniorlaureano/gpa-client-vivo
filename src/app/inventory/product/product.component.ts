@@ -30,6 +30,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { FilterModel } from '../../core/models/filter.model';
 
 @Component({
   selector: 'gpa-product',
@@ -338,18 +339,26 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   loadUnits() {
-    this.units$ = this.unitService.getUnits().pipe(map((data) => data.data));
+    const filder = new FilterModel();
+    filder.pageSize = 1000;
+    this.units$ = this.unitService
+      .getUnits(filder)
+      .pipe(map((data) => data.data));
   }
 
   loadCategories() {
+    const filder = new FilterModel();
+    filder.pageSize = 1000;
     this.categories$ = this.categoryService
-      .getCategory()
+      .getCategory(filder)
       .pipe(map((data) => data.data));
   }
 
   loadAddons() {
     if (!this.isEdit) {
-      const sub = this.addonService.getAddon().subscribe({
+      const filder = new FilterModel();
+      filder.pageSize = 1000;
+      const sub = this.addonService.getAddon(filder).subscribe({
         next: (data) => this.mapAddon(data.data),
         error: (error) => {
           this.toastService.showError('Error cargando agregados');
