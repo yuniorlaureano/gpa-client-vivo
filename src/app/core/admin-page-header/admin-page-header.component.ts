@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LayoutService } from '../service/layout.service';
 import { ProfileModel } from '../../security/model/profile.model';
 import { ProfileService } from '../../security/service/profile.service';
 import {
@@ -38,7 +37,6 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
   changeProfileSubscription$!: Subscription;
 
   constructor(
-    private layoutService: LayoutService,
     private profileService: ProfileService,
     private tokenService: TokenService,
     private authService: AuthService,
@@ -72,10 +70,6 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
 
   logOut() {
     this.authService.logOut();
-  }
-
-  getCurrentMenu() {
-    return this.layoutService.getMenuHeader();
   }
 
   removeError(error: string) {

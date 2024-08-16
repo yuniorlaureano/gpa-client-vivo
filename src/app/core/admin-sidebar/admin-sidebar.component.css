@@ -1,3 +1,6 @@
+.sidebarMenuScroll {
+  height: 100%;
+}
 /************************************************
 	************************************************
 					6. Layout CSS
@@ -72,7 +75,7 @@
 .sidebar-wrapper .sidebar-menu ul li a {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   flex-direction: column;
   position: relative;
   padding: 20px 15px 20px 15px;
@@ -287,3 +290,4 @@ ul li.active a.current-page {
 .menu-item-list i {
   font-size: 15px !important;
 }
+/*--------------------------menu items*/

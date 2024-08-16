@@ -31,3 +31,8 @@ export class SetBlobProviders {
   static readonly type = '[App] SetBlobProviders';
   constructor(public profiles?: BlobStorageConfigurationModel) {}
 }
+
+export class SetCurrentMenu {
+  static readonly type = '[App] SetCurrentMenu';
+  constructor(public menu: string) {}
+}

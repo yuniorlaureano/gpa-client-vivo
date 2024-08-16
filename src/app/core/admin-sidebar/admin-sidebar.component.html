@@ -14,12 +14,15 @@
   <div class="sidebar-menu">
     <div class="sidebarMenuScroll">
       <ul>
-        <gpa-admin-sidebar-menu-item menu="inventory">
-          <ng-container header>
+        <li class="sidebar-dropdown" [class.active]="menu == 'inventory'">
+          <a (click)="handleMenuSelected('inventory')">
             <i class="bi bi-list-check"></i>
             <span class="menu-text">Inventario</span>
-          </ng-container>
-          <ng-container items>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'inventory' ? 'block' : 'none'"
+          >
             <ul>
               <li routerLinkActive="active">
                 <a
@@ -107,14 +110,17 @@
                 >
               </li>
             </ul>
-          </ng-container>
-        </gpa-admin-sidebar-menu-item>
-        <gpa-admin-sidebar-menu-item menu="invoice">
-          <ng-container header>
+          </div>
+        </li>
+        <li class="sidebar-dropdown" [class.active]="menu == 'invoice'">
+          <a (click)="handleMenuSelected('invoice')">
             <i class="bi bi-cash-coin"></i>
             <span class="menu-text">Facturación</span>
-          </ng-container>
-          <ng-container items>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'invoice' ? 'block' : 'none'"
+          >
             <ul>
               <li routerLinkActive="active">
                 <a
@@ -169,14 +175,17 @@
                 >
               </li>
             </ul>
-          </ng-container>
-        </gpa-admin-sidebar-menu-item>
-        <gpa-admin-sidebar-menu-item menu="report">
-          <ng-container header>
+          </div>
+        </li>
+        <li class="sidebar-dropdown" [class.active]="menu == 'report'">
+          <a (click)="handleMenuSelected('report')">
             <i class="bi bi-file-earmark-bar-graph"></i>
             <span class="menu-text">Reportes</span>
-          </ng-container>
-          <ng-container items>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'report' ? 'block' : 'none'"
+          >
             <ul>
               <li routerLinkActive="active">
                 <a
@@ -195,14 +204,17 @@
                 >
               </li>
             </ul>
-          </ng-container>
-        </gpa-admin-sidebar-menu-item>
-        <gpa-admin-sidebar-menu-item menu="configuration">
-          <ng-container header>
+          </div>
+        </li>
+        <li class="sidebar-dropdown" [class.active]="menu == 'configuration'">
+          <a (click)="handleMenuSelected('configuration')">
             <i class="bi bi-gear"></i>
             <span class="menu-text">Configuraciones</span>
-          </ng-container>
-          <ng-container items>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'configuration' ? 'block' : 'none'"
+          >
             <ul>
               <li routerLinkActive="active">
                 <a
@@ -215,14 +227,17 @@
                 >
               </li>
             </ul>
-          </ng-container>
-        </gpa-admin-sidebar-menu-item>
-        <gpa-admin-sidebar-menu-item menu="security">
-          <ng-container header>
+          </div>
+        </li>
+        <li class="sidebar-dropdown" [class.active]="menu == 'security'">
+          <a (click)="handleMenuSelected('security')">
             <i class="bi bi-shield-lock"></i>
             <span class="menu-text">Seguridad</span>
-          </ng-container>
-          <ng-container items>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'security' ? 'block' : 'none'"
+          >
             <ul>
               <li routerLinkActive="active">
                 <a
@@ -249,8 +264,8 @@
                 >
               </li>
             </ul>
-          </ng-container>
-        </gpa-admin-sidebar-menu-item>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
