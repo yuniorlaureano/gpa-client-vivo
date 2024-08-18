@@ -36,6 +36,7 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
   errors$ = this.store.select(AppState.getErrors);
   submenu = '';
   subscriptions$: Subscription[] = [];
+  profileImage = 'assets/images/default-placeholder.png';
 
   constructor(
     private profileService: ProfileService,
@@ -92,6 +93,8 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
     let claims = this.tokenService.getClaims();
     if (claims) {
       this.principal = claims;
+      this.profileImage =
+        claims.photo || 'assets/images/default-placeholder.png';
       this.profiles$ = this.loadProfiles(claims);
     }
   }

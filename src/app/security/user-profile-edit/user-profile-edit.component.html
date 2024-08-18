@@ -52,16 +52,18 @@
           No tiene permisos para editar su perfil
         </gpa-no-permission-alert>
         <form [formGroup]="userForm" class="row">
-          <div class="col-sm-2">
-            <figure>
-              <img
-                src="assets/images/user.png"
-                alt=""
-                class="img-thumbnail float-start"
-                style="width: 250px"
-              />
-              <figcaption></figcaption>
-            </figure>
+          <div class="col-sm-2 col-12">
+            <img
+              [src]="this.imageUrl"
+              class="img-thumbnail image-upload-product"
+              (click)="fileUpload.click()"
+            />
+            <input
+              type="file"
+              style="display: none"
+              #fileUpload
+              (change)="processFileUpload($event)"
+            />
           </div>
           <!--  -->
           <div class="col-sm-10">

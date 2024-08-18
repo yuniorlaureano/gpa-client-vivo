@@ -19,6 +19,9 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 })
 export class UserProfileEditComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
+  imageUrl: string | ArrayBuffer | null =
+    'assets/images/default-placeholder.png';
+  photo: File | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -78,7 +81,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.userForm.valid) {
-      this.upateUser();
+      this.updateUser();
     } else {
       this.toastService.showError(
         'Debe llenar todos los campos del formulario'
@@ -86,7 +89,51 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  upateUser() {
+  processFileUpload(event: Event) {
+    const fileElement = event.currentTarget as HTMLInputElement;
+    this.photo = fileElement.files ? fileElement.files[0] : null;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.imageUrl = reader.result;
+    };
+    if (this.photo) {
+      reader.readAsDataURL(this.photo);
+    } else {
+      this.imageUrl = 'assets/images/default-placeholder.png';
+    }
+
+    //automaticaly upload the file if the product is being edited
+    this.uploadFIleOnUpdate();
+  }
+
+  uploadFIleOnUpdate() {
+    if (this.isEdit && this.userForm.get('id')?.value) {
+      this.spinner.show('fullscreen');
+      this.uploadFile(this.userForm.get('id')?.value!, () => {
+        this.toastService.showSucess('Foto actualizada');
+        this.spinner.hide('fullscreen');
+        this.router.navigate(['/']);
+      });
+    }
+  }
+
+  uploadFile(userId: string, func: () => void) {
+    if (this.photo) {
+      const formData = new FormData();
+      formData.append('photo', this.photo);
+      const sub = this.authService.uploadPhoto(userId, formData).subscribe({
+        next: () => {
+          func();
+        },
+        error: () => {
+          func();
+        },
+      });
+      this.subscriptions$.push(sub);
+    }
+  }
+
+  updateUser() {
     const value = {
       ...this.userForm.value,
     };
@@ -117,6 +164,15 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
     this.isEdit = false;
   }
 
+  setPhoto(photo: string | null) {
+    if (photo) {
+      try {
+        var fileUrl = JSON.parse(photo).fileUrl;
+        this.imageUrl = fileUrl;
+      } catch {}
+    }
+  }
+
   loadUser() {
     const sub = this.route.paramMap
       .pipe(
@@ -142,6 +198,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
               email: user.email,
               userName: user.userName,
             });
+            this.setPhoto(user.photo);
           }
           this.spinner.hide('fullscreen');
         },

@@ -3,5 +3,6 @@ export interface TokenClaims {
   unique_name: string;
   email: string;
   userId: string;
+  photo: string;
   profileId: string;
 }

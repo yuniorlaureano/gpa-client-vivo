@@ -70,4 +70,19 @@ export class AuthService {
   resetPassword(passwordReset: ResetPasswordModel): Observable<void> {
     return this.http.post<void>(`${this.url}/reset-password`, passwordReset);
   }
+
+  uploadPhoto(userId: string, model: FormData): Observable<TokenModel> {
+    return this.http
+      .post<TokenModel>(`${this.url}/${userId}/photo/upload`, model)
+      .pipe(
+        tap({
+          next: (data) => {
+            this.tokenService.remoteToken();
+            this.tokenService.remotePermissions();
+            this.tokenService.saveToken(data.token);
+            this.tokenService.savePermissions(data.permissions);
+          },
+        })
+      );
+  }
 }
