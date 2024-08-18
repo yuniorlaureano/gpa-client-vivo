@@ -1,21 +1,17 @@
-<!-- Row start -->
-<div class="row">
-  <div class="col-12">
-    <div style="display: flex; justify-content: space-between; gap: 15px">
-      <div></div>
-      <div class="right-button">
-        <a
-          routerLink="/invoice/sale/list"
-          class="btn btn-outline-info btn-rounded"
-          style="margin-right: 5px"
-        >
-          <i class="bi bi-card-list"></i> Facturas
-        </a>
-      </div>
-    </div>
-  </div>
+<div
+  style="position: fixed; top: 90px; display: block; right: 50px; z-index: 100"
+>
+  <a
+    routerLink="/invoice/sale/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Facturas
+  </a>
 </div>
-<gpa-receivable-account-list-table
-  (onDelete)="handleDelete($event)"
-  (onEdit)="handleEdit($event)"
-></gpa-receivable-account-list-table>
+<div style="margin-top: 50px">
+  <gpa-receivable-account-list-table
+    (onDelete)="handleDelete($event)"
+    (onEdit)="handleEdit($event)"
+  ></gpa-receivable-account-list-table>
+</div>

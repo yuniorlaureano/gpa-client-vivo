@@ -1,29 +1,24 @@
-<!-- Row start -->
-<div class="row">
-  <div class="col-12">
-    <div style="display: flex; justify-content: space-between; gap: 15px">
-      <div></div>
-      <div class="right-button">
-        <a
-          routerLink="/invoice/receivable-account-list"
-          class="btn btn-outline-info btn-rounded"
-          style="margin-right: 5px"
-        >
-          <i class="bi bi-currency-exchange"></i> Cuentas por cobrar Cuenta por
-          cobrar
-        </a>
-        <a
-          routerLink="/invoice/sale"
-          class="btn btn-outline-primary btn-rounded"
-          style="margin-right: 5px"
-        >
-          <i class="bi bi-plus-lg"></i> Nueva
-        </a>
-      </div>
-    </div>
-  </div>
+<div
+  style="position: fixed; top: 90px; display: block; right: 50px; z-index: 100"
+>
+  <a
+    routerLink="/invoice/receivable-account-list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-currency-exchange"></i> Cuentas por cobrar Cuenta por cobrar
+  </a>
+  <a
+    routerLink="/invoice/sale"
+    class="btn btn-outline-primary btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-plus-lg"></i> Nueva
+  </a>
 </div>
-<gpa-sale-list-table
-  (onDelete)="handleDelete($event)"
-  (onEdit)="handleEdit($event)"
-></gpa-sale-list-table>
+<div style="margin-top: 50px">
+  <gpa-sale-list-table
+    (onDelete)="handleDelete($event)"
+    (onEdit)="handleEdit($event)"
+  ></gpa-sale-list-table>
+</div>

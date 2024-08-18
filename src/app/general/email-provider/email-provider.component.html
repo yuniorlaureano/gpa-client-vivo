@@ -1,80 +1,74 @@
-<!-- Row start -->
-<div class="row">
-  <div class="col-12">
-    <div style="display: flex; justify-content: space-between; gap: 15px">
-      <div></div>
-      <div class="right-button">
-        <a
-          routerLink="/general/emails/list"
-          class="btn btn-outline-info btn-rounded"
-          style="margin-right: 5px"
-          *ngIf="canRead"
-        >
-          <i class="bi bi-card-list"></i> Proveedores de email
-        </a>
-        <button
-          type="button"
-          class="btn btn-outline-success btn-rounded"
-          style="margin-right: 5px"
-          (click)="save()"
-          *ngIf="!isEdit"
-          [disabled]="!canCreate"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-floppy"
-            viewBox="0 0 16 16"
-          >
-            <path d="M11 2H9v3h2z" />
-            <path
-              d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"
-            />
-          </svg>
-          Guardar
-        </button>
-        <button
-          *ngIf="isEdit"
-          type="button"
-          class="btn btn-outline-warning btn-rounded"
-          style="margin-right: 5px"
-          (click)="save()"
-          [disabled]="!canEdit"
-        >
-          <i class="bi bi-pencil-square"></i>
-          Actualizar
-        </button>
+<div
+  style="position: fixed; top: 90px; display: block; right: 50px; z-index: 100"
+>
+  <a
+    routerLink="/general/emails/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+    *ngIf="canRead"
+  >
+    <i class="bi bi-card-list"></i> Proveedores de email
+  </a>
+  <button
+    type="button"
+    class="btn btn-outline-success btn-rounded"
+    style="margin-right: 5px"
+    (click)="save()"
+    *ngIf="!isEdit"
+    [disabled]="!canCreate"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-floppy"
+      viewBox="0 0 16 16"
+    >
+      <path d="M11 2H9v3h2z" />
+      <path
+        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"
+      />
+    </svg>
+    Guardar
+  </button>
+  <button
+    *ngIf="isEdit"
+    type="button"
+    class="btn btn-outline-warning btn-rounded"
+    style="margin-right: 5px"
+    (click)="save()"
+    [disabled]="!canEdit"
+  >
+    <i class="bi bi-pencil-square"></i>
+    Actualizar
+  </button>
 
-        <button
-          type="button"
-          class="btn btn-outline-dark btn-rounded"
-          (click)="handleCancel()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-x-square"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"
-            />
-            <path
-              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
-            />
-          </svg>
-          Cancelar
-        </button>
-      </div>
-    </div>
-  </div>
+  <button
+    type="button"
+    class="btn btn-outline-dark btn-rounded"
+    (click)="handleCancel()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-x-square"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"
+      />
+      <path
+        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+      />
+    </svg>
+    Cancelar
+  </button>
 </div>
 <!-- Row start -->
-<div class="row">
+<div class="row" style="margin-top: 50px">
   <div class="col-sm-12 col-12">
     <!-- Card start -->
     <div class="card">
