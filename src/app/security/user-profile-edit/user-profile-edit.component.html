@@ -53,10 +53,14 @@
         </gpa-no-permission-alert>
         <form [formGroup]="userForm" class="row">
           <div class="col-sm-2 col-12">
+            <gpa-no-permission-alert [visible]="!uploadPhoto">
+              No tiene permisos para editar subir foto
+            </gpa-no-permission-alert>
             <img
               [src]="this.imageUrl"
               class="img-thumbnail image-upload-product"
               (click)="fileUpload.click()"
+              *ngIf="uploadPhoto"
             />
             <input
               type="file"

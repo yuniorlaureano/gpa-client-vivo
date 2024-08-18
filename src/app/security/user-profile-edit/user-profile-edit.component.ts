@@ -39,6 +39,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
 
   //permissions
   updateUserProfile: boolean = false;
+  uploadPhoto: boolean = false;
 
   //form
   userForm = this.fb.group({
@@ -76,6 +77,10 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
     this.updateUserProfile = ProfileUtils.validateIfCan(
       requiredPermissions,
       PermissionConstants.Permission.UpdateUserProfile
+    );
+    this.uploadPhoto = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Upload
     );
   }
 

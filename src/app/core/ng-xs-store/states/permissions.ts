@@ -87,6 +87,10 @@ function authPermission(): RequiredPermissionType {
       expected: PermissionConstants.Permission.UpdateUserProfile,
       valid: false,
     },
+    [PermissionConstants.Permission.Upload]: {
+      expected: PermissionConstants.Permission.Upload,
+      valid: false,
+    },
   };
 }
 
