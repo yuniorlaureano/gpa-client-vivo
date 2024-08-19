@@ -8,7 +8,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { SearchOptionsModel } from '../../../core/models/search-options.model';
 import { FilterModel } from '../../../core/models/filter.model';
 import { ProfileService } from '../../service/profile.service';
@@ -44,6 +50,8 @@ export class ProfileUserCatalogComponent
     pageSize: 10,
     search: null,
   };
+  searchTerms = new Subject<string>();
+  subscriptions$: Subscription[] = [];
 
   //permissions
   @Input() canAssignUser: boolean = false;
@@ -56,6 +64,7 @@ export class ProfileUserCatalogComponent
 
   ngOnInit(): void {
     this.loadUsers();
+    this.initSearch();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -67,6 +76,7 @@ export class ProfileUserCatalogComponent
   ngOnDestroy(): void {
     this.handleShowUserCatalog(false);
     this.userSubscription.unsubscribe();
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
 
   handleShowUserCatalog(visible: boolean) {
@@ -105,12 +115,29 @@ export class ProfileUserCatalogComponent
     this.onRemove.emit(user);
   }
 
+  handleSearch(search: any) {
+    this.searchTerms.next(search.target.value);
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.options, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
+
   loadUsers() {
     const search = new FilterModel();
     this.userSubscription = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {
           search.page = options.page;
+          search.pageSize = options.pageSize;
+          search.search = options.search;
           if (this.selectedProfile?.id) {
             return this.profileService.getUsers(
               this.selectedProfile.id,

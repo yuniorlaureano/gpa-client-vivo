@@ -10,6 +10,8 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-user-register',
@@ -19,6 +21,27 @@ import { Store } from '@ngxs/store';
 export class UserRegisterComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
   profiles: ProfileModel[] = [];
+  imageUrl: string | ArrayBuffer | null =
+    'assets/images/default-placeholder.png';
+  photo: File | null = null;
+  //subscriptions
+  subscriptions$: Subscription[] = [];
+
+  //permissions
+  canRead: boolean = false;
+  canCreate: boolean = false;
+  canDelete: boolean = false;
+  canEdit: boolean = false;
+  uploadPhoto: boolean = true;
+
+  //form
+  userForm = this.fb.group({
+    id: [''],
+    firstName: ['', Validators.required],
+    lastName: ['', [Validators.required]],
+    email: ['', Validators.required],
+    userName: ['', Validators.required],
+  });
 
   constructor(
     private fb: FormBuilder,
@@ -26,7 +49,8 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private store: Store
+    private store: Store,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnDestroy(): void {
@@ -37,23 +61,6 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     this.loadUser();
     this.handlePermissionsLoad();
   }
-  //subscriptions
-  subscriptions$: Subscription[] = [];
-
-  //permissions
-  canRead: boolean = false;
-  canCreate: boolean = false;
-  canDelete: boolean = false;
-  canEdit: boolean = false;
-
-  //form
-  userForm = this.fb.group({
-    id: [''],
-    firstName: ['', Validators.required],
-    lastName: ['', [Validators.required]],
-    email: ['', Validators.required],
-    userName: ['', Validators.required],
-  });
 
   handlePermissionsLoad() {
     const sub = this.store
@@ -88,6 +95,10 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
       requiredPermissions,
       PermissionConstants.Permission.Update
     );
+    this.uploadPhoto = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Upload
+    );
   }
 
   onSubmit() {
@@ -109,14 +120,24 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     const value = {
       ...this.userForm.value,
     };
-
+    this.spinner.show('fullscreen');
     const sub = this.userService.addUser(value as UserModel).subscribe({
-      next: () => {
-        this.clearForm();
-        this.toastService.showSucess('Usuario agregado');
+      next: (user) => {
+        this.uploadFile(user.id!, (hasError) => {
+          if (hasError) {
+            this.toastService.showError('No se pudo agregar la foto. ');
+          }
+          this.toastService.showSucess('Usuario agregado');
+          this.spinner.hide('fullscreen');
+          this.clearForm();
+        });
       },
       error: (error) => {
         this.toastService.showError('Error al agregar usuario. ');
+        this.spinner.hide('fullscreen');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
       },
     });
     this.subscriptions$.push(sub);
@@ -126,14 +147,20 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     const value = {
       ...this.userForm.value,
     };
-
+    this.spinner.show('fullscreen');
     const sub = this.userService.updateUser(value as UserModel).subscribe({
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Usuario actualizado');
+        this.spinner.hide('fullscreen');
       },
-      error: (err) =>
-        this.toastService.showError('Error actualizado usuario. ' + err),
+      error: (error) => {
+        this.toastService.showError('Error actualizado usuario.');
+        this.spinner.hide('fullscreen');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
+      },
     });
     this.subscriptions$.push(sub);
   }
@@ -146,6 +173,61 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
   clearForm() {
     this.userForm.reset();
     this.isEdit = false;
+    this.imageUrl = 'assets/images/default-placeholder.png';
+  }
+
+  processFileUpload(event: Event) {
+    const fileElement = event.currentTarget as HTMLInputElement;
+    this.photo = fileElement.files ? fileElement.files[0] : null;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.imageUrl = reader.result;
+    };
+    if (this.photo) {
+      reader.readAsDataURL(this.photo);
+    } else {
+      this.imageUrl = 'assets/images/default-placeholder.png';
+    }
+
+    //automaticaly upload the file if the product is being edited
+    this.uploadFIleOnUpdate();
+  }
+
+  uploadFIleOnUpdate() {
+    if (this.isEdit && this.userForm.get('id')?.value) {
+      this.spinner.show('fullscreen');
+      this.uploadFile(this.userForm.get('id')?.value!, () => {
+        this.toastService.showSucess('Foto actualizada');
+        this.spinner.hide('fullscreen');
+      });
+    }
+  }
+
+  uploadFile(userId: string, func: (hasError: boolean) => void) {
+    if (this.photo) {
+      const formData = new FormData();
+      formData.append('photo', this.photo);
+      const sub = this.userService.uploadPhoto(userId, formData).subscribe({
+        next: () => {
+          func(false);
+        },
+        error: () => {
+          func(true);
+        },
+      });
+      this.subscriptions$.push(sub);
+    } else {
+      func(false);
+    }
+  }
+
+  setPhoto(photo: string | null) {
+    if (photo) {
+      try {
+        var fileUrl = JSON.parse(photo).fileUrl;
+        this.imageUrl = fileUrl;
+      } catch {}
+    }
   }
 
   loadUser() {
@@ -173,6 +255,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
               userName: user.userName,
             });
             this.profiles = user.profiles;
+            this.setPhoto(user.photo);
           }
         },
         error: (error) => {

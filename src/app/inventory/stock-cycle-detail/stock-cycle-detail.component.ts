@@ -56,6 +56,10 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
     this.handlePermissionsLoad();
   }
 
+  displayDate(date: any) {
+    return date ? `${date.day}/${date.month}/${date.year}` : '';
+  }
+
   handlePermissionsLoad() {
     const sub = this.store
       .select(

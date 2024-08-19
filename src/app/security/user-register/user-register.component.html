@@ -79,16 +79,22 @@
           No tiene permisos para modificar usuarios
         </gpa-no-permission-alert>
         <form [formGroup]="userForm" class="row">
-          <div class="col-sm-2">
-            <figure>
-              <img
-                src="assets/images/user.png"
-                alt=""
-                class="img-thumbnail float-start"
-                style="width: 250px"
-              />
-              <figcaption></figcaption>
-            </figure>
+          <div class="col-sm-2 col-12">
+            <gpa-no-permission-alert [visible]="!uploadPhoto">
+              No tiene permisos para subir foto
+            </gpa-no-permission-alert>
+            <img
+              [src]="this.imageUrl"
+              class="img-thumbnail image-upload-product"
+              (click)="fileUpload.click()"
+              *ngIf="uploadPhoto"
+            />
+            <input
+              type="file"
+              style="display: none"
+              #fileUpload
+              (change)="processFileUpload($event)"
+            />
           </div>
           <!--  -->
           <div class="col-sm-10">

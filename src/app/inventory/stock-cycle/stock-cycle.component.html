@@ -91,7 +91,7 @@
                   [control]="cycleForm.get('startDate')"
                   [touched]="cycleForm.touched"
                   validation="required"
-                  message="La fecha de inicio es requerida"
+                  message="La fecha de apertura es requerida"
                 />
               </div>
             </div>
@@ -117,10 +117,10 @@
                   ></button>
                 </div>
                 <gpa-validator-message
-                  [control]="cycleForm.get('startDate')"
+                  [control]="cycleForm.get('endDate')"
                   [touched]="cycleForm.touched"
                   validation="required"
-                  message="La fecha final es requerida"
+                  message="La fecha de cierre es requerida"
                 />
               </div>
             </div>
@@ -137,7 +137,7 @@
                 ></textarea>
               </div>
               <gpa-validator-message
-                [control]="cycleForm.get('startDate')"
+                [control]="cycleForm.get('note')"
                 [touched]="cycleForm.touched"
                 validation="required"
                 message="La nota es requrida"

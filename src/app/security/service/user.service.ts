@@ -23,11 +23,19 @@ export class UserService {
     return this.http.get<UserModel>(`${this.url}/${id}`);
   }
 
-  addUser(model: UserModel): Observable<void> {
-    return this.http.post<void>(`${this.url}`, model);
+  addUser(model: UserModel): Observable<UserModel> {
+    return this.http.post<UserModel>(`${this.url}`, model);
   }
 
   updateUser(model: UserModel): Observable<void> {
     return this.http.put<void>(`${this.url}`, model);
+  }
+
+  removeUser(userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${userId}`);
+  }
+
+  uploadPhoto(userId: string, model: FormData): Observable<void> {
+    return this.http.post<void>(`${this.url}/${userId}/photo/upload`, model);
   }
 }

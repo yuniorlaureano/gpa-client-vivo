@@ -117,7 +117,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
       this.uploadFile(this.userForm.get('id')?.value!, () => {
         this.toastService.showSucess('Foto actualizada');
         this.spinner.hide('fullscreen');
-        this.router.navigate(['/']);
+        window.location.reload();
       });
     }
   }
@@ -148,7 +148,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Usuario actualizado');
-        this.router.navigate(['/']);
+        window.location.reload();
         this.spinner.hide('fullscreen');
       },
       error: (error) => {

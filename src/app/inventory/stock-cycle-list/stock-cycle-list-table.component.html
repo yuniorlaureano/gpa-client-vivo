@@ -18,7 +18,7 @@
               checked
               value="init"
               (change)="handleDateTypeFilter($event)"
-            />Fecha inicio</label
+            />Fecha de apertura</label
           >
           <label
             ><input
@@ -26,7 +26,7 @@
               name="dateTypeFilter"
               value="end"
               (change)="handleDateTypeFilter($event)"
-            />Fecha final</label
+            />Fecha de cierre</label
           >
         </div>
       </div>
@@ -36,7 +36,9 @@
             <label class="form-label"
               >Desde
               {{
-                dateTypeFilter == "init" ? "Fecha de inicio" : "Fecha final"
+                dateTypeFilter == "init"
+                  ? "Fecha de apertura"
+                  : "Fecha de cierre"
               }}</label
             >
             <div class="input-group">
@@ -61,7 +63,7 @@
             <label class="form-label"
               >Hasta
               {{
-                dateTypeFilter == "init" ? "Fecha de inicio" : "Fecha final"
+                dateTypeFilter == "init" ? "Fecha de apertura" : "Fecha cierre"
               }}</label
             >
             <div class="input-group">
@@ -102,15 +104,15 @@
   </div>
   <h3 class="card-title" caption></h3>
   <tr header>
-    <th>Fecha de inicio</th>
-    <th>Fecha final</th>
+    <th>Fecha de apertura</th>
+    <th>Fecha de cierre</th>
     <th>Estado</th>
     <th>Nota</th>
   </tr>
   <tbody body>
     <tr *ngFor="let stockCycle of data.data">
-      <td>{{ stockCycle.startDate | json }}</td>
-      <td>{{ stockCycle.endDate | json }}</td>
+      <td>{{ displayDate(stockCycle.startDate) }}</td>
+      <td>{{ displayDate(stockCycle.endDate) }}</td>
       <td>
         {{ stockCycle.isClose ? "Cerrado" : "Abierto" }}
       </td>

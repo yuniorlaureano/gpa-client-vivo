@@ -100,6 +100,10 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
+  displayDate(date: any) {
+    return date ? `${date.day}/${date.month}/${date.year}` : '';
+  }
+
   setPermissions(requiredPermissions: RequiredPermissionType) {
     this.canRead = ProfileUtils.validateIfCan(
       requiredPermissions,

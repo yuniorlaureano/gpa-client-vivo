@@ -42,19 +42,21 @@
               <div>
                 <div class="row">
                   <address class="col-sm-8 col-10">
-                    Fecha de inicio: {{ stockCycle?.cycle?.startDate | json }}
+                    <span style="font-weight: bold">Fecha de apertura:</span>
+                    {{ displayDate(stockCycle?.cycle?.startDate) }}
                     <br />
-                    Fech ade fin: {{ stockCycle?.cycle?.endDate | json }} <br />
-                    Estado:
+                    <span style="font-weight: bold">Fecha de cierre:</span>
+                    {{ displayDate(stockCycle?.cycle?.endDate) }} <br />
+                    <span style="font-weight: bold">Estado:</span>
                     {{ stockCycle?.cycle?.isClose ? "Cerrado" : "Abierto" }}
                     <br />
-                    Nota:
+                    <span style="font-weight: bold">Nota:</span>
                     {{ stockCycle?.cycle?.note }} <br />
                   </address>
 
                   <div class="invoice-num col-sm-4 col-2">
-                    <span class="initial-indicator"></span> Inicial
-                    <span class="final-indicator"></span> Final
+                    <span class="initial-indicator"></span> Apertura
+                    <span class="final-indicator"></span> Cierre
                   </div>
                 </div>
               </div>
