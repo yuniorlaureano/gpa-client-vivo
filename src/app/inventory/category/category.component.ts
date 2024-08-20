@@ -10,6 +10,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-category',
@@ -20,8 +21,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
   isEdit = false;
   categoryForm = this.formBuilder.group({
     id: [''],
-    name: ['', Validators.required],
-    description: [''],
+    name: ['', [Validators.required, Validators.maxLength(50)]],
+    description: ['', [Validators.required, Validators.maxLength(200)]],
   });
 
   //subscriptions
@@ -87,6 +88,49 @@ export class CategoryComponent implements OnInit, OnDestroy {
     );
   }
 
+  updateCategory(value: any) {
+    this.spinner.show('fullscreen');
+    const sub = this.categoryService
+      .updateCategory(<CategoryModel>value)
+      .subscribe({
+        next: () => {
+          this.clearForm();
+          this.toastService.showSucess('Categoría modificada');
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al modificar la categoría');
+          processError(error.error).forEach((error) => {
+            this.toastService.showError(error);
+          });
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  createCategory(value: any) {
+    value.id = null;
+    this.spinner.show('fullscreen');
+    const sub = this.categoryService
+      .addCategory(<CategoryModel>value)
+      .subscribe({
+        next: () => {
+          this.clearForm();
+          this.toastService.showSucess('Categoría creada');
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error al crear la categoría');
+          processError(error.error).forEach((error) => {
+            this.toastService.showError(error);
+          });
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
   saveCategory() {
     this.categoryForm.markAllAsTouched();
     if (this.categoryForm.valid) {
@@ -94,38 +138,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
         ...this.categoryForm.value,
       };
       if (this.isEdit) {
-        this.spinner.show('fullscreen');
-        const sub = this.categoryService
-          .updateCategory(<CategoryModel>value)
-          .subscribe({
-            next: () => {
-              this.clearForm();
-              this.toastService.showSucess('Categoría modificada');
-              this.spinner.hide('fullscreen');
-            },
-            error: (error) => {
-              this.spinner.hide('fullscreen');
-              this.toastService.showError('Error al modificar la categoría');
-            },
-          });
-        this.subscriptions$.push(sub);
+        this.updateCategory(value);
       } else {
-        value.id = null;
-        this.spinner.show('fullscreen');
-        const sub = this.categoryService
-          .addCategory(<CategoryModel>value)
-          .subscribe({
-            next: () => {
-              this.clearForm();
-              this.toastService.showSucess('Categoría creada');
-              this.spinner.hide('fullscreen');
-            },
-            error: (error) => {
-              this.spinner.hide('fullscreen');
-              this.toastService.showError('Error al crear la categoría');
-            },
-          });
-        this.subscriptions$.push(sub);
+        this.createCategory(value);
       }
     }
   }

@@ -8,9 +8,8 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ReasonEnum } from '../../core/models/reason.enum';
 import { TransactionType } from '../../core/models/transaction-type.enum';
 import { InventoryEntryCollectionModel } from '../models/inventory-entry.model';
-import { SelectModel } from '../../core/models/select-model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StockDetailsModel } from '../models/stock.model';
+import { StockDetailsModel, StockModel } from '../models/stock.model';
 import { ProductModel } from '../models/product.model';
 import { StockStatusEnum } from '../../core/models/stock-status.enum';
 import { ToastService } from '../../core/service/toast.service';
@@ -20,6 +19,8 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { processError } from '../../core/utils/error.utils';
+import { FilterModel } from '../../core/models/filter.model';
 
 @Component({
   selector: 'gpa-stock-entry',
@@ -35,10 +36,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   selectedProducts: { [key: string]: boolean } = {};
   isProductCatalogVisible: boolean = false;
   selectedProvider: ProviderModel | null = null;
-  productCatalogAggregate: {
-    totalPrice: number;
-    totalQuantity: number;
-  } = { totalPrice: 0, totalQuantity: 0 };
 
   reasons$!: Observable<ReasonModel[]>;
 
@@ -142,8 +139,10 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   }
 
   loadReasons() {
+    const filter = new FilterModel();
+    filter.pageSize = 100;
     this.reasons$ = this.reasonService
-      .getReasons()
+      .getReasons(filter)
       .pipe(
         map((data) =>
           data.data.filter(
@@ -171,27 +170,12 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   removeProductFromCatalog(index: number, productId: string) {
     this.formProducts.removeAt(index);
     delete this.selectedProducts[productId];
-    this.calculateSelectedProductCatalogAggregate();
-  }
-
-  calculateSelectedProductCatalogAggregate() {
-    let totalPrice = 0;
-    let totalQuantity = 0;
-    for (let product of this.formProducts.value) {
-      totalQuantity += product.quantity;
-      totalPrice += product.quantity * product.price;
-    }
-    this.productCatalogAggregate = {
-      totalPrice,
-      totalQuantity,
-    };
   }
 
   handleSelectedProductFromCatalog(product: ProductModel) {
     if (!this.selectedProducts[product.id!]) {
       this.selectedProducts[product.id!] = true;
       this.formProducts?.push(this.newProduct(product));
-      this.calculateSelectedProductCatalogAggregate();
     }
   }
 
@@ -212,54 +196,71 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   addProducts() {
     this.stockForm.markAsTouched();
     if (this.stockForm.valid && this.formProducts.length > 0) {
-      const value = {
-        ...this.stockForm.value,
-        providerId:
-          this.stockForm.value.providerId == ''
-            ? null
-            : this.stockForm.value.providerId,
-        storeId: null,
-        stockDetails: this.formProducts.value.map((product: any) => ({
-          productId: product.productId,
-          purchasePrice: product.purchasePrice,
-          quantity: product.quantity,
-        })),
-      };
-
+      const value = this.getFormValue();
       if (this.isEdit) {
-        this.spinner.show('fullscreen');
-        const sub = this.stockService
-          .updateInput(<InventoryEntryCollectionModel>value)
-          .subscribe({
-            next: () => {
-              this.clearForm();
-              this.toastService.showSucess('Registro modificado.');
-              this.spinner.hide('fullscreen');
-            },
-            error: (error) => {
-              this.spinner.hide('fullscreen');
-              this.toastService.showError('Error modificando registro');
-            },
-          });
-        this.subscriptions$.push(sub);
+        this.upateEntry(value);
       } else {
-        this.spinner.show('fullscreen');
-        value.id = null;
-        const sub = this.stockService
-          .registerInput(<InventoryEntryCollectionModel>value)
-          .subscribe({
-            next: () => {
-              this.clearForm();
-              this.toastService.showSucess('Registro agregado.');
-            },
-            error: (error) => {
-              this.spinner.hide('fullscreen');
-              this.toastService.showError('Error agregando registro');
-            },
-          });
-        this.subscriptions$.push(sub);
+        this.createEntry(value);
       }
     }
+  }
+
+  getFormValue() {
+    return {
+      ...this.stockForm.value,
+      providerId:
+        this.stockForm.value.providerId == ''
+          ? null
+          : this.stockForm.value.providerId,
+      storeId: null,
+      stockDetails: this.formProducts.value.map((product: any) => ({
+        productId: product.productId,
+        purchasePrice: product.purchasePrice,
+        quantity: product.quantity,
+      })),
+    };
+  }
+
+  upateEntry(value: any) {
+    this.spinner.show('fullscreen');
+    const sub = this.stockService
+      .updateInput(<InventoryEntryCollectionModel>value)
+      .subscribe({
+        next: () => {
+          this.clearForm();
+          this.toastService.showSucess('Registro modificado.');
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error modificando registro');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  createEntry(value: any) {
+    this.spinner.show('fullscreen');
+    value.id = null;
+    const sub = this.stockService
+      .registerInput(<InventoryEntryCollectionModel>value)
+      .subscribe({
+        next: () => {
+          this.clearForm();
+          this.toastService.showSucess('Registro agregado.');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error agregando registro');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
+        },
+      });
+    this.subscriptions$.push(sub);
   }
 
   save() {
@@ -335,10 +336,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleQuantityChange() {
-    this.calculateSelectedProductCatalogAggregate();
-  }
-
   get formProducts() {
     return this.stockForm.get('stockDetails') as FormArray;
   }
@@ -371,38 +368,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (stock) => {
-          if (stock) {
-            this.stockForm.setValue({
-              id: stock.id,
-              description: stock.description,
-              transactionType: <TransactionType>stock.transactionType,
-              status: stock.status,
-              providerId: stock.providerId,
-              date: stock.date,
-              storeId: stock.storeId,
-              reasonId: stock.reasonId.toString(),
-              stockDetails: [],
-            });
-            this.mapStockToForm(stock.stockDetails);
-            this.selectedProvider = stock.providerName
-              ? {
-                  id: stock.providerId,
-                  name: stock.providerName,
-                  identification: stock.providerIdentification,
-                  phone: null,
-                  email: null,
-                  lastName: null,
-                  identificationType: null,
-                }
-              : null;
-            this.calculateSelectedProductCatalogAggregate();
-            this.disableForm(
-              stock.transactionType == TransactionType.Output ||
-                Number(stock.reasonId) == ReasonEnum.Return ||
-                stock.status == StockStatusEnum.Saved ||
-                stock.status == StockStatusEnum.Canceled
-            );
-          }
+          this.mapStockEntryToForm(stock);
           this.spinner.hide('fullscreen');
         },
         error: (error) => {
@@ -411,6 +377,44 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         },
       });
     this.subscriptions$.push(sub);
+  }
+
+  mapStockEntryToForm(stock: StockModel | null) {
+    if (stock) {
+      this.stockForm.setValue({
+        id: stock.id,
+        description: stock.description,
+        transactionType: <TransactionType>stock.transactionType,
+        status: stock.status,
+        providerId: stock.providerId,
+        date: stock.date,
+        storeId: stock.storeId,
+        reasonId: stock.reasonId.toString(),
+        stockDetails: [],
+      });
+      this.mapStockToForm(stock.stockDetails);
+      this.mapProvider(stock);
+      this.disableForm(
+        stock.transactionType == TransactionType.Output ||
+          Number(stock.reasonId) == ReasonEnum.Return ||
+          stock.status == StockStatusEnum.Saved ||
+          stock.status == StockStatusEnum.Canceled
+      );
+    }
+  }
+
+  mapProvider(stock: StockModel) {
+    this.selectedProvider = stock.providerName
+      ? {
+          id: stock.providerId,
+          name: stock.providerName,
+          identification: stock.providerIdentification,
+          phone: null,
+          email: null,
+          lastName: null,
+          identificationType: null,
+        }
+      : null;
   }
 
   clearForm = () => {

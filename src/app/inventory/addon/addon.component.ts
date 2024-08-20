@@ -10,6 +10,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-addon',
@@ -20,7 +21,7 @@ export class AddonComponent implements OnInit, OnDestroy {
   isEdit = false;
   addonForm = this.formBuilder.group({
     id: [''],
-    concept: ['', Validators.required],
+    concept: ['', [Validators.required, Validators.maxLength(50)]],
     isDiscount: [true, Validators.required],
     type: ['PERCENTAGE', Validators.required],
     value: ['', Validators.required],
@@ -84,6 +85,45 @@ export class AddonComponent implements OnInit, OnDestroy {
     );
   }
 
+  createAddons(value: any) {
+    this.spinner.show('fullscreen');
+    const sub = this.addonService.updateAddon(<AddonModel>value).subscribe({
+      next: () => {
+        this.clearForm();
+        this.toastService.showSucess('Agregado modificado');
+        this.spinner.hide('fullscreen');
+      },
+      error: (error) => {
+        this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al modificar el agregado');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
+      },
+    });
+    this.subscriptions$.push(sub);
+  }
+
+  updateAddon(value: any) {
+    value.id = null;
+    this.spinner.show('fullscreen');
+    const sub = this.addonService.addAddon(<AddonModel>value).subscribe({
+      next: () => {
+        this.clearForm();
+        this.toastService.showSucess('Agregado creada');
+        this.spinner.hide('fullscreen');
+      },
+      error: (error) => {
+        this.spinner.hide('fullscreen');
+        this.toastService.showError('Error al crear el agregado');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
+      },
+    });
+    this.subscriptions$.push(sub);
+  }
+
   saveAddon() {
     this.addonForm.markAllAsTouched();
     if (this.addonForm.valid) {
@@ -92,34 +132,9 @@ export class AddonComponent implements OnInit, OnDestroy {
         value: Number(this.addonForm.get('value')?.value),
       };
       if (this.isEdit) {
-        this.spinner.show('fullscreen');
-        const sub = this.addonService.updateAddon(<AddonModel>value).subscribe({
-          next: () => {
-            this.clearForm();
-            this.toastService.showSucess('Agregado modificado');
-            this.spinner.hide('fullscreen');
-          },
-          error: (error) => {
-            this.spinner.hide('fullscreen');
-            this.toastService.showError('Error al modificar el agregado');
-          },
-        });
-        this.subscriptions$.push(sub);
+        this.createAddons(value);
       } else {
-        value.id = null;
-        this.spinner.show('fullscreen');
-        const sub = this.addonService.addAddon(<AddonModel>value).subscribe({
-          next: () => {
-            this.clearForm();
-            this.toastService.showSucess('Agregado creada');
-            this.spinner.hide('fullscreen');
-          },
-          error: (error) => {
-            this.spinner.hide('fullscreen');
-            this.toastService.showError('Error al crear el agregado');
-          },
-        });
-        this.subscriptions$.push(sub);
+        this.updateAddon(value);
       }
     }
   }
@@ -141,23 +156,30 @@ export class AddonComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (addon) => {
-          if (addon) {
-            this.addonForm.setValue({
-              id: addon.id,
-              concept: addon.concept,
-              isDiscount: addon.isDiscount,
-              type: addon.type,
-              value: addon.value.toString(),
-            });
-          }
+          this.mapAddons(addon);
           this.spinner.hide('fullscreen');
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
           this.toastService.showError('Error al cargar el agregado');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
+  }
+
+  mapAddons(addon: AddonModel | null) {
+    if (addon) {
+      this.addonForm.setValue({
+        id: addon.id,
+        concept: addon.concept,
+        isDiscount: addon.isDiscount,
+        type: addon.type,
+        value: addon.value.toString(),
+      });
+    }
   }
 
   handleCancel() {

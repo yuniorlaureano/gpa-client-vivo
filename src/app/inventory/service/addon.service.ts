@@ -30,4 +30,8 @@ export class AddonService {
   updateAddon(model: AddonModel): Observable<void> {
     return this.http.put<void>(`${this.url}`, model);
   }
+
+  removeAddon(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
+  }
 }

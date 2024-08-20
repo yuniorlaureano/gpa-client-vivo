@@ -30,4 +30,8 @@ export class CategoryService {
   updateCategory(model: CategoryModel): Observable<void> {
     return this.http.put<void>(`${this.url}`, model);
   }
+
+  removeCategory(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
+  }
 }

@@ -107,6 +107,12 @@
                   validation="required"
                   message="El concepto es requerido"
                 />
+                <gpa-validator-message
+                  [control]="addonForm.get('concept')"
+                  [touched]="addonForm.touched"
+                  validation="maxlength"
+                  message="El concepto solo admite 50 caracteres"
+                />
               </div>
             </div>
             <div class="col-sm-2 col-2">

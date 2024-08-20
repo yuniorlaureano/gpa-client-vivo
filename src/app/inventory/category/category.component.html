@@ -103,6 +103,12 @@
                   validation="required"
                   message="El nombre el requerido"
                 />
+                <gpa-validator-message
+                  [control]="categoryForm.get('name')"
+                  [touched]="categoryForm.touched"
+                  validation="maxlength"
+                  message="El nombre solo admite 50 caracteres"
+                />
               </div>
             </div>
             <div class="col-sm-12 col-12">
@@ -114,6 +120,18 @@
                   rows="3"
                   formControlName="description"
                 ></textarea>
+                <gpa-validator-message
+                  [control]="categoryForm.get('description')"
+                  [touched]="categoryForm.touched"
+                  validation="required"
+                  message="La descripción es requerids"
+                />
+                <gpa-validator-message
+                  [control]="categoryForm.get('description')"
+                  [touched]="categoryForm.touched"
+                  validation="maxlength"
+                  message="La descripción solo admite 200 caracteres"
+                />
               </div>
             </div>
           </div>
