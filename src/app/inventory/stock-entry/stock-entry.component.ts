@@ -153,6 +153,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
                 ReasonEnum.DamagedProduct,
                 ReasonEnum.ExpiredProduct,
                 ReasonEnum.RawMaterial,
+                ReasonEnum.OutputCancellation,
               ].includes(reason.id)
           )
         )

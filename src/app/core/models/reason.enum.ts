@@ -6,4 +6,5 @@ export enum ReasonEnum {
   DamagedProduct = 5,
   ExpiredProduct = 6,
   RawMaterial = 7,
+  OutputCancellation = 8,
 }

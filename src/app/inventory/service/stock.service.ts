@@ -41,7 +41,7 @@ export class StockService {
     search: FilterModel | null = null
   ): Observable<ResponseModel<ExistenceModel>> {
     return this.http.get<ResponseModel<ExistenceModel>>(
-      `${this.url}/existance${search ? search.asQueryString() : ''}`
+      `${this.url}/existence${search ? search.asQueryString() : ''}`
     );
   }
 

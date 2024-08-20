@@ -108,6 +108,7 @@ export class ExistenceListTableComponent implements OnInit, OnDestroy {
   }
 
   handleSearch() {
+    this.spinner.show('table-spinner');
     this.searchTerms.next(
       JSON.stringify({
         ...this.filterForm.value,

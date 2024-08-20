@@ -8,7 +8,7 @@ import { ReasonEnum } from '../../core/models/reason.enum';
 import { TransactionType } from '../../core/models/transaction-type.enum';
 import { InventoryOutputCollectionModel } from '../models/inventory-entry.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StockDetailsModel } from '../models/stock.model';
+import { StockDetailsModel, StockModel } from '../models/stock.model';
 import { ProductModel } from '../models/product.model';
 import { StockStatusEnum } from '../../core/models/stock-status.enum';
 import { ToastService } from '../../core/service/toast.service';
@@ -18,6 +18,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-stock-output',
@@ -147,39 +148,54 @@ export class StockOutputComponent implements OnInit, OnDestroy {
       };
 
       if (this.isEdit) {
-        this.spinner.show('fullscreen');
-        const sub = this.stockService
-          .updateOutput(<InventoryOutputCollectionModel>value)
-          .subscribe({
-            next: () => {
-              this.clearForm();
-              this.toastService.showSucess('Registro modificado.');
-              this.spinner.hide('fullscreen');
-            },
-            error: (error) => {
-              this.spinner.hide('fullscreen');
-              this.toastService.showError('Error modificando registro');
-            },
-          });
-        this.subscriptions$.push(sub);
+        this.updateOutput(value);
       } else {
-        this.spinner.show('fullscreen');
-        value.id = null;
-        const sub = this.stockService
-          .registerOutput(<InventoryOutputCollectionModel>value)
-          .subscribe({
-            next: () => {
-              this.clearForm();
-              this.toastService.showSucess('Registro agregado.');
-            },
-            error: (error) => {
-              this.spinner.hide('fullscreen');
-              this.toastService.showError('Error agregando registro');
-            },
-          });
-        this.subscriptions$.push(sub);
+        this.createOutput(value);
       }
     }
+  }
+
+  createOutput(value: any) {
+    this.spinner.show('fullscreen');
+    value.id = null;
+    const sub = this.stockService
+      .registerOutput(<InventoryOutputCollectionModel>value)
+      .subscribe({
+        next: () => {
+          this.clearForm();
+          this.toastService.showSucess('Registro agregado.');
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error agregando registro');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  updateOutput(value: any) {
+    this.spinner.show('fullscreen');
+    const sub = this.stockService
+      .updateOutput(<InventoryOutputCollectionModel>value)
+      .subscribe({
+        next: () => {
+          this.clearForm();
+          this.toastService.showSucess('Registro modificado.');
+          this.spinner.hide('fullscreen');
+        },
+        error: (error) => {
+          this.spinner.hide('fullscreen');
+          this.toastService.showError('Error modificando registro');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
+        },
+      });
+    this.subscriptions$.push(sub);
   }
 
   save() {
@@ -289,30 +305,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (stock) => {
-          if (stock) {
-            this.stockForm.setValue({
-              id: stock.id,
-              description: stock.description,
-              transactionType: <TransactionType>stock.transactionType,
-              status: stock.status,
-              storeId: stock.storeId,
-              reasonId: stock.reasonId.toString(),
-              stockDetails: [],
-            });
-            this.mapStockToForm(stock.stockDetails);
-            this.calculateSelectedProductCatalogAggregate();
-
-            var notAValidReason =
-              Number(stock.reasonId) != ReasonEnum.DamagedProduct &&
-              Number(stock.reasonId) != ReasonEnum.ExpiredProduct &&
-              Number(stock.reasonId) != ReasonEnum.RawMaterial;
-            this.disableForm(
-              stock.transactionType == TransactionType.Input ||
-                notAValidReason ||
-                stock.status == StockStatusEnum.Saved ||
-                stock.status == StockStatusEnum.Canceled
-            );
-          }
+          this.mapValues(stock);
           this.spinner.hide('fullscreen');
         },
         error: (error) => {
@@ -321,6 +314,33 @@ export class StockOutputComponent implements OnInit, OnDestroy {
         },
       });
     this.subscriptions$.push(sub);
+  }
+
+  mapValues(stock: StockModel | null) {
+    if (stock) {
+      this.stockForm.setValue({
+        id: stock.id,
+        description: stock.description,
+        transactionType: <TransactionType>stock.transactionType,
+        status: stock.status,
+        storeId: stock.storeId,
+        reasonId: stock.reasonId.toString(),
+        stockDetails: [],
+      });
+      this.mapStockToForm(stock.stockDetails);
+      this.calculateSelectedProductCatalogAggregate();
+
+      var notAValidReason =
+        Number(stock.reasonId) != ReasonEnum.DamagedProduct &&
+        Number(stock.reasonId) != ReasonEnum.ExpiredProduct &&
+        Number(stock.reasonId) != ReasonEnum.RawMaterial;
+      this.disableForm(
+        stock.transactionType == TransactionType.Input ||
+          notAValidReason ||
+          stock.status == StockStatusEnum.Saved ||
+          stock.status == StockStatusEnum.Canceled
+      );
+    }
   }
 
   clearForm = () => {
@@ -371,6 +391,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
                 ReasonEnum.Sale,
                 ReasonEnum.Return,
                 ReasonEnum.Manufactured,
+                ReasonEnum.OutputCancellation,
               ].includes(reason.id)
           )
         )
