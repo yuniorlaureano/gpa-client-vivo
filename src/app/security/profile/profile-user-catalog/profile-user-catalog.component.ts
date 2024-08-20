@@ -21,6 +21,7 @@ import { ProfileService } from '../../service/profile.service';
 import { RawUserModel } from '../../model/raw-user.model';
 import { ProfileModel } from '../../model/profile.model';
 import { ToastService } from '../../../core/service/toast.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-profile-user-catalog',
@@ -59,7 +60,8 @@ export class ProfileUserCatalogComponent
 
   constructor(
     private profileService: ProfileService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -116,6 +118,7 @@ export class ProfileUserCatalogComponent
   }
 
   handleSearch(search: any) {
+    this.spinner.show('table-spinner');
     this.searchTerms.next(search.target.value);
   }
 
@@ -154,9 +157,11 @@ export class ProfileUserCatalogComponent
             ...this.options,
             count: model.count,
           };
+          this.spinner.hide('table-spinner');
         },
         error: (error) => {
           this.toastService.showError('Error cargando usuarios');
+          this.spinner.hide('table-spinner');
         },
       });
   }

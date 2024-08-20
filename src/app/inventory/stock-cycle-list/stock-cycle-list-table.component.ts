@@ -126,6 +126,7 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
   }
 
   handleSearch() {
+    this.spinner.show('table-spinner');
     if (
       (this.filterForm.get('from')?.value &&
         !this.filterForm.get('to')?.value) ||

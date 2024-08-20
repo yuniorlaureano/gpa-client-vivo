@@ -107,6 +107,7 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   handleSearch(search: any) {
+    this.spinner.show('profile-spinner');
     this.searchTerms.next(search.target.value);
   }
 

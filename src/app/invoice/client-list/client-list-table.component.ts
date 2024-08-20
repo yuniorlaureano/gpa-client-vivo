@@ -152,6 +152,7 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
   };
 
   handleSearch() {
+    this.spinner.show('table-spinner');
     this.searchTerms.next(this.filterForm.get('term')?.value ?? '');
   }
 

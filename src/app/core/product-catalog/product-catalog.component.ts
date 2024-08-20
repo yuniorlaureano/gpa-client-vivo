@@ -99,6 +99,7 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
   }
 
   handleSearch(event: any) {
+    this.spinner.show('product-catalog-spinner');
     this.searchTerms.next(event.target.value);
   }
 

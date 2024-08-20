@@ -101,6 +101,7 @@ export class ProductListTableComponent {
   }
 
   handleSearch(search: any) {
+    this.spinner.show('table-spinner');
     this.searchTerms.next(search.target.value);
   }
 

@@ -112,6 +112,7 @@ export class CategoryListTableComponent implements OnInit, OnDestroy {
   }
 
   handleSearch(search: any) {
+    this.spinner.show('table-spinner');
     this.searchTerms.next(search.target.value);
   }
 

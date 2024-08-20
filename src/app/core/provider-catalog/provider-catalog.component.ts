@@ -95,6 +95,7 @@ export class ProviderCatalogComponent implements OnInit, OnDestroy {
   }
 
   handleSearch(event: any) {
+    this.spinner.show('provider-catalog-spinner');
     this.searchTerms.next(event.target.value);
   }
 
