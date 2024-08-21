@@ -1,5 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, of, Subscription, switchMap } from 'rxjs';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  BehaviorSubject,
+  map,
+  Observable,
+  of,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { StockService } from '../service/stock.service';
 import { ReasonModel } from '../models/reason.model';
 import { ReasonService } from '../service/reason.service';
@@ -21,6 +34,8 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
 import { FilterModel } from '../../core/models/filter.model';
+import { StockAttachModel } from '../models/stock-attachment';
+import { downloadFile } from '../../core/utils/file.utils';
 
 @Component({
   selector: 'gpa-stock-entry',
@@ -36,8 +51,11 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   selectedProducts: { [key: string]: boolean } = {};
   isProductCatalogVisible: boolean = false;
   selectedProvider: ProviderModel | null = null;
-
+  files: FileList | null = null;
+  attachments: StockAttachModel[] = [];
   reasons$!: Observable<ReasonModel[]>;
+  attachmentsSubject$ = new BehaviorSubject<string | null>(null);
+  @ViewChild('stockInputFile') stockFileInput!: ElementRef;
 
   stockForm = this.formBuilder.group({
     id: [''],
@@ -81,6 +99,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     this.handlePermissionsLoad();
     this.loadReasons();
     this.getStock();
+    this.loadAttachments();
   }
 
   ngOnDestroy(): void {
@@ -249,9 +268,13 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     const sub = this.stockService
       .registerInput(<InventoryEntryCollectionModel>value)
       .subscribe({
-        next: () => {
-          this.clearForm();
-          this.toastService.showSucess('Registro agregado.');
+        next: (data) => {
+          this.uploadFile(data.id, () => {
+            this.toastService.showSucess('Adjuntos agregados');
+            this.toastService.showSucess('Registro agregado.');
+            this.clearForm();
+            this.spinner.hide('fullscreen');
+          });
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
@@ -364,6 +387,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
             return of(null);
           }
           this.isEdit = true;
+          this.attachmentsSubject$.next(id);
           return this.stockService.getStockById(id);
         })
       )
@@ -462,5 +486,94 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       this.stockForm.enable();
       this.isFormDisabled = false;
     }
+  }
+
+  processFileUpload(event: Event) {
+    const fileElement = event.currentTarget as HTMLInputElement;
+    this.files = fileElement.files;
+    //automaticaly upload the file if the product is being edited
+    this.uploadFIleOnUpdate();
+  }
+
+  uploadFIleOnUpdate() {
+    if (this.isEdit && this.stockForm.get('id')?.value) {
+      this.spinner.show('stock-file-spinner');
+      this.uploadFile(this.stockForm.get('id')?.value!, () => {
+        this.toastService.showSucess('Adjuntos agregados');
+        this.spinner.hide('stock-file-spinner');
+      });
+    }
+  }
+
+  uploadFile(stockId: string, func: () => void) {
+    if (this.files && this.files.length > 0) {
+      const formData = new FormData();
+      for (let i = 0; i < this.files.length; i++) {
+        formData.append('files', this.files[i]);
+      }
+      const sub = this.stockService
+        .uploadAttachment(stockId, formData)
+        .subscribe({
+          next: () => {
+            func();
+            this.stockFileInput.nativeElement.value = '';
+            if (this.isEdit) {
+              this.attachmentsSubject$.next(stockId);
+            }
+          },
+          error: () => {
+            func();
+          },
+        });
+      this.subscriptions$.push(sub);
+    }
+  }
+
+  loadAttachments() {
+    const sub = this.attachmentsSubject$
+      .pipe(
+        switchMap((stockId) => {
+          this.spinner.show('stock-file-spinner');
+          if (stockId) {
+            return this.stockService.getAttachments(stockId);
+          }
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (attachments) => {
+          this.mapAttachments(attachments);
+          this.spinner.hide('stock-file-spinner');
+        },
+        error: () => {
+          this.spinner.hide('stock-file-spinner');
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  mapAttachments(attachments: StockAttachModel[]) {
+    this.attachments = attachments.map((attachment) => {
+      let file = JSON.parse(attachment.file);
+      attachment.deserializedFile = {
+        name: file.fileName,
+        uniqueName: file.uniqueFileName,
+      };
+      return attachment;
+    });
+  }
+
+  downloadAttachment(id: string, name: string) {
+    this.spinner.show('stock-file-spinner');
+    const sub = this.stockService.downloadAttachments(id).subscribe({
+      next: (data) => {
+        downloadFile(data, name);
+        this.spinner.hide('stock-file-spinner');
+      },
+      error: () => {
+        this.spinner.hide('stock-file-spinner');
+      },
+    });
+    this.subscriptions$.push(sub);
   }
 }

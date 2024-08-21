@@ -180,10 +180,41 @@
               ></textarea>
             </div>
           </div>
-          <div class="col-12 col-sm-12">
-            <div class="mb-3">
+          <div class="col-12 col-sm-12 card">
+            <div class="mb-3 card-body" style="border: solid 1px lightgray">
+              <ngx-spinner
+                name="stock-file-spinner"
+                [fullScreen]="false"
+                type="timer"
+                size="medium"
+              ></ngx-spinner>
               <label for="inputCompanyName" class="form-label">Adjuntos</label>
-              <input type="file" class="form-control" />
+              <input
+                type="file"
+                multiple
+                class="form-control"
+                #stockInputFile
+                (change)="processFileUpload($event)"
+              />
+              <ul style="margin-left: 10px">
+                <li *ngFor="let item of attachments">
+                  <a
+                    style="color: rgba(13, 110, 253); cursor: pointer"
+                    (click)="
+                      downloadAttachment(
+                        item.id,
+                        item.deserializedFile?.name ?? 'attachment'
+                      )
+                    "
+                  >
+                    <i
+                      class="bi bi-cloud-arrow-down"
+                      style="font-size: 20px"
+                    ></i>
+                    {{ item.deserializedFile?.name }}
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
           <div class="col-sm-6" *ngIf="isEdit">
@@ -196,7 +227,7 @@
               />
             </div>
           </div>
-          <div class="col-sm-12 col-12">
+          <div class="col-sm-12 col-12 mt-3">
             <div class="mb-3">
               <button
                 class="btn btn-outline-primary"

@@ -11,6 +11,7 @@ import {
 } from '../models/inventory-entry.model';
 import { StockModel } from '../models/stock.model';
 import { ExistenceModel } from '../models/existence.model';
+import { StockAttachModel } from '../models/stock-attachment';
 
 @Injectable()
 export class StockService {
@@ -45,8 +46,10 @@ export class StockService {
     );
   }
 
-  registerInput(products: InventoryEntryCollectionModel): Observable<void> {
-    return this.http.post<void>(`${this.url}/input`, products);
+  registerInput(
+    products: InventoryEntryCollectionModel
+  ): Observable<StockModel> {
+    return this.http.post<StockModel>(`${this.url}/input`, products);
   }
 
   registerOutput(products: InventoryOutputCollectionModel): Observable<void> {
@@ -63,5 +66,23 @@ export class StockService {
 
   cancelStock(id: string): Observable<void> {
     return this.http.put<void>(`${this.url}/${id}/cancel`, {});
+  }
+
+  uploadAttachment(id: string, file: FormData): Observable<void> {
+    return this.http.post<void>(`${this.url}/${id}/attachment/upload`, file);
+  }
+
+  getAttachments(stockId: string): Observable<StockAttachModel[]> {
+    return this.http.get<StockAttachModel[]>(
+      `${this.url}/${stockId}/attachments`
+    );
+  }
+
+  downloadAttachments(attachmentId: string): Observable<Blob> {
+    return this.http.post(
+      `${this.url}/attachments/${attachmentId}/download`,
+      {},
+      { responseType: 'blob' }
+    );
   }
 }
