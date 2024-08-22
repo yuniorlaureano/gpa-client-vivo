@@ -3,7 +3,7 @@ import { ProductModel } from './product.model';
 export interface StockModel {
   id: string;
   description: string;
-  date: any;
+  date: string;
   transactionType: number;
   providerId: string;
   status: StockStatusEnum;

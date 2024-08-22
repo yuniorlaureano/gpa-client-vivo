@@ -63,7 +63,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     transactionType: [TransactionType.Input, Validators.required],
     providerId: [''],
     status: [StockStatusEnum.Saved],
-    date: ['', Validators.required],
     storeId: [''],
     reasonId: ['', Validators.required],
     stockDetails: this.formBuilder.array([]),
@@ -269,8 +268,10 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       .registerInput(<InventoryEntryCollectionModel>value)
       .subscribe({
         next: (data) => {
-          this.uploadFile(data.id, () => {
-            this.toastService.showSucess('Adjuntos agregados');
+          this.uploadFile(data.id, (success) => {
+            if (success) {
+              this.toastService.showSucess('Adjuntos agregados');
+            }
             this.toastService.showSucess('Registro agregado.');
             this.clearForm();
             this.spinner.hide('fullscreen');
@@ -412,7 +413,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         transactionType: <TransactionType>stock.transactionType,
         status: stock.status,
         providerId: stock.providerId,
-        date: stock.date,
         storeId: stock.storeId,
         reasonId: stock.reasonId.toString(),
         stockDetails: [],
@@ -505,7 +505,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     }
   }
 
-  uploadFile(stockId: string, func: () => void) {
+  uploadFile(stockId: string, func: (success: boolean) => void) {
     if (this.files && this.files.length > 0) {
       const formData = new FormData();
       for (let i = 0; i < this.files.length; i++) {
@@ -515,18 +515,19 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         .uploadAttachment(stockId, formData)
         .subscribe({
           next: () => {
-            func();
+            func(true);
             this.stockFileInput.nativeElement.value = '';
             if (this.isEdit) {
               this.attachmentsSubject$.next(stockId);
             }
           },
           error: () => {
-            func();
+            func(false);
           },
         });
       this.subscriptions$.push(sub);
     }
+    func(false);
   }
 
   loadAttachments() {

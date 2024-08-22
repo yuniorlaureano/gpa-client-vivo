@@ -143,34 +143,6 @@
               />
             </div>
           </div>
-          <div class="col-12 col-sm-4">
-            <div class="mb-3">
-              <label for="inputEmail" class="form-label"
-                ><span class="text-danger require-sign">*</span>Fecha</label
-              >
-              <div class="input-group">
-                <input
-                  class="form-control"
-                  placeholder="yyyy-mm-dd"
-                  name="dp"
-                  ngbDatepicker
-                  formControlName="date"
-                  #d="ngbDatepicker"
-                />
-                <button
-                  class="btn btn-outline-secondary bi bi-calendar3"
-                  (click)="d.toggle()"
-                  type="button"
-                ></button>
-              </div>
-              <gpa-validator-message
-                [control]="stockForm.get('date')"
-                [touched]="stockForm.touched"
-                validation="required"
-                message="La fecha es obligatoria"
-              />
-            </div>
-          </div>
           <div class="col-12 col-sm-12">
             <div class="mb-3">
               <label for="description" class="form-label">Descripción</label>

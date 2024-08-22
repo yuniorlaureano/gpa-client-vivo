@@ -69,6 +69,7 @@
   <tr header>
     <th>Estado</th>
     <th>Tipo de operación</th>
+    <th>Fecha</th>
     <th>Proveedor</th>
     <th>Motivo</th>
     <th>Descripción</th>
@@ -88,6 +89,7 @@
         {{ getStatusDescription(stock.status) }}
       </td>
       <td>{{ stock.transactionType == 0 ? "Entrada" : "Salida" }}</td>
+      <td>{{ stock.date | date : "dd/MM/yyyy" }}</td>
       <td>{{ stock.providerName }}</td>
       <td>{{ stock.reasonName }}</td>
       <td>{{ stock.description }}</td>
