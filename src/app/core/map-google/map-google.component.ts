@@ -8,11 +8,13 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LocationModel } from '../models/location.model';
 import { LocationWithNameModel } from '../models/location-with-name.model';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { GoogleMap } from '@angular/google-maps';
 
 @Component({
   selector: 'gpa-map-google',
@@ -31,19 +33,36 @@ export class MapGoogleComponent implements OnInit, OnDestroy, OnChanges {
   };
   zoom = 15;
   display!: google.maps.LatLngLiteral;
-  private placeChangedListener: google.maps.MapsEventListener | null = null;
-  private geocoder = new google.maps.Geocoder();
-  private placesService!: google.maps.places.PlacesService;
+  placeChangedListener: google.maps.MapsEventListener | null = null;
+  geocoder = new google.maps.Geocoder();
+  placesService!: google.maps.places.PlacesService;
+  markers: google.maps.marker.AdvancedMarkerElement[] = [];
+  @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
+  markerIcon: HTMLImageElement = document.createElement('img');
+  @Input() locations: google.maps.LatLng[] = [];
 
-  constructor(private spinner: NgxSpinnerService, private ngZone: NgZone) {}
+  constructor(private spinner: NgxSpinnerService, private ngZone: NgZone) {
+    this.markerIcon.src = 'assets/images/botellon-icon.png';
+    this.markerIcon.width = 60;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['visible']) {
       if (this.visible) {
-        this.center = {
-          lat: 18.931924080755334,
-          lng: -70.40929224394681,
-        };
+        if (this.locations.length > 0) {
+          this.center = {
+            lat: this.locations[0].lat(),
+            lng: this.locations[0].lng(),
+          };
+        } else {
+          this.center = {
+            lat: 18.931924080755334,
+            lng: -70.40929224394681,
+          };
+        }
+
+        this.clearMarkers();
+        this.setNewMarkers(this.locations);
       }
     }
   }
@@ -134,6 +153,24 @@ export class MapGoogleComponent implements OnInit, OnDestroy, OnChanges {
         );
       } else {
         onNameFetched('', '');
+      }
+    });
+  }
+
+  private clearMarkers(): void {
+    this.markers.forEach((marker) => (marker.map = null));
+    this.markers = [];
+  }
+
+  private setNewMarkers(locations: google.maps.LatLng[]): void {
+    locations.forEach((position) => {
+      if (position.lat != null || position.lng != null) {
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          position: position,
+          map: this.map.googleMap,
+          content: this.markerIcon,
+        });
+        this.markers.push(marker);
       }
     });
   }

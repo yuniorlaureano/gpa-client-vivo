@@ -279,16 +279,6 @@
                     </div>
                     <div class="col-sm-3 col-3">
                       <div class="mb-3">
-                        <label class="form-label">Estado</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          formControlName="state"
-                        />
-                      </div>
-                    </div>
-                    <div class="col-sm-3 col-3">
-                      <div class="mb-3">
                         <label class="form-label">País</label>
                         <input
                           type="text"
@@ -388,6 +378,7 @@
         [visible]="mapIsVisible"
         (onLocationChange)="handleLocationChange($event)"
         (onClose)="hideMap()"
+        [locations]="locations"
       />
     </div>
   </div>

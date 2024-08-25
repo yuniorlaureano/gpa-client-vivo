@@ -22,6 +22,7 @@ export class ClientComponent implements OnInit, OnDestroy {
   clients: ClientModel[] = [];
   isEdit: boolean = false;
   mapIsVisible: boolean = false;
+  locations: google.maps.LatLng[] = [];
 
   //subscriptions
   subscriptions$: Subscription[] = [];
@@ -59,16 +60,15 @@ export class ClientComponent implements OnInit, OnDestroy {
     lastName: [''],
     identification: ['', Validators.required],
     identificationType: [1],
-    phone: [''],
-    email: [''],
+    phone: ['', Validators.required],
+    email: ['', Validators.required],
     buildingNumber: [''],
-    state: [''],
     city: [''],
     street: [''],
     country: [''],
     postalCode: [''],
-    latitude: [0],
-    longitude: [0],
+    latitude: [''],
+    longitude: [''],
     formattedAddress: [''],
     credits: this.fb.array([]),
   });
@@ -132,6 +132,10 @@ export class ClientComponent implements OnInit, OnDestroy {
     this.clientForm.get('id')?.setValue(null);
     const value = {
       ...this.clientForm.value,
+      latitude: this.parseLocationValue(this.clientForm.get('latitude')?.value),
+      longitude: this.parseLocationValue(
+        this.clientForm.get('longitude')?.value
+      ),
     };
     this.spinner.show('fullscreen');
     const sub = this.clientService.addClient(value as ClientModel).subscribe({
@@ -148,9 +152,20 @@ export class ClientComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
+  parseLocationValue(value: any) {
+    if (value == '' || value == null) {
+      return null;
+    }
+    return parseFloat(value);
+  }
+
   upateClient() {
     const value = {
       ...this.clientForm.value,
+      latitude: this.parseLocationValue(this.clientForm.get('latitude')?.value),
+      longitude: this.parseLocationValue(
+        this.clientForm.get('longitude')?.value
+      ),
     };
 
     this.spinner.show('fullscreen');
@@ -205,9 +220,8 @@ export class ClientComponent implements OnInit, OnDestroy {
     this.clientForm
       .get('formattedAddress')
       ?.setValue(location.formattedAddress);
-    this.clientForm.get('latitude')?.setValue(location.lat);
-    this.clientForm.get('longitude')?.setValue(location.lng);
-    console.log('setting location');
+    this.clientForm.get('latitude')?.setValue(location.lat?.toString() ?? '');
+    this.clientForm.get('longitude')?.setValue(location.lng?.toString() ?? '');
   }
 
   hideMap() {
@@ -241,17 +255,22 @@ export class ClientComponent implements OnInit, OnDestroy {
               phone: client.phone,
               email: client.email,
               buildingNumber: client.buildingNumber,
-              state: client.state,
               country: client.country,
               postalCode: client.postalCode,
               street: client.street,
               city: client.city,
-              latitude: client.latitude,
-              longitude: client.longitude,
+              latitude: client.latitude?.toString() ?? '',
+              longitude: client.longitude?.toString() ?? '',
               formattedAddress: client.formattedAddress,
               credits: [],
             });
             this.mapCredits(client.credits);
+
+            if (client.latitude != null && client.longitude != null) {
+              this.locations.push(
+                new google.maps.LatLng(client.latitude, client.longitude)
+              );
+            }
           }
           this.spinner.hide('fullscreen');
         },

@@ -73,7 +73,8 @@
               *ngFor="let item of profiles$ | async"
               (click)="changeProfile(item.id!, item.name!)"
             >
-              <i class="bi bi-check" *ngIf="item.isCurrent"></i> {{ item.name }}
+              <i class="bi bi-check" *ngIf="item.isCurrent"></i>
+              {{ item.name }}
             </button>
           </div>
         </div>

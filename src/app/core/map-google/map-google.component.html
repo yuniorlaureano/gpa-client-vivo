@@ -8,10 +8,22 @@
   <div class="row">
     <div class="col-4 col-sm-4">
       <ul>
-        <li>{{ selectedLocation?.formattedAddress }}</li>
-        <li>{{ selectedLocation?.placeName }}</li>
-        <li>{{ selectedLocation?.lat }}</li>
-        <li>{{ selectedLocation?.lng }}</li>
+        <li>
+          <span style="font-weight: bold">Dirección: </span
+          >{{ selectedLocation?.formattedAddress }}
+        </li>
+        <li>
+          <span style="font-weight: bold">Negocio: </span
+          >{{ selectedLocation?.placeName }}
+        </li>
+        <li>
+          <span style="font-weight: bold">Latitud: </span
+          >{{ selectedLocation?.lat }}
+        </li>
+        <li>
+          <span style="font-weight: bold">Longitud: </span
+          >{{ selectedLocation?.lng }}
+        </li>
       </ul>
     </div>
     <div class="search-holder col-11 col-sm-11">
@@ -30,8 +42,10 @@
   </div>
   <google-map
     width="100%"
+    height="650px"
     [center]="center"
     [zoom]="zoom"
+    mapId="map-google"
     (mapClick)="mapClick($event)"
   />
 </div>
