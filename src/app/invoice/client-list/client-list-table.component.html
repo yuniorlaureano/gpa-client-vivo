@@ -30,13 +30,18 @@
   <h3 class="card-title" caption></h3>
   <tr header>
     <th>Nombre</th>
+    <th>Correo</th>
+    <th>Teléfono</th>
+    <th>Tipo de identificación</th>
     <th>Identificación</th>
     <th></th>
   </tr>
   <tbody body>
     <tr *ngFor="let client of data.data">
-      <td>{{ client.name }}</td>
-      <td>{{ client.lastName }}</td>
+      <td>{{ client.name + " " + client.lastName }}</td>
+      <td>{{ client.email }}</td>
+      <td>{{ client.phone }}</td>
+      <td>{{ getIdentificationType(client.identificationType) }}</td>
       <td>{{ client.identification }}</td>
       <td style="width: 100px">
         <button

@@ -87,8 +87,9 @@
               <div class="card-border-body">
                 <form [formGroup]="clientForm">
                   <div class="row">
+                    <h4>Información personal</h4>
                     <!--  -->
-                    <div class="col-sm-3 col-12">
+                    <div class="col-sm-3 col-3">
                       <div class="mb-3">
                         <label class="form-label"
                           >Nombre<span class="text-red">*</span></label
@@ -109,27 +110,43 @@
                     <!--  -->
                     <div class="col-sm-3 col-12">
                       <div class="mb-3">
-                        <label class="form-label"
-                          >Apellido<span class="text-red">*</span></label
-                        >
+                        <label class="form-label">Apellido</label>
                         <input
                           type="text"
                           class="form-control"
                           formControlName="lastName"
                         />
-                        <gpa-validator-message
-                          [control]="clientForm.get('lastName')"
-                          [touched]="clientForm.touched"
-                          validation="required"
-                          message="El apellido es requerido"
-                        />
                       </div>
                     </div>
                     <!--  -->
+                    <div class="col-sm-2 col-2">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Tipo de documento
+                          <span class="text-red">*</span></label
+                        >
+                        <select
+                          class="form-control"
+                          formControlName="identificationType"
+                        >
+                          <option value="1">Cédula</option>
+                          <option value="2">RNC</option>
+                          <option value="3">Pasaporte</option>
+                        </select>
+                        <gpa-validator-message
+                          [control]="clientForm.get('identificationType')"
+                          [touched]="clientForm.touched"
+                          validation="required"
+                          message="El tipo es requerido"
+                        />
+                      </div>
+                    </div>
                     <div class="col-sm-3 col-12">
                       <div class="mb-3">
                         <label class="form-label"
-                          >Identificación<span class="text-red">*</span></label
+                          >Documento de indentidad<span class="text-red"
+                            >*</span
+                          ></label
                         >
                         <input
                           type="text"
@@ -144,6 +161,153 @@
                         />
                       </div>
                     </div>
+
+                    <div class="col-sm-3 col-12">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Teléfono<span class="text-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="phone"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('phone')"
+                          [touched]="clientForm.touched"
+                          validation="required"
+                          message="El teléfono es requerido"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3 col-12">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Email<span class="text-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="email"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('email')"
+                          [touched]="clientForm.touched"
+                          validation="required"
+                          message="El teléfono es requerido"
+                        />
+                      </div>
+                    </div>
+                    <hr />
+                    <h5>Dirección de google</h5>
+                    <div class="col-1 col-sm-1 mt-4">
+                      <button
+                        class="btn btn-outline-dark btn-rounded"
+                        type="button"
+                        style="width: 100px"
+                        (click)="showMap()"
+                      >
+                        <i
+                          class="bi bi-geo-alt"
+                          style="font-size: 20px; color: red"
+                        ></i>
+                      </button>
+                    </div>
+                    <div class="col-sm-5 col-5">
+                      <div class="mb-3">
+                        <label class="form-label">Dirección de google</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="formattedAddress"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-2 col-2">
+                      <div class="mb-3">
+                        <label class="form-label">Latitud</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="longitude"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-2 col-2">
+                      <div class="mb-3">
+                        <label class="form-label">Longitud</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="latitude"
+                        />
+                      </div>
+                    </div>
+
+                    <hr />
+                    <h5>Dirección</h5>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Calle</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="street"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Número</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="buildingNumber"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Ciudad</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="city"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Estado</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="state"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">País</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="country"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Código postal</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="postalCode"
+                        />
+                      </div>
+                    </div>
+
                     <fieldset style="border: solid 1px #e1e1e1">
                       <legend>
                         Creditos
@@ -219,6 +383,12 @@
           </div>
         </div>
       </div>
+
+      <gpa-map-google
+        [visible]="mapIsVisible"
+        (onLocationChange)="handleLocationChange($event)"
+        (onClose)="hideMap()"
+      />
     </div>
   </div>
 </div>

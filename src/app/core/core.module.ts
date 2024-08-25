@@ -24,6 +24,8 @@ import { UserCatalogComponent } from './user-catalog/user-catalog.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NoPermissionAlertComponent } from './no-permission-alert/no-permission-alert';
 import { ProviderCatalogComponent } from './provider-catalog/provider-catalog.component';
+import { MapGoogleComponent } from './map-google/map-google.component';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,7 @@ import { ProviderCatalogComponent } from './provider-catalog/provider-catalog.co
     UserCatalogComponent,
     NoPermissionAlertComponent,
     ProviderCatalogComponent,
+    MapGoogleComponent,
   ],
   imports: [
     CommonModule,
@@ -52,6 +55,7 @@ import { ProviderCatalogComponent } from './provider-catalog/provider-catalog.co
     NgTemplateOutlet,
     NgxSpinnerModule,
     NgbAlertModule,
+    GoogleMapsModule,
   ],
   providers: [
     LayoutService,
@@ -73,6 +77,7 @@ import { ProviderCatalogComponent } from './provider-catalog/provider-catalog.co
     NgbAlertModule,
     NoPermissionAlertComponent,
     ProviderCatalogComponent,
+    MapGoogleComponent,
   ],
 })
 export class CoreModule {}

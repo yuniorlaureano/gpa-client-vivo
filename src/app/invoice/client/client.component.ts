@@ -11,6 +11,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { LocationWithNameModel } from '../../core/models/location-with-name.model';
 
 @Component({
   selector: 'gpa-client',
@@ -20,6 +21,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 export class ClientComponent implements OnInit, OnDestroy {
   clients: ClientModel[] = [];
   isEdit: boolean = false;
+  mapIsVisible: boolean = false;
 
   //subscriptions
   subscriptions$: Subscription[] = [];
@@ -47,13 +49,27 @@ export class ClientComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad();
     this.loadClient();
+    this.clientForm.get('latitude')?.disable();
+    this.clientForm.get('longitude')?.disable();
   }
 
   clientForm = this.fb.group({
     id: [''],
     name: ['', Validators.required],
-    lastName: ['', Validators.required],
+    lastName: [''],
     identification: ['', Validators.required],
+    identificationType: [1],
+    phone: [''],
+    email: [''],
+    buildingNumber: [''],
+    state: [''],
+    city: [''],
+    street: [''],
+    country: [''],
+    postalCode: [''],
+    latitude: [0],
+    longitude: [0],
+    formattedAddress: [''],
     credits: this.fb.array([]),
   });
 
@@ -90,6 +106,10 @@ export class ClientComponent implements OnInit, OnDestroy {
       requiredPermissions,
       PermissionConstants.Permission.Update
     );
+  }
+
+  showMap() {
+    this.mapIsVisible = true;
   }
 
   onSubmit() {
@@ -139,6 +159,7 @@ export class ClientComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.clearForm();
+          this.spinner.hide('fullscreen');
           this.toastService.showSucess('Cliente actualizado');
         },
         error: (error) => {
@@ -174,6 +195,23 @@ export class ClientComponent implements OnInit, OnDestroy {
   clearForm() {
     this.clientForm.reset();
     this.isEdit = false;
+    this.clientForm.get('latitude')?.disable();
+    this.clientForm.get('longitude')?.disable();
+  }
+
+  handleLocationChange(location: LocationWithNameModel) {
+    this.mapIsVisible = false;
+    this.clientForm.get('name')?.setValue(location.placeName);
+    this.clientForm
+      .get('formattedAddress')
+      ?.setValue(location.formattedAddress);
+    this.clientForm.get('latitude')?.setValue(location.lat);
+    this.clientForm.get('longitude')?.setValue(location.lng);
+    console.log('setting location');
+  }
+
+  hideMap() {
+    this.mapIsVisible = false;
   }
 
   loadClient() {
@@ -199,6 +237,18 @@ export class ClientComponent implements OnInit, OnDestroy {
               name: client.name,
               lastName: client.lastName,
               identification: client.identification,
+              identificationType: client.identificationType,
+              phone: client.phone,
+              email: client.email,
+              buildingNumber: client.buildingNumber,
+              state: client.state,
+              country: client.country,
+              postalCode: client.postalCode,
+              street: client.street,
+              city: client.city,
+              latitude: client.latitude,
+              longitude: client.longitude,
+              formattedAddress: client.formattedAddress,
               credits: [],
             });
             this.mapCredits(client.credits);

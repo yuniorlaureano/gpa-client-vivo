@@ -30,4 +30,8 @@ export class ClientService {
   updateClient(model: ClientModel): Observable<void> {
     return this.http.put<void>(`${this.url}`, model);
   }
+
+  removeClient(clientId: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${clientId}`);
+  }
 }

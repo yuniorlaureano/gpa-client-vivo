@@ -32,7 +32,6 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() onSelectedProduct = new EventEmitter<ProductModel>();
-  productSubscription!: Subscription;
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,
@@ -62,7 +61,7 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.handleShowProductCatalog(false);
-    this.productSubscription.unsubscribe();
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
 
   handleShowProductCatalog(visible: boolean) {
@@ -116,7 +115,7 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
 
   loadProducts() {
     const search = new FilterModel();
-    this.productSubscription = this.pageOptionsSubject
+    const sub = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {
           this.spinner.show('product-catalog-spinner');
@@ -139,5 +138,6 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
           this.spinner.hide('product-catalog-spinner');
         },
       });
+    this.subscriptions$.push(sub);
   }
 }

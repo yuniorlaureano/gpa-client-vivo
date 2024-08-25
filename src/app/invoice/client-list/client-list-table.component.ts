@@ -167,6 +167,19 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
+  getIdentificationType(type: number) {
+    switch (type) {
+      case 1:
+        return 'Cédula';
+      case 2:
+        return 'RNC';
+      case 3:
+        return 'Pasaporte';
+      default:
+        return 'Otro';
+    }
+  }
+
   loadClients() {
     let searchModel = new FilterModel();
     const sub = this.pageOptionsSubject

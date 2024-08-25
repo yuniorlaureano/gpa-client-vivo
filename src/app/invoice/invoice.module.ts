@@ -15,6 +15,7 @@ import { ReceivableAccountListTableComponent } from './receivable-account-list/r
 import { ClientComponent } from './client/client.component';
 import { ClientListComponent } from './client-list/client-list.component';
 import { ClientListTableComponent } from './client-list/client-list-table.component';
+import { MapGoogleComponent } from '../core/map-google/map-google.component';
 
 @NgModule({
   declarations: [

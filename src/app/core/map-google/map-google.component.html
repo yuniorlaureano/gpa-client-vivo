@@ -1,0 +1,37 @@
+<div class="map-google" [hidden]="!visible">
+  <ngx-spinner
+    name="map-google-spinner"
+    [fullScreen]="false"
+    type="timer"
+    size="medium"
+  ></ngx-spinner>
+  <div class="row">
+    <div class="col-4 col-sm-4">
+      <ul>
+        <li>{{ selectedLocation?.formattedAddress }}</li>
+        <li>{{ selectedLocation?.placeName }}</li>
+        <li>{{ selectedLocation?.lat }}</li>
+        <li>{{ selectedLocation?.lng }}</li>
+      </ul>
+    </div>
+    <div class="search-holder col-11 col-sm-11">
+      <input
+        id="place-search"
+        type="text"
+        class="form-control"
+        placeholder="Search for places"
+      />
+    </div>
+    <div class="col-1 col-sm-1">
+      <button class="btn btn-danger" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+  <google-map
+    width="100%"
+    [center]="center"
+    [zoom]="zoom"
+    (mapClick)="mapClick($event)"
+  />
+</div>

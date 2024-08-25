@@ -1,0 +1,26 @@
+div.card {
+  position: relative;
+}
+
+.map-google {
+  position: absolute;
+  padding: 20px;
+  width: 100%;
+  min-height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  background-color: white;
+}
+
+.map-google tbody tr {
+  cursor: pointer;
+}
+
+.selected-product {
+  background-color: lightblue;
+}
+
+.search-holder {
+  margin-bottom: 5px;
+}
