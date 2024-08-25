@@ -7,47 +7,64 @@
       class="form-control"
       placeholder="Buscar cliente"
       style="margin-right: 20px"
+      (input)="handleSearch($event)"
     />
     <button class="btn btn-outline-danger btn-rounded" (click)="handleHide()">
       <i class="bi bi-x"></i>
     </button>
   </div>
   <hr />
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <td>Nombre</td>
-          <td>Documento de identidad</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let client of clients"
-          (click)="handleSelectedClientFromCatalog(client)"
-        >
-          <td>{{ client.name + " " + client.lastName }}</td>
-          <td>{{ client.identification }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <nav aria-label="Page Navigation">
-      <ul class="pagination justify-content-end">
-        <li class="page-item" style="margin-right: 6px">
-          <button class="btn btn-outline-info" (click)="handleBackwardPage()">
-            <span aria-hidden="true">
-              <i class="bi bi-arrow-left"></i>
-            </span>
-          </button>
-        </li>
-        <li class="page-item">
-          <button class="btn btn-outline-info" (click)="handleForwardPage()">
-            <span aria-hidden="true">
-              <i class="bi bi-arrow-right"></i>
-            </span>
-          </button>
-        </li>
-      </ul>
-    </nav>
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <ngx-spinner
+          name="client-catalog-spinner"
+          [fullScreen]="false"
+          type="timer"
+          size="medium"
+        ></ngx-spinner>
+        <table class="table">
+          <thead>
+            <tr>
+              <td>Nombre</td>
+              <td>Documento de identidad</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let client of clients"
+              (click)="handleSelectedClientFromCatalog(client)"
+            >
+              <td>{{ client.name + " " + client.lastName }}</td>
+              <td>{{ client.identification }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="Page Navigation">
+          <ul class="pagination justify-content-end">
+            <li class="page-item" style="margin-right: 6px">
+              <button
+                class="btn btn-outline-info"
+                (click)="handleBackwardPage()"
+              >
+                <span aria-hidden="true">
+                  <i class="bi bi-arrow-left"></i>
+                </span>
+              </button>
+            </li>
+            <li class="page-item">
+              <button
+                class="btn btn-outline-info"
+                (click)="handleForwardPage()"
+              >
+                <span aria-hidden="true">
+                  <i class="bi bi-arrow-right"></i>
+                </span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
   </div>
 </div>

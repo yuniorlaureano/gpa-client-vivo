@@ -6,12 +6,19 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { StockService } from '../../inventory/service/stock.service';
 import { ProductCatalogModel } from '../../inventory/models/product-catalog.model';
 import { ToastService } from '../service/toast.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-stock-product-catalog',
@@ -23,7 +30,8 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() onSelectedProduct = new EventEmitter<ProductCatalogModel>();
-  productSubscription!: Subscription;
+  subscriptions$: Subscription[] = [];
+  searchTerms = new Subject<string>();
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,
@@ -40,16 +48,18 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
 
   constructor(
     private stockService: StockService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.initSearch();
   }
 
   ngOnDestroy(): void {
     this.handleShowProductCatalog(false);
-    this.productSubscription.unsubscribe();
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
 
   handleShowProductCatalog(visible: boolean) {
@@ -84,12 +94,31 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
     this.onSelectedProduct.emit(product);
   }
 
+  handleSearch(event: any) {
+    this.spinner.show('stock-product-catalog-spinner');
+    this.searchTerms.next(event.target.value);
+  }
+
+  initSearch() {
+    const sub = this.searchTerms
+      .pipe(
+        debounceTime(300) // Adjust the time (in milliseconds) as needed
+      )
+      .subscribe((search) => {
+        this.pageOptionsSubject.next({ ...this.options, search: search });
+      });
+    this.subscriptions$.push(sub);
+  }
+
   loadProducts() {
     const search = new FilterModel();
-    this.productSubscription = this.pageOptionsSubject
+    const sub = this.pageOptionsSubject
       .pipe(
         switchMap((options) => {
+          this.spinner.show('stock-product-catalog-spinner');
           search.page = options.page;
+          search.pageSize = options.pageSize;
+          search.search = options.search;
           return this.stockService.getProductCatalog(search);
         })
       )
@@ -100,10 +129,13 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
             ...this.options,
             count: model.count,
           };
+          this.spinner.hide('stock-product-catalog-spinner');
         },
         error: (error) => {
           this.toastService.showError('Error cargando productos');
+          this.spinner.hide('stock-product-catalog-spinner');
         },
       });
+    this.subscriptions$.push(sub);
   }
 }

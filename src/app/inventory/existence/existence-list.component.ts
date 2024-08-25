@@ -10,11 +10,9 @@ import { ExistenceModel } from '../models/existence.model';
 export class ExistenceListComponent {
   constructor(private router: Router) {}
 
-  handleEdit(invoice: ExistenceModel) {
-    // this.router.navigate(['/invoice/sale/edit/' + invoice.id]);
+  handleEdit(existence: ExistenceModel) {
+    this.router.navigate(['/inventory/product/' + existence.productId]);
   }
 
-  handleDelete(invoice: ExistenceModel) {
-    // this.router.navigate(['/invoice/sale/edit/' + invoice.id]);
-  }
+  handleDelete(existence: ExistenceModel) {}
 }

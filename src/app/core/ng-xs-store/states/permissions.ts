@@ -236,6 +236,14 @@ function stockPermission(): RequiredPermissionType {
       expected: PermissionConstants.Permission.ReadTransactions,
       valid: false,
     },
+    upload: {
+      expected: PermissionConstants.Permission.Upload,
+      valid: false,
+    },
+    download: {
+      expected: PermissionConstants.Permission.Download,
+      valid: false,
+    },
   };
 }
 
@@ -259,6 +267,14 @@ function invoicePermission(): RequiredPermissionType {
     },
     return: {
       expected: PermissionConstants.Permission.Return,
+      valid: false,
+    },
+    upload: {
+      expected: PermissionConstants.Permission.Upload,
+      valid: false,
+    },
+    download: {
+      expected: PermissionConstants.Permission.Download,
       valid: false,
     },
   };

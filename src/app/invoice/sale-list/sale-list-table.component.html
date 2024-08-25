@@ -91,6 +91,15 @@
             </div>
           </div>
         </div>
+        <div class="col-sm-1 col-1 mt-4" style="padding-top: 3px">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="resetSearchFilter()"
+          >
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
       </div>
     </form>
   </div>
@@ -101,6 +110,7 @@
     <th>Fecha</th>
     <th>Nota</th>
     <th>Cliente</th>
+    <th>Estado de pago</th>
     <th></th>
   </tr>
   <tbody body>
@@ -113,17 +123,11 @@
         {{ getStatusDescription(invoice.status) }}
       </td>
       <td>{{ invoice.type == 1 ? "Al contado" : "A crédito" }}</td>
-      <td>{{ invoice.date | json }}</td>
+      <td>{{ invoice.date | date }}</td>
       <td>{{ invoice.note }}</td>
       <td>{{ invoice.client?.name + " " + invoice.client?.lastName }}</td>
+      <td>{{ getPyamentStatusDescription(invoice.paymentStatus) }}</td>
       <td style="width: 100px">
-        <button
-          class="btn btn-outline-danger btn-icon"
-          (click)="handleDelete(invoice)"
-          [disabled]="!canDelete"
-        >
-          <i class="bi bi-trash"></i>
-        </button>
         <button
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(invoice)"

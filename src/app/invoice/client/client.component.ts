@@ -212,6 +212,7 @@ export class ClientComponent implements OnInit, OnDestroy {
     this.isEdit = false;
     this.clientForm.get('latitude')?.disable();
     this.clientForm.get('longitude')?.disable();
+    this.credits.clear();
   }
 
   handleLocationChange(location: LocationWithNameModel) {

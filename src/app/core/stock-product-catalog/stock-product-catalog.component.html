@@ -6,6 +6,7 @@
       class="form-control"
       placeholder="Buscar productos"
       style="margin-right: 20px"
+      (input)="handleSearch($event)"
     />
     <button
       class="btn btn-outline-danger btn-rounded"
@@ -14,58 +15,67 @@
       <i class="bi bi-x"></i>
     </button>
   </div>
-  <div>
-    <ul>
-      <li><i class="bi bi-cart4"></i></li>
-      <li>Cantidad: 2</li>
-      <li>Total: $54</li>
-    </ul>
-  </div>
   <hr />
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <td>Código</td>
-          <td>Nombre</td>
-          <td>Cantidad</td>
-          <td>Descuento</td>
-          <td>Agregado</td>
-          <td>Precio Unitario</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let product of products"
-          (click)="handleSelectedProductFromCatalog(product)"
-          [class.selected-product]="!!selectedProducts[product.productCode]"
-        >
-          <td>{{ product.productCode }}</td>
-          <td>{{ product.productName }}</td>
-          <td>{{ product.stock }}</td>
-          <td>$ {{ product.debit }}</td>
-          <td>$ {{ product.credit }}</td>
-          <td>$ {{ product.price }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <nav aria-label="Page Navigation">
-      <ul class="pagination justify-content-end">
-        <li class="page-item" style="margin-right: 6px">
-          <button class="btn btn-outline-info" (click)="handleBackwardPage()">
-            <span aria-hidden="true">
-              <i class="bi bi-arrow-left"></i>
-            </span>
-          </button>
-        </li>
-        <li class="page-item">
-          <button class="btn btn-outline-info" (click)="handleForwardPage()">
-            <span aria-hidden="true">
-              <i class="bi bi-arrow-right"></i>
-            </span>
-          </button>
-        </li>
-      </ul>
-    </nav>
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <ngx-spinner
+          name="stock-product-catalog-spinner"
+          [fullScreen]="false"
+          type="timer"
+          size="medium"
+        ></ngx-spinner>
+        <table class="table">
+          <thead>
+            <tr>
+              <td>Código</td>
+              <td>Nombre</td>
+              <td>Cantidad</td>
+              <td>Descuento</td>
+              <td>Agregado</td>
+              <td>Precio Unitario</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let product of products"
+              (click)="handleSelectedProductFromCatalog(product)"
+              [class.selected-product]="!!selectedProducts[product.productCode]"
+            >
+              <td>{{ product.productCode }}</td>
+              <td>{{ product.productName }}</td>
+              <td>{{ product.stock }}</td>
+              <td>$ {{ product.debit }}</td>
+              <td>$ {{ product.credit }}</td>
+              <td>$ {{ product.price }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="Page Navigation">
+          <ul class="pagination justify-content-end">
+            <li class="page-item" style="margin-right: 6px">
+              <button
+                class="btn btn-outline-info"
+                (click)="handleBackwardPage()"
+              >
+                <span aria-hidden="true">
+                  <i class="bi bi-arrow-left"></i>
+                </span>
+              </button>
+            </li>
+            <li class="page-item">
+              <button
+                class="btn btn-outline-info"
+                (click)="handleForwardPage()"
+              >
+                <span aria-hidden="true">
+                  <i class="bi bi-arrow-right"></i>
+                </span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
   </div>
 </div>

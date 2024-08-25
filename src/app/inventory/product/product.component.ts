@@ -207,6 +207,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.clearForm();
     this.toastService.showSucess('Producto actualizado');
     this.spinner.hide('fullscreen');
+    this.router.navigate(['/inventory/product']);
   }
 
   upateProduct() {

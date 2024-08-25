@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ProductCatalogModel } from '../../inventory/models/product-catalog.model';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ClientModel } from '../model/client.model';
@@ -6,7 +12,7 @@ import { SaleType } from '../../core/models/sale-type.enum';
 import { InvoiceService } from '../service/invoice.service';
 import { InvoiceModel, InvoiceDetailModel } from '../model/invoice.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, Subscription, switchMap } from 'rxjs';
+import { BehaviorSubject, of, Subscription, switchMap } from 'rxjs';
 import { InvoiceStatusEnum } from '../../core/models/invoice-status.enum';
 import { ToastService } from '../../core/service/toast.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
@@ -21,6 +27,10 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { bankRound } from '../../core/utils/calculation.utils';
+import { downloadFile } from '../../core/utils/file.utils';
+import { InvoiceAttachModel } from '../model/invoice-attachment';
+import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
 
 @Component({
   selector: 'gpa-sale',
@@ -38,6 +48,7 @@ export class SaleComponent implements OnInit, OnDestroy {
   isClientCatalogVisible: boolean = false;
   selectedProducts: { [key: string]: ProductCatalogModel } = {};
   concepts: { concept: string; total: number; isDiscount: boolean }[] = [];
+  files: FileList | null = null;
   productCatalogAggregate: {
     grossTotalPrice: number;
     netTotalPrice: number;
@@ -52,12 +63,16 @@ export class SaleComponent implements OnInit, OnDestroy {
     outOfCredit: false,
   };
 
+  attachments: InvoiceAttachModel[] = [];
+  attachmentsSubject$ = new BehaviorSubject<string | null>(null);
+  @ViewChild('invoiceInputFile') invoiceFileInput!: ElementRef;
+
   saleForm = this.formBuilder.group({
     id: [''],
     note: [null],
     status: [InvoiceStatusEnum.Saved, Validators.required],
-    date: [null, Validators.required],
     type: [SaleType.Cash, Validators.required],
+    date: [''],
     clientId: ['', Validators.required],
     storeId: [''],
     invoiceDetails: this.formBuilder.array([]),
@@ -94,6 +109,7 @@ export class SaleComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getInvoice();
     this.handlePermissionsLoad();
+    this.loadAttachments();
   }
 
   handlePermissionsLoad() {
@@ -162,16 +178,22 @@ export class SaleComponent implements OnInit, OnDestroy {
     this.concepts = flatConcepts.flatConcepts;
 
     this.productCatalogAggregate = {
-      grossTotalPrice: totalPrice,
-      netTotalPrice: totalPrice - flatConcepts.debit + flatConcepts.credit,
+      grossTotalPrice: bankRound(totalPrice),
+      netTotalPrice: bankRound(
+        totalPrice - flatConcepts.debit + flatConcepts.credit
+      ),
       totalQuantity,
       return: 0,
       outOfCredit: false,
     };
 
     if (!this.isEdit) {
-      this.payment = totalPrice - flatConcepts.debit + flatConcepts.credit;
-      this.paymentValue = totalPrice - flatConcepts.debit + flatConcepts.credit;
+      this.payment = bankRound(
+        totalPrice - flatConcepts.debit + flatConcepts.credit
+      );
+      this.paymentValue = bankRound(
+        totalPrice - flatConcepts.debit + flatConcepts.credit
+      );
     }
   }
 
@@ -264,10 +286,15 @@ export class SaleComponent implements OnInit, OnDestroy {
     value.id = null;
     const sub = this.invoiceService.addInvoice(<InvoiceModel>value).subscribe({
       next: (data) => {
-        this.router.navigate(['/invoice/sale/edit/' + data.id]);
-        this.toastService.showSucess('Venta realizada');
-        this.calculateSelectedProductCatalogAggregate();
-        this.spinner.hide('fullscreen');
+        this.uploadFile(data.id!, (success) => {
+          if (success) {
+            this.toastService.showSucess('Adjuntos agregados');
+          }
+          // this.toastService.showSucess('Venta realizada');
+          // this.calculateSelectedProductCatalogAggregate();
+          // this.spinner.hide('fullscreen');
+          this.router.navigate(['/invoice/sale/edit/' + data.id]);
+        });
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
@@ -284,6 +311,7 @@ export class SaleComponent implements OnInit, OnDestroy {
         this.router.navigate(['/invoice/sale/edit/' + value.id]);
         this.toastService.showSucess('Venta editada');
         this.calculateSelectedProductCatalogAggregate();
+        this.spinner.hide('fullscreen');
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
@@ -298,8 +326,10 @@ export class SaleComponent implements OnInit, OnDestroy {
       ...this.saleForm.value,
       storeId: null,
       client: null,
+      date: '',
       type: this.saleType,
       payment: this.getPayment(),
+      paymentStatus: PaymentStatusEnum.Payed,
       invoiceDetails: this.invoiceDetails.value.map((product: any) => ({
         id: product.id,
         productId: product.productId,
@@ -391,11 +421,6 @@ export class SaleComponent implements OnInit, OnDestroy {
     );
   }
 
-  clearSelectedClient() {
-    this.saleForm.get('clientId')?.setValue(null);
-    this.client = null;
-  }
-
   handleSelectedClient(client: ClientModel) {
     this.spinner.show('fullscreen');
     this.saleForm.get('clientId')?.setValue(client.id);
@@ -435,7 +460,7 @@ export class SaleComponent implements OnInit, OnDestroy {
               id: invoice.id,
               note: <any>invoice.note,
               status: invoice.status,
-              date: <any>invoice.date,
+              date: invoice.date,
               type: invoice.type,
               clientId: invoice.clientId,
               storeId: null,
@@ -449,6 +474,7 @@ export class SaleComponent implements OnInit, OnDestroy {
             this.mapProductsToForm(invoice.invoiceDetails);
             this.calculateSelectedProductCatalogAggregate();
             this.setDisable(invoice.status == InvoiceStatusEnum.Canceled);
+            this.attachmentsSubject$.next(invoice.id);
           }
           this.spinner.hide('fullscreen');
         },
@@ -468,6 +494,97 @@ export class SaleComponent implements OnInit, OnDestroy {
       this.disableForm = false;
       this.saleForm.enable();
     }
+  }
+
+  processFileUpload(event: Event) {
+    const fileElement = event.currentTarget as HTMLInputElement;
+    this.files = fileElement.files;
+    //automaticaly upload the file if the product is being edited
+    this.uploadFIleOnUpdate();
+  }
+
+  uploadFIleOnUpdate() {
+    if (this.isEdit && this.saleForm.get('id')?.value) {
+      this.spinner.show('invoice-file-spinner');
+      this.uploadFile(this.saleForm.get('id')?.value!, () => {
+        this.toastService.showSucess('Adjuntos agregados');
+        this.spinner.hide('invoice-file-spinner');
+      });
+    }
+  }
+
+  uploadFile(invoiceId: string, func: (success: boolean) => void) {
+    if (this.files && this.files.length > 0) {
+      const formData = new FormData();
+      for (let i = 0; i < this.files.length; i++) {
+        formData.append('files', this.files[i]);
+      }
+      const sub = this.invoiceService
+        .uploadAttachment(invoiceId, formData)
+        .subscribe({
+          next: () => {
+            func(true);
+            this.invoiceFileInput.nativeElement.value = '';
+            if (this.isEdit) {
+              this.attachmentsSubject$.next(invoiceId);
+            }
+          },
+          error: () => {
+            func(false);
+          },
+        });
+      this.subscriptions$.push(sub);
+    } else {
+      func(false);
+    }
+  }
+
+  loadAttachments() {
+    const sub = this.attachmentsSubject$
+      .pipe(
+        switchMap((invoiceId) => {
+          this.spinner.show('invoice-file-spinner');
+          if (invoiceId) {
+            return this.invoiceService.getAttachments(invoiceId);
+          }
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (attachments) => {
+          this.mapAttachments(attachments);
+          this.spinner.hide('invoice-file-spinner');
+        },
+        error: () => {
+          this.spinner.hide('invoice-file-spinner');
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  mapAttachments(attachments: InvoiceAttachModel[]) {
+    this.attachments = attachments.map((attachment) => {
+      let file = JSON.parse(attachment.file);
+      attachment.deserializedFile = {
+        name: file.fileName,
+        uniqueName: file.uniqueFileName,
+      };
+      return attachment;
+    });
+  }
+
+  downloadAttachment(id: string, name: string) {
+    this.spinner.show('invoice-file-spinner');
+    const sub = this.invoiceService.downloadAttachments(id).subscribe({
+      next: (data) => {
+        downloadFile(data, name);
+        this.spinner.hide('invoice-file-spinner');
+      },
+      error: () => {
+        this.spinner.hide('invoice-file-spinner');
+      },
+    });
+    this.subscriptions$.push(sub);
   }
 
   mapProductsToForm(invoiceDetails: InvoiceDetailModel[]) {

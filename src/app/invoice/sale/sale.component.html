@@ -95,14 +95,6 @@
               <i class="bi bi-person-plus"></i>
               Cliente
             </button>
-            <button
-              class="btn btn-outline-danger"
-              style="margin-left: 5px"
-              (click)="clearSelectedClient()"
-              [disabled]="disableForm"
-            >
-              <i class="bi bi-x-lg"></i>
-            </button>
             <gpa-validator-message
               [control]="saleForm.get('clientId')"
               [touched]="saleForm.touched"
@@ -129,10 +121,11 @@
                 <ol>
                   <li *ngFor="let cl of client.debits">
                     <a
+                      style="color: rgba(13, 110, 253)"
                       routerLink="{{
                         '/invoice/receivable-account/invoice/' + cl.invoiceId
                       }}"
-                      >Cuenta por cobrar</a
+                      ><i class="bi bi-link"></i> Cuenta por cobrar</a
                     >
                   </li>
                 </ol>
@@ -141,34 +134,6 @@
           </div>
           <div class="col-12 col-sm-12">
             <hr />
-          </div>
-          <div class="col-12 col-sm-6">
-            <div class="mb-3">
-              <label for="date" class="form-label"
-                ><span class="text-danger require-sign">*</span>Fecha</label
-              >
-              <div class="input-group">
-                <input
-                  id="date"
-                  class="form-control"
-                  placeholder="yyyy-mm-dd"
-                  formControlName="date"
-                  ngbDatepicker
-                  #date="ngbDatepicker"
-                />
-                <button
-                  class="btn btn-outline-secondary bi bi-calendar3"
-                  (click)="date.toggle()"
-                  type="button"
-                ></button>
-              </div>
-              <gpa-validator-message
-                [control]="saleForm.get('date')"
-                [touched]="saleForm.touched"
-                validation="required"
-                message="La fecha es obligatoria"
-              />
-            </div>
           </div>
           <div class="col-sm-6" *ngIf="isEdit">
             <label for="status" class="form-label">Estado</label>
@@ -180,10 +145,41 @@
               />
             </div>
           </div>
-          <div class="col-12 col-sm-12">
-            <div class="mb-3">
+          <div class="col-12 col-sm-12 card mt-3">
+            <div class="mb-3 card-body" style="border: solid 1px lightgray">
+              <ngx-spinner
+                name="invoice-file-spinner"
+                [fullScreen]="false"
+                type="timer"
+                size="medium"
+              ></ngx-spinner>
               <label for="inputCompanyName" class="form-label">Adjuntos</label>
-              <input type="file" class="form-control" />
+              <input
+                type="file"
+                multiple
+                class="form-control"
+                #invoiceInputFile
+                (change)="processFileUpload($event)"
+              />
+              <ul style="margin-left: 10px">
+                <li *ngFor="let item of attachments">
+                  <a
+                    style="color: rgba(13, 110, 253); cursor: pointer"
+                    (click)="
+                      downloadAttachment(
+                        item.id,
+                        item.deserializedFile?.name ?? 'attachment'
+                      )
+                    "
+                  >
+                    <i
+                      class="bi bi-cloud-arrow-down"
+                      style="font-size: 20px"
+                    ></i>
+                    {{ item.deserializedFile?.name }}
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
           <div class="col-12 col-sm-12">
@@ -314,7 +310,7 @@
                 [class.credit]="!concept.isDiscount"
                 *ngFor="let concept of concepts"
               >
-                {{ concept.concept }}: $ {{ concept.total }}
+                {{ concept.concept }}: $ {{ concept.total.toFixed(2) }}
               </p>
               <p>____________________________</p>
               <p>
@@ -324,7 +320,7 @@
               <input
                 type="number"
                 name="payment"
-                [value]="paymentValue"
+                [value]="paymentValue.toFixed(2)"
                 (input)="handlePayment($event)"
                 class="form-control"
                 style="max-width: 200px; text-align: right"

@@ -1,5 +1,6 @@
 import { ProductType } from '../models/product-type.enum';
 import { AddonModel, AddonTypeConst } from '../../inventory/models/addon.model';
+import { bankRound } from './calculation.utils';
 
 export const getProductTypeDescription = (type: ProductType): string => {
   switch (type) {
@@ -64,8 +65,8 @@ export const conceptObjectToFlatArray = (
     };
   });
   return {
-    debit,
-    credit,
+    debit: bankRound(debit),
+    credit: bankRound(credit),
     flatConcepts: arrayConcepts,
   };
 };

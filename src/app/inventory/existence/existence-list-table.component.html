@@ -60,6 +60,14 @@
       <td style="color: red">{{ stock.output }}</td>
       <td>{{ stock.stock }}</td>
       <td>{{ stock.price * stock.stock | currency }}</td>
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(stock)"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
     </tr>
   </tbody>
 </gpa-data-table>

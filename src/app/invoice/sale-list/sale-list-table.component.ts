@@ -28,6 +28,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FormBuilder } from '@angular/forms';
+import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
 
 @Component({
   selector: 'gpa-sale-list-table',
@@ -175,6 +176,7 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
         !this.filterForm.get('to')?.value) ||
       (!this.filterForm.get('from')?.value && this.filterForm.get('to')?.value)
     ) {
+      this.spinner.hide('table-spinner');
       return;
     }
 
@@ -234,5 +236,21 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
         },
       });
     this.subscriptions$.push(sub);
+  }
+
+  resetSearchFilter() {
+    this.filterForm.reset();
+    this.handleSearch();
+  }
+
+  getPyamentStatusDescription(status: PaymentStatusEnum) {
+    switch (status) {
+      case PaymentStatusEnum.Payed:
+        return 'Pagado';
+      case PaymentStatusEnum.Pending:
+        return 'Pendiente';
+      default:
+        return '';
+    }
   }
 }

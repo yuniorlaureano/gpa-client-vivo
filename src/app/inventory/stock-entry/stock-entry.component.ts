@@ -526,8 +526,9 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           },
         });
       this.subscriptions$.push(sub);
+    } else {
+      func(false);
     }
-    func(false);
   }
 
   loadAttachments() {
