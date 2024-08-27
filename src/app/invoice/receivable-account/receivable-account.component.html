@@ -32,11 +32,65 @@
     Guardar
   </button>
 </div>
-<div class="row" style="margin-top: 50px">
-  <div class="col-sm-12 col-12">
-    <!-- Card start -->
-    <div class="card">
-      <div class="card-body">
+<div class="card" style="margin-top: 50px">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-3 col-3">
+        <i class="bi bi-receipt" style="font-size: 50px"></i>
+        <span style="font-size: 40px">Factura</span>
+        <div>
+          <ul>
+            <li>
+              <span class="client-profile">Estado:</span>
+              {{ getStatusDescription(invoice?.invoiceStatus) }}
+            </li>
+            <li>
+              <span class="client-profile">Tipo:</span>
+              {{ invoice?.saleType == 0 ? "A crédito" : "Al contado" }}
+            </li>
+            <li>
+              <span class="client-profile">Fecha:</span>
+              {{ invoice?.date | date }}
+            </li>
+            <li>
+              <span class="client-profile">Nota:</span>
+              {{ invoice?.invoiceNote }}
+            </li>
+            <li>
+              <span class="client-profile">Pago inicial:</span>
+              {{ invoice?.payment | currency }}
+            </li>
+            <li
+              [class.payment_status_payed]="invoice?.paymentStatus == 0"
+              [class.payment_status_pending]="invoice?.paymentStatus == 1"
+            >
+              <span class="client-profile">Estado:</span>
+              {{ getPaymentStatusDescription(invoice?.paymentStatus) }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-sm-3 col-3">
+        <i class="bi bi-person" style="font-size: 50px"></i>
+        <span style="font-size: 40px">Cliente</span>
+        <div>
+          <ul>
+            <li>
+              <span class="client-profile">Cliente:</span>
+              {{ invoice?.clientName }}
+            </li>
+            <li>
+              <span class="client-profile">Email:</span>
+              {{ invoice?.clientEmail }}
+            </li>
+            <li>
+              <span class="client-profile">Teléfono:</span>
+              {{ invoice?.clientPhone }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-12 col-sm-12">
         <form class="row row-cols-sm-auto" [formGroup]="receivableForm">
           <div class="col-sm-3">
             <div class="mb-3">
@@ -58,7 +112,7 @@
 
           <div class="col-sm-3">
             <div class="mb-3">
-              <label for="date" class="form-label"
+              <label for="payment" class="form-label"
                 ><span class="text-danger require-sign">*</span>Pago</label
               >
               <div class="input-group">
@@ -83,36 +137,6 @@
               />
             </div>
           </div>
-
-          <div class="col-sm-6">
-            <div class="mb-3">
-              <label for="date" class="form-label"
-                ><span class="text-danger require-sign">*</span>Fecha</label
-              >
-              <div class="input-group">
-                <input
-                  id="date"
-                  class="form-control"
-                  placeholder="yyyy-mm-dd"
-                  ngbDatepicker
-                  formControlName="date"
-                  #date="ngbDatepicker"
-                />
-                <button
-                  class="btn btn-outline-secondary bi bi-calendar3"
-                  (click)="date.toggle()"
-                  type="button"
-                ></button>
-              </div>
-              <gpa-validator-message
-                [control]="receivableForm.get('date')"
-                [touched]="receivableForm.touched"
-                validation="required"
-                message="La fecha es obligatoria"
-              />
-            </div>
-          </div>
-
           <div class="col-12 col-sm-12">
             <div class="mb-3">
               <label for="note" class="form-label">Nota</label>
@@ -124,62 +148,9 @@
             </div>
           </div>
         </form>
-        <div class="col-sm-12">
-          <i class="bi bi-receipt" style="font-size: 50px"></i>
-          <span style="font-size: 40px">Factura</span>
-          <div>
-            <ul>
-              <li>
-                <span class="client-profile">Estado:</span>
-                {{ getStatusDescription(invoice?.invoiceStatus) }}
-              </li>
-              <li>
-                <span class="client-profile">Tipo:</span>
-                {{ invoice?.saleType == 0 ? "A crédito" : "Al contado" }}
-              </li>
-              <li>
-                <span class="client-profile">Fecha:</span>
-                {{ invoice?.date }}
-              </li>
-              <li>
-                <span class="client-profile">Nota:</span>
-                {{ invoice?.invoiceNote }}
-              </li>
-              <li>
-                <span class="client-profile">Pago inicial:</span>
-                {{ invoice?.payment | currency }}
-              </li>
-              <li
-                [class.payment_status_payed]="invoice?.paymentStatus == 0"
-                [class.payment_status_pending]="invoice?.paymentStatus == 1"
-              >
-                <span class="client-profile">Estado:</span>
-                {{ getPaymentStatusDescription(invoice?.paymentStatus) }}
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <i class="bi bi-person" style="font-size: 50px"></i>
-          <span style="font-size: 40px">Cliente</span>
-          <div>
-            <ul>
-              <li>
-                <span class="client-profile">Cliente:</span>
-                {{ invoice?.clientName }}
-              </li>
-              <li>
-                <span class="client-profile">Email:</span>
-                {{ invoice?.clientEmail }}
-              </li>
-              <li>
-                <span class="client-profile">Teléfono:</span>
-                {{ invoice?.clientPhone }}
-              </li>
-            </ul>
-          </div>
-        </div>
-        <hr />
+      </div>
+      <hr />
+      <div class="col-12 col-sm-12">
         <gpa-no-permission-alert [visible]="!canRead">
           No tiene permisos para ver las cuentas por cobrar
         </gpa-no-permission-alert>
@@ -197,15 +168,13 @@
               *ngFor="let account of invoice?.receivableAccounts"
               [class.row_paid]="account.payment != 0"
             >
-              <td>{{ account.pendingPayment }}</td>
-              <td>{{ account.payment }}</td>
-              <td>{{ account.date | json }}</td>
+              <td>{{ account.pendingPayment | currency }}</td>
+              <td>{{ account.payment | currency }}</td>
+              <td>{{ account.date | date }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <!-- Card end -->
   </div>
 </div>
-<!-- Row end -->

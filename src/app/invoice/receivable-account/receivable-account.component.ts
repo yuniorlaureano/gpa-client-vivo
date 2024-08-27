@@ -27,7 +27,6 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
   receivableForm = this.form.group({
     id: [''],
     payment: [0.0, [Validators.required, Validators.min(1)]],
-    date: [null, Validators.required],
     note: [null],
     invoiceId: ['', Validators.required],
   });
@@ -132,7 +131,7 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
       const value: ReceivableAccountModel = {
         id: this.receivableForm.get('id')?.value ?? '',
         payment: this.receivableForm.get('payment')?.value ?? 0.0,
-        date: this.receivableForm.get('date')?.value ?? {},
+        date: '',
         pendingPayment: 0.0,
         invoiceId: this.receivableForm.get('invoiceId')?.value ?? '',
       };
@@ -200,7 +199,6 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
             this.receivableForm.setValue({
               id: invoice.pendingPayment?.id ?? null,
               payment: 0.0,
-              date: null,
               note: null,
               invoiceId: invoice.invoiceId,
             });

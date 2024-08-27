@@ -7,7 +7,7 @@ export interface InvoiceWithReceivableAccountModel {
   invoiceId: string;
   invoiceStatus: InvoiceStatusEnum;
   saleType: SaleType;
-  date: object;
+  date: string;
   invoiceNote: string | null;
   paymentStatus: PaymentStatusEnum;
   payment: number;
