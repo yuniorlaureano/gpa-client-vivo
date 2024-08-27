@@ -290,7 +290,7 @@ export class SaleComponent implements OnInit, OnDestroy {
           if (success) {
             this.toastService.showSucess('Adjuntos agregados');
           }
-          // this.toastService.showSucess('Venta realizada');
+          this.toastService.showSucess('Venta realizada');
           // this.calculateSelectedProductCatalogAggregate();
           // this.spinner.hide('fullscreen');
           this.router.navigate(['/invoice/sale/edit/' + data.id]);
