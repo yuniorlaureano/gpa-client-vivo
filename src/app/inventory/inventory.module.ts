@@ -27,6 +27,7 @@ import { StockOutputComponent } from './stock-output/stock-output.component';
 import { AddonComponent } from './addon/addon.component';
 import { AddonListComponent } from './addon-list/addon-list.component';
 import { AddonListTableComponent } from './addon-list/addon-list-table.component';
+import { AddonProductCatalogComponent } from './addon/addon-product-catalog/addon-product-catalog.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { AddonListTableComponent } from './addon-list/addon-list-table.component
     AddonComponent,
     AddonListComponent,
     AddonListTableComponent,
+    AddonProductCatalogComponent,
   ],
   imports: [
     CommonModule,

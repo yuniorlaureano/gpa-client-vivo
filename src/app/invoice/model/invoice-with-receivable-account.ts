@@ -11,6 +11,7 @@ export interface InvoiceWithReceivableAccountModel {
   invoiceNote: string | null;
   paymentStatus: PaymentStatusEnum;
   payment: number;
+  clientId: string;
   clientName: string;
   clientIdentification: string;
   clientEmail: string;

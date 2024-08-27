@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
 import { FilterModel } from '../../core/models/filter.model';
 import { AddonModel } from '../models/addon.model';
+import { ProductByAddonModel } from '../models/product-by-addon.model';
 
 @Injectable()
 export class AddonService {
@@ -33,5 +34,41 @@ export class AddonService {
 
   removeAddon(id: string): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
+  }
+
+  getProductsByAddonId(
+    addonId: string,
+    search: FilterModel | null = null
+  ): Observable<ResponseModel<ProductByAddonModel>> {
+    return this.http.get<ResponseModel<ProductByAddonModel>>(
+      `${this.url}/${addonId}/products${search ? search.asQueryString() : ''}`
+    );
+  }
+
+  removeAddonFromProductAsync(
+    addonId: string,
+    productId: string
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `${this.url}/${addonId}/products/${productId}`
+    );
+  }
+
+  assignAddonToProductAsync(
+    addonId: string,
+    productId: string
+  ): Observable<void> {
+    return this.http.post<void>(
+      `${this.url}/${addonId}/products/${productId}`,
+      {}
+    );
+  }
+
+  removeAddonFromAllProductAsync(addonId: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${addonId}/products`);
+  }
+
+  assignAddonToAllProductAsync(addonId: string): Observable<void> {
+    return this.http.post<void>(`${this.url}/${addonId}/products`, {});
   }
 }

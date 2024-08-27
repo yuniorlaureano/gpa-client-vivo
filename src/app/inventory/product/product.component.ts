@@ -63,7 +63,6 @@ export class ProductComponent implements OnInit, OnDestroy {
     name: ['', Validators.required],
     price: [0.0, [Validators.required]],
     description: ['', Validators.required],
-    expirationDate: ['', Validators.required],
     unitId: ['', Validators.required],
     categoryId: ['', Validators.required],
     type: [
@@ -335,7 +334,6 @@ export class ProductComponent implements OnInit, OnDestroy {
       name: product.name,
       price: product.price,
       description: product.description,
-      expirationDate: product.expirationDate,
       unitId: product.unitId,
       categoryId: product.categoryId,
       type: product.type,

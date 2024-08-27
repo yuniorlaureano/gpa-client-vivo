@@ -129,14 +129,15 @@
         <a
           style="color: rgba(13, 110, 253)"
           routerLink="{{ '/invoice/client/edit/' + invoice.clientId }}"
-          >{{ invoice.client?.name + " " + invoice.client?.lastName }}</a
+          ><i class="bi bi-person"></i>
+          {{ invoice.client?.name + " " + invoice.client?.lastName }}</a
         >
       </td>
       <td>
         <a
           style="color: rgba(13, 110, 253)"
           routerLink="{{ '/invoice/receivable-account/invoice/' + invoice.id }}"
-          ><i class="bi bi-link"></i>
+          ><i class="bi bi-receipt"></i>
           {{ getPyamentStatusDescription(invoice.paymentStatus) }}</a
         >
       </td>

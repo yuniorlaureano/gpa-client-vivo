@@ -40,7 +40,7 @@
       [class.text-danger]="isPedding(receivable)"
       [class.text-success]="!isPedding(receivable)"
     >
-      <td>{{ receivable.client }}</td>
+      <td><i class="bi bi-person"></i> {{ receivable.client }}</td>
       <td>{{ receivable.pendingPayment - receivable.payment | currency }}</td>
       <td>{{ receivable.payment | currency }}</td>
       <td style="width: 100px">
