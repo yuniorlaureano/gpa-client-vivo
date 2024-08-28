@@ -59,7 +59,7 @@ export class ClientComponent implements OnInit, OnDestroy {
     name: ['', Validators.required],
     lastName: [''],
     identification: ['', Validators.required],
-    identificationType: [1],
+    identificationType: [1, Validators.required],
     phone: ['', Validators.required],
     email: ['', Validators.required],
     buildingNumber: [''],

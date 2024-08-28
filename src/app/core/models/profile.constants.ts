@@ -19,6 +19,7 @@ export class Permission {
   public static Return: string = 'return';
   public static Upload: string = 'upload';
   public static Download: string = 'download';
+  public static Print = 'print';
 }
 
 export class Apps {

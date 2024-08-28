@@ -46,9 +46,11 @@ export class AdminSidebarComponent implements OnInit, OnDestroy {
 
   handleMenuSelected(menu: string) {
     this.store.dispatch(new SetCurrentMenu(menu));
+    sessionStorage.setItem('menu', menu);
   }
 
   handleSubMenuSelected(menu: string) {
     this.store.dispatch(new SetCurrentSubMenu(menu));
+    sessionStorage.setItem('subMenu', menu);
   }
 }

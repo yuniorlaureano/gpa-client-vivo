@@ -277,6 +277,10 @@ function invoicePermission(): RequiredPermissionType {
       expected: PermissionConstants.Permission.Download,
       valid: false,
     },
+    [PermissionConstants.Permission.Print]: {
+      expected: PermissionConstants.Permission.Print,
+      valid: false,
+    },
   };
 }
 

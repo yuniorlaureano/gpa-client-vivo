@@ -53,4 +53,10 @@ export class InvoiceService {
       { responseType: 'blob' }
     );
   }
+
+  printInvoice(invoiceId: string): Observable<Blob> {
+    return this.http.get(`${this.url}/${invoiceId}/print`, {
+      responseType: 'blob',
+    });
+  }
 }
