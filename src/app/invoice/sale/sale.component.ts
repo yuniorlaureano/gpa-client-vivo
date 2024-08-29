@@ -38,6 +38,7 @@ import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
   styleUrl: './sale.component.css',
 })
 export class SaleComponent implements OnInit, OnDestroy {
+  paymentStatus: PaymentStatusEnum = PaymentStatusEnum.Pending;
   payment: number = 0;
   paymentValue: number = 0;
   disableForm: boolean = false;
@@ -475,6 +476,8 @@ export class SaleComponent implements OnInit, OnDestroy {
             this.calculateSelectedProductCatalogAggregate();
             this.setDisable(invoice.status == InvoiceStatusEnum.Canceled);
             this.attachmentsSubject$.next(invoice.id);
+
+            this.paymentStatus = invoice.paymentStatus;
           }
           this.spinner.hide('fullscreen');
         },
@@ -484,6 +487,10 @@ export class SaleComponent implements OnInit, OnDestroy {
         },
       });
     this.subscriptions$.push(sub);
+  }
+
+  isPayed() {
+    return this.paymentStatus == PaymentStatusEnum.Payed;
   }
 
   setDisable(disable: boolean) {

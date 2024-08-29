@@ -76,6 +76,7 @@
     type="button"
     class="btn btn-outline-dark btn-rounded"
     (click)="printInvoice()"
+    *ngIf="isEdit"
   >
     <i class="bi bi-printer"></i> Imprimir factura
   </button>
@@ -84,6 +85,7 @@
     type="button"
     class="btn btn-outline-dark btn-rounded"
     (click)="printProofOfPayment()"
+    *ngIf="isEdit && isPayed()"
   >
     <i class="bi bi-printer"></i> Imprimir comprobante
   </button>

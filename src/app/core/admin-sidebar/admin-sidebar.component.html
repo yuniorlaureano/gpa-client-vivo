@@ -31,7 +31,7 @@
                   class="menu-item-list"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="handleSubMenuSelected('Productos')"
-                  ><i class="bi bi-bag-plus"></i> Productos</a
+                  ><i class="bi bi-basket2-fill"></i> Productos</a
                 >
               </li>
               <li routerLinkActive="active">
@@ -40,7 +40,7 @@
                   routerLinkActive="current-page"
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('List de productos')"
-                  >List de productos</a
+                  ><i class="bi bi-list"></i> Lista de productos</a
                 >
               </li>
               <li routerLinkActive="active">
@@ -48,8 +48,17 @@
                   routerLink="/inventory/stock/cycle"
                   routerLinkActive="current-page"
                   class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
                   (click)="handleSubMenuSelected('Ciclos de inventario')"
-                  >Ciclos de inventario</a
+                  ><i class="bi bi-arrow-repeat"></i> Ciclos de inventario</a
+                >
+                <a
+                  routerLink="/inventory/stock/cycle/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Ciclos de inventario')"
+                  ><i class="bi bi-list"></i> Lista ciclos de inventario</a
                 >
               </li>
               <li routerLinkActive="active">
@@ -59,7 +68,16 @@
                   class="menu-item-list"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="handleSubMenuSelected('Category')"
-                  >Category</a
+                  ><i class="bi bi-tags"></i> Categorías</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/category/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Category List')"
+                  ><i class="bi bi-list"></i>Lista de categorías</a
                 >
               </li>
               <li routerLinkActive="active">
@@ -69,18 +87,37 @@
                   class="menu-item-list"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="handleSubMenuSelected('Agregados')"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-building-add"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0"
+                    />
+                    <path
+                      d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z"
+                    />
+                    <path
+                      d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"
+                    /></svg
                   >Agregados</a
                 >
               </li>
               <li routerLinkActive="active">
                 <a
-                  routerLink="/inventory/category/list"
+                  routerLink="/inventory/addon/list"
                   routerLinkActive="current-page"
                   class="menu-item-list"
-                  (click)="handleSubMenuSelected('Category List')"
-                  >Category List</a
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Agregados')"
+                  ><i class="bi bi-list"></i>Lista de agregados</a
                 >
               </li>
+
               <li routerLinkActive="active">
                 <a
                   routerLink="/inventory/entry"
@@ -88,6 +125,7 @@
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Entrada')"
                 >
+                  <i class="bi bi-arrow-right"></i>
                   Entrada</a
                 >
               </li>
@@ -98,7 +136,7 @@
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Salida')"
                 >
-                  Salida</a
+                  <i class="bi bi-arrow-left"></i> Salida</a
                 >
               </li>
               <li routerLinkActive="active">
@@ -107,7 +145,7 @@
                   routerLinkActive="current-page"
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Existencia')"
-                  ><i class="bi bi-list"></i> Existencia</a
+                  ><i class="bi bi-bag-check"></i> Existencia</a
                 >
               </li>
               <li routerLinkActive="active">
@@ -116,7 +154,7 @@
                   routerLinkActive="current-page"
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Transacciones')"
-                  ><i class="bi bi-list"></i> Transacciones</a
+                  ><i class="bi bi-arrow-left-right"></i> Transacciones</a
                 >
               </li>
             </ul>
@@ -140,7 +178,7 @@
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Venta')"
                 >
-                  <i class="bi bi-pencil" style="font-size: 15px"></i> Venta</a
+                  <i class="bi bi-arrows-angle-contract"></i> Venta</a
                 >
               </li>
               <li routerLinkActive="active">
@@ -173,7 +211,7 @@
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Cliente')"
                 >
-                  <i class="bi bi-pencil" style="font-size: 15px"></i>
+                  <i class="bi bi-people-fill"></i>
                   Cliente</a
                 >
               </li>
@@ -185,8 +223,7 @@
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Listado de clientes')"
                 >
-                  <i class="bi bi-pencil" style="font-size: 15px"></i>Listado de
-                  clientes</a
+                  <i class="bi bi-person-lines-fill"></i>Lista de clientes</a
                 >
               </li>
             </ul>
@@ -241,6 +278,18 @@
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Integraciones')"
                   [routerLinkActiveOptions]="{ exact: true }"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-plugin"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 8a7 7 0 1 1 2.898 5.673c-.167-.121-.216-.406-.002-.62l1.8-1.8a3.5 3.5 0 0 0 4.572-.328l1.414-1.415a.5.5 0 0 0 0-.707l-.707-.707 1.559-1.563a.5.5 0 1 0-.708-.706l-1.559 1.562-1.414-1.414 1.56-1.562a.5.5 0 1 0-.707-.706l-1.56 1.56-.707-.706a.5.5 0 0 0-.707 0L5.318 5.975a3.5 3.5 0 0 0-.328 4.571l-1.8 1.8c-.58.58-.62 1.6.121 2.137A8 8 0 1 0 0 8a.5.5 0 0 0 1 0"
+                    /></svg
                   >Integraciones</a
                 >
               </li>
@@ -263,6 +312,17 @@
                   routerLinkActive="current-page"
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Usuarios')"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-person-lock"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m0 5.996V14H3s-1 0-1-1 1-4 6-4q.845.002 1.544.107a4.5 4.5 0 0 0-.803.918A11 11 0 0 0 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664zM9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1"
+                    /></svg
                   >Usuarios</a
                 >
               </li>
@@ -272,7 +332,7 @@
                   routerLinkActive="current-page"
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Registrar usuario')"
-                  >Registrar usuario</a
+                  ><i class="bi bi-person-video2"></i>Registrar usuario</a
                 >
               </li>
               <li routerLinkActive="active">
@@ -281,7 +341,7 @@
                   routerLinkActive="current-page"
                   class="menu-item-list"
                   (click)="handleSubMenuSelected('Perfiles')"
-                  >Perfiles</a
+                  ><i class="bi bi-lock"></i>Perfiles</a
                 >
               </li>
             </ul>
