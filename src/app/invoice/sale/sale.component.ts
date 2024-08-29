@@ -634,4 +634,21 @@ export class SaleComponent implements OnInit, OnDestroy {
         });
     }
   }
+
+  printProofOfPayment() {
+    if (this.saleForm.get('id')?.value) {
+      this.invoiceService
+        .printProofOfPayment(this.saleForm.get('id')?.value!)
+        .subscribe((pdfBlob: Blob) => {
+          const url = window.URL.createObjectURL(pdfBlob);
+          const printWindow = window.open(url);
+          if (printWindow) {
+            printWindow.onload = () => {
+              printWindow.focus();
+              printWindow.print();
+            };
+          }
+        });
+    }
+  }
 }

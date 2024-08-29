@@ -78,6 +78,10 @@ function userPermission(): RequiredPermissionType {
       expected: PermissionConstants.Permission.Read,
       valid: false,
     },
+    [PermissionConstants.Permission.Upload]: {
+      expected: PermissionConstants.Permission.Upload,
+      valid: false,
+    },
   };
 }
 

@@ -1,12 +1,4 @@
-<!-- Row start -->
-<div class="row">
-  <div class="col-12">
-    <div style="display: flex; justify-content: space-between; gap: 15px">
-      <div></div>
-    </div>
-  </div>
-</div>
-<div class="row">
+<div style="position: relative">
   <div class="card">
     <div class="card-header">
       <h4>{{ isEdit ? "Editando perfil" : "Agregando perfil" }}</h4>
@@ -54,43 +46,48 @@
               </button>
             </div>
           </div>
-          <div class="col-sm-12">
-            <gpa-no-permission-alert [visible]="!canRead">
-              No tiene permisos para ver los perfiles
-            </gpa-no-permission-alert>
-            <div class="card" *ngIf="canRead">
-              <ngx-spinner
-                name="profile-spinner"
-                [fullScreen]="false"
-                type="timer"
-                size="medium"
-              ></ngx-spinner>
-              <hr />
-              <h4>Lista de perfiles</h4>
-              <gpa-profile-list
-                [reloadTable]="reloadTable"
-                (onDelete)="handleDelete($event)"
-                (onEdit)="handleEdit($event)"
-                (onView)="handleView($event)"
-                (onAddUser)="handleAddUser($event)"
-                [canEdit]="canEdit"
-                [canDelete]="canDelete"
-                [canAssignUser]="canAssignUser"
-                [canUnAssignUser]="canUnAssignUser"
-              ></gpa-profile-list>
-            </div>
-          </div>
         </form>
       </div>
     </div>
-    <gpa-profile-user-catalog
-      [(visible)]="isProfileUserCatalogVisible"
-      (onAdd)="handdleUserAdded($event)"
-      (onRemove)="handdleUserRemoved($event)"
-      [selectedProfile]="selectedProfile"
-      [reloadTable]="reloadProfileUserTable"
-      [canAssignUser]="canAssignUser"
-      [canUnAssignUser]="canUnAssignUser"
-    ></gpa-profile-user-catalog>
   </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="col-sm-12">
+        <gpa-no-permission-alert [visible]="!canRead">
+          No tiene permisos para ver los perfiles
+        </gpa-no-permission-alert>
+        <div class="card" *ngIf="canRead">
+          <ngx-spinner
+            name="profile-spinner"
+            [fullScreen]="false"
+            type="timer"
+            size="medium"
+          ></ngx-spinner>
+          <h4>Lista de perfiles</h4>
+          <gpa-profile-list
+            [reloadTable]="reloadTable"
+            (onDelete)="handleDelete($event)"
+            (onEdit)="handleEdit($event)"
+            (onView)="handleView($event)"
+            (onAddUser)="handleAddUser($event)"
+            [canEdit]="canEdit"
+            [canDelete]="canDelete"
+            [canAssignUser]="canAssignUser"
+            [canUnAssignUser]="canUnAssignUser"
+          ></gpa-profile-list>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <gpa-profile-user-catalog
+    [(visible)]="isProfileUserCatalogVisible"
+    (onAdd)="handdleUserAdded($event)"
+    (onRemove)="handdleUserRemoved($event)"
+    [selectedProfile]="selectedProfile"
+    [reloadTable]="reloadProfileUserTable"
+    [canAssignUser]="canAssignUser"
+    [canUnAssignUser]="canUnAssignUser"
+  ></gpa-profile-user-catalog>
 </div>

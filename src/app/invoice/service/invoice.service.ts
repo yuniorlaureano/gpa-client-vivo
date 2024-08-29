@@ -59,4 +59,10 @@ export class InvoiceService {
       responseType: 'blob',
     });
   }
+
+  printProofOfPayment(invoiceId: string): Observable<Blob> {
+    return this.http.get(`${this.url}/${invoiceId}/proof-of-payment/print`, {
+      responseType: 'blob',
+    });
+  }
 }

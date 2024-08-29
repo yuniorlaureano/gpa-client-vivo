@@ -74,7 +74,7 @@
     Cancelar
   </button>
 </div>
-<div class="row" style="margin-top: 50px">
+<div style="margin-top: 50px">
   <div class="col-sm-12 col-12">
     <div class="card">
       <div class="card-header"></div>
@@ -111,7 +111,7 @@
                   </div>
                   <div class="col-sm-8 col-8">
                     <div class="row">
-                      <div class="col-sm-3 col-12">
+                      <div class="col-sm-4 col-12">
                         <div class="mb-3">
                           <label class="form-label"
                             >Código<span class="text-red">*</span></label
@@ -131,7 +131,7 @@
                         </div>
                       </div>
                       <!--  -->
-                      <div class="col-sm-3 col-12">
+                      <div class="col-sm-4 col-12">
                         <div class="mb-3">
                           <label class="form-label"
                             >Nombre<span class="text-red">*</span></label
@@ -151,7 +151,7 @@
                         </div>
                       </div>
                       <!--  -->
-                      <div class="col-sm-3 col-12">
+                      <div class="col-sm-4 col-12">
                         <div class="mb-3">
                           <label class="form-label"
                             >Categoría<span class="text-red">*</span></label
@@ -171,7 +171,7 @@
                         </div>
                       </div>
                       <!--  -->
-                      <div class="col-sm-3 col-12">
+                      <div class="col-sm-4 col-12">
                         <div class="mb-3">
                           <label class="form-label"
                             >Precio<span class="text-red">*</span></label
@@ -184,33 +184,6 @@
                           />
                         </div>
                       </div>
-                      <!--  -->
-                      <!-- Este es el input para la fecha, cree una pequeña "validación"
-                      que evita que sean ingresadas fechas anteriores a la actual -->
-                      <div class="col-sm-4 col-12">
-                        <div class="mb-3">
-                          <label for="expirationDate" class="form-label"
-                            >Fecha de expiración</label
-                          >
-                          <div class="input-group">
-                            <input
-                              class="form-control"
-                              placeholder="yyyy-mm-dd"
-                              id="expirationDate"
-                              formControlName="expirationDate"
-                              [minDate]="minDate"
-                              ngbDatepicker
-                              #expirationDate="ngbDatepicker"
-                            />
-                            <button
-                              class="btn btn-outline-secondary bi bi-calendar3"
-                              (click)="expirationDate.toggle()"
-                              type="button"
-                            ></button>
-                          </div>
-                        </div>
-                      </div>
-
                       <div class="col-sm-4 col-12">
                         <div class="mb-3">
                           <label class="form-label"

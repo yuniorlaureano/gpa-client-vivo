@@ -77,10 +77,18 @@
     class="btn btn-outline-dark btn-rounded"
     (click)="printInvoice()"
   >
-    <i class="bi bi-plus-lg"></i> Imprimir factura
+    <i class="bi bi-printer"></i> Imprimir factura
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-dark btn-rounded"
+    (click)="printProofOfPayment()"
+  >
+    <i class="bi bi-printer"></i> Imprimir comprobante
   </button>
 </div>
-<div class="row" style="margin-top: 50px">
+<div style="margin-top: 50px">
   <div class="col-sm-12 col-12">
     <!-- Card start -->
     <div class="card">

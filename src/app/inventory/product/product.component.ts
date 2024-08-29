@@ -39,7 +39,6 @@ import { FilterModel } from '../../core/models/filter.model';
   styleUrl: './product.component.css',
 })
 export class ProductComponent implements OnInit, OnDestroy {
-  minDate!: NgbDateStruct;
   products: ProductModel[] = [];
   isEdit: boolean = false;
   units$!: Observable<UnitModel[]>;
@@ -83,9 +82,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     private addonService: AddonService,
     private spinner: NgxSpinnerService,
     private store: Store
-  ) {
-    this.loadMinDate();
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this.subscriptions$.forEach((sub) => sub.unsubscribe());
@@ -375,17 +372,6 @@ export class ProductComponent implements OnInit, OnDestroy {
         });
       this.subscriptions$.push(sub);
     }
-  }
-
-  loadMinDate() {
-    // Esto es parte de la validacion general
-    //sirve para que la fecha de expiracion no sea menor a la fecha actual
-    const today = new Date();
-    this.minDate = {
-      year: today.getFullYear(),
-      month: today.getMonth() + 1,
-      day: today.getDate(),
-    };
   }
 
   getIdFromParamsAndLoadProduct() {
