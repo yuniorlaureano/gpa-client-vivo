@@ -11,15 +11,20 @@ export function processError(
 }
 
 function iterateErrorObject(error: any, errors: string[] = []) {
+  if (!error || errors.length > 10 || error.hasOwnProperty('XMLHttpRequest'))
+    return;
+
   if (error.hasOwnProperty('errors')) {
     error = error.errors;
   }
 
-  if (!error) return;
-
   if (typeof error === 'object') {
     for (const key in error) {
-      iterateErrorObject(error[key], errors);
+      try {
+        iterateErrorObject(error[key], errors);
+      } catch (e) {
+        return;
+      }
     }
   } else if (Array.isArray(error)) {
     error.forEach((err) => {
