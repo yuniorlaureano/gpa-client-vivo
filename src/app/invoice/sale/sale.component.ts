@@ -639,35 +639,49 @@ export class SaleComponent implements OnInit, OnDestroy {
   }
 
   printInvoice() {
+    this.spinner.show('fullscreen');
     if (this.saleForm.get('id')?.value) {
       this.invoiceService
         .printInvoice(this.saleForm.get('id')?.value!)
-        .subscribe((pdfBlob: Blob) => {
-          const url = window.URL.createObjectURL(pdfBlob);
-          const printWindow = window.open(url);
-          if (printWindow) {
-            printWindow.onload = () => {
-              printWindow.focus();
-              printWindow.print();
-            };
-          }
+        .subscribe({
+          next: (pdfBlob: Blob) => {
+            const url = window.URL.createObjectURL(pdfBlob);
+            const printWindow = window.open(url);
+            if (printWindow) {
+              printWindow.onload = () => {
+                printWindow.focus();
+                printWindow.print();
+              };
+            }
+            this.spinner.hide('fullscreen');
+          },
+          error: () => {
+            this.spinner.hide('fullscreen');
+          },
         });
     }
   }
 
   printProofOfPayment() {
+    this.spinner.show('fullscreen');
     if (this.saleForm.get('id')?.value) {
       this.invoiceService
         .printProofOfPayment(this.saleForm.get('id')?.value!)
-        .subscribe((pdfBlob: Blob) => {
-          const url = window.URL.createObjectURL(pdfBlob);
-          const printWindow = window.open(url);
-          if (printWindow) {
-            printWindow.onload = () => {
-              printWindow.focus();
-              printWindow.print();
-            };
-          }
+        .subscribe({
+          next: (pdfBlob: Blob) => {
+            const url = window.URL.createObjectURL(pdfBlob);
+            const printWindow = window.open(url);
+            if (printWindow) {
+              printWindow.onload = () => {
+                printWindow.focus();
+                printWindow.print();
+              };
+            }
+            this.spinner.hide('fullscreen');
+          },
+          error: () => {
+            this.spinner.hide('fullscreen');
+          },
         });
     }
   }
