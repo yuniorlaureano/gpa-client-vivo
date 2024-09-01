@@ -69,242 +69,231 @@
     </div>
   </div>
 </div>
-<div class="row" style="margin-top: 10px">
-  <div class="col-sm-12 col-12">
-    <!-- Card start -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">Entra de inventario</div>
-      </div>
-      <div class="card-body">
-        <gpa-no-permission-alert [visible]="!canCreate || !canRegisterInput">
-          No tiene permisos para agreagr productos al inventario
-        </gpa-no-permission-alert>
-        <gpa-no-permission-alert
-          [visible]="isEdit && (!canUpdateInput || !canEdit)"
-        >
-          No tiene permisos para modificar productos del inventario
-        </gpa-no-permission-alert>
-        <!-- Row start -->
-        <form
-          class="row row-cols-sm-auto"
-          [formGroup]="stockForm"
-          #form="ngForm"
-        >
-          <div class="col-12 col-sm-4">
-            <div class="mb-3">
-              <label for="reason" class="form-label"
-                ><span class="text-danger require-sign">*</span>Motivo</label
-              >
-              <select
-                name="reason"
-                class="form-select"
-                formControlName="reasonId"
-              >
-                <option
-                  *ngFor="let reason of reasons$ | async"
-                  value="{{ reason.id }}"
-                >
-                  {{ reason.name }}
-                </option>
-              </select>
-              <gpa-validator-message
-                [control]="stockForm.get('reasonId')"
-                [touched]="stockForm.touched"
-                validation="required"
-                message="El motivo es obligatorio"
-              />
-            </div>
-          </div>
-          <div class="col-12 col-sm-12">
-            <div class="mb-3">
-              <label for="description" class="form-label">Descripción</label>
-              <textarea
-                formControlName="description"
-                class="form-control"
-              ></textarea>
-            </div>
-          </div>
-          <div class="col-12 col-sm-12 card">
-            <div class="mb-3 card-body" style="border: solid 1px lightgray">
-              <ngx-spinner
-                name="stock-file-spinner"
-                [fullScreen]="false"
-                type="timer"
-                size="medium"
-              ></ngx-spinner>
-              <label for="inputCompanyName" class="form-label">Adjuntos</label>
-              <input
-                type="file"
-                multiple
-                class="form-control"
-                #stockInputFile
-                (change)="processFileUpload($event)"
-              />
-              <ul style="margin-left: 10px">
-                <li *ngFor="let item of attachments">
-                  <a
-                    style="color: rgba(13, 110, 253); cursor: pointer"
-                    (click)="
-                      downloadAttachment(
-                        item.id,
-                        item.deserializedFile?.name ?? 'attachment'
-                      )
-                    "
-                  >
-                    <i
-                      class="bi bi-cloud-arrow-down"
-                      style="font-size: 20px"
-                    ></i>
-                    {{ item.deserializedFile?.name }}
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-sm-6" *ngIf="isEdit">
-            <label for="status" class="form-label">Estado</label>
-            <div class="input-group">
-              <input
-                class="form-control"
-                disabled
-                [value]="getStatusDescription()"
-              />
-            </div>
-          </div>
-          <div class="col-sm-12 col-12 mt-3">
-            <div class="mb-3">
-              <button
-                class="btn btn-outline-primary"
-                type="button"
-                [disabled]="isFormDisabled"
-                (click)="handleShowProductCatalog(true)"
-              >
-                <i class="bi bi-plus-lg"></i> Agregar producto
-              </button>
-              <button
-                class="btn btn-outline-primary"
-                type="button"
-                [disabled]="isFormDisabled"
-                (click)="handleShowProviderCatalog(true)"
-                style="margin-left: 5px"
-              >
-                <i class="bi bi-plus-lg"></i> Agregar proveedor
-              </button>
-            </div>
-          </div>
-          <div>
-            <ol
-              style="list-style-type: none; margin-left: 0; padding-left: 0"
-              *ngIf="selectedProvider"
-            >
-              <li>
-                Proveedor:
-                <button class="btn" (click)="removeSelectedProvider()">
-                  <i class="bi bi-x"></i>
-                </button>
-              </li>
-              <ol style="list-style-type: none">
-                <li>
-                  <span style="margin-right: 8px">Nombre:</span
-                  >{{ selectedProvider.name }}
-                  {{ selectedProvider.lastName }}
-                </li>
-                <li>
-                  <span style="margin-right: 8px">Identificación:</span>
-                  {{ selectedProvider.identification }}
-                </li>
-              </ol>
-            </ol>
-          </div>
-          <div class="col-12 col-sm-12">
-            <gpa-validator-message
-              [control]="{ errors: { required: true } }"
-              [touched]="stockForm.touched && formProducts.length == 0"
-              validation="required"
-              message="Debe elegir al menos un producto"
-            />
-            <div class="table-responsive">
-              <table class="table table-sm">
-                <thead>
-                  <tr>
-                    <th>Código</th>
-                    <th>Producto</th>
-                    <th>Precio de Compra</th>
-                    <th style="background-color: lightgreen">Cantidad</th>
-                    <th style="background-color: lightgreen">Precio</th>
-                    <th style="background-color: lightgreen">Total</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody formArrayName="stockDetails">
-                  <tr
-                    *ngFor="
-                      let formProduct of formProducts.controls;
-                      let i = index
-                    "
-                    [formGroupName]="i"
-                  >
-                    <td>{{ formProduct.get("productCode")?.value }}</td>
-                    <td>{{ formProduct.get("productName")?.value }}</td>
-                    <td>
-                      <input
-                        type="number"
-                        class="form-control"
-                        formControlName="purchasePrice"
-                        style="width: 130px"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        class="form-control"
-                        formControlName="quantity"
-                        style="width: 130px"
-                        [class.quantity-error]="
-                          !formProduct.get('quantity')?.valid
-                        "
-                      />
-                    </td>
-                    <td>{{ formProduct.get("price")?.value | currency }}</td>
-                    <td>
-                      {{ computePrice(formProduct) | currency }}
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        class="btn btn-outline-danger btn-rounded"
-                        (click)="
-                          removeProductFromCatalog(
-                            i,
-                            formProduct.get('id')?.value
-                          )
-                        "
-                      >
-                        <i class="bi bi-trash-fill"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </form>
-        <!-- Row end -->
-      </div>
-
-      <gpa-product-catalog
-        [(visible)]="isProductCatalogVisible"
-        [selectedProducts]="selectedProducts"
-        (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
-      ></gpa-product-catalog>
-      <gpa-provider-catalog
-        [(visible)]="isProviderCatalogVisible"
-        [selectedProviders]="selectedProviders"
-        (onSelectedProvider)="handleSelectedProviderFromCatalog($event)"
-      ></gpa-provider-catalog>
+<div style="margin-top: 50px" class="card-content-container">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Entra de inventario</div>
     </div>
-    <!-- Card end -->
+    <div class="card-body">
+      <gpa-no-permission-alert [visible]="!canCreate || !canRegisterInput">
+        No tiene permisos para agreagr productos al inventario
+      </gpa-no-permission-alert>
+      <gpa-no-permission-alert
+        [visible]="isEdit && (!canUpdateInput || !canEdit)"
+      >
+        No tiene permisos para modificar productos del inventario
+      </gpa-no-permission-alert>
+      <!-- Row start -->
+      <form class="row row-cols-sm-auto" [formGroup]="stockForm" #form="ngForm">
+        <div class="col-12 col-sm-4">
+          <div class="mb-3">
+            <label for="reason" class="form-label"
+              ><span class="text-danger require-sign">*</span>Motivo</label
+            >
+            <select
+              name="reason"
+              class="form-select"
+              formControlName="reasonId"
+            >
+              <option
+                *ngFor="let reason of reasons$ | async"
+                value="{{ reason.id }}"
+              >
+                {{ reason.name }}
+              </option>
+            </select>
+            <gpa-validator-message
+              [control]="stockForm.get('reasonId')"
+              [touched]="stockForm.touched"
+              validation="required"
+              message="El motivo es obligatorio"
+            />
+          </div>
+        </div>
+        <div class="col-12 col-sm-12">
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea
+              formControlName="description"
+              class="form-control"
+            ></textarea>
+          </div>
+        </div>
+        <div class="col-12 col-sm-12 card">
+          <div class="mb-3 card-body" style="border: solid 1px lightgray">
+            <ngx-spinner
+              name="stock-file-spinner"
+              [fullScreen]="false"
+              type="timer"
+              size="medium"
+            ></ngx-spinner>
+            <label for="inputCompanyName" class="form-label">Adjuntos</label>
+            <input
+              type="file"
+              multiple
+              class="form-control"
+              #stockInputFile
+              (change)="processFileUpload($event)"
+            />
+            <ul style="margin-left: 10px">
+              <li *ngFor="let item of attachments">
+                <a
+                  style="color: rgba(13, 110, 253); cursor: pointer"
+                  (click)="
+                    downloadAttachment(
+                      item.id,
+                      item.deserializedFile?.name ?? 'attachment'
+                    )
+                  "
+                >
+                  <i class="bi bi-cloud-arrow-down" style="font-size: 20px"></i>
+                  {{ item.deserializedFile?.name }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6" *ngIf="isEdit">
+          <label for="status" class="form-label">Estado</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              disabled
+              [value]="getStatusDescription()"
+            />
+          </div>
+        </div>
+        <div class="col-sm-12 col-12 mt-3">
+          <div class="mb-3">
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              [disabled]="isFormDisabled"
+              (click)="handleShowProductCatalog(true)"
+            >
+              <i class="bi bi-plus-lg"></i> Agregar producto
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              [disabled]="isFormDisabled"
+              (click)="handleShowProviderCatalog(true)"
+              style="margin-left: 5px"
+            >
+              <i class="bi bi-plus-lg"></i> Agregar proveedor
+            </button>
+          </div>
+        </div>
+        <div>
+          <ol
+            style="list-style-type: none; margin-left: 0; padding-left: 0"
+            *ngIf="selectedProvider"
+          >
+            <li>
+              Proveedor:
+              <button class="btn" (click)="removeSelectedProvider()">
+                <i class="bi bi-x"></i>
+              </button>
+            </li>
+            <ol style="list-style-type: none">
+              <li>
+                <span style="margin-right: 8px">Nombre:</span
+                >{{ selectedProvider.name }}
+                {{ selectedProvider.lastName }}
+              </li>
+              <li>
+                <span style="margin-right: 8px">Identificación:</span>
+                {{ selectedProvider.identification }}
+              </li>
+            </ol>
+          </ol>
+        </div>
+        <div class="col-12 col-sm-12">
+          <gpa-validator-message
+            [control]="{ errors: { required: true } }"
+            [touched]="stockForm.touched && formProducts.length == 0"
+            validation="required"
+            message="Debe elegir al menos un producto"
+          />
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Producto</th>
+                  <th>Precio de Compra</th>
+                  <th style="background-color: lightgreen">Cantidad</th>
+                  <th style="background-color: lightgreen">Precio</th>
+                  <th style="background-color: lightgreen">Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody formArrayName="stockDetails">
+                <tr
+                  *ngFor="
+                    let formProduct of formProducts.controls;
+                    let i = index
+                  "
+                  [formGroupName]="i"
+                >
+                  <td>{{ formProduct.get("productCode")?.value }}</td>
+                  <td>{{ formProduct.get("productName")?.value }}</td>
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="purchasePrice"
+                      style="width: 130px"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="quantity"
+                      style="width: 130px"
+                      [class.quantity-error]="
+                        !formProduct.get('quantity')?.valid
+                      "
+                    />
+                  </td>
+                  <td>{{ formProduct.get("price")?.value | currency }}</td>
+                  <td>
+                    {{ computePrice(formProduct) | currency }}
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger btn-rounded"
+                      (click)="
+                        removeProductFromCatalog(
+                          i,
+                          formProduct.get('id')?.value
+                        )
+                      "
+                    >
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </form>
+      <!-- Row end -->
+    </div>
+
+    <gpa-product-catalog
+      [(visible)]="isProductCatalogVisible"
+      [selectedProducts]="selectedProducts"
+      (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
+    ></gpa-product-catalog>
+    <gpa-provider-catalog
+      [(visible)]="isProviderCatalogVisible"
+      [selectedProviders]="selectedProviders"
+      (onSelectedProvider)="handleSelectedProviderFromCatalog($event)"
+    ></gpa-provider-catalog>
   </div>
 </div>
 <!-- Row end -->
