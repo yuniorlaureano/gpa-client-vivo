@@ -36,7 +36,7 @@
           class="btn btn-outline-primary btn-icon"
           *ngIf="profile?.name != 'administrador'"
         >
-          <i class="bi bi-plus-lg"></i>
+          <i class="fa-solid fa-thumbtack"></i>
         </a>
         <button
           class="btn btn-outline-sucess btn-icon"
@@ -49,7 +49,7 @@
           (click)="handleAddUser(profile)"
           [disabled]="!canAssignUser && !canUnAssignUser"
         >
-          <i class="bi bi-person-lines-fill"></i>
+          <i class="fa-solid fa-user-plus"></i>
         </button>
       </div>
     </div>

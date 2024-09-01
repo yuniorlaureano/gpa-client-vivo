@@ -24,19 +24,7 @@
     *ngIf="!isEdit"
     [disabled]="!canCreate"
   >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      class="bi bi-floppy"
-      viewBox="0 0 16 16"
-    >
-      <path d="M11 2H9v3h2z" />
-      <path
-        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"
-      />
-    </svg>
+    <i class="fa-solid fa-floppy-disk"></i>
   </button>
   <button
     *ngIf="isEdit"
@@ -65,201 +53,183 @@
 
       <!--  -->
       <div class="card-body">
-        <!-- Comienza row de sergundo nivel! -->
-        <div class="row">
-          <gpa-no-permission-alert [visible]="!canCreate">
-            No tiene permisos para crear productos
-          </gpa-no-permission-alert>
-          <gpa-no-permission-alert [visible]="isEdit && !canEdit">
-            No tiene permisos para modificar productos
-          </gpa-no-permission-alert>
-          <div class="col-sm-6 col-12 info-container">
-            <!-- Primer grupo del formlario -->
-            <div class="card-border">
-              <div class="card-border-title mb-1">Información General</div>
-              <div class="card-border-body">
-                <form [formGroup]="productForm" class="row">
-                  <!--  -->
-                  <div class="col-sm-2 col-12">
-                    <img
-                      [src]="this.imageUrl"
-                      class="img-thumbnail image-upload-product"
-                      (click)="fileUpload.click()"
-                    />
+        <gpa-no-permission-alert [visible]="!canCreate">
+          No tiene permisos para crear productos
+        </gpa-no-permission-alert>
+        <gpa-no-permission-alert [visible]="isEdit && !canEdit">
+          No tiene permisos para modificar productos
+        </gpa-no-permission-alert>
+        <div class="col-sm-6 col-12 info-container">
+          <!-- Primer grupo del formlario -->
+          <div class="card-border">
+            <div class="card-border-title mb-1">Información General</div>
+            <div class="card-border-body">
+              <form [formGroup]="productForm" class="row">
+                <!--  -->
+                <div class="col-sm-12 col-12">
+                  <img
+                    [src]="this.imageUrl"
+                    class="img-thumbnail image-upload-product"
+                    (click)="fileUpload.click()"
+                  />
+                  <input
+                    type="file"
+                    style="display: none"
+                    #fileUpload
+                    (change)="processFileUpload($event)"
+                  />
+                </div>
+                <div class="col-sm-4 col-12">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Código<span class="text-red">*</span></label
+                    >
                     <input
-                      type="file"
-                      style="display: none"
-                      #fileUpload
-                      (change)="processFileUpload($event)"
+                      type="text"
+                      class="form-control"
+                      formControlName="code"
+                      placeholder="Ingrese el código del producto"
+                    />
+                    <div *ngIf="isFieldInvalid('code')" class="text-danger">
+                      El código es obligatorio.
+                    </div>
+                  </div>
+                </div>
+                <!--  -->
+                <div class="col-sm-4 col-12">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Nombre<span class="text-red">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="name"
+                      placeholder="Ingrese el nombre del producto"
+                    />
+                    <div *ngIf="isFieldInvalid('name')" class="text-danger">
+                      El nombre es obligatorio.
+                    </div>
+                  </div>
+                </div>
+                <!--  -->
+                <div class="col-sm-4 col-12">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Categoría<span class="text-red">*</span></label
+                    >
+                    <select
+                      name="categoryId"
+                      class="form-select"
+                      formControlName="categoryId"
+                    >
+                      <option
+                        *ngFor="let category of categories$ | async"
+                        value="{{ category.id }}"
+                      >
+                        {{ category.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!--  -->
+                <div class="col-sm-4 col-12">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Precio<span class="text-red">*</span></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="price"
+                      placeholder="Ingrese el precio del producto"
                     />
                   </div>
-                  <div class="col-sm-8 col-8">
-                    <div class="row">
-                      <div class="col-sm-4 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Código<span class="text-red">*</span></label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="code"
-                            placeholder="Ingrese el código del producto"
-                          />
-                          <div
-                            *ngIf="isFieldInvalid('code')"
-                            class="text-danger"
-                          >
-                            El código es obligatorio.
-                          </div>
-                        </div>
-                      </div>
-                      <!--  -->
-                      <div class="col-sm-4 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Nombre<span class="text-red">*</span></label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="name"
-                            placeholder="Ingrese el nombre del producto"
-                          />
-                          <div
-                            *ngIf="isFieldInvalid('name')"
-                            class="text-danger"
-                          >
-                            El nombre es obligatorio.
-                          </div>
-                        </div>
-                      </div>
-                      <!--  -->
-                      <div class="col-sm-4 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Categoría<span class="text-red">*</span></label
-                          >
-                          <select
-                            name="categoryId"
-                            class="form-select"
-                            formControlName="categoryId"
-                          >
-                            <option
-                              *ngFor="let category of categories$ | async"
-                              value="{{ category.id }}"
-                            >
-                              {{ category.name }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-                      <!--  -->
-                      <div class="col-sm-4 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Precio<span class="text-red">*</span></label
-                          >
-                          <input
-                            type="number"
-                            class="form-control"
-                            formControlName="price"
-                            placeholder="Ingrese el precio del producto"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-sm-4 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Unidad<span class="text-red">*</span></label
-                          >
-                          <select
-                            name="unitId"
-                            class="form-select"
-                            formControlName="unitId"
-                          >
-                            <option
-                              *ngFor="let unit of units$ | async"
-                              value="{{ unit.id }}"
-                            >
-                              {{ unit.name }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-                      <!--  -->
-                      <div class="col-sm-4 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Tipo de producto<span class="text-red"
-                              >*</span
-                            ></label
-                          >
-                          <select
-                            name="categoryId"
-                            class="form-select"
-                            formControlName="type"
-                          >
-                            <option value="1">Producto terminado</option>
-                            <option value="2">Materia prima</option>
-                          </select>
-                          <div
-                            *ngIf="isFieldInvalid('type')"
-                            class="text-danger"
-                          >
-                            El tipo es obligatorio
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-12 col-12">
-                    <div class="mb-2">
-                      <label class="form-label"
-                        >Descripcion<span class="text-red">*</span></label
+                </div>
+                <div class="col-sm-4 col-12">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Unidad<span class="text-red">*</span></label
+                    >
+                    <select
+                      name="unitId"
+                      class="form-select"
+                      formControlName="unitId"
+                    >
+                      <option
+                        *ngFor="let unit of units$ | async"
+                        value="{{ unit.id }}"
                       >
-                      <textarea
-                        rows="4"
-                        class="form-control"
-                        formControlName="description"
-                        placeholder="Use este espacio para agregar una descripcion del producto"
-                      ></textarea>
+                        {{ unit.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!--  -->
+                <div class="col-sm-4 col-12">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Tipo de producto<span class="text-red">*</span></label
+                    >
+                    <select
+                      name="categoryId"
+                      class="form-select"
+                      formControlName="type"
+                    >
+                      <option value="1">Producto terminado</option>
+                      <option value="2">Materia prima</option>
+                    </select>
+                    <div *ngIf="isFieldInvalid('type')" class="text-danger">
+                      El tipo es obligatorio
                     </div>
                   </div>
+                </div>
+                <div class="col-sm-12 col-12">
+                  <div class="mb-2">
+                    <label class="form-label"
+                      >Descripcion<span class="text-red">*</span></label
+                    >
+                    <textarea
+                      rows="4"
+                      class="form-control"
+                      formControlName="description"
+                      placeholder="Use este espacio para agregar una descripcion del producto"
+                    ></textarea>
+                  </div>
+                </div>
 
-                  <div class="col-sm-12 col-12">
-                    <div class="mb-2">
-                      <label class="form-label"
-                        >Agregados<span class="text-red">*</span></label
+                <div class="col-sm-12 col-12">
+                  <div class="mb-2">
+                    <label class="form-label"
+                      >Agregados<span class="text-red">*</span></label
+                    >
+                    <div formArrayName="addons">
+                      <div
+                        *ngFor="
+                          let credit of this.addonsForm.controls;
+                          let i = index
+                        "
+                        class="form-check"
+                        [formGroupName]="i"
                       >
-                      <div formArrayName="addons">
-                        <div
-                          *ngFor="
-                            let credit of this.addonsForm.controls;
-                            let i = index
-                          "
-                          class="form-check"
-                          [formGroupName]="i"
+                        <input
+                          type="checkbox"
+                          [id]="credit.get('id')?.value"
+                          formControlName="selected"
+                          [value]="credit.get('selected')?.value"
+                          class="form-check-input"
+                        />
+                        <label
+                          [for]="credit.get('id')?.value"
+                          class="form-check-label"
                         >
-                          <input
-                            type="checkbox"
-                            [id]="credit.get('id')?.value"
-                            formControlName="selected"
-                            [value]="credit.get('selected')?.value"
-                            class="form-check-input"
-                          />
-                          <label
-                            [for]="credit.get('id')?.value"
-                            class="form-check-label"
-                          >
-                            {{ credit.get("concept")?.value }}
-                          </label>
-                        </div>
+                          {{ credit.get("concept")?.value }}
+                        </label>
                       </div>
                     </div>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
