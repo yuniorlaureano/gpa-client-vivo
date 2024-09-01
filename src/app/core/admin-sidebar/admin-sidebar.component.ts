@@ -6,8 +6,6 @@ import {
   SetCurrentSubMenu,
 } from '../ng-xs-store/actions/app.actions';
 
-declare let jQuery: any;
-
 @Component({
   selector: 'gpa-admin-sidebar',
   templateUrl: './admin-sidebar.component.html',
@@ -30,19 +28,7 @@ export class AdminSidebarComponent implements OnInit, OnDestroy {
     this.subscription$?.unsubscribe();
   }
 
-  ngOnInit(): void {
-    jQuery('.sidebarMenuScroll').overlayScrollbars({
-      scrollbars: {
-        visibility: 'auto',
-        autoHide: 'scroll',
-        autoHideDelay: 200,
-        dragScrolling: true,
-        clickScrolling: false,
-        touchSupport: true,
-        snapHandle: false,
-      },
-    });
-  }
+  ngOnInit(): void {}
 
   handleMenuSelected(menu: string) {
     this.store.dispatch(new SetCurrentMenu(menu));
