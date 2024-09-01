@@ -19,6 +19,7 @@ import { StockService } from '../../inventory/service/stock.service';
 import { ProductCatalogModel } from '../../inventory/models/product-catalog.model';
 import { ToastService } from '../service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { processError } from '../utils/error.utils';
 
 @Component({
   selector: 'gpa-stock-product-catalog',
@@ -132,7 +133,9 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
           this.spinner.hide('stock-product-catalog-spinner');
         },
         error: (error) => {
-          this.toastService.showError('Error cargando productos');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('stock-product-catalog-spinner');
         },
       });

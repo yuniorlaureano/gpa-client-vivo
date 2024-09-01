@@ -14,6 +14,7 @@ import { SearchOptionsModel } from '../models/search-options.model';
 import { UserModel } from '../../security/model/user.model';
 import { UserService } from '../../security/service/user.service';
 import { ToastService } from '../service/toast.service';
+import { processError } from '../utils/error.utils';
 
 @Component({
   selector: 'gpa-user-catalog',
@@ -111,7 +112,9 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
           };
         },
         error: (error) => {
-          this.toastService.showError('Error cargando usuarios');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
   }

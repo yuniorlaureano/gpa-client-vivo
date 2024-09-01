@@ -1,0 +1,33 @@
+.info-container {
+  width: 100%;
+}
+
+.dropzone {
+  min-height: 100px !important;
+}
+
+#demo-upload {
+  background-color: #f0f0f0;
+  align-items: stretch;
+}
+
+.addon-product-list {
+  border: solid 1px lightgray;
+  border-radius: 20px;
+  padding: 10px;
+  display: flex;
+  gap: 4px;
+}
+
+.addon-product-list .addon-product-list-item {
+  background-color: lightgreen;
+  padding: 5px;
+  border-radius: 70px;
+  border: inset 1px lightgreen;
+}
+
+.image-upload-product {
+  width: 250px;
+  max-width: 250px;
+  cursor: pointer;
+}

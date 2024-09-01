@@ -19,6 +19,9 @@ import { BlobProviderListTableComponent } from './blob-provider-list/blob-provid
 import { GcpBlobComponent } from './blob-provider/providers/gcp-blob.component';
 import { AzureBlobComponent } from './blob-provider/providers/azure-blob.component';
 import { IntegrationsComponent } from './integrations/integrations.component';
+import { PrintInformationListTableComponent } from './print-information-list/print-information-list-table.component';
+import { PrintInformationListComponent } from './print-information-list/print-information-list.component';
+import { PrintInformationComponent } from './print-information/print-information.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +37,9 @@ import { IntegrationsComponent } from './integrations/integrations.component';
     GcpBlobComponent,
     AzureBlobComponent,
     IntegrationsComponent,
+    PrintInformationListTableComponent,
+    PrintInformationListComponent,
+    PrintInformationComponent,
   ],
   imports: [
     CoreModule,

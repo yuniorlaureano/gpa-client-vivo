@@ -12,6 +12,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { LocationWithNameModel } from '../../core/models/location-with-name.model';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-client',
@@ -146,7 +147,9 @@ export class ClientComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al agregar cliente');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
       },
     });
     this.subscriptions$.push(sub);
@@ -179,7 +182,9 @@ export class ClientComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al actualizar el cliente');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
@@ -277,7 +282,9 @@ export class ClientComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al cargar el cliente');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

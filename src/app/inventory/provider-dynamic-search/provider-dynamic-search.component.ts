@@ -7,6 +7,7 @@ import { FilterModel } from '../../core/models/filter.model';
 import { ToastService } from '../../core/service/toast.service';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-provider-dynamic-search',
@@ -81,7 +82,9 @@ export class ProviderDynamicSearchComponent implements OnInit {
           };
         },
         error: (error) => {
-          this.toastService.showError('Error cargando proveedores');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
   }

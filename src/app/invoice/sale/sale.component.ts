@@ -31,6 +31,7 @@ import { bankRound } from '../../core/utils/calculation.utils';
 import { downloadFile } from '../../core/utils/file.utils';
 import { InvoiceAttachModel } from '../model/invoice-attachment';
 import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-sale',
@@ -299,7 +300,9 @@ export class SaleComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al realizar la venta');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
       },
     });
     this.subscriptions$.push(sub);
@@ -316,7 +319,9 @@ export class SaleComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al editar la venta');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
       },
     });
     this.subscriptions$.push(sub);
@@ -366,7 +371,9 @@ export class SaleComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al cancelar la factura');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
       },
     });
     this.subscriptions$.push(sub);
@@ -433,7 +440,9 @@ export class SaleComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
       },
       error: (error) => {
-        this.toastService.showError('Error al cargar el cliente');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
         this.spinner.hide('fullscreen');
       },
     });
@@ -482,7 +491,9 @@ export class SaleComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
         },
         error: (error) => {
-          this.toastService.showError('Error al cargar la factura');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('fullscreen');
         },
       });

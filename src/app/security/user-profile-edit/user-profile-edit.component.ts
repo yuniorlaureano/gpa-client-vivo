@@ -11,6 +11,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-user-profile-edit',
@@ -153,7 +154,9 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al actualizar el usuario');
+        processError(error.error).forEach((err) => {
+          this.toastService.showError(err);
+        });
       },
     });
     this.subscriptions$.push(sub);
@@ -209,7 +212,9 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error cargando usuario');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

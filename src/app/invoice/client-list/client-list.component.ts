@@ -6,6 +6,7 @@ import { ToastService } from '../../core/service/toast.service';
 import { ClientService } from '../service/client.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { Subscription } from 'rxjs';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-sale-list',
@@ -47,7 +48,9 @@ export class ClientListComponent {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            this.toastService.showError('Error elimiando cliente');
+            processError(error.error).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
         this.subscriptions$.push(sub);

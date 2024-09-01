@@ -14,6 +14,8 @@ export function getRequiredPermissions(): ModuleRequiredPermissionType {
       [PermissionConstants.Components.Auth]: authPermission(),
       [PermissionConstants.Components.Email]: emailPermission(),
       [PermissionConstants.Components.Blob]: blobPermission(),
+      [PermissionConstants.Components.PrintInformation]:
+        printInformationPermission(),
     },
     [PermissionConstants.Modules.Inventory]: {
       [PermissionConstants.Components.Product]: productPermission(),
@@ -375,6 +377,31 @@ function blobPermission(): RequiredPermissionType {
     },
     download: {
       expected: PermissionConstants.Permission.Download,
+      valid: false,
+    },
+  };
+}
+
+function printInformationPermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+    [PermissionConstants.Permission.Upload]: {
+      expected: PermissionConstants.Permission.Upload,
       valid: false,
     },
   };

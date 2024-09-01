@@ -46,7 +46,6 @@ export class CategoryListComponent {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              this.toastService.showError('Error elimiando categoría');
               processError(error).forEach((x) =>
                 this.toastService.showError(x)
               );

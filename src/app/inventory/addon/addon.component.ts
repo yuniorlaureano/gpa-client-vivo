@@ -95,7 +95,6 @@ export class AddonComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al modificar el agregado');
         processError(error.error).forEach((err) => {
           this.toastService.showError(err);
         });
@@ -115,7 +114,6 @@ export class AddonComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        this.toastService.showError('Error al crear el agregado');
         processError(error.error).forEach((err) => {
           this.toastService.showError(err);
         });
@@ -161,7 +159,6 @@ export class AddonComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al cargar el agregado');
           processError(error.error).forEach((err) => {
             this.toastService.showError(err);
           });

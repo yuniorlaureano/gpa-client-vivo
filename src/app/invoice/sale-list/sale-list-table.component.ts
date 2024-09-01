@@ -29,6 +29,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FormBuilder } from '@angular/forms';
 import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-sale-list-table',
@@ -232,7 +233,9 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('table-spinner');
-          this.toastService.showError('Error al cargar las facturas');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

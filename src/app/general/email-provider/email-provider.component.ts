@@ -11,6 +11,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { EmailProviderService } from '../service/email-provider.service';
 import { EmailConfigurationModel } from '../model/email-configuration.model';
 import { EmailConstant } from '../../core/models/email.constants';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-email-provider',
@@ -190,7 +191,9 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al cargar el proveedor de email');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

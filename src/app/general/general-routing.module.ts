@@ -6,6 +6,8 @@ import { EmailProviderListComponent } from './email-provider-list/email-provider
 import { BlobProviderComponent } from './blob-provider/blob-provider.component';
 import { BlobProviderListComponent } from './blob-provider-list/blob-provider-list.component';
 import { IntegrationsComponent } from './integrations/integrations.component';
+import { PrintInformationComponent } from './print-information/print-information.component';
+import { PrintInformationListComponent } from './print-information-list/print-information-list.component';
 
 const routes: Routes = [
   {
@@ -32,6 +34,18 @@ const routes: Routes = [
       {
         path: 'blobs/integrations/:provider/edit/:id',
         component: BlobProviderComponent,
+      },
+      {
+        path: 'print-information',
+        component: PrintInformationComponent,
+      },
+      {
+        path: 'print-information/edit/:id',
+        component: PrintInformationComponent,
+      },
+      {
+        path: 'print-information/list',
+        component: PrintInformationListComponent,
       },
     ],
   },

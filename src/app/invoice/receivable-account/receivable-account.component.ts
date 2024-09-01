@@ -14,6 +14,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-receivable-account',
@@ -147,7 +148,9 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            this.toastService.showError('Error al realizar el pago');
+            processError(error.error).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
       this.subscriptions$.push(sub);
@@ -208,7 +211,9 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al cargar la factura');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

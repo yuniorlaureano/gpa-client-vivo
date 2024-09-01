@@ -293,6 +293,17 @@
                   >Integraciones</a
                 >
               </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/print-information"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Integraciones')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  >Información de impresión</a
+                >
+              </li>
             </ul>
           </div>
         </li>

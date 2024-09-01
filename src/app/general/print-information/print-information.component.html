@@ -1,0 +1,272 @@
+<div
+  class="right-button"
+  style="position: fixed; top: 90px; display: block; right: 50px; z-index: 100"
+>
+  <a
+    routerLink="/inventory/existence/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Existencia
+  </a>
+  <a
+    routerLink="/inventory/product/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Productos
+  </a>
+  <button
+    type="button"
+    class="btn btn-outline-success btn-rounded"
+    style="margin-right: 5px"
+    (click)="onSubmit()"
+    *ngIf="!isEdit"
+    [disabled]="!canCreate"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-floppy"
+      viewBox="0 0 16 16"
+    >
+      <path d="M11 2H9v3h2z" />
+      <path
+        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"
+      />
+    </svg>
+    Guardar
+  </button>
+  <button
+    *ngIf="isEdit"
+    type="button"
+    class="btn btn-outline-warning btn-rounded"
+    style="margin-right: 5px"
+    (click)="onSubmit()"
+    [disabled]="!canEdit"
+  >
+    <i class="bi bi-pencil-square"></i>
+    Actualizar
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-dark btn-rounded"
+    (click)="handleCancel()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-x-square"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"
+      />
+      <path
+        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+      />
+    </svg>
+    Cancelar
+  </button>
+</div>
+<div style="margin-top: 50px">
+  <div class="col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header"></div>
+
+      <!--  -->
+      <div class="card-body">
+        <!-- Comienza row de sergundo nivel! -->
+        <div class="row">
+          <gpa-no-permission-alert [visible]="!canCreate">
+            No tiene permisos para crear productos
+          </gpa-no-permission-alert>
+          <gpa-no-permission-alert [visible]="isEdit && !canEdit">
+            No tiene permisos para modificar productos
+          </gpa-no-permission-alert>
+          <div class="col-sm-6 col-12 info-container">
+            <!-- Primer grupo del formlario -->
+            <div class="card-border">
+              <div class="card-border-title mb-1">Información General</div>
+              <div class="card-border-body">
+                <form [formGroup]="printInformationForm" class="row">
+                  <!--  -->
+                  <div class="col-sm-2 col-12">
+                    <img
+                      [src]="this.imageUrl"
+                      class="img-thumbnail image-upload-product"
+                      (click)="fileUpload.click()"
+                    />
+                    <input
+                      type="file"
+                      style="display: none"
+                      #fileUpload
+                      (change)="processFileUpload($event)"
+                    />
+                  </div>
+                  <div class="col-sm-8 col-8">
+                    <div class="row">
+                      <div class="col-sm-6 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Compaía<span class="text-red">*</span></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="companyName"
+                          />
+                          <gpa-validator-message
+                            [control]="printInformationForm.get('companyName')"
+                            [touched]="printInformationForm.touched"
+                            validation="required"
+                            message="Campo requerido"
+                          />
+                        </div>
+                      </div>
+                      <!--  -->
+                      <div class="col-sm-6 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Documento<span class="text-red">*</span></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="companyDocument"
+                          />
+                          <gpa-validator-message
+                            [control]="
+                              printInformationForm.get('companyDocument')
+                            "
+                            [touched]="printInformationForm.touched"
+                            validation="required"
+                            message="Campo requerido"
+                          />
+                        </div>
+                      </div>
+                      <!--  -->
+                      <div class="col-sm-6 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Teléfono<span class="text-red">*</span></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="companyPhone"
+                          />
+                          <gpa-validator-message
+                            [control]="printInformationForm.get('companyPhone')"
+                            [touched]="printInformationForm.touched"
+                            validation="required"
+                            message="Campo requerido"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Email<span class="text-red">*</span></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="companyEmail"
+                          />
+                          <gpa-validator-message
+                            [control]="printInformationForm.get('companyEmail')"
+                            [touched]="printInformationForm.touched"
+                            validation="required"
+                            message="Campo requerido"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-sm-4 col-12">
+                        <div class="mb-3">
+                          <label class="form-label"
+                            >Firmante<span class="text-red">*</span></label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="signer"
+                          />
+                          <gpa-validator-message
+                            [control]="printInformationForm.get('signer')"
+                            [touched]="printInformationForm.touched"
+                            validation="required"
+                            message="Campo requerido"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6 col-12" style="padding-top: 26px">
+                        <div class="mb-3">
+                          <div class="form-check">
+                            <input
+                              type="checkbox"
+                              id="current"
+                              class="form-check-input"
+                              formControlName="current"
+                              [value]="true"
+                            />
+                            <label for="current" class="form-check-label"
+                              >Configuración por defecto</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-8 col-12">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Sitio web<span class="text-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="companyWebsite"
+                      />
+                      <gpa-validator-message
+                        [control]="printInformationForm.get('companyWebsite')"
+                        [touched]="printInformationForm.touched"
+                        validation="required"
+                        message="Campo requerido"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-12">
+                    <div class="mb-2">
+                      <label class="form-label"
+                        >Dirección<span class="text-red">*</span></label
+                      >
+                      <textarea
+                        rows="4"
+                        class="form-control"
+                        formControlName="companyAddress"
+                      ></textarea>
+                      <gpa-validator-message
+                        [control]="printInformationForm.get('companyAddress')"
+                        [touched]="printInformationForm.touched"
+                        validation="required"
+                        message="Campo requerido"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

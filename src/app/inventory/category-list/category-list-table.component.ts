@@ -26,6 +26,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-category-list-table',
@@ -159,7 +160,9 @@ export class CategoryListTableComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('table-spinner');
-          this.toastService.showError('Error cargando categorias');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

@@ -13,6 +13,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { Subscription } from 'rxjs';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-profile',
@@ -135,7 +136,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error creado perfil');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
@@ -158,7 +161,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al actualizar el usuario');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
@@ -198,7 +203,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            this.toastService.showError('Error elimiando perfil');
+            processError(error.error).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
         this.subscriptions$.push(sub);
@@ -241,7 +248,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              this.toastService.showError('Error asignando usuario');
+              processError(error.error).forEach((err) => {
+                this.toastService.showError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);
@@ -277,7 +286,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              this.toastService.showError('Error removiendo usuario');
+              processError(error.error).forEach((err) => {
+                this.toastService.showError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);

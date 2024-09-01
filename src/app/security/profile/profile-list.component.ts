@@ -21,9 +21,9 @@ import {
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProfileModel } from '../model/profile.model';
 import { ProfileService } from '../service/profile.service';
-import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { ToastService } from '../../core/service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-profile-list',
@@ -177,7 +177,9 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('profile-spinner');
-          this.toastService.showError('Error al cargar perfiles');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

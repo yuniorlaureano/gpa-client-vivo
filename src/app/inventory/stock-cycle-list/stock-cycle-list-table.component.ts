@@ -22,6 +22,7 @@ import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FormBuilder } from '@angular/forms';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-stock-cycle-list-table',
@@ -188,7 +189,9 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('table-spinner');
-          this.toastService.showError('Error al cargar existencias');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

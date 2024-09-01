@@ -12,6 +12,7 @@ import { ClientService } from '../../invoice/service/client.service';
 import { ClientModel } from '../../invoice/model/client.model';
 import { ToastService } from '../service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { processError } from '../utils/error.utils';
 
 @Component({
   selector: 'gpa-client-catalog',
@@ -101,7 +102,9 @@ export class ClientCatalogComponent {
           this.spinner.hide('client-catalog-spinner');
         },
         error: (error) => {
-          this.toastService.showError('Error cargando clientes');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('client-catalog-spinner');
         },
       });

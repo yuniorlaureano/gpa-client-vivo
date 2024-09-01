@@ -19,6 +19,7 @@ import { ToastService } from '../service/toast.service';
 import { ProviderModel } from '../../inventory/models/provider.model';
 import { ProviderService } from '../../inventory/service/provider.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { processError } from '../utils/error.utils';
 
 @Component({
   selector: 'gpa-provider-catalog',
@@ -131,7 +132,9 @@ export class ProviderCatalogComponent implements OnInit, OnDestroy {
           this.spinner.hide('provider-catalog-spinner');
         },
         error: (error) => {
-          this.toastService.showError('Error cargando proveedores');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('provider-catalog-spinner');
         },
       });

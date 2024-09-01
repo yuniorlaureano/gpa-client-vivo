@@ -6,6 +6,7 @@ import { ToastService } from '../../core/service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { Subscription } from 'rxjs';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-user-list',
@@ -44,7 +45,9 @@ export class UserListComponent {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            this.toastService.showError('Error elimiando usuario');
+            processError(error.error).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
         this.subscriptions$.push(sub);

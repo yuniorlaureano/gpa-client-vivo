@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastService } from '../../core/service/toast.service';
 import { ProductService } from '../service/product.service';
 import { Subscription } from 'rxjs';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-product-list',
@@ -47,7 +48,9 @@ export class ProductListComponent implements OnDestroy {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            this.toastService.showError('Error elimiando producto');
+            processError(error.error).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
         this.subscriptions$.push(sub);

@@ -1,0 +1,57 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver la información
+</gpa-no-permission-alert>
+<!-- <div class="row">
+  
+</div> -->
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <div search>
+    <div class="input-group">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar por Código o Nombre"
+        style="margin-right: 20px; width: 300px"
+        (input)="handleSearch($event)"
+      />
+    </div>
+  </div>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Compañía</th>
+    <th>Email</th>
+    <th>Teléfono</th>
+    <th>Firmanten</th>
+    <!-- <th></th> -->
+  </tr>
+  <tbody body>
+    <tr *ngFor="let information of data.data">
+      <td>{{ information.companyName }}</td>
+      <td>{{ information.companyEmail }}</td>
+      <td>{{ information.companyPhone }}</td>
+      <td>{{ information.signer }}</td>
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(information)"
+          [disabled]="!canDelete"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(information)"
+          [disabled]="!canEdit"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

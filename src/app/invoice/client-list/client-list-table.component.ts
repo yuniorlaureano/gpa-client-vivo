@@ -27,6 +27,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FormBuilder } from '@angular/forms';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-client-list-table',
@@ -212,7 +213,9 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('table-spinner');
-          this.toastService.showError('Error al cargar clientes');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

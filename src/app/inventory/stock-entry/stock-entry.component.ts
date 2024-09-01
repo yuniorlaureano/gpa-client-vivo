@@ -252,7 +252,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error modificando registro');
           processError(error.error).forEach((err) => {
             this.toastService.showError(err);
           });
@@ -279,7 +278,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error agregando registro');
           processError(error.error).forEach((err) => {
             this.toastService.showError(err);
           });
@@ -323,7 +321,9 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
         },
         error: (error) => {
-          this.toastService.showError('Error al cancelar el registro');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('fullscreen');
         },
       });
@@ -399,7 +399,9 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al obtener la existencia');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

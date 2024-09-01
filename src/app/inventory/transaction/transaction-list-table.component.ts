@@ -29,7 +29,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FormBuilder } from '@angular/forms';
 import { ReasonEnum } from '../../core/models/reason.enum';
-import { of } from 'rxjs';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-transaction-list-table',
@@ -224,7 +224,9 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('table-spinner');
-          this.toastService.showError('Error al cargar transacciones.');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

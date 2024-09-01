@@ -13,6 +13,7 @@ import { ProductModel } from '../../models/product.model';
 import { ToastService } from '../../../core/service/toast.service';
 import { AddonService } from '../../service/addon.service';
 import { ProductByAddonModel } from '../../models/product-by-addon.model';
+import { processError } from '../../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-addon-product-catalog',
@@ -124,7 +125,9 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
           this.spinner.hide('product-catalog-spinner');
         },
         error: (error) => {
-          this.toastService.showError('Error cargando productos');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('product-catalog-spinner');
         },
       });
@@ -140,8 +143,10 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
           next: () => {
             this.toastService.showSucess('Addon asignado correctamente');
           },
-          error: () => {
-            this.toastService.showError('Error asignando addon');
+          error: (error) => {
+            processError(error.error).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
           complete: () => {
             this.spinner.hide('product-catalog-spinner');
@@ -157,8 +162,10 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
           next: () => {
             this.toastService.showSucess('Addon removido correctamente');
           },
-          error: () => {
-            this.toastService.showError('Error removiendo addon');
+          error: (error) => {
+            processError(error.error).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
           complete: () => {
             this.spinner.hide('product-catalog-spinner');
@@ -177,8 +184,10 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
         next: () => {
           this.toastService.showSucess('Addon removido correctamente');
         },
-        error: () => {
-          this.toastService.showError('Error removiendo addon');
+        error: (error) => {
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
         complete: () => {
           this.spinner.hide('product-catalog-spinner');
@@ -196,8 +205,10 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
         next: () => {
           this.toastService.showSucess('Addon removido correctamente');
         },
-        error: () => {
-          this.toastService.showError('Error removiendo addon');
+        error: (error) => {
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
         complete: () => {
           this.spinner.hide('product-catalog-spinner');

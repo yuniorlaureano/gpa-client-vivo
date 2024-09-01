@@ -21,6 +21,7 @@ import { getProductTypeDescription } from '../utils/product.util';
 import { ProductType } from '../models/product-type.enum';
 import { ToastService } from '../service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { processError } from '../utils/error.utils';
 
 @Component({
   selector: 'gpa-product-catalog',
@@ -134,7 +135,9 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
           this.spinner.hide('product-catalog-spinner');
         },
         error: (error) => {
-          this.toastService.showError('Error cargando productos');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('product-catalog-spinner');
         },
       });

@@ -1,0 +1,25 @@
+<div
+  style="position: fixed; top: 90px; display: block; right: 50px; z-index: 100"
+>
+  <a
+    routerLink="/inventory/existence/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Existencia
+  </a>
+  <a
+    routerLink="/inventory/product"
+    class="btn btn-outline-primary btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-plus-lg"></i> Nueva producto
+  </a>
+</div>
+<div style="margin-top: 50px">
+  <gpa-print-information-list-table
+    (onDelete)="handleDelete($event)"
+    (onEdit)="handleEdit($event)"
+    [reloadTable]="reloadTable"
+  ></gpa-print-information-list-table>
+</div>

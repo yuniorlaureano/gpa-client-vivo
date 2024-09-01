@@ -33,6 +33,7 @@ import { ErrorService } from './core/service/error.service';
 import { EmailProviderService } from './general/service/email-provider.service';
 import { AuthState } from './core/ng-xs-store/states/auth.state';
 import { BlobStorageProviderService } from './general/service/blob-storage-provider.service';
+import { PrintInformationService } from './general/service/print-information.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -66,6 +67,7 @@ import { BlobStorageProviderService } from './general/service/blob-storage-provi
     ErrorService,
     EmailProviderService,
     BlobStorageProviderService,
+    PrintInformationService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
   ],
   bootstrap: [AppComponent],

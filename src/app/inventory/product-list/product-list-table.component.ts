@@ -20,6 +20,7 @@ import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import * as ProfileUtils from '../../core/utils/profile.utils';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-product-list-table',
@@ -148,7 +149,9 @@ export class ProductListTableComponent {
         },
         error: (error) => {
           this.spinner.hide('table-spinner');
-          this.toastService.showError('Error al cargar productos');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

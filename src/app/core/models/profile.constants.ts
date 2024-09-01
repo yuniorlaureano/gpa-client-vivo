@@ -51,4 +51,5 @@ export class Components {
   public static Auth: string = 'auth';
   public static Email: string = 'email';
   public static Blob: string = 'blob';
+  public static PrintInformation = 'printInformation';
 }

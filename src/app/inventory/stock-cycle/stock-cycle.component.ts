@@ -11,6 +11,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-stock-cycle',
@@ -119,7 +120,9 @@ export class StockCycleComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        this.toast.showError('Error al abrir el ciclo de inventario');
+        processError(error.error).forEach((err) => {
+          this.toast.showError(err);
+        });
       },
     });
     this.subscriptions$.push(sub);

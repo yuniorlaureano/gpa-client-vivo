@@ -12,6 +12,7 @@ import { SearchOptionsModel } from '../models/search-options.model';
 import { InvoiceModel } from '../../invoice/model/invoice.model';
 import { InvoiceService } from '../../invoice/service/invoice.service';
 import { ToastService } from '../service/toast.service';
+import { processError } from '../utils/error.utils';
 
 @Component({
   selector: 'gpa-invoice-catalog',
@@ -102,7 +103,9 @@ export class InvoiceCatalogComponent implements OnInit, OnDestroy {
           };
         },
         error: (error) => {
-          this.toastService.showError('Error cargando facturas');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
   }

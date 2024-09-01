@@ -10,6 +10,7 @@ import { SignUpModel } from '../model/sign-up.model';
 import { ToastService } from '../../core/service/toast.service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-sign-up',
@@ -72,12 +73,9 @@ export class SignUpComponent {
           }, 500);
         },
         error: (error) => {
-          if (typeof error.error === 'string') {
-            this.errors.push = error.error;
-          } else {
-            this.errors = error.error.map((e: any) => e.errorMessage);
-            this.toastService.showError('Error al registrar usuario');
-          }
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('fullscreen');
         },
       });

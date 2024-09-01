@@ -32,6 +32,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FilterModel } from '../../core/models/filter.model';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-product',
@@ -193,7 +194,9 @@ export class ProductComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al agregar producto');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
@@ -217,7 +220,9 @@ export class ProductComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al actualizar el producto');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
@@ -367,7 +372,9 @@ export class ProductComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (data) => this.mapAddon(data.data),
           error: (error) => {
-            this.toastService.showError('Error cargando agregados');
+            processError(error.error).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
       this.subscriptions$.push(sub);
@@ -404,7 +411,9 @@ export class ProductComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError('Error al cargar el producto');
+          processError(error.error).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
