@@ -161,9 +161,11 @@ export class ProfileUserCatalogComponent
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando usuarios').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('table-spinner');
         },
       });

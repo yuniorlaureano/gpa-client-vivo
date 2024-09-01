@@ -120,9 +120,11 @@ export class StockCycleComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error).forEach((err) => {
-          this.toast.showError(err);
-        });
+        processError(error.error, 'Error abriendo ciclo de inventario').forEach(
+          (err) => {
+            this.toast.showError(err);
+          }
+        );
       },
     });
     this.subscriptions$.push(sub);

@@ -19,6 +19,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import { PrintInformationModel } from '../model/print-information.model';
 import { PrintInformationService } from '../service/print-information.service';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-print-information-list-table',
@@ -146,10 +147,13 @@ export class PrintInformationListTableComponent {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
+          processError(
+            error.error,
+            'Error cargando información de impresión'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('table-spinner');
-          this.toastService.showError(
-            'Error al cargar información de impresión'
-          );
         },
       });
     this.subscriptions$.push(sub);

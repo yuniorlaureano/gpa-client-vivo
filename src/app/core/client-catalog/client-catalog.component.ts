@@ -102,9 +102,11 @@ export class ClientCatalogComponent {
           this.spinner.hide('client-catalog-spinner');
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando clientes').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('client-catalog-spinner');
         },
       });

@@ -20,6 +20,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { BlobStorageConfigurationModel } from '../model/blob-storage-configuration.model';
 import { BlobStorageProviderService } from '../service/blob-storage-provider.service';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-blob-provider-list-table',
@@ -129,13 +130,15 @@ export class BlobProviderListTableComponent implements OnInit, OnDestroy {
               filteredSize: data.data.length,
             },
           };
-          this.spinner.hide('table-spinner');
         },
         error: (error) => {
+          processError(
+            error.error,
+            'Error cargando proveedores de archivos'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('table-spinner');
-          this.toastService.showError(
-            'Error al cargar los proveedores de archivos'
-          );
         },
       });
     this.subscriptions$.push(sub);

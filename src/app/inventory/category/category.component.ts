@@ -100,9 +100,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((error) => {
-            this.toastService.showError(error);
-          });
+          processError(error.error, 'Error modificando categoría').forEach(
+            (error) => {
+              this.toastService.showError(error);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);
@@ -121,9 +123,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((error) => {
-            this.toastService.showError(error);
-          });
+          processError(error.error, 'Error creando categoría').forEach(
+            (error) => {
+              this.toastService.showError(error);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);
@@ -171,9 +175,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando categoría').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);

@@ -168,7 +168,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
+          processError(error.error, 'Error creando salida').forEach((err) => {
             this.toastService.showError(err);
           });
         },
@@ -188,9 +188,11 @@ export class StockOutputComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error modificando salida').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);
@@ -232,9 +234,11 @@ export class StockOutputComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cancelando salida').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
       this.subscriptions$.push(sub);
@@ -310,7 +314,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
+          processError(error.error, 'Error cargando salida').forEach((err) => {
             this.toastService.showError(err);
           });
         },

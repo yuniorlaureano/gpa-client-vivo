@@ -6,6 +6,7 @@ import { ToastService } from '../../core/service/toast.service';
 import { Subscription } from 'rxjs';
 import { PrintInformationService } from '../service/print-information.service';
 import { PrintInformationModel } from '../model/print-information.model';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-print-information-list',
@@ -29,7 +30,7 @@ export class PrintInformationListComponent implements OnDestroy {
 
   handleEdit(printInformation: PrintInformationModel) {
     this.router.navigate([
-      '/inventory/print-information/edit/' + printInformation.id,
+      '/general/print-information/edit/' + printInformation.id,
     ]);
   }
 
@@ -54,9 +55,12 @@ export class PrintInformationListComponent implements OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              this.toastService.showError(
-                'Error elimiando información de impresión'
-              );
+              processError(
+                error,
+                'Error eleminando información de impresión'
+              ).forEach((err) => {
+                this.toastService.showError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);

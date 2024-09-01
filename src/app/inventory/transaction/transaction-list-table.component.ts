@@ -223,10 +223,12 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
+          processError(error.error, 'Error cargando transacciones').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('table-spinner');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
         },
       });
     this.subscriptions$.push(sub);

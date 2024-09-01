@@ -30,7 +30,7 @@ export class PrintInformationService {
   }
 
   updatePrintInformation(model: PrintInformationModel): Observable<void> {
-    return this.http.put<void>(`${this.url}`, model);
+    return this.http.put<void>(`${this.url}/${model.id}`, model);
   }
 
   deletePrintInformation(id: string): Observable<void> {

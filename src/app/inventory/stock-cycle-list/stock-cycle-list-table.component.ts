@@ -188,10 +188,13 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
-          this.spinner.hide('table-spinner');
-          processError(error.error).forEach((err) => {
+          processError(
+            error.error,
+            'Error cargando ciclos de inventario'
+          ).forEach((err) => {
             this.toastService.showError(err);
           });
+          this.spinner.hide('table-spinner');
         },
       });
     this.subscriptions$.push(sub);

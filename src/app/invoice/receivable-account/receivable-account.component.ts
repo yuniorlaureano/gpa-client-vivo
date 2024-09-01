@@ -148,9 +148,11 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            processError(error.error).forEach((err) => {
-              this.toastService.showError(err);
-            });
+            processError(error.error, 'Error realizando pago').forEach(
+              (err) => {
+                this.toastService.showError(err);
+              }
+            );
           },
         });
       this.subscriptions$.push(sub);
@@ -211,9 +213,11 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando cuenta por cobrar').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);

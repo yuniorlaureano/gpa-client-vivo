@@ -173,13 +173,15 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
               filteredSize: data.data.length,
             },
           };
-          this.spinner.hide('profile-spinner');
+          this.spinner.hide('table-spinner');
         },
         error: (error) => {
-          this.spinner.hide('profile-spinner');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando perfiles').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
+          this.spinner.hide('table-spinner');
         },
       });
     this.subscriptions$.push(sub);

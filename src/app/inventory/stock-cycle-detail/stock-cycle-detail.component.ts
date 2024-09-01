@@ -106,7 +106,10 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.spinner.show('fullscreen');
-              processError(error.error).forEach((err) => {
+              processError(
+                error.error,
+                'Error cerrando ciclo de inventario'
+              ).forEach((err) => {
                 this.toast.showError(err);
               });
             },
@@ -139,7 +142,10 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
+          processError(
+            error.error,
+            'Error cargando el cliclo de inventario'
+          ).forEach((err) => {
             this.toast.showError(err);
           });
         },

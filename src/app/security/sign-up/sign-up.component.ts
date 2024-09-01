@@ -73,9 +73,11 @@ export class SignUpComponent {
           }, 500);
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error agregando usuario').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('fullscreen');
         },
       });

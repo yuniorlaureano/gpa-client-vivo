@@ -252,9 +252,11 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error modificando entrada').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);
@@ -278,7 +280,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
+          processError(error.error, 'Error creando entrada').forEach((err) => {
             this.toastService.showError(err);
           });
         },
@@ -321,9 +323,11 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cancelando entrada').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('fullscreen');
         },
       });
@@ -399,7 +403,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
+          processError(error.error, 'Error cargando entrada').forEach((err) => {
             this.toastService.showError(err);
           });
         },

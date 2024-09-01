@@ -132,9 +132,11 @@ export class ProviderCatalogComponent implements OnInit, OnDestroy {
           this.spinner.hide('provider-catalog-spinner');
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando proveedores').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('provider-catalog-spinner');
         },
       });

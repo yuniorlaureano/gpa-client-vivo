@@ -135,9 +135,11 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
           this.spinner.hide('product-catalog-spinner');
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando productos').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('product-catalog-spinner');
         },
       });

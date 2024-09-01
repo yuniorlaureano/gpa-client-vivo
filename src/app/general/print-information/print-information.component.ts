@@ -1,7 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { of, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  of,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import * as ProfileUtils from '../../core/utils/profile.utils';
@@ -23,6 +29,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
   imageUrl: string | ArrayBuffer | null =
     'assets/images/default-placeholder.png';
   subscriptions$: Subscription[] = [];
+  triggerLoad$ = new BehaviorSubject<boolean>(true);
 
   //permissions
   canRead: boolean = false;
@@ -31,16 +38,19 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
 
   //form
   printInformationForm = this.fb.group({
-    id: ['', [Validators.required]],
-    companyName: ['', [Validators.required]],
-    companyDocument: ['', [Validators.required]],
-    companyAddress: ['', [Validators.required]],
-    companyPhone: ['', [Validators.required]],
-    companyEmail: ['', [Validators.required]],
-    companyWebsite: ['', [Validators.required]],
-    signer: ['', [Validators.required]],
+    id: [''],
+    companyName: ['PLANTA DE AGUA ADVENTISTA', [Validators.required]],
+    companyDocument: ['RNC: 4545455554', [Validators.required]],
+    companyAddress: [
+      'Dirección: Calle 1, No. 2, Ensanche 3',
+      [Validators.required],
+    ],
+    companyPhone: ['TEL: 809-555-5555', [Validators.required]],
+    companyEmail: ['EMAIL: yuniorlaureano@gmail.com', [Validators.required]],
+    companyWebsite: ['www.colegioadventista.com', [Validators.required]],
+    signer: ['Usuario: Yunior Laureano', [Validators.required]],
     current: [true],
-    storeId: ['', [Validators.required]],
+    storeId: [''],
   });
 
   constructor(
@@ -49,7 +59,8 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private router: Router
   ) {}
 
   ngOnDestroy(): void {
@@ -114,7 +125,10 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
 
   createPrintInformation() {
     this.printInformationForm.get('id')?.setValue(null);
-    const value = this.printInformationForm.value;
+    const value = {
+      ...this.printInformationForm.value,
+      storeId: this.printInformationForm.get('storeId')?.value || null,
+    };
 
     this.spinner.show('fullscreen');
     const sub = this.printInformationService
@@ -124,16 +138,23 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
           if (this.photo) {
             this.uploadFile(product.id!, () => {
               this.clearFormOnCreate();
-              // this.router.navigate(['/inventory/product/' + product.id]);
+              this.router.navigate([
+                '/general/print-information/edit/' + product.id,
+              ]);
             });
           } else {
             this.clearFormOnCreate();
-            // this.router.navigate(['/inventory/product/' + product.id]);
+            this.router.navigate([
+              '/general/print-information/edit/' + product.id,
+            ]);
           }
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
+          processError(
+            error.error,
+            'Error cargando información de impresión'
+          ).forEach((err) => {
             this.toastService.showError(err);
           });
         },
@@ -145,11 +166,14 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
     this.clearForm();
     this.toastService.showSucess('Registro actualizado');
     this.spinner.hide('fullscreen');
-    // this.router.navigate(['/inventory/product']);
+    this.router.navigate(['/general/print-information/']);
   }
 
   upatePrintInformation() {
-    const value = this.printInformationForm.value;
+    const value = {
+      ...this.printInformationForm.value,
+      storeId: this.printInformationForm.get('storeId')?.value || null,
+    };
     this.spinner.show('fullscreen');
     const sub = this.printInformationService
       .updatePrintInformation(value as PrintInformationModel)
@@ -159,7 +183,10 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
+          processError(
+            error.error,
+            'Error actualizando información de impresión'
+          ).forEach((err) => {
             this.toastService.showError(err);
           });
         },
@@ -169,7 +196,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
 
   handleCancel() {
     this.clearForm();
-    // this.router.navigate(['/inventory/product']);
+    this.router.navigate(['/general/print-information/']);
   }
 
   clearForm() {
@@ -202,7 +229,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
         this.clearForm();
         this.toastService.showSucess('Foto actualizada');
         this.spinner.hide('fullscreen');
-        // this.router.navigate(['/inventory/product']);
+        this.triggerLoad$.next(true);
       });
     }
   }
@@ -244,13 +271,12 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
       companyWebsite: printInformation.companyWebsite,
       signer: printInformation.signer,
       current: printInformation.current,
-      storeId: printInformation.storeId,
+      storeId: printInformation.storeId ?? null,
     });
   }
 
   getIdFromParamsAndLoadPrintInformation() {
-    return switchMap((params: ParamMap) => {
-      this.spinner.show('fullscreen');
+    return switchMap(([params, _]) => {
       const id = params.get('id');
       if (id) {
         this.isEdit = true;
@@ -263,7 +289,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
   }
 
   loadPrintInformation() {
-    const sub = this.route.paramMap
+    const sub = combineLatest([this.route.paramMap, this.triggerLoad$])
       .pipe(this.getIdFromParamsAndLoadPrintInformation())
       .subscribe({
         next: (printInformation: PrintInformationModel | null) => {
@@ -275,7 +301,10 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
+          processError(
+            error.error,
+            'Error cargando información de impresión'
+          ).forEach((err) => {
             this.toastService.showError(err);
           });
         },

@@ -119,9 +119,11 @@ export class ProfilePermissionComponent
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error actualizando perfil').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);
@@ -150,7 +152,7 @@ export class ProfilePermissionComponent
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
+          processError(error.error, 'Error cargando permiso').forEach((err) => {
             this.toastService.showError(err);
           });
         },

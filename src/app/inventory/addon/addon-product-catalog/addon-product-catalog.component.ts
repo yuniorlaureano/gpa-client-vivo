@@ -125,9 +125,11 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
           this.spinner.hide('product-catalog-spinner');
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando productos').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('product-catalog-spinner');
         },
       });
@@ -141,16 +143,16 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
         .assignAddonToProductAsync(this.addonId, product.id)
         .subscribe({
           next: () => {
-            this.toastService.showSucess('Addon asignado correctamente');
+            this.toastService.showSucess('Agregado asignado correctamente');
+            this.spinner.hide('product-catalog-spinner');
           },
           error: (error) => {
-            processError(error.error).forEach((err) => {
-              this.toastService.showError(err);
-            });
-          },
-          complete: () => {
+            processError(error.error, 'Error asignado agregado').forEach(
+              (err) => {
+                this.toastService.showError(err);
+              }
+            );
             this.spinner.hide('product-catalog-spinner');
-            this.searchTerms.next(JSON.stringify(this.searchParams));
           },
         });
       this.subscriptions$.push(sub);
@@ -160,14 +162,16 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
         .removeAddonFromProductAsync(this.addonId, product.id)
         .subscribe({
           next: () => {
-            this.toastService.showSucess('Addon removido correctamente');
+            this.toastService.showSucess('Agregado removido correctamente');
+            this.spinner.hide('product-catalog-spinner');
+            this.searchTerms.next(JSON.stringify(this.searchParams));
           },
           error: (error) => {
-            processError(error.error).forEach((err) => {
-              this.toastService.showError(err);
-            });
-          },
-          complete: () => {
+            processError(error.error, 'Error removiendo agregado').forEach(
+              (err) => {
+                this.toastService.showError(err);
+              }
+            );
             this.spinner.hide('product-catalog-spinner');
             this.searchTerms.next(JSON.stringify(this.searchParams));
           },
@@ -182,14 +186,17 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
       .assignAddonToAllProductAsync(this.addonId)
       .subscribe({
         next: () => {
-          this.toastService.showSucess('Addon removido correctamente');
+          this.toastService.showSucess('Agregado asignado correctamente');
+          this.spinner.hide('product-catalog-spinner');
+          this.searchTerms.next(JSON.stringify(this.searchParams));
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
+          processError(
+            error.error,
+            'Error asignando usuarios a agregado'
+          ).forEach((err) => {
             this.toastService.showError(err);
           });
-        },
-        complete: () => {
           this.spinner.hide('product-catalog-spinner');
           this.searchTerms.next(JSON.stringify(this.searchParams));
         },
@@ -203,14 +210,16 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
       .removeAddonFromAllProductAsync(this.addonId)
       .subscribe({
         next: () => {
-          this.toastService.showSucess('Addon removido correctamente');
+          this.toastService.showSucess('Agregado removido correctamente');
+          this.spinner.hide('product-catalog-spinner');
+          this.searchTerms.next(JSON.stringify(this.searchParams));
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
-        },
-        complete: () => {
+          processError(error.error, 'Error removiendo agregados').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('product-catalog-spinner');
           this.searchTerms.next(JSON.stringify(this.searchParams));
         },

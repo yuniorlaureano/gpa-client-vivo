@@ -20,6 +20,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { EmailConfigurationModel } from '../model/email-configuration.model';
 import { EmailProviderService } from '../service/email-provider.service';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-email-provider-list-table',
@@ -132,10 +133,13 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
+          processError(
+            error.error,
+            'Error cargando proveedores de email'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('table-spinner');
-          this.toastService.showError(
-            'Error al cargar los proveedores de email.'
-          );
         },
       });
     this.subscriptions$.push(sub);

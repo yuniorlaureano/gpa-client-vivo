@@ -180,10 +180,12 @@ export class AddonListTableComponent implements OnInit, OnDestroy {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
+          processError(error.error, 'Error cargando agregados').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('table-spinner');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
         },
       });
     this.subscriptions$.push(sub);

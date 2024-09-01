@@ -48,9 +48,11 @@ export class ClientListComponent {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            processError(error.error).forEach((err) => {
-              this.toastService.showError(err);
-            });
+            processError(error.error, 'Error eliminando cliente').forEach(
+              (err) => {
+                this.toastService.showError(err);
+              }
+            );
           },
         });
         this.subscriptions$.push(sub);

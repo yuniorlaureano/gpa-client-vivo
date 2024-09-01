@@ -148,10 +148,12 @@ export class ProductListTableComponent {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
+          processError(error.error, 'Error cargando productos').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
           this.spinner.hide('table-spinner');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
         },
       });
     this.subscriptions$.push(sub);

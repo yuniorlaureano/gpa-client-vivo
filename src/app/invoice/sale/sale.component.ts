@@ -300,7 +300,7 @@ export class SaleComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error).forEach((err) => {
+        processError(error.error, 'Error realizando venta').forEach((err) => {
           this.toastService.showError(err);
         });
       },
@@ -319,7 +319,7 @@ export class SaleComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error).forEach((err) => {
+        processError(error.error, 'Error editando venta').forEach((err) => {
           this.toastService.showError(err);
         });
       },
@@ -371,9 +371,11 @@ export class SaleComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error).forEach((err) => {
-          this.toastService.showError(err);
-        });
+        processError(error.error, 'Error realizando devolución').forEach(
+          (err) => {
+            this.toastService.showError(err);
+          }
+        );
       },
     });
     this.subscriptions$.push(sub);
@@ -440,7 +442,7 @@ export class SaleComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
       },
       error: (error) => {
-        processError(error.error).forEach((err) => {
+        processError(error.error, 'Error cargando cliente').forEach((err) => {
           this.toastService.showError(err);
         });
         this.spinner.hide('fullscreen');
@@ -491,7 +493,7 @@ export class SaleComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
+          processError(error.error, 'Error cargando factura').forEach((err) => {
             this.toastService.showError(err);
           });
           this.spinner.hide('fullscreen');

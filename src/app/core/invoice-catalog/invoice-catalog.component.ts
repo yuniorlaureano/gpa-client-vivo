@@ -103,9 +103,11 @@ export class InvoiceCatalogComponent implements OnInit, OnDestroy {
           };
         },
         error: (error) => {
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando facturas').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
   }

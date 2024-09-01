@@ -95,7 +95,7 @@ export class AddonComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error).forEach((err) => {
+        processError(error.error, 'Error agregando agregado').forEach((err) => {
           this.toastService.showError(err);
         });
       },
@@ -109,14 +109,16 @@ export class AddonComponent implements OnInit, OnDestroy {
     const sub = this.addonService.addAddon(<AddonModel>value).subscribe({
       next: () => {
         this.clearForm();
-        this.toastService.showSucess('Agregado creada');
+        this.toastService.showSucess('Agregado actualizado');
         this.spinner.hide('fullscreen');
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error).forEach((err) => {
-          this.toastService.showError(err);
-        });
+        processError(error.error, 'Error actualizando agregado').forEach(
+          (err) => {
+            this.toastService.showError(err);
+          }
+        );
       },
     });
     this.subscriptions$.push(sub);
@@ -159,9 +161,11 @@ export class AddonComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error).forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error, 'Error cargando agregado').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);
