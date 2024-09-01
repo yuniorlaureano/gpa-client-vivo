@@ -6,9 +6,9 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { ProductService } from './inventory/service/product.service';
 import {
-  HttpClientModule,
-  provideHttpClient,
   withInterceptors,
+  provideHttpClient,
+  withInterceptorsFromDi,
 } from '@angular/common/http';
 import { JwtAuthInterceptor } from './core/interceptor/jwt-auth.interceptor';
 import { TokenService } from './core/service/token.service';
@@ -38,11 +38,11 @@ import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
+  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CoreModule,
-    HttpClientModule,
     BrowserAnimationsModule,
     NgxsModule.forRoot([AppState, AuthState], {
       developmentMode: environment.development,
@@ -70,7 +70,7 @@ import { environment } from '../environments/environment';
     BlobStorageProviderService,
     PrintInformationService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}
