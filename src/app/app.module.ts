@@ -34,6 +34,7 @@ import { EmailProviderService } from './general/service/email-provider.service';
 import { AuthState } from './core/ng-xs-store/states/auth.state';
 import { BlobStorageProviderService } from './general/service/blob-storage-provider.service';
 import { PrintInformationService } from './general/service/print-information.service';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -44,7 +45,7 @@ import { PrintInformationService } from './general/service/print-information.ser
     HttpClientModule,
     BrowserAnimationsModule,
     NgxsModule.forRoot([AppState, AuthState], {
-      developmentMode: true,
+      developmentMode: environment.development,
     }),
   ],
   providers: [
