@@ -39,16 +39,13 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
   //form
   printInformationForm = this.fb.group({
     id: [''],
-    companyName: ['PLANTA DE AGUA ADVENTISTA', [Validators.required]],
-    companyDocument: ['RNC: 4545455554', [Validators.required]],
-    companyAddress: [
-      'Dirección: Calle 1, No. 2, Ensanche 3',
-      [Validators.required],
-    ],
-    companyPhone: ['TEL: 809-555-5555', [Validators.required]],
-    companyEmail: ['EMAIL: yuniorlaureano@gmail.com', [Validators.required]],
-    companyWebsite: ['www.colegioadventista.com', [Validators.required]],
-    signer: ['Usuario: Yunior Laureano', [Validators.required]],
+    companyName: ['', [Validators.required]],
+    companyDocument: ['', [Validators.required]],
+    companyAddress: ['', [Validators.required]],
+    companyPhone: ['', [Validators.required]],
+    companyEmail: ['', [Validators.required]],
+    companyWebsite: ['', [Validators.required]],
+    signer: ['', [Validators.required]],
     current: [true],
     storeId: [''],
   });

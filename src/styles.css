@@ -10,3 +10,16 @@
 .show-more-drowpdown {
   padding: 9px;
 }
+
+@media screen and (max-width: 1024px) {
+  .right-button {
+    position: fixed !important;
+    top: 140px !important;
+    display: block;
+    z-index: 100 !important;
+  }
+
+  .card-content-container {
+    margin-top: 100px !important;
+  }
+}

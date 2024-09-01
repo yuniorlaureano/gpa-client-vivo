@@ -51,7 +51,7 @@
     <i class="bi bi-arrow-clockwise"></i>
   </button>
 </div>
-<div style="margin-top: 50px">
+<div style="margin-top: 50px" class="card-content-container">
   <div class="col-sm-12 col-12">
     <div class="card">
       <div class="card-header"></div>
@@ -59,21 +59,21 @@
       <!--  -->
       <div class="card-body">
         <!-- Comienza row de sergundo nivel! -->
-        <div class="row">
-          <gpa-no-permission-alert [visible]="!canCreate">
-            No tiene permisos para crear productos
-          </gpa-no-permission-alert>
-          <gpa-no-permission-alert [visible]="isEdit && !canEdit">
-            No tiene permisos para modificar productos
-          </gpa-no-permission-alert>
-          <div class="col-sm-6 col-12 info-container">
-            <!-- Primer grupo del formlario -->
-            <div class="card-border">
-              <div class="card-border-title mb-1">Información General</div>
-              <div class="card-border-body">
-                <form [formGroup]="printInformationForm" class="row">
-                  <!--  -->
-                  <div class="col-sm-2 col-12">
+        <gpa-no-permission-alert [visible]="!canCreate">
+          No tiene permisos para crear productos
+        </gpa-no-permission-alert>
+        <gpa-no-permission-alert [visible]="isEdit && !canEdit">
+          No tiene permisos para modificar productos
+        </gpa-no-permission-alert>
+        <div class="info-container">
+          <!-- Primer grupo del formlario -->
+          <div class="card-border">
+            <div class="card-border-title mb-1">Información General</div>
+            <div class="card-border-body">
+              <form [formGroup]="printInformationForm" class="row">
+                <!--  -->
+                <div class="row">
+                  <div class="col-sm-2 col-2">
                     <img
                       [src]="this.imageUrl"
                       class="img-thumbnail image-upload-product"
@@ -86,118 +86,112 @@
                       (change)="processFileUpload($event)"
                     />
                   </div>
-                  <div class="col-sm-8 col-8">
-                    <div class="row">
-                      <div class="col-sm-6 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Compaía<span class="text-red">*</span></label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="companyName"
-                          />
-                          <gpa-validator-message
-                            [control]="printInformationForm.get('companyName')"
-                            [touched]="printInformationForm.touched"
-                            validation="required"
-                            message="Campo requerido"
-                          />
-                        </div>
-                      </div>
-                      <!--  -->
-                      <div class="col-sm-6 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Documento<span class="text-red">*</span></label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="companyDocument"
-                          />
-                          <gpa-validator-message
-                            [control]="
-                              printInformationForm.get('companyDocument')
-                            "
-                            [touched]="printInformationForm.touched"
-                            validation="required"
-                            message="Campo requerido"
-                          />
-                        </div>
-                      </div>
-                      <!--  -->
-                      <div class="col-sm-6 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Teléfono<span class="text-red">*</span></label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="companyPhone"
-                          />
-                          <gpa-validator-message
-                            [control]="printInformationForm.get('companyPhone')"
-                            [touched]="printInformationForm.touched"
-                            validation="required"
-                            message="Campo requerido"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-sm-6 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Email<span class="text-red">*</span></label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="companyEmail"
-                          />
-                          <gpa-validator-message
-                            [control]="printInformationForm.get('companyEmail')"
-                            [touched]="printInformationForm.touched"
-                            validation="required"
-                            message="Campo requerido"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-sm-4 col-12">
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Firmante<span class="text-red">*</span></label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="signer"
-                          />
-                          <gpa-validator-message
-                            [control]="printInformationForm.get('signer')"
-                            [touched]="printInformationForm.touched"
-                            validation="required"
-                            message="Campo requerido"
-                          />
-                        </div>
-                      </div>
+                  <div class="col-sm-12 col-12">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Compaía<span class="text-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="companyName"
+                      />
+                      <gpa-validator-message
+                        [control]="printInformationForm.get('companyName')"
+                        [touched]="printInformationForm.touched"
+                        validation="required"
+                        message="Campo requerido"
+                      />
+                    </div>
+                  </div>
+                  <!--  -->
+                  <div class="col-sm-6 col-12">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Documento<span class="text-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="companyDocument"
+                      />
+                      <gpa-validator-message
+                        [control]="printInformationForm.get('companyDocument')"
+                        [touched]="printInformationForm.touched"
+                        validation="required"
+                        message="Campo requerido"
+                      />
+                    </div>
+                  </div>
+                  <!--  -->
+                  <div class="col-sm-6 col-12">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Teléfono<span class="text-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="companyPhone"
+                      />
+                      <gpa-validator-message
+                        [control]="printInformationForm.get('companyPhone')"
+                        [touched]="printInformationForm.touched"
+                        validation="required"
+                        message="Campo requerido"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-12">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Email<span class="text-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="companyEmail"
+                      />
+                      <gpa-validator-message
+                        [control]="printInformationForm.get('companyEmail')"
+                        [touched]="printInformationForm.touched"
+                        validation="required"
+                        message="Campo requerido"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-12">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Firmante<span class="text-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="signer"
+                      />
+                      <gpa-validator-message
+                        [control]="printInformationForm.get('signer')"
+                        [touched]="printInformationForm.touched"
+                        validation="required"
+                        message="Campo requerido"
+                      />
+                    </div>
+                  </div>
 
-                      <div class="col-sm-6 col-12" style="padding-top: 26px">
-                        <div class="mb-3">
-                          <div class="form-check">
-                            <input
-                              type="checkbox"
-                              id="current"
-                              class="form-check-input"
-                              formControlName="current"
-                              [value]="true"
-                            />
-                            <label for="current" class="form-check-label"
-                              >Configuración por defecto</label
-                            >
-                          </div>
-                        </div>
+                  <div class="col-sm-6 col-12" style="padding-top: 26px">
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input
+                          type="checkbox"
+                          id="current"
+                          class="form-check-input"
+                          formControlName="current"
+                          [value]="true"
+                        />
+                        <label for="current" class="form-check-label"
+                          >Configuración por defecto</label
+                        >
                       </div>
                     </div>
                   </div>
@@ -238,8 +232,8 @@
                       />
                     </div>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>

@@ -173,7 +173,7 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
               filteredSize: data.data.length,
             },
           };
-          this.spinner.hide('table-spinner');
+          this.spinner.hide('profile-spinner');
         },
         error: (error) => {
           processError(error.error, 'Error cargando perfiles').forEach(
@@ -181,7 +181,7 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
               this.toastService.showError(err);
             }
           );
-          this.spinner.hide('table-spinner');
+          this.spinner.hide('profile-spinner');
         },
       });
     this.subscriptions$.push(sub);

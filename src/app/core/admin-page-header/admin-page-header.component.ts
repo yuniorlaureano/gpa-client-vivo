@@ -51,6 +51,10 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const subMenu = sessionStorage.getItem('subMenu');
+    if (subMenu) {
+      this.submenu = subMenu;
+    }
     this.subscribeToClaims();
     this.handleSubmenu();
   }

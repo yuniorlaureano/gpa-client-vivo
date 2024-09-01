@@ -13506,8 +13506,7 @@ img {
 
 .content-wrapper {
   padding: 0 14px 0 14px;
-  height: calc(100vh - 100px);
-  overflow: auto;
+  height: calc(100vh - 100px); 
 }
 
 @media (max-width: 576px) {
