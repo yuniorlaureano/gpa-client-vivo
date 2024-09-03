@@ -1,31 +1,25 @@
 import {
   Component,
-  EventEmitter,
   Input,
   NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LocationModel } from '../models/location.model';
-import { LocationWithNameModel } from '../models/location-with-name.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GoogleMap } from '@angular/google-maps';
+import { LocationModel } from '../../models/location.model';
 
 @Component({
-  selector: 'gpa-map-google',
-  templateUrl: './map-google.component.html',
-  styleUrl: './map-google.component.css',
+  selector: 'gpa-dashboard-client-map',
+  templateUrl: './dashboard-client-map.component.html',
 })
-export class MapGoogleComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() visible: boolean = false;
-  @Output() onLocationChange = new EventEmitter<LocationWithNameModel>();
-  @Output() onClose = new EventEmitter();
-  selectedLocation: LocationWithNameModel | null = null;
+export class DashboardClientMapComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   subscriptions$: Subscription[] = [];
   center: google.maps.LatLngLiteral = {
     lat: 18.931924080755334,
@@ -47,24 +41,23 @@ export class MapGoogleComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['visible']) {
-      if (this.visible) {
-        if (this.locations.length > 0) {
-          this.center = {
-            lat: this.locations[0].lat(),
-            lng: this.locations[0].lng(),
-          };
-        } else {
-          this.center = {
-            lat: 18.931924080755334,
-            lng: -70.40929224394681,
-          };
-        }
-
-        this.clearMarkers();
+    // if (this.locations.length > 0) {
+    //   this.center = {
+    //     lat: this.locations[0].lat(),
+    //     lng: this.locations[0].lng(),
+    //   };
+    // } else {
+    //   this.center = {
+    //     lat: 18.931924080755334,
+    //     lng: -70.40929224394681,
+    //   };
+    // }
+    // if (changes['visible']) {
+    // }
+    /*
+    this.clearMarkers();
         this.setNewMarkers(this.locations);
-      }
-    }
+    */
   }
 
   ngOnInit(): void {
@@ -86,11 +79,7 @@ export class MapGoogleComponent implements OnInit, OnDestroy, OnChanges {
       this.center = event.latLng.toJSON();
       this.getPlaceDetails(event.latLng, (placeName, formattedAddress) => {
         this.ngZone.run(() => {
-          this.selectedLocation = {
-            ...loc,
-            placeName: placeName,
-            formattedAddress: formattedAddress,
-          };
+          console.log('Map clicked', loc);
           this.spinner.hide('map-google-spinner');
         });
       });
@@ -115,11 +104,12 @@ export class MapGoogleComponent implements OnInit, OnDestroy, OnChanges {
                 lng: pl.lng(),
               };
               this.zoom = 15;
-              this.selectedLocation = {
+              const selected = {
                 ...this.center,
                 placeName: place.name ?? null,
                 formattedAddress: place.formatted_address ?? null,
               };
+              console.log('Place changed', selected);
             });
           }
         }
@@ -172,12 +162,5 @@ export class MapGoogleComponent implements OnInit, OnDestroy, OnChanges {
         this.markers.push(marker);
       }
     });
-  }
-
-  close() {
-    if (this.selectedLocation) {
-      this.onLocationChange.emit(this.selectedLocation);
-    }
-    this.onClose.emit();
   }
 }

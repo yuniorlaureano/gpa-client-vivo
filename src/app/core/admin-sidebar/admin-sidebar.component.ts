@@ -31,12 +31,22 @@ export class AdminSidebarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   handleMenuSelected(menu: string) {
-    this.store.dispatch(new SetCurrentMenu(menu));
-    sessionStorage.setItem('menu', menu);
+    if (menu === this.menu) {
+      this.store.dispatch(new SetCurrentMenu(menu));
+      sessionStorage.setItem('menu', '');
+    } else {
+      this.store.dispatch(new SetCurrentMenu(menu));
+      sessionStorage.setItem('menu', menu);
+    }
   }
 
   handleSubMenuSelected(menu: string) {
     this.store.dispatch(new SetCurrentSubMenu(menu));
     sessionStorage.setItem('subMenu', menu);
+  }
+
+  handleDasboardSelected() {
+    this.handleMenuSelected('dashboard');
+    this.handleSubMenuSelected('Dashboard');
   }
 }

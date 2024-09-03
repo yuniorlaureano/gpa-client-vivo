@@ -26,6 +26,8 @@ import { NoPermissionAlertComponent } from './no-permission-alert/no-permission-
 import { ProviderCatalogComponent } from './provider-catalog/provider-catalog.component';
 import { MapGoogleComponent } from './map-google/map-google.component';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { DashboardClientMapComponent } from './dashboard/dashboard-client-map/dashboard-client-map.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
     NoPermissionAlertComponent,
     ProviderCatalogComponent,
     MapGoogleComponent,
+    DashboardClientMapComponent,
   ],
   imports: [
     CommonModule,
@@ -56,6 +59,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
     NgxSpinnerModule,
     NgbAlertModule,
     GoogleMapsModule,
+    NgApexchartsModule,
   ],
   providers: [
     LayoutService,

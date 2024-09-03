@@ -1,1 +1,123 @@
-<p>dashboard works!</p>
+<!-- Row start -->
+<div class="row">
+  <div class="col-xxl-3 col-sm-6 col-12">
+    <div class="stats-tile">
+      <div class="sale-icon-bdr">
+        <i class="bi bi-pie-chart"></i>
+      </div>
+      <div class="sale-details">
+        <h5>Productos terminado</h5>
+        <h3 class="text-blue">2,567</h3>
+        <p class="growth text-blue">Cantidad</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xxl-3 col-sm-6 col-12">
+    <div class="stats-tile">
+      <div class="sale-icon-bdr">
+        <i class="bi bi-box-seam"></i>
+      </div>
+      <div class="sale-details">
+        <h5>Materia prima</h5>
+        <h3 class="text-blue">$65,950</h3>
+        <p class="growth text-red">Monto</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xxl-3 col-sm-6 col-12">
+    <div class="stats-tile">
+      <div class="sale-icon-bdr green">
+        <i class="bi bi-handbag"></i>
+      </div>
+      <div class="sale-details">
+        <h5>Clientes</h5>
+        <h3 class="text-green">50</h3>
+        <p class="growth text-blue">Cantidad</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xxl-3 col-sm-6 col-12">
+    <div class="stats-tile">
+      <div class="sale-icon-bdr">
+        <i class="bi bi-emoji-smile"></i>
+      </div>
+      <div class="sale-details">
+        <h5>Ventas</h5>
+        <h3 class="text-blue">46</h3>
+        <p class="growth text-blue">Cantidad</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Row end -->
+
+<!-- Row start -->
+<div class="row">
+  <div class="col-xxl-9 col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title" style="display: flex; gap: 4px">
+          <select
+            class="form-control"
+            style="padding-left: 4px; padding-right: 4px"
+          >
+            <option value="-1" style="font-weight: bold">Transacción</option>
+            <option value="0">Entrada</option>
+            <option value="1">Salida</option>
+          </select>
+          <select class="form-control">
+            <option value="-1" style="font-weight: bold">Razón</option>
+            <option value="1">Compra</option>
+            <option value="2">Venta</option>
+            <option value="3">Devolución</option>
+            <option value="4">Manufacturado</option>
+            <option value="5">Dañados</option>
+            <option value="6">Expirados</option>
+            <option value="7">Materia prima</option>
+            <option value="8">Cancelación de salia</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <apx-chart
+          [series]="monthlyChartOptions.series!"
+          [chart]="monthlyChartOptions.chart!"
+          [xaxis]="monthlyChartOptions.xaxis!"
+          [title]="monthlyChartOptions.title!"
+        ></apx-chart>
+      </div>
+    </div>
+  </div>
+  <div class="col-xxl-3 col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Entrada vs Salida vs Existencia</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-height-xl auto-align-graph">
+          <apx-chart
+            [series]="inputOutputExistenceCartOptions.series!"
+            [chart]="inputOutputExistenceCartOptions.chart!"
+            [labels]="inputOutputExistenceCartOptions.labels!"
+            [title]="inputOutputExistenceCartOptions.title!"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Row end -->
+
+<!-- Row start -->
+<div class="row">
+  <div class="col-xxl-12 col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Clientes</div>
+      </div>
+      <div class="card-body">
+        <gpa-dashboard-client-map></gpa-dashboard-client-map>
+      </div>
+    </div>
+  </div>
+</div>
