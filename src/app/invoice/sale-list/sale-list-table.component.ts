@@ -250,7 +250,7 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
 
   getPyamentStatusDescription(status: PaymentStatusEnum) {
     switch (status) {
-      case PaymentStatusEnum.Payed:
+      case PaymentStatusEnum.Paid:
         return 'Pagado';
       case PaymentStatusEnum.Pending:
         return 'Pendiente';

@@ -12,3 +12,7 @@
 .client-catalog tbody tr {
   cursor: pointer;
 }
+
+.selected-client {
+  background-color: lightblue;
+}

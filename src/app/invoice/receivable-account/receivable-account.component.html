@@ -58,7 +58,7 @@
               {{ invoice?.payment | currency }}
             </li>
             <li
-              [class.payment_status_payed]="invoice?.paymentStatus == 0"
+              [class.payment_status_paid]="invoice?.paymentStatus == 0"
               [class.payment_status_pending]="invoice?.paymentStatus == 1"
             >
               <span class="client-profile">Estado:</span>

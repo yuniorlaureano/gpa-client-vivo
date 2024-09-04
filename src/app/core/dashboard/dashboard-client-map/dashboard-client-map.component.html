@@ -6,6 +6,15 @@
     size="medium"
   ></ngx-spinner>
   <div class="row">
+    <div>
+      <button
+        type="button"
+        class="btn btn-info mb-1"
+        (click)="handleSearchClient()"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i> Buscar cliente
+      </button>
+    </div>
     <div class="search-holder col-12 col-sm-12 mb-2">
       <input
         id="place-search"
@@ -22,5 +31,13 @@
     [zoom]="zoom"
     mapId="map-google"
     (mapClick)="mapClick($event)"
-  />
+  >
+    <map-marker
+      *ngFor="let client of clientsAsArray()"
+      [position]="client.position"
+      [label]="client.name"
+      [title]="client.name"
+      [icon]="markerIcon1"
+    />
+  </google-map>
 </div>

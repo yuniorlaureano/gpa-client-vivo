@@ -335,7 +335,7 @@ export class SaleComponent implements OnInit, OnDestroy {
       date: '',
       type: this.saleType,
       payment: this.getPayment(),
-      paymentStatus: PaymentStatusEnum.Payed,
+      paymentStatus: PaymentStatusEnum.Paid,
       invoiceDetails: this.invoiceDetails.value.map((product: any) => ({
         id: product.id,
         productId: product.productId,
@@ -502,8 +502,8 @@ export class SaleComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
-  isPayed() {
-    return this.paymentStatus == PaymentStatusEnum.Payed;
+  isPaid() {
+    return this.paymentStatus == PaymentStatusEnum.Paid;
   }
 
   setDisable(disable: boolean) {

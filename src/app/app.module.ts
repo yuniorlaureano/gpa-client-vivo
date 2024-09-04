@@ -35,6 +35,7 @@ import { AuthState } from './core/ng-xs-store/states/auth.state';
 import { BlobStorageProviderService } from './general/service/blob-storage-provider.service';
 import { PrintInformationService } from './general/service/print-information.service';
 import { environment } from '../environments/environment';
+import { DashboardService } from './general/service/dashboard.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -69,6 +70,7 @@ import { environment } from '../environments/environment';
     EmailProviderService,
     BlobStorageProviderService,
     PrintInformationService,
+    DashboardService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
     provideHttpClient(withInterceptorsFromDi()),
   ],

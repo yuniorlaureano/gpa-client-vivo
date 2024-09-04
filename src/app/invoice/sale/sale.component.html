@@ -71,7 +71,7 @@
     type="button"
     class="btn btn-outline-dark btn-rounded"
     (click)="printProofOfPayment()"
-    *ngIf="isEdit && isPayed()"
+    *ngIf="isEdit && isPaid()"
   >
     <i class="bi bi-printer"></i> Imprimir comprobante
   </button>
@@ -333,7 +333,11 @@
                 style="color: red"
                 *ngIf="productCatalogAggregate.netTotalPrice - payment >= 0"
               >
-                Adeuda: {{ productCatalogAggregate.netTotalPrice - payment }}
+                Adeuda:
+                {{
+                  (productCatalogAggregate.netTotalPrice - payment).toFixed(2)
+                    | currency
+                }}
               </p>
               <p style="color: green">
                 Devuelta: {{ productCatalogAggregate.return | currency }}

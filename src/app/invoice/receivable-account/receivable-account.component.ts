@@ -176,7 +176,7 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
     switch (status) {
       case PaymentStatusEnum.Pending:
         return 'Pendiente de pagar';
-      case PaymentStatusEnum.Payed:
+      case PaymentStatusEnum.Paid:
         return 'Pagada';
       default:
         return '';

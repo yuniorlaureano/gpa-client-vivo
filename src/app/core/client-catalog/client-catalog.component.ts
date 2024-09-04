@@ -23,6 +23,7 @@ export class ClientCatalogComponent {
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() onSelectedClient = new EventEmitter<ClientModel>();
+  @Input() selectedClientes: { [index: string]: boolean } = {};
   searchTerms = new Subject<string>();
   subscriptions$: Subscription[] = [];
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({

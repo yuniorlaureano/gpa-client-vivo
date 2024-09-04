@@ -34,6 +34,7 @@
             <tr
               *ngFor="let client of clients"
               (click)="handleSelectedClientFromCatalog(client)"
+              [class.selected-client]="selectedClientes[client.id]"
             >
               <td>{{ client.name + " " + client.lastName }}</td>
               <td>{{ client.identification }}</td>
