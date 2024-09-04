@@ -23,7 +23,7 @@ export class ClientComponent implements OnInit, OnDestroy {
   clients: ClientModel[] = [];
   isEdit: boolean = false;
   mapIsVisible: boolean = false;
-  locations: google.maps.LatLng[] = [];
+  locations: { lat: number; lng: number; name: string }[] = [];
 
   //subscriptions
   subscriptions$: Subscription[] = [];
@@ -275,9 +275,13 @@ export class ClientComponent implements OnInit, OnDestroy {
             this.mapCredits(client.credits);
 
             if (client.latitude != null && client.longitude != null) {
-              this.locations.push(
-                new google.maps.LatLng(client.latitude, client.longitude)
-              );
+              this.locations = [
+                {
+                  lat: client.latitude,
+                  lng: client.longitude,
+                  name: client.name + ' ' + client.lastName,
+                },
+              ];
             }
           }
           this.spinner.hide('fullscreen');

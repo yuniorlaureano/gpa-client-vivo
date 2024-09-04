@@ -47,5 +47,13 @@
     [zoom]="zoom"
     mapId="map-google"
     (mapClick)="mapClick($event)"
-  />
+  >
+    <map-marker
+      *ngFor="let client of transformLocations()"
+      [position]="client.position"
+      [label]="client.name"
+      [title]="client.name"
+      [icon]="markerIcon1"
+    />
+  </google-map>
 </div>
