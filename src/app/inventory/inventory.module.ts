@@ -28,6 +28,9 @@ import { AddonComponent } from './addon/addon.component';
 import { AddonListComponent } from './addon-list/addon-list.component';
 import { AddonListTableComponent } from './addon-list/addon-list-table.component';
 import { AddonProductCatalogComponent } from './addon/addon-product-catalog/addon-product-catalog.component';
+import { ProviderComponent } from './provider/provider.component';
+import { ProviderListComponent } from './provider-list/provider-list.component';
+import { ProviderListTableComponent } from './provider-list/provider-list-table.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +55,9 @@ import { AddonProductCatalogComponent } from './addon/addon-product-catalog/addo
     AddonListComponent,
     AddonListTableComponent,
     AddonProductCatalogComponent,
+    ProviderComponent,
+    ProviderListComponent,
+    ProviderListTableComponent,
   ],
   imports: [
     CommonModule,

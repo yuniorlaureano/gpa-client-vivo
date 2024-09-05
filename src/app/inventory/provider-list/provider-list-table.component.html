@@ -1,0 +1,68 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver los proveedores
+</gpa-no-permission-alert>
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <div search style="width: 100%">
+    <form [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-sm-6 col-12">
+          <label class="form-label" style="margin-bottom: 23px"></label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por Nombre o Identificación"
+              formControlName="term"
+              (input)="handleSearch()"
+              style="margin-right: 2px; width: 100px"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Nombre</th>
+    <th>Correo</th>
+    <th>Teléfono</th>
+    <th>Identificación</th>
+    <th></th>
+  </tr>
+  <tbody body>
+    <tr *ngFor="let provider of data.data">
+      <td>{{ provider.name + " " + provider.lastName }}</td>
+      <td>{{ provider.email }}</td>
+      <td>{{ provider.phone }}</td>
+      <td>
+        {{
+          getIdentificationType(provider.identificationType!) +
+            "" +
+            provider.identification
+        }}
+      </td>
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(provider)"
+          [disabled]="!canDelete"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(provider)"
+          [disabled]="!canEdit"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

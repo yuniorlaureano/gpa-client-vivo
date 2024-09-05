@@ -8,6 +8,8 @@ import { BlobProviderListComponent } from './blob-provider-list/blob-provider-li
 import { IntegrationsComponent } from './integrations/integrations.component';
 import { PrintInformationComponent } from './print-information/print-information.component';
 import { PrintInformationListComponent } from './print-information-list/print-information-list.component';
+import { UnitComponent } from './unit/unit.component';
+import { UnitListComponent } from './unit-list/unit-list.component';
 
 const routes: Routes = [
   {
@@ -47,6 +49,12 @@ const routes: Routes = [
         path: 'print-information/list',
         component: PrintInformationListComponent,
       },
+      { path: 'unit', component: UnitComponent },
+      {
+        path: 'unit/list',
+        component: UnitListComponent,
+      },
+      { path: 'unit/:id', component: UnitComponent },
     ],
   },
 ];

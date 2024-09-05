@@ -52,4 +52,5 @@ export class Components {
   public static Email: string = 'email';
   public static Blob: string = 'blob';
   public static PrintInformation = 'printInformation';
+  public static Unit = 'unit';
 }

@@ -5,5 +5,17 @@ export interface ProviderModel {
   email: string | null;
   lastName: string | null;
   identification: string;
-  identificationType: string | null;
+  identificationType: number | null;
+
+  street: string;
+  buildingNumber: string;
+  city: string;
+  state: string;
+  country: string;
+  postalCode: string;
+
+  formattedAddress: string | null;
+
+  latitude: number | null;
+  longitude: number | null;
 }

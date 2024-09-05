@@ -50,7 +50,12 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   isFormDisabled: boolean = false;
   selectedProducts: { [key: string]: boolean } = {};
   isProductCatalogVisible: boolean = false;
-  selectedProvider: ProviderModel | null = null;
+  selectedProvider: {
+    id: string | null;
+    name: string;
+    lastName: string | null;
+    identification: string | null;
+  } | null = null;
   files: FileList | null = null;
   attachments: StockAttachModel[] = [];
   reasons$!: Observable<ReasonModel[]>;
@@ -375,7 +380,10 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       productCode: [product.code, Validators.required],
       price: [product.price, Validators.required],
       purchasePrice: [product.price, Validators.required],
-      productName: [product.name, Validators.required],
+      productName: [
+        product.name + ' ' + product.unitValue + ' ' + product.unit,
+        Validators.required,
+      ],
       productId: [product.id, Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
     });
@@ -440,10 +448,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           id: stock.providerId,
           name: stock.providerName,
           identification: stock.providerIdentification,
-          phone: null,
-          email: null,
           lastName: null,
-          identificationType: null,
         }
       : null;
   }

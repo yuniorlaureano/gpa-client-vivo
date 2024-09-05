@@ -22,6 +22,9 @@ import { IntegrationsComponent } from './integrations/integrations.component';
 import { PrintInformationListTableComponent } from './print-information-list/print-information-list-table.component';
 import { PrintInformationListComponent } from './print-information-list/print-information-list.component';
 import { PrintInformationComponent } from './print-information/print-information.component';
+import { UnitComponent } from './unit/unit.component';
+import { UnitListComponent } from './unit-list/unit-list.component';
+import { UnitListTableComponent } from './unit-list/unit-list-table.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,9 @@ import { PrintInformationComponent } from './print-information/print-information
     PrintInformationListTableComponent,
     PrintInformationListComponent,
     PrintInformationComponent,
+    UnitComponent,
+    UnitListComponent,
+    UnitListTableComponent,
   ],
   imports: [
     CoreModule,

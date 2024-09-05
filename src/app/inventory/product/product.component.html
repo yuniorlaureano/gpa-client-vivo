@@ -87,9 +87,12 @@
                       formControlName="code"
                       placeholder="Ingrese el código del producto"
                     />
-                    <div *ngIf="isFieldInvalid('code')" class="text-danger">
-                      El código es obligatorio.
-                    </div>
+                    <gpa-validator-message
+                      [control]="productForm.get('code')"
+                      [touched]="productForm.touched"
+                      validation="required"
+                      message="Requerido"
+                    />
                   </div>
                 </div>
                 <!--  -->
@@ -104,9 +107,12 @@
                       formControlName="name"
                       placeholder="Ingrese el nombre del producto"
                     />
-                    <div *ngIf="isFieldInvalid('name')" class="text-danger">
-                      El nombre es obligatorio.
-                    </div>
+                    <gpa-validator-message
+                      [control]="productForm.get('name')"
+                      [touched]="productForm.touched"
+                      validation="required"
+                      message="Requerido"
+                    />
                   </div>
                 </div>
                 <!--  -->
@@ -127,6 +133,12 @@
                         {{ category.name }}
                       </option>
                     </select>
+                    <gpa-validator-message
+                      [control]="productForm.get('categoryId')"
+                      [touched]="productForm.touched"
+                      validation="required"
+                      message="Requerido"
+                    />
                   </div>
                 </div>
                 <!--  -->
@@ -141,25 +153,51 @@
                       formControlName="price"
                       placeholder="Ingrese el precio del producto"
                     />
+                    <gpa-validator-message
+                      [control]="productForm.get('price')"
+                      [touched]="productForm.touched"
+                      validation="required"
+                      message="Requerido"
+                    />
                   </div>
                 </div>
+
                 <div class="col-sm-4 col-12">
-                  <div class="mb-3">
-                    <label class="form-label"
-                      >Unidad<span class="text-red">*</span></label
-                    >
-                    <select
-                      name="unitId"
-                      class="form-select"
-                      formControlName="unitId"
-                    >
-                      <option
-                        *ngFor="let unit of units$ | async"
-                        value="{{ unit.id }}"
+                  <div class="input-group">
+                    <div class="mb-3" style="width: 20%">
+                      <label class="form-label"
+                        >Valor<span class="text-red">*</span></label
                       >
-                        {{ unit.name }}
-                      </option>
-                    </select>
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="unitValue"
+                      />
+                    </div>
+
+                    <div class="mb-3" style="width: 80%">
+                      <label class="form-label"
+                        >Unidad<span class="text-red">*</span></label
+                      >
+                      <select
+                        name="unitId"
+                        class="form-select"
+                        formControlName="unitId"
+                      >
+                        <option
+                          *ngFor="let unit of units$ | async"
+                          value="{{ unit.id }}"
+                        >
+                          {{ unit.name }}
+                        </option>
+                      </select>
+                      <gpa-validator-message
+                        [control]="productForm.get('unitId')"
+                        [touched]="productForm.touched"
+                        validation="required"
+                        message="Requerido"
+                      />
+                    </div>
                   </div>
                 </div>
                 <!--  -->
@@ -176,9 +214,12 @@
                       <option value="1">Producto terminado</option>
                       <option value="2">Materia prima</option>
                     </select>
-                    <div *ngIf="isFieldInvalid('type')" class="text-danger">
-                      El tipo es obligatorio
-                    </div>
+                    <gpa-validator-message
+                      [control]="productForm.get('type')"
+                      [touched]="productForm.touched"
+                      validation="required"
+                      message="Requerido"
+                    />
                   </div>
                 </div>
                 <div class="col-sm-12 col-12">
@@ -192,14 +233,18 @@
                       formControlName="description"
                       placeholder="Use este espacio para agregar una descripcion del producto"
                     ></textarea>
+                    <gpa-validator-message
+                      [control]="productForm.get('description')"
+                      [touched]="productForm.touched"
+                      validation="required"
+                      message="Requerido"
+                    />
                   </div>
                 </div>
 
                 <div class="col-sm-12 col-12">
                   <div class="mb-2">
-                    <label class="form-label"
-                      >Agregados<span class="text-red">*</span></label
-                    >
+                    <label class="form-label">Agregados</label>
                     <div formArrayName="addons">
                       <div
                         *ngFor="

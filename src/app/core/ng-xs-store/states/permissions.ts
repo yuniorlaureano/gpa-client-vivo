@@ -16,6 +16,7 @@ export function getRequiredPermissions(): ModuleRequiredPermissionType {
       [PermissionConstants.Components.Blob]: blobPermission(),
       [PermissionConstants.Components.PrintInformation]:
         printInformationPermission(),
+      [PermissionConstants.Components.Unit]: unitPermission(),
     },
     [PermissionConstants.Modules.Inventory]: {
       [PermissionConstants.Components.Product]: productPermission(),
@@ -23,6 +24,7 @@ export function getRequiredPermissions(): ModuleRequiredPermissionType {
       [PermissionConstants.Components.Category]: categoryPermission(),
       [PermissionConstants.Components.Addon]: addonPermission(),
       [PermissionConstants.Components.Stock]: stockPermission(),
+      [PermissionConstants.Components.Provider]: providerPermission(),
     },
     [PermissionConstants.Modules.Invoice]: {
       [PermissionConstants.Components.Invoicing]: invoicePermission(),
@@ -402,6 +404,48 @@ function printInformationPermission(): RequiredPermissionType {
     },
     [PermissionConstants.Permission.Upload]: {
       expected: PermissionConstants.Permission.Upload,
+      valid: false,
+    },
+  };
+}
+
+function unitPermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+  };
+}
+
+function providerPermission(): RequiredPermissionType {
+  return {
+    create: {
+      expected: PermissionConstants.Permission.Create,
+      valid: false,
+    },
+    update: {
+      expected: PermissionConstants.Permission.Update,
+      valid: false,
+    },
+    delete: {
+      expected: PermissionConstants.Permission.Delete,
+      valid: false,
+    },
+    read: {
+      expected: PermissionConstants.Permission.Read,
       valid: false,
     },
   };

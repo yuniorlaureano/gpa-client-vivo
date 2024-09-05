@@ -18,4 +18,20 @@ export class ProviderService {
       `${this.url}${search ? search.asQueryString() : ''}`
     );
   }
+
+  getProviderById(id: string): Observable<ProviderModel> {
+    return this.http.get<ProviderModel>(`${this.url}/${id}`);
+  }
+
+  addProvider(model: ProviderModel): Observable<void> {
+    return this.http.post<void>(`${this.url}`, model);
+  }
+
+  updateProvider(model: ProviderModel): Observable<void> {
+    return this.http.put<void>(`${this.url}`, model);
+  }
+
+  removeProvider(providerId: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${providerId}`);
+  }
 }

@@ -7,6 +7,7 @@ export function processError(
   }
   const errors: string[] = [];
   iterateErrorObject(error, errors);
+
   return errors;
 }
 
@@ -31,7 +32,20 @@ function iterateErrorObject(error: any, errors: string[] = []) {
       iterateErrorObject(err, errors);
     });
   } else {
-    errors.push(error);
+    if (
+      error !== '<root>' &&
+      error !== 'root' &&
+      error !== 'error' &&
+      error !== true &&
+      error !== false &&
+      error !== null &&
+      error !== undefined &&
+      error !== 0
+    ) {
+      console.log(error);
+      errors.push(error);
+    }
+
     return;
   }
 }

@@ -8,6 +8,7 @@ export interface ProductModel {
   photo: string | null;
   price: number;
   description: string;
+  unitValue: number;
   unitId: string;
   unit: string;
   categoryId: string;

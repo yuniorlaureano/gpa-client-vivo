@@ -1,9 +1,6 @@
 <gpa-no-permission-alert [visible]="!canRead">
-  No tiene permisos para crear usuarios
+  No tiene permisos para leer unidades
 </gpa-no-permission-alert>
-<!-- <div class="row">
-  
-</div> -->
 <gpa-data-table
   [onSetPageToShow]="handleSetPageToShow"
   [options]="data.options"
@@ -16,7 +13,7 @@
       <input
         type="text"
         class="form-control"
-        placeholder="Buscar por Código o Nombre"
+        placeholder="Buscar por código o nombre o descripción"
         style="margin-right: 20px; width: 300px"
         (input)="handleSearch($event)"
       />
@@ -27,32 +24,24 @@
     <th>Código</th>
     <th>Nombre</th>
     <th>Descripción</th>
-    <th>Precio</th>
-    <th>Categoría</th>
-    <th>Unidad</th>
-    <th>Tipo</th>
     <!-- <th></th> -->
   </tr>
   <tbody body>
-    <tr *ngFor="let product of data.data">
-      <td>{{ product.code }}</td>
-      <td>{{ product.name }}</td>
-      <td>{{ product.description }}</td>
-      <td>{{ product.price }}</td>
-      <td>{{ product.category }}</td>
-      <td>{{ product.unitValue + " " + product.unit }}</td>
-      <td>{{ getTypeLabel(product.type) }}</td>
+    <tr *ngFor="let unit of data.data">
+      <td>{{ unit.code }}</td>
+      <td>{{ unit.name }}</td>
+      <td>{{ unit.description }}</td>
       <td style="width: 100px">
         <button
           class="btn btn-outline-danger btn-icon"
-          (click)="handleDelete(product)"
+          (click)="handleDelete(unit)"
           [disabled]="!canDelete"
         >
           <i class="bi bi-trash"></i>
         </button>
         <button
           class="btn btn-outline-warning btn-icon"
-          (click)="handleEdit(product)"
+          (click)="handleEdit(unit)"
           [disabled]="!canEdit"
         >
           <i class="bi bi-pencil"></i>

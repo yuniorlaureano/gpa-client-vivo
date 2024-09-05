@@ -272,7 +272,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         position: 'bottom',
       },
       dataLabels: {
-        enabled: false,
+        enabled: true,
       },
       stroke: {
         width: 8,

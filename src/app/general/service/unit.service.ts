@@ -18,4 +18,20 @@ export class UnitService {
       `${this.url}${search ? search.asQueryString() : ''}`
     );
   }
+
+  getUnitById(id: string): Observable<UnitModel> {
+    return this.http.get<UnitModel>(`${this.url}/${id}`);
+  }
+
+  addUnit(model: UnitModel): Observable<void> {
+    return this.http.post<void>(`${this.url}`, model);
+  }
+
+  updateUnit(model: UnitModel): Observable<void> {
+    return this.http.put<void>(`${this.url}`, model);
+  }
+
+  removeUnit(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
+  }
 }

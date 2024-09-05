@@ -1,0 +1,16 @@
+<div class="right-button">
+  <a
+    routerLink="/general/unit"
+    class="btn btn-outline-primary btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-plus-lg"></i> Nueva unidad
+  </a>
+</div>
+<div style="margin-top: 50px" class="card-content-container">
+  <gpa-unit-list-table
+    (onDelete)="handleDelete($event)"
+    (onEdit)="handleEdit($event)"
+    [reloadTable]="reloadTable"
+  ></gpa-unit-list-table>
+</div>

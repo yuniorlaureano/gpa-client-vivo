@@ -1,11 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  Validators,
-} from '@angular/forms';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ProductModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -64,6 +58,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     price: [0.0, [Validators.required]],
     description: ['', Validators.required],
     unitId: ['', Validators.required],
+    unitValue: [1, Validators.required],
     categoryId: ['', Validators.required],
     type: [
       ProductType.FinishedProduct,
@@ -95,17 +90,6 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.loadUnits();
     this.loadCategories();
     this.loadAddons();
-  }
-
-  isFieldInvalid(field: string): boolean {
-    const control = this.productForm.get(field) as FormControl;
-    return (
-      control &&
-      control.touched &&
-      control.errors &&
-      'required' in control.errors &&
-      control.errors['required']
-    );
   }
 
   handlePermissionsLoad() {
@@ -282,10 +266,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     if (this.isEdit && this.productForm.get('id')?.value) {
       this.spinner.show('fullscreen');
       this.uploadFile(this.productForm.get('id')?.value!, () => {
-        this.clearForm();
         this.toastService.showSucess('Foto actualizada');
         this.spinner.hide('fullscreen');
-        this.router.navigate(['/inventory/product']);
       });
     }
   }
@@ -338,6 +320,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       name: product.name,
       price: product.price,
       description: product.description,
+      unitValue: product.unitValue,
       unitId: product.unitId,
       categoryId: product.categoryId,
       type: product.type,

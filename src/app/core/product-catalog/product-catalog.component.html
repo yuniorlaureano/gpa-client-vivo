@@ -45,7 +45,11 @@
               [class.selected-product]="selectedProducts[product.id!]"
             >
               <td>{{ product.code }}</td>
-              <td>{{ product.name }}</td>
+              <td>
+                {{
+                  product.name + " " + product.unitValue + " " + product.unit
+                }}
+              </td>
               <td>{{ productType(product.type) }}</td>
               <td>$ {{ product.price }}</td>
             </tr>

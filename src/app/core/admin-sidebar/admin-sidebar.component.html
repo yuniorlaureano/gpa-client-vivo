@@ -150,6 +150,29 @@
                   ><i class="bi bi-arrow-left-right"></i> Transacciones</a
                 >
               </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/provider"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Proveedor')"
+                >
+                  <i class="fa-solid fa-users"></i>
+                  Proveedor</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/provider/list"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Listado de proveedor')"
+                >
+                  <i class="bi bi-person-lines-fill"></i>Lista de proveedor</a
+                >
+              </li>
             </ul>
           </div>
         </li>
@@ -282,6 +305,30 @@
                   (click)="handleSubMenuSelected('Información de impresión')"
                   [routerLinkActiveOptions]="{ exact: true }"
                   ><i class="bi bi-building"></i> Información de impresión</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/unit"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Unidades de medida')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-solid fa-scale-unbalanced"></i> Unidades de
+                  medida</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/unit/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Lista de unidades')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-solid fa-weight-hanging"></i> Lista de
+                  unidades</a
                 >
               </li>
             </ul>

@@ -14,6 +14,8 @@ import { StockCycleListComponent } from './stock-cycle-list/stock-cycle-list.com
 import { StockOutputComponent } from './stock-output/stock-output.component';
 import { AddonComponent } from './addon/addon.component';
 import { AddonListComponent } from './addon-list/addon-list.component';
+import { ProviderComponent } from './provider/provider.component';
+import { ProviderListComponent } from './provider-list/provider-list.component';
 
 const routes: Routes = [
   {
@@ -29,6 +31,7 @@ const routes: Routes = [
         component: CategoryListComponent,
       },
       { path: 'category/:id', component: CategoryComponent },
+
       { path: 'existence/list', component: ExistenceListComponent },
       { path: 'transaction/list', component: TransactionListComponent },
       {
@@ -70,6 +73,19 @@ const routes: Routes = [
       {
         path: 'addon/list',
         component: AddonListComponent,
+      },
+
+      {
+        path: 'provider',
+        component: ProviderComponent,
+      },
+      {
+        path: 'provider/edit/:id',
+        component: ProviderComponent,
+      },
+      {
+        path: 'provider/list',
+        component: ProviderListComponent,
       },
     ],
   },

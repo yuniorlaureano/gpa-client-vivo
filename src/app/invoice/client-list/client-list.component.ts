@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { processError } from '../../core/utils/error.utils';
 
 @Component({
-  selector: 'gpa-sale-list',
+  selector: 'gpa-client-list',
   templateUrl: './client-list.component.html',
   styleUrl: './client-list.component.css',
 })
