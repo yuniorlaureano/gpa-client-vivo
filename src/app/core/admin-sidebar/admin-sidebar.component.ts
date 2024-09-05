@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
+import { LayoutService } from '../service/layout.service';
 import {
   SetCurrentMenu,
   SetCurrentSubMenu,
@@ -15,7 +16,7 @@ export class AdminSidebarComponent implements OnInit, OnDestroy {
   menu: string = '';
   subscription$: Subscription | null = null;
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private layoutService: LayoutService) {
     this.subscription$ = this.store
       .select((state: any) => state.app.menu)
       .subscribe({
@@ -41,6 +42,7 @@ export class AdminSidebarComponent implements OnInit, OnDestroy {
   }
 
   handleSubMenuSelected(menu: string) {
+    this.layoutService.closeToggle();
     this.store.dispatch(new SetCurrentSubMenu(menu));
     sessionStorage.setItem('subMenu', menu);
   }

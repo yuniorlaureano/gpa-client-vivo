@@ -11,12 +11,24 @@
   padding: 9px;
 }
 
+.right-button {
+  display: flex;
+  justify-content: flex-end;
+  top: 90px;
+  position: fixed;
+  right: 0px;
+  z-index: 100;
+}
+
 @media screen and (max-width: 1024px) {
   .right-button {
+    display: flex;
+    justify-content: flex-end;
     position: fixed !important;
-    top: 140px !important;
-    display: block;
+    top: 100px !important;
+    right: 0px !important;
     z-index: 100 !important;
+    overflow: scroll;
   }
 
   .card-content-container {
@@ -79,7 +91,7 @@
 }
 /************* 6.2 Sidebar Wrapper *************/
 .sidebar-wrapper {
-  width: 210px;
+  width: 220px;
   padding: 0;
   height: calc(100vh - 20px);
   -webkit-border-radius: 10px 90px 90px 10px;
@@ -126,7 +138,7 @@
 .sidebar-wrapper .sidebar-menu ul li a {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   position: relative;
   padding: 20px 15px 20px 15px;

@@ -23,4 +23,8 @@ export class LayoutService {
   getMenuHeader() {
     return this.menus[this.selectedMenu];
   }
+
+  closeToggle() {
+    this.toggle = false;
+  }
 }

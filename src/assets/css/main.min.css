@@ -13115,6 +13115,7 @@ img {
   transition: padding-left 0.3s ease;
   padding: 0 0 0 230px;
   height: calc(100vh - 20px);
+  margin: 5px;
 }
 
 @media screen and (max-width: 1024px) {
@@ -13506,7 +13507,7 @@ img {
 
 .content-wrapper {
   padding: 0 14px 0 14px;
-  height: calc(100vh - 100px); 
+  height: calc(100vh - 100px);
 }
 
 @media (max-width: 576px) {
