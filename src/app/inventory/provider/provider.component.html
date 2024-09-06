@@ -1,10 +1,10 @@
 <div class="right-button">
   <a
-    routerLink="/invoice/client/list"
+    routerLink="/inventory/provider/list"
     class="btn btn-outline-info btn-rounded"
     style="margin-right: 5px"
   >
-    <i class="bi bi-card-list"></i> Lista de clientes
+    <i class="bi bi-card-list"></i> Lista de proveedores
   </a>
   <button
     type="button"
@@ -44,10 +44,10 @@
       <!--  -->
       <div class="card-body">
         <gpa-no-permission-alert [visible]="!canCreate">
-          No tiene permisos para crear clientes
+          No tiene permisos para crear proveedores
         </gpa-no-permission-alert>
         <gpa-no-permission-alert [visible]="isEdit && !canEdit">
-          No tiene permisos para modificar clientes
+          No tiene permisos para modificar proveedores
         </gpa-no-permission-alert>
         <!-- Comienza row de sergundo nivel! -->
         <div class="row">
