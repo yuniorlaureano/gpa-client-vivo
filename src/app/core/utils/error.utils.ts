@@ -32,15 +32,17 @@ function iterateErrorObject(error: any, errors: string[] = []) {
       iterateErrorObject(err, errors);
     });
   } else {
+    let strErr = error?.toString();
     if (
-      error !== '<root>' &&
-      error !== 'root' &&
-      error !== 'error' &&
-      error !== true &&
-      error !== false &&
-      error !== null &&
-      error !== undefined &&
-      error !== 0
+      strErr != '<root>' &&
+      strErr != 'root' &&
+      strErr != 'error' &&
+      strErr != 'true' &&
+      strErr != 'false' &&
+      strErr != null &&
+      strErr != undefined &&
+      strErr != '0' &&
+      strErr.lenth > 15
     ) {
       console.log(error);
       errors.push(error);
