@@ -6,14 +6,24 @@ export function processError(
     return [defaultError];
   }
   const errors: string[] = [];
-  iterateErrorObject(error, errors);
+  if (error) {
+    let err = null;
+    try {
+      err = JSON.parse(JSON.stringify(error));
+    } catch (e) {}
+    iterateErrorObject(err, errors);
+  }
 
   return errors;
 }
 
-function iterateErrorObject(error: any, errors: string[] = []) {
-  if (!error || errors.length > 10 || error.hasOwnProperty('XMLHttpRequest'))
+function iterateErrorObject(error: any, errors: string[] = [], cumulative = 0) {
+  if (cumulative > 10) {
     return;
+  }
+  if (!error || errors.length > 10 || error.hasOwnProperty('XMLHttpRequest')) {
+    return;
+  }
 
   if (error.hasOwnProperty('errors')) {
     error = error.errors;
@@ -22,14 +32,18 @@ function iterateErrorObject(error: any, errors: string[] = []) {
   if (typeof error === 'object') {
     for (const key in error) {
       try {
-        iterateErrorObject(error[key], errors);
+        if (cumulative <= 10) {
+          iterateErrorObject(error[key], errors, cumulative + 1);
+        }
       } catch (e) {
         return;
       }
     }
   } else if (Array.isArray(error)) {
     error.forEach((err) => {
-      iterateErrorObject(err, errors);
+      if (cumulative <= 10) {
+        iterateErrorObject(err, errors, cumulative + 1);
+      }
     });
   } else {
     let strErr = error?.toString();
@@ -44,7 +58,6 @@ function iterateErrorObject(error: any, errors: string[] = []) {
       strErr != '0' &&
       strErr.lenth > 15
     ) {
-      console.log(error);
       errors.push(error);
     }
 
