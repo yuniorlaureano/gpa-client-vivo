@@ -456,7 +456,10 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   clearForm = () => {
     this.formProducts.clear();
     this.selectedProducts = {};
-    this.stockForm.reset({ status: StockStatusEnum.Saved });
+    this.stockForm.reset({
+      status: StockStatusEnum.Saved,
+      transactionType: TransactionType.Input,
+    });
     this.selectedProvider = null;
     this.isEdit = false;
     this.disableForm(false);

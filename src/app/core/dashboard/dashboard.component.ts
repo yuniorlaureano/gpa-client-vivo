@@ -130,9 +130,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.finishedProductCount = finishedProductExistence;
 
     this.setInputOutputExistenceCartOptions({
-      input: input,
-      output: output,
-      existence: existence,
+      input: Math.abs(input),
+      output: Math.abs(output),
+      existence: Math.abs(existence),
     });
   }
 
@@ -275,7 +275,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         enabled: true,
       },
       stroke: {
-        width: 8,
+        width: 2,
         colors: ['#ffffff'],
       },
       colors: ['#435EEF', '#59a2fb', '#8ec0fd'],

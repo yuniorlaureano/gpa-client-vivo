@@ -352,7 +352,10 @@ export class StockOutputComponent implements OnInit, OnDestroy {
   clearForm = () => {
     this.formProducts.clear();
     this.selectedProducts = {};
-    this.stockForm.reset({ status: StockStatusEnum.Saved });
+    this.stockForm.reset({
+      status: StockStatusEnum.Saved,
+      transactionType: TransactionType.Output,
+    });
     this.isEdit = false;
     this.disableForm(false);
     this.router.navigate(['/inventory/output']);

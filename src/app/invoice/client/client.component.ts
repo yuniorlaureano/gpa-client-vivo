@@ -179,6 +179,7 @@ export class ClientComponent implements OnInit, OnDestroy {
           this.clearForm();
           this.spinner.hide('fullscreen');
           this.toastService.showSucess('Cliente actualizado');
+          this.router.navigate(['/invoice/client']);
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
