@@ -6,7 +6,13 @@
         <i class="fa-solid fa-bag-shopping"></i>
       </div>
       <div class="sale-details">
-        <h5>Productos terminado</h5>
+        <h5>
+          <a
+            routerLink="/inventory/product/list"
+            routerLinkActive="router-link-active"
+            >Productos terminado</a
+          >
+        </h5>
         <h3 class="text-blue">{{ finishedProductCount }}</h3>
         <p class="growth text-blue">Cantidad</p>
       </div>
@@ -18,7 +24,13 @@
         <i class="fa-solid fa-toolbox"></i>
       </div>
       <div class="sale-details">
-        <h5>Materia prima</h5>
+        <h5>
+          <a
+            routerLink="/inventory/product/list"
+            routerLinkActive="router-link-active"
+            >Materia prima</a
+          >
+        </h5>
         <h3 class="text-blue">{{ rawProductCount }}</h3>
         <p class="growth text-blue">Cantidad</p>
       </div>
@@ -36,7 +48,13 @@
           type="timer"
           size="medium"
         ></ngx-spinner>
-        <h5>Clientes</h5>
+        <h5>
+          <a
+            routerLink="/invoice/client/list"
+            routerLinkActive="router-link-active"
+            >Clientes</a
+          >
+        </h5>
         <h3 class="text-green">{{ clientsCount }}</h3>
         <p class="growth text-blue">Cantidad</p>
       </div>
@@ -55,7 +73,13 @@
           size="medium"
         ></ngx-spinner>
 
-        <h5>Ventas</h5>
+        <h5>
+          <a
+            routerLink="/invoice/sale/list"
+            routerLinkActive="router-link-active"
+            >Ventas</a
+          >
+        </h5>
         <h3 class="text-blue">{{ revenues | currency }}</h3>
         <div style="display: flex">
           <p class="growth text-blue" style="margin-right: 5px">Cantidad</p>
@@ -127,7 +151,13 @@
   <div class="col-xxl-3 col-sm-12 col-12">
     <div class="card">
       <div class="card-header">
-        <div class="card-title">Entrada vs Salida vs Existencia</div>
+        <div class="card-title">
+          <a
+            routerLink="/inventory/existence/list"
+            routerLinkActive="router-link-active"
+            >Entrada vs Salida vs Existencia</a
+          >
+        </div>
       </div>
       <div class="card-body">
         <div class="chart-height-xl auto-align-graph">

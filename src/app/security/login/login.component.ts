@@ -8,6 +8,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthState } from '../../core/ng-xs-store/states/auth.state';
 import { Store } from '@ngxs/store';
 import { ReplaceMessages } from '../../core/ng-xs-store/actions/auth.actions';
+import { processError } from '../../core/utils/error.utils';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-login',
@@ -28,7 +30,8 @@ export class LoginComponent implements OnDestroy {
     private authService: AuthService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private toastService: ToastService
   ) {}
 
   ngOnDestroy(): void {
@@ -50,17 +53,11 @@ export class LoginComponent implements OnDestroy {
             this.router.navigate(['']);
           },
           error: ({ error }) => {
-            let errors = [];
-            if (typeof error === 'string') {
-              errors.push(error);
-            } else {
-              errors = Object.keys(error).map((err) => error[err]);
-            }
-            let concatenatedErrors: string[] = [];
-            for (let err of errors) {
-              concatenatedErrors = concatenatedErrors.concat(err);
-            }
-            this.errors = concatenatedErrors;
+            var errors = processError(error.error, 'Error creando usuario');
+            errors.forEach((err) => {
+              this.toastService.showError(err);
+            });
+            this.errors = errors;
             this.spinner.hide('fullscreen');
           },
         });

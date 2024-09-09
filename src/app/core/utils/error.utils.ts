@@ -56,7 +56,7 @@ function iterateErrorObject(error: any, errors: string[] = [], cumulative = 0) {
       strErr != null &&
       strErr != undefined &&
       strErr != '0' &&
-      strErr.lenth > 15
+      strErr.length > 15
     ) {
       errors.push(error);
     }
