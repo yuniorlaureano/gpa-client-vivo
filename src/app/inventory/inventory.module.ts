@@ -5,7 +5,10 @@ import { InventoryRoutingModule } from './inventory-routing.module';
 import { ProductComponent } from './product/product.component';
 import { CategoryComponent } from './category/category.component';
 import { StockEntryComponent } from './stock-entry/stock-entry.component';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDatepickerModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicSelectComponent } from '../core/dynamic-search/dynamic-search.component';
 import { ProviderDynamicSearchComponent } from './provider-dynamic-search/provider-dynamic-search.component';
@@ -68,6 +71,7 @@ import { ProviderListTableComponent } from './provider-list/provider-list-table.
     DynamicSelectComponent,
     CoreModule,
     DataTableComponent,
+    NgbTooltipModule,
   ],
 })
 export class InventoryModule {}

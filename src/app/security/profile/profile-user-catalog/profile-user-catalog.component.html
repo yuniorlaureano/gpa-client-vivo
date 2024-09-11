@@ -57,6 +57,8 @@
               (click)="handleRemove(user)"
               *ngIf="user.isAssigned"
               [disabled]="!canUnAssignUser"
+              placement="top"
+              ngbTooltip="Eliminar"
             >
               <i class="bi bi-trash"></i>
             </button>

@@ -65,11 +65,12 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadPrintInformation();
-    this.handlePermissionsLoad();
+    this.handlePermissionsLoad(() => {
+      this.loadPrintInformation();
+    });
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -80,6 +81,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

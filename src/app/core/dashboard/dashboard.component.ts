@@ -14,6 +14,10 @@ import { ToastService } from '../service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, of, Subscription, switchMap } from 'rxjs';
 import { ClientModel } from '../../invoice/model/client.model';
+import { RequiredPermissionType } from '../models/required-permission.type';
+import * as ProfileUtils from '../../core/utils/profile.utils';
+import * as PermissionConstants from '../../core/models/profile.constants';
+import { Store } from '@ngxs/store';
 
 export type InputVsOutputVsExistenceType = {
   input: number;
@@ -51,7 +55,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     reason: number;
   }>({ reason: this.reason });
   refreshRevenue$ = new BehaviorSubject<number>(this.getCurrentMonth());
-  subscriptions: Subscription[] = [];
   isClientCatalogVisible: boolean = false;
   selectedClientes: { [index: string]: boolean } = {};
   selectedClientesData: {
@@ -69,23 +72,54 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
   } = {};
 
+  subscriptions$: Subscription[] = [];
+  //permissions
+  canRead: boolean = false;
+
   constructor(
     private dashboardService: DashboardService,
     private toastService: ToastService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private store: Store
   ) {}
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
 
   ngOnInit() {
-    this.setMonthlyChartOptions([]);
-    this.setInputOutputExistenceCartOptions(this.inputVsOutputVsExistence);
-    this.loadTransactionPerMonth();
-    this.loadClienteCount();
-    this.loadRenueCount();
-    this.loadInputVsOutputVsExistence();
+    this.handlePermissionsLoad(() => {
+      this.setMonthlyChartOptions([]);
+      this.setInputOutputExistenceCartOptions(this.inputVsOutputVsExistence);
+      this.loadTransactionPerMonth();
+      this.loadClienteCount();
+      this.loadRenueCount();
+      this.loadInputVsOutputVsExistence();
+    });
+  }
+
+  handlePermissionsLoad(onPermisionLoad: () => void) {
+    const sub = this.store
+      .select(
+        (state: any) =>
+          state.app.requiredPermissions[PermissionConstants.Modules.General][
+            PermissionConstants.Components.Dashboard
+          ]
+      )
+      .subscribe({
+        next: (permissions) => {
+          this.setPermissions(permissions);
+          onPermisionLoad();
+        },
+      });
+    this.subscriptions$.push(sub);
+  }
+
+  setPermissions(requiredPermissions: RequiredPermissionType) {
+    this.canRead = ProfileUtils.validateIfCan(
+      requiredPermissions,
+      PermissionConstants.Permission.Read
+    );
   }
 
   loadInputVsOutputVsExistence() {
@@ -105,7 +139,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
       },
     });
-    this.subscriptions.push(sub);
+    this.subscriptions$.push(sub);
   }
 
   processInputVsOutputVsExistence(data: RawInputVsOutputVsExistenceModel[]) {
@@ -177,7 +211,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.spinner.hide('transaction-spinner');
         },
       });
-    this.subscriptions.push(sub);
+    this.subscriptions$.push(sub);
   }
 
   loadClienteCount() {
@@ -197,7 +231,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
       },
     });
-    this.subscriptions.push(sub);
+    this.subscriptions$.push(sub);
   }
 
   loadRenueCount() {
@@ -223,7 +257,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           });
         },
       });
-    this.subscriptions.push(sub);
+    this.subscriptions$.push(sub);
   }
 
   setMonthlyChartOptions(series: number[] = []) {

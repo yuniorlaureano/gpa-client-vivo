@@ -80,12 +80,13 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
   canEdit: boolean = false;
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadStockCycles();
+    this.handlePermissionsLoad(() => {
+      this.loadStockCycles();
+    });
     this.initSearch();
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -96,6 +97,7 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

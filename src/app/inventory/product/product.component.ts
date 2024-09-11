@@ -85,14 +85,15 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadProduct();
-    this.handlePermissionsLoad();
-    this.loadUnits();
-    this.loadCategories();
-    this.loadAddons();
+    this.handlePermissionsLoad(() => {
+      this.loadProduct();
+      this.loadUnits();
+      this.loadCategories();
+      this.loadAddons();
+    });
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -103,6 +104,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);
@@ -190,7 +192,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.clearForm();
     this.toastService.showSucess('Producto actualizado');
     this.spinner.hide('fullscreen');
-    this.router.navigate(['/inventory/product']);
+    this.router.navigate(['/inventory/product/list']);
   }
 
   upateProduct() {

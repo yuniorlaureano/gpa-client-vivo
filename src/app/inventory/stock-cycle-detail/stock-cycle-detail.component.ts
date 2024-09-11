@@ -53,15 +53,16 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadCycle();
-    this.handlePermissionsLoad();
+    this.handlePermissionsLoad(() => {
+      this.loadCycle();
+    });
   }
 
   displayDate(date: any) {
     return date ? `${date.day}/${date.month}/${date.year}` : '';
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -72,6 +73,7 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

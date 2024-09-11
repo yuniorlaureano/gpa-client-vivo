@@ -20,6 +20,8 @@
           (click)="handleEdit(profile)"
           *ngIf="profile?.name != 'administrador'"
           [disabled]="!canEdit"
+          placement="top"
+          ngbTooltip="Editar"
         >
           <i class="bi bi-pencil"></i>
         </button>
@@ -28,6 +30,8 @@
           (click)="handleDelete(profile)"
           *ngIf="profile?.name != 'administrador'"
           [disabled]="!canDelete"
+          placement="top"
+          ngbTooltip="Borrar"
         >
           <i class="bi bi-trash"></i>
         </button>
@@ -35,12 +39,16 @@
           routerLink="/auth/profiles/permissions/{{ profile.id }}"
           class="btn btn-outline-primary btn-icon"
           *ngIf="profile?.name != 'administrador'"
+          placement="top"
+          ngbTooltip="Agregar permisos"
         >
           <i class="fa-solid fa-thumbtack"></i>
         </a>
         <button
           class="btn btn-outline-sucess btn-icon"
           (click)="handleView(profile)"
+          placement="top"
+          ngbTooltip="Ver permisos"
         >
           <i class="bi bi-eye"></i>
         </button>
@@ -48,6 +56,8 @@
           class="btn btn-outline-info btn-icon"
           (click)="handleAddUser(profile)"
           [disabled]="!canAssignUser && !canUnAssignUser"
+          placement="top"
+          ngbTooltip="Asignar usuario"
         >
           <i class="fa-solid fa-user-plus"></i>
         </button>

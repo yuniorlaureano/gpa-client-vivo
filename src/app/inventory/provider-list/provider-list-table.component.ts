@@ -82,12 +82,13 @@ export class ProviderListTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadProviders();
+    this.handlePermissionsLoad(() => {
+      this.loadProviders();
+    });
     this.initSearch();
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -98,6 +99,7 @@ export class ProviderListTableComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

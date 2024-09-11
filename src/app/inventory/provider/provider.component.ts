@@ -48,8 +48,9 @@ export class ProviderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadProvider();
+    this.handlePermissionsLoad(() => {
+      this.loadProvider();
+    });
     this.providerForm.get('latitude')?.disable();
     this.providerForm.get('longitude')?.disable();
   }
@@ -72,7 +73,7 @@ export class ProviderComponent implements OnInit, OnDestroy {
     formattedAddress: [''],
   });
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -83,6 +84,7 @@ export class ProviderComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

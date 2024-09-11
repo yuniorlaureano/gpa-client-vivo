@@ -53,4 +53,5 @@ export class Components {
   public static Blob: string = 'blob';
   public static PrintInformation = 'printInformation';
   public static Unit = 'unit';
+  public static Dashboard = 'dashboard';
 }

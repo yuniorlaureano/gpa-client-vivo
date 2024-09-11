@@ -40,7 +40,7 @@ export class StockCycleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
+    this.handlePermissionsLoad(() => {});
   }
 
   //subscriptions
@@ -52,7 +52,7 @@ export class StockCycleComponent implements OnInit, OnDestroy {
   canDelete: boolean = false;
   canEdit: boolean = false;
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -63,6 +63,7 @@ export class StockCycleComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

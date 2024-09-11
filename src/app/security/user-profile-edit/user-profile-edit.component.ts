@@ -55,11 +55,12 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
     this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
   ngOnInit(): void {
-    this.loadUser();
-    this.handlePermissionsLoad();
+    this.handlePermissionsLoad(() => {
+      this.loadUser();
+    });
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select((state: any) => {
         return state.app.requiredPermissions[
@@ -69,6 +70,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

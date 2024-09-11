@@ -77,8 +77,9 @@ export class UserListTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadData();
+    this.handlePermissionsLoad(() => {
+      this.loadData();
+    });
     this.initSearch();
   }
 
@@ -140,7 +141,7 @@ export class UserListTableComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -151,6 +152,7 @@ export class UserListTableComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

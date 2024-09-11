@@ -122,6 +122,8 @@
           class="btn btn-outline-danger btn-icon"
           (click)="handleDelete(stockCycle)"
           [disabled]="!canDelete"
+          placement="top"
+          ngbTooltip="Eliminar"
         >
           <i class="bi bi-trash"></i>
         </button>
@@ -129,6 +131,8 @@
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(stockCycle)"
           [disabled]="!canEdit"
+          placement="top"
+          ngbTooltip="Editar"
         >
           <i class="bi bi-pencil"></i>
         </button>

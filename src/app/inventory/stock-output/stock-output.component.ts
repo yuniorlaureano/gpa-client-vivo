@@ -67,16 +67,17 @@ export class StockOutputComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadReasons();
-    this.getStock();
+    this.handlePermissionsLoad(() => {
+      this.loadReasons();
+      this.getStock();
+    });
   }
 
   ngOnDestroy(): void {
     this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -87,6 +88,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

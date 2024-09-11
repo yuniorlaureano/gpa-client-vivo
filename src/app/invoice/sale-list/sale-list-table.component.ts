@@ -87,12 +87,13 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadInvoices();
+    this.handlePermissionsLoad(() => {
+      this.loadInvoices();
+    });
     this.initSearch();
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -103,6 +104,7 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

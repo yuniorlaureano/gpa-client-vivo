@@ -64,12 +64,13 @@ export class PrintInformationListTableComponent {
   ) {}
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadPrintInformation();
+    this.handlePermissionsLoad(() => {
+      this.loadPrintInformation();
+    });
     this.initSearch();
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -80,6 +81,7 @@ export class PrintInformationListTableComponent {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

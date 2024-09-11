@@ -17,6 +17,7 @@ export function getRequiredPermissions(): ModuleRequiredPermissionType {
       [PermissionConstants.Components.PrintInformation]:
         printInformationPermission(),
       [PermissionConstants.Components.Unit]: unitPermission(),
+      [PermissionConstants.Components.Dashboard]: providerDashboard(),
     },
     [PermissionConstants.Modules.Inventory]: {
       [PermissionConstants.Components.Product]: productPermission(),
@@ -445,6 +446,15 @@ function providerPermission(): RequiredPermissionType {
       valid: false,
     },
     read: {
+      expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+  };
+}
+
+function providerDashboard(): RequiredPermissionType {
+  return {
+    [PermissionConstants.Permission.Read]: {
       expected: PermissionConstants.Permission.Read,
       valid: false,
     },

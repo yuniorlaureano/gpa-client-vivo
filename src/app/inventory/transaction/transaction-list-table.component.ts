@@ -84,13 +84,14 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadTransactions();
+    this.handlePermissionsLoad(() => {
+      this.loadTransactions();
+      this.reasons = this.getReasons();
+    });
     this.initSearch();
-    this.reasons = this.getReasons();
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -101,6 +102,7 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

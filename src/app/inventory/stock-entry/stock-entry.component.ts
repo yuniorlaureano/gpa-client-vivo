@@ -100,17 +100,18 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadReasons();
-    this.getStock();
-    this.loadAttachments();
+    this.handlePermissionsLoad(() => {
+      this.loadReasons();
+      this.getStock();
+      this.loadAttachments();
+    });
   }
 
   ngOnDestroy(): void {
     this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -121,6 +122,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

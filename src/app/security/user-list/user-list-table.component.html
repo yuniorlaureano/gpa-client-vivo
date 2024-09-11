@@ -36,6 +36,8 @@
           class="btn btn-outline-danger btn-icon"
           (click)="handleDelete(user)"
           [disabled]="!canDelete"
+          placement="top"
+          ngbTooltip="Eliminar"
         >
           <i class="bi bi-trash"></i>
         </button>
@@ -43,8 +45,10 @@
           class="btn btn-outline-warning btn-icon"
           (click)="handleEdit(user)"
           [disabled]="!canEdit"
+          placement="top"
+          ngbTooltip="Editar"
         >
-          <i class="bi bi-pencil"></i>
+          <i class="bi bi-pencil"></i> Modificar
         </button>
       </td>
     </tr>

@@ -56,15 +56,16 @@ export class ProfilePermissionComponent
   }
 
   ngOnInit(): void {
-    this.masterProfile$ = this.permissionService.getMasterProfile();
-    this.handlePermissionsLoad();
+    this.handlePermissionsLoad(() => {
+      this.masterProfile$ = this.permissionService.getMasterProfile();
+    });
   }
 
   ngAfterViewInit() {
     this.loadPermission();
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -75,6 +76,7 @@ export class ProfilePermissionComponent
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

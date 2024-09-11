@@ -18,6 +18,7 @@ import { ProfileUserCatalogComponent } from './profile/profile-user-catalog/prof
 import { UserProfileEditComponent } from './user-profile-edit/user-profile-edit.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { TOTPCodeComponent } from './totp-code/totp-code.component';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { TOTPCodeComponent } from './totp-code/totp-code.component';
     ReactiveFormsModule,
     DataTableComponent,
     CoreModule,
+    NgbTooltipModule,
   ],
 })
 export class SecurityModule {}

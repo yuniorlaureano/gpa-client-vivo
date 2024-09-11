@@ -23,6 +23,7 @@ import {
   SetProfiles,
 } from '../ng-xs-store/actions/app.actions';
 import { AppState } from '../ng-xs-store/states/app.state';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'gpa-admin-page-header',
@@ -43,7 +44,8 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
     private tokenService: TokenService,
     private authService: AuthService,
     private toastService: ToastService,
-    private store: Store
+    private store: Store,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnDestroy(): void {
@@ -72,14 +74,17 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
   }
 
   changeProfile(profileId: string, profileName: string) {
+    this.spinner.show('fullscreen');
     this.store.dispatch(new CleanError());
     const sub = this.authService.changeProfile(profileId).subscribe({
       next: () => {
         this.updateProfileSubject$.next(profileId);
         this.toastService.showSucess(`Ha elegido el perifl de ${profileName}`);
+        this.spinner.hide('fullscreen');
       },
       error: (error) => {
         this.toastService.showError(`Error al cambiar de perfil`);
+        this.spinner.hide('fullscreen');
       },
     });
     this.subscriptions$.push(sub);

@@ -49,11 +49,12 @@ export class CategoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadCategory();
-    this.handlePermissionsLoad();
+    this.handlePermissionsLoad(() => {
+      this.loadCategory();
+    });
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -64,6 +65,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

@@ -17324,8 +17324,8 @@ fieldset:disabled .btn-white {
 /******** 11.20 Form Controls ********/
 .form-label {
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: #8d9092;
+  font-size: 0.95rem;
+  color: black;
 }
 
 .form-control {

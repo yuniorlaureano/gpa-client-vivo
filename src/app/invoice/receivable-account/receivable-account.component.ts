@@ -56,8 +56,9 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getInvoice();
-    this.handlePermissionsLoad();
+    this.handlePermissionsLoad(() => {
+      this.getInvoice();
+    });
     const sub = this.route.paramMap.subscribe({
       next: (params) => {
         const id = params.get('id');
@@ -67,7 +68,7 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -78,6 +79,7 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

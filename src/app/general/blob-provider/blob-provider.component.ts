@@ -60,11 +60,12 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadBlobProvider();
-    this.handlePermissionsLoad();
+    this.handlePermissionsLoad(() => {
+      this.loadBlobProvider();
+    });
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -75,6 +76,7 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

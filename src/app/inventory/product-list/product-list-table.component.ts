@@ -65,12 +65,13 @@ export class ProductListTableComponent {
   ) {}
 
   ngOnInit(): void {
-    this.handlePermissionsLoad();
-    this.loadProducts();
+    this.handlePermissionsLoad(() => {
+      this.loadProducts();
+    });
     this.initSearch();
   }
 
-  handlePermissionsLoad() {
+  handlePermissionsLoad(onPermissionLoad: () => void) {
     const sub = this.store
       .select(
         (state: any) =>
@@ -81,6 +82,7 @@ export class ProductListTableComponent {
       .subscribe({
         next: (permissions) => {
           this.setPermissions(permissions);
+          onPermissionLoad();
         },
       });
     this.subscriptions$.push(sub);

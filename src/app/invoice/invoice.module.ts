@@ -3,7 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { InvoiceRoutingModule } from './invoice-routing.module';
 import { SaleComponent } from './sale/sale.component';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDatepickerModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
 import { SaleListComponent } from './sale-list/sale-list.component';
@@ -38,6 +41,7 @@ import { MapGoogleComponent } from '../core/map-google/map-google.component';
     FormsModule,
     ReactiveFormsModule,
     DataTableComponent,
+    NgbTooltipModule,
   ],
 })
 export class InvoiceModule {}
