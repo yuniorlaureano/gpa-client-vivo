@@ -36,6 +36,7 @@ import { BlobStorageProviderService } from './general/service/blob-storage-provi
 import { PrintInformationService } from './general/service/print-information.service';
 import { environment } from '../environments/environment';
 import { DashboardService } from './general/service/dashboard.service';
+import { ReportService } from './report/service/report.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -71,6 +72,7 @@ import { DashboardService } from './general/service/dashboard.service';
     BlobStorageProviderService,
     PrintInformationService,
     DashboardService,
+    ReportService,
     provideHttpClient(withInterceptors([JwtAuthInterceptor])),
     provideHttpClient(withInterceptorsFromDi()),
   ],

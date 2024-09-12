@@ -256,20 +256,14 @@
             <ul>
               <li routerLinkActive="active">
                 <a
-                  href="#"
+                  routerLink="/report/existence"
                   routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
                   class="menu-item-list"
-                  (click)="handleSubMenuSelected('Venta')"
-                  >Venta</a
+                  (click)="handleSubMenuSelected('Reporte de existencia')"
                 >
-              </li>
-              <li routerLinkActive="active">
-                <a
-                  href="#"
-                  routerLinkActive="current-page"
-                  class="menu-item-list"
-                  (click)="handleSubMenuSelected('Compra')"
-                  >Compra</a
+                  <i class="fa-regular fa-file-excel"></i>Reporte de
+                  existencia</a
                 >
               </li>
             </ul>

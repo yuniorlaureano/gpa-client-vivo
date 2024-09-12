@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StockComponent } from './stock/stock.component';
 import { AdminTemplateComponent } from '../core/admin-template/admin-template.component';
+import { ExistenceReportComponent } from './existence-report/existence-report.component';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminTemplateComponent,
-    children: [{ path: 'stock', component: StockComponent }],
+    children: [{ path: 'existence', component: ExistenceReportComponent }],
   },
 ];
 

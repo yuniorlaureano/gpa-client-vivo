@@ -20,6 +20,7 @@ export class Permission {
   public static Upload: string = 'upload';
   public static Download: string = 'download';
   public static Print = 'print';
+  public static ExistenceReport = 'existence-report';
 }
 
 export class Apps {
@@ -30,7 +31,7 @@ export class Modules {
   public static Inventory: string = 'inventory';
   public static Invoice: string = 'invoice';
   public static Security: string = 'security';
-  public static Report: string = 'report';
+  public static Reporting = 'reporting';
   public static General: string = 'general';
 }
 
@@ -54,4 +55,5 @@ export class Components {
   public static PrintInformation = 'printInformation';
   public static Unit = 'unit';
   public static Dashboard = 'dashboard';
+  public static Report = 'report';
 }

@@ -35,8 +35,11 @@ export class AuthState {
     { payload }: AddErrors
   ) {
     const state = getState();
+    const errors = payload.filter((error) => {
+      return state.errors.includes(error) === false;
+    });
     patchState({
-      errors: [...state.errors, ...payload],
+      errors: [...state.errors, ...errors],
     });
   }
 

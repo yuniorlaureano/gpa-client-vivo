@@ -66,9 +66,11 @@ export class AppState {
     { payload }: AddError
   ) {
     const state = getState();
-    patchState({
-      errors: [...state.errors, payload],
-    });
+    if (!state.errors.includes(payload)) {
+      patchState({
+        errors: [...state.errors, payload],
+      });
+    }
   }
 
   @Action(RemoveError)

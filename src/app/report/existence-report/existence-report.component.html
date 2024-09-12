@@ -1,0 +1,138 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-12 col-12">
+        <form [formGroup]="filterForm">
+          <div class="row">
+            <div class="col-sm-4 col-12">
+              <label class="form-label" style="margin-bottom: 23px"></label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-search"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Buscar por Código o Producto"
+                  formControlName="term"
+                  (input)="handleSearch()"
+                  style="margin-right: 2px; width: 100px"
+                />
+              </div>
+            </div>
+            <div class="col-sm-3 col-12">
+              <label class="form-label">Tipo</label>
+              <select
+                class="form-control"
+                (change)="handleSearch()"
+                formControlName="type"
+              >
+                <option value="-1">Todos</option>
+                <option value="1">Producto terminado</option>
+                <option value="2">Materia prima</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Row start -->
+<div class="row">
+  <div class="col-sm-12 col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered m-0">
+            <thead>
+              <tr>
+                <th>Country</th>
+                <th>Languages</th>
+                <th>Population</th>
+                <th>Median Age</th>
+                <th>Area (Km²)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <img
+                    src="assets/images/flags/1x1/hk.svg"
+                    class="flag-img"
+                    alt="Hong Kong"
+                  />Hong Kong
+                </td>
+                <td>Chinese (official), English</td>
+                <td>7,39,000</td>
+                <td>31.3</td>
+                <td>1106</td>
+              </tr>
+              <tr>
+                <td>
+                  <img
+                    src="assets/images/flags/1x1/au.svg"
+                    class="flag-img"
+                    alt="Australia"
+                  />Australia
+                </td>
+                <td>English 79%, native and other languages</td>
+                <td>23,630,169</td>
+                <td>37.3</td>
+                <td>7,739,983</td>
+              </tr>
+              <tr>
+                <td>
+                  <img
+                    src="assets/images/flags/1x1/tz.svg"
+                    class="flag-img"
+                    alt="Tanzania"
+                  />Tanzania
+                </td>
+                <td>Swahili (national), English, Arabic, Chaga, Makonde</td>
+                <td>57,353,670</td>
+                <td>39.1</td>
+                <td>945,086</td>
+              </tr>
+              <tr>
+                <td>
+                  <img
+                    src="assets/images/flags/1x1/ru.svg"
+                    class="flag-img"
+                    alt="Russia"
+                  />Russia
+                </td>
+                <td>Russian, others</td>
+                <td>142,467,651</td>
+                <td>38.4</td>
+                <td>17,076,310</td>
+              </tr>
+              <tr>
+                <td>
+                  <img
+                    src="assets/images/flags/1x1/de.svg"
+                    class="flag-img"
+                    alt="Germany"
+                  />Germany
+                </td>
+                <td>German, Danish, Low Rhenish, Romani</td>
+                <td>82,081,261</td>
+                <td>41.1</td>
+                <td>357,386</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5" class="text-center">
+                  Data retrieved from <a href="" class="link">Vivo admin.</a>.
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Row end -->

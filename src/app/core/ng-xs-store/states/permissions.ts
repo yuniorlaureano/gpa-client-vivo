@@ -33,6 +33,9 @@ export function getRequiredPermissions(): ModuleRequiredPermissionType {
         receivabelAccountPermission(),
       [PermissionConstants.Components.Client]: clientPermission(),
     },
+    [PermissionConstants.Modules.Reporting]: {
+      [PermissionConstants.Components.Report]: reportingPermission(),
+    },
   };
 }
 
@@ -456,6 +459,15 @@ function providerDashboard(): RequiredPermissionType {
   return {
     [PermissionConstants.Permission.Read]: {
       expected: PermissionConstants.Permission.Read,
+      valid: false,
+    },
+  };
+}
+
+function reportingPermission(): RequiredPermissionType {
+  return {
+    [PermissionConstants.Permission.ExistenceReport]: {
+      expected: PermissionConstants.Permission.ExistenceReport,
       valid: false,
     },
   };
