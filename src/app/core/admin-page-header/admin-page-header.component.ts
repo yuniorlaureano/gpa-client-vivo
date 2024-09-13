@@ -15,10 +15,11 @@ import { TokenService } from '../service/token.service';
 import { AuthService } from '../../security/service/auth.service';
 import { ToastService } from '../service/toast.service';
 import { TokenClaims } from '../models/token-claims.model';
-import { Store } from '@ngxs/store';
+import { Actions, ofActionDispatched, Store } from '@ngxs/store';
 import {
   AddRequiredPermissions,
   CleanError,
+  RefreshCredentials,
   RemoveError,
   SetProfiles,
 } from '../ng-xs-store/actions/app.actions';
@@ -45,7 +46,8 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private toastService: ToastService,
     private store: Store,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private action$: Actions
   ) {}
 
   ngOnDestroy(): void {
@@ -57,8 +59,16 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
     if (subMenu) {
       this.submenu = subMenu;
     }
-    this.subscribeToClaims();
+    this.loadAndSubscribeToCliamChange();
     this.handleSubmenu();
+  }
+
+  loadAndSubscribeToCliamChange() {
+    const sub = this.action$
+      .pipe(ofActionDispatched(RefreshCredentials))
+      .subscribe(() => this.subscribeToClaims());
+    this.subscribeToClaims();
+    this.subscriptions$.push(sub);
   }
 
   handleSubmenu() {

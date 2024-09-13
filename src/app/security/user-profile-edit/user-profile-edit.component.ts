@@ -12,6 +12,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
+import { RefreshCredentials } from '../../core/ng-xs-store/actions/app.actions';
 
 @Component({
   selector: 'gpa-user-profile-edit',
@@ -120,7 +121,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
       this.uploadFile(this.userForm.get('id')?.value!, () => {
         this.toastService.showSucess('Foto actualizada');
         this.spinner.hide('fullscreen');
-        window.location.reload();
+        this.store.dispatch(new RefreshCredentials());
       });
     }
   }
@@ -151,7 +152,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
       next: () => {
         this.clearForm();
         this.toastService.showSucess('Usuario actualizado');
-        window.location.reload();
+        this.store.dispatch(new RefreshCredentials());
         this.spinner.hide('fullscreen');
       },
       error: (error) => {

@@ -46,3 +46,8 @@ export class SetCurrentSubMenu {
   static readonly type = '[App] SetCurrentSubMenu';
   constructor(public submenu: string) {}
 }
+
+export class RefreshCredentials {
+  static readonly type = '[App] RefreshCredentials';
+  constructor() {}
+}

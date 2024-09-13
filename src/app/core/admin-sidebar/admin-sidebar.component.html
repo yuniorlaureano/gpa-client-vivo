@@ -268,6 +268,29 @@
               <li routerLinkActive="active">
                 <a
                   href="#"
+                  routerLink="/general/blobs/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Proveedores de archivos')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-regular fa-folder-open"></i>Proveedores de
+                  archivos</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/emails/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Proveedores de email')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-regular fa-envelope"></i>Proveedores de email</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
                   routerLink="/general/print-information"
                   routerLinkActive="current-page"
                   class="menu-item-list"

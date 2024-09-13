@@ -9,6 +9,7 @@ import {
   SetCurrentMenu,
   SetCurrentSubMenu,
   SetProfiles,
+  RefreshCredentials,
 } from '../actions/app.actions';
 import { PermissionType } from '../../models/permission.type';
 import { Injectable } from '@angular/core';
@@ -165,6 +166,16 @@ export class AppState {
   ) {
     patchState({
       submenu: payload.submenu,
+    });
+  }
+
+  @Action(RefreshCredentials)
+  refreshCredentials(
+    ctx: StateContext<AppStateModel>,
+    action: RefreshCredentials
+  ) {
+    ctx.setState({
+      ...ctx.getState(),
     });
   }
 }

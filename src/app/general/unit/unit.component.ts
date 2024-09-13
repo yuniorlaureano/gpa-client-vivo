@@ -98,6 +98,7 @@ export class UnitComponent implements OnInit, OnDestroy {
         this.clearForm();
         this.toastService.showSucess('Uniad modificada');
         this.spinner.hide('fullscreen');
+        this.router.navigate(['/general/unit/list']);
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
@@ -119,6 +120,7 @@ export class UnitComponent implements OnInit, OnDestroy {
         this.clearForm();
         this.toastService.showSucess('Unidad creada');
         this.spinner.hide('fullscreen');
+        this.router.navigate(['/general/unit/list']);
       },
       error: (error) => {
         this.spinner.hide('fullscreen');

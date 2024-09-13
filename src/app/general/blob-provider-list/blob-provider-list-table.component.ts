@@ -132,6 +132,7 @@ export class BlobProviderListTableComponent implements OnInit, OnDestroy {
               filteredSize: data.data.length,
             },
           };
+          this.spinner.hide('table-spinner');
         },
         error: (error) => {
           processError(
