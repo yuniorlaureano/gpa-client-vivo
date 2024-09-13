@@ -172,7 +172,8 @@ export class SaleComponent implements OnInit, OnDestroy {
       totalQuantity += product.quantity;
       totalPrice += product.quantity * product.price;
       calculateAddonPerConcept(
-        product.quantity * product.price,
+        product.price,
+        product.quantity,
         this.selectedProducts[product.productCode].addons ?? [],
         concepts
       );

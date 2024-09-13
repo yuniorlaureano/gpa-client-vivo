@@ -311,7 +311,7 @@
                 [class.credit]="!concept.isDiscount"
                 *ngFor="let concept of concepts"
               >
-                {{ concept.concept }}: $ {{ concept.total.toFixed(2) }}
+                {{ concept.concept }}: {{ concept.total | currency }}
               </p>
               <p>____________________________</p>
               <p>

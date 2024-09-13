@@ -29,12 +29,13 @@ export const calculateAddons = (
 
 export const calculateAddonPerConcept = (
   price: number,
+  quantity: number,
   addons: AddonModel[],
   concepts: { [id: string]: { isDiscount: boolean; total: number } } = {}
 ) => {
   for (let addon of addons) {
-    let debit = getDebit(price, addon);
-    let credit = getCredit(price, addon);
+    let debit = getDebit(price, addon) * quantity;
+    let credit = getCredit(price, addon) * quantity;
 
     if (addon.isDiscount) {
       concepts[addon.concept] = {
