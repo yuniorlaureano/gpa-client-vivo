@@ -103,6 +103,17 @@
           </button>
         </div>
       </div>
+      <div style="display: flex; justify-content: right">
+        <button
+          type="button"
+          class="btn btn-outline-info mb-1"
+          (click)="downloadSaleReport()"
+          placement="top"
+          ngbTooltip="Exportar a PDF"
+        >
+          <i class="fa-regular fa-file-pdf"></i>
+        </button>
+      </div>
     </form>
   </div>
   <h3 class="card-title" caption></h3>

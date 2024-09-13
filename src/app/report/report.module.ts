@@ -6,6 +6,7 @@ import { StockComponent } from './stock/stock.component';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { ExistenceReportComponent } from './existence-report/existence-report.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxSpinnerComponent } from 'ngx-spinner';
 
 @NgModule({
   declarations: [StockComponent, ExistenceReportComponent],
@@ -15,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NgbTooltipModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxSpinnerComponent,
   ],
 })
 export class ReportModule {}

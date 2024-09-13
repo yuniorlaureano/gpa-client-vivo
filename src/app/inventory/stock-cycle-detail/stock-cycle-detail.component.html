@@ -63,6 +63,18 @@
           <!-- Row end -->
           <hr />
           <!-- Row start -->
+          <div style="display: flex; justify-content: right">
+            <button
+              type="button"
+              class="btn btn-outline-info mb-1"
+              (click)="downloadStocyCycleDetailsReport()"
+              [disabled]="!canClose"
+              placement="top"
+              ngbTooltip="Exportar a PDF"
+            >
+              <i class="fa-regular fa-file-pdf"></i>
+            </button>
+          </div>
           <div class="row">
             <div class="col-12">
               <div class="table-responsive">

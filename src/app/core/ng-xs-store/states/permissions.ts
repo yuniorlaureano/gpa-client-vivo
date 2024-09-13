@@ -470,5 +470,17 @@ function reportingPermission(): RequiredPermissionType {
       expected: PermissionConstants.Permission.ExistenceReport,
       valid: false,
     },
+    [PermissionConstants.Permission.StockCycleReport]: {
+      expected: PermissionConstants.Permission.StockCycleReport,
+      valid: false,
+    },
+    [PermissionConstants.Permission.TransactionReport]: {
+      expected: PermissionConstants.Permission.TransactionReport,
+      valid: false,
+    },
+    [PermissionConstants.Permission.SaleReport]: {
+      expected: PermissionConstants.Permission.SaleReport,
+      valid: false,
+    },
   };
 }

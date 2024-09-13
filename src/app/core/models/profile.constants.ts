@@ -21,6 +21,9 @@ export class Permission {
   public static Download: string = 'download';
   public static Print = 'print';
   public static ExistenceReport = 'existence-report';
+  public static StockCycleReport = 'stock-cycle-report';
+  public static TransactionReport = 'transaction-report';
+  public static SaleReport = 'sale-report';
 }
 
 export class Apps {

@@ -38,6 +38,17 @@
         </div>
       </div>
     </form>
+    <div style="display: flex; justify-content: right">
+      <button
+        type="button"
+        class="btn btn-outline-info mb-1"
+        (click)="downloadExistenceAsExcel()"
+        placement="top"
+        ngbTooltip="Exportar a Excel"
+      >
+        <i class="fa-regular fa-file-excel"></i>
+      </button>
+    </div>
   </div>
   <h3 class="card-title" caption></h3>
   <tr header>

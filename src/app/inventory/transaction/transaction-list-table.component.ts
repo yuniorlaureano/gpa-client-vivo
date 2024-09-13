@@ -30,6 +30,8 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { FormBuilder } from '@angular/forms';
 import { ReasonEnum } from '../../core/models/reason.enum';
 import { processError } from '../../core/utils/error.utils';
+import { downloadFile } from '../../core/utils/file.utils';
+import { ReportService } from '../../report/service/report.service';
 
 @Component({
   selector: 'gpa-transaction-list-table',
@@ -69,6 +71,8 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
     status: ['-1'],
     transactionType: ['-1'],
     reason: ['-1'],
+    from: [null],
+    to: [null],
   });
 
   constructor(
@@ -76,7 +80,8 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
     private store: Store,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private reportService: ReportService
   ) {}
 
   ngOnDestroy(): void {
@@ -160,6 +165,14 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
 
   handleSearch() {
     this.spinner.show('table-spinner');
+    if (
+      (this.filterForm.get('from')?.value &&
+        !this.filterForm.get('to')?.value) ||
+      (!this.filterForm.get('from')?.value && this.filterForm.get('to')?.value)
+    ) {
+      this.spinner.hide('table-spinner');
+      return;
+    }
     this.searchTerms.next(
       JSON.stringify({
         ...this.filterForm.value,
@@ -192,6 +205,27 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
       }
     }
     return reasons;
+  }
+
+  resetSearchFilter() {
+    this.filterForm.reset();
+    this.handleSearch();
+  }
+
+  downloadTransactionReport() {
+    this.spinner.show('fullscreen');
+    let searchModel = new FilterModel();
+    searchModel.search = this.searchOptions.search;
+    const sub = this.reportService.transactionReport(searchModel).subscribe({
+      next: (data) => {
+        downloadFile(data, 'stock-cycle-details.pdf');
+        this.spinner.hide('fullscreen');
+      },
+      error: () => {
+        this.spinner.hide('fullscreen');
+      },
+    });
+    this.subscriptions$.push(sub);
   }
 
   loadTransactions() {

@@ -16,6 +16,8 @@ import { FilterModel } from '../../core/models/filter.model';
 import { processError } from '../../core/utils/error.utils';
 import { ToastService } from '../../core/service/toast.service';
 import { ExistenceModel } from '../../inventory/models/existence.model';
+import { StockService } from '../../inventory/service/stock.service';
+import { DataTableDataModel } from '../../core/models/data-table-data.model';
 
 @Component({
   selector: 'gpa-existence-report',
@@ -33,12 +35,20 @@ export class ExistenceReportComponent implements OnInit, OnDestroy {
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,
-    pageSize: 10,
+    pageSize: 1000,
     search: null,
   });
-  data: ExistenceModel[] = [];
+  public data: DataTableDataModel<ExistenceModel> = {
+    data: [],
+    options: {
+      ...DEFAULT_SEARCH_PARAMS,
+      filteredSize: 0,
+      count: 0,
+    },
+  };
 
   constructor(
+    private stockService: StockService,
     private reportService: ReportService,
     private spinner: NgxSpinnerService,
     private fb: FormBuilder,
@@ -75,11 +85,11 @@ export class ExistenceReportComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
-  downloadAttachment(name: string) {
+  downloadExistenceAsExcel() {
     this.spinner.show('fullscreen');
     const sub = this.reportService.existenceReport().subscribe({
       next: (data) => {
-        downloadFile(data, name);
+        downloadFile(data, 'reporte_existencias.xlsx');
         this.spinner.hide('fullscreen');
       },
       error: () => {
@@ -98,7 +108,7 @@ export class ExistenceReportComponent implements OnInit, OnDestroy {
           searchModel.page = search.page;
           searchModel.pageSize = search.pageSize;
           searchModel.search = search.search;
-          return this.reportService.getExistence(searchModel);
+          return this.stockService.getExistence(searchModel);
         })
       )
       .subscribe({
@@ -109,15 +119,14 @@ export class ExistenceReportComponent implements OnInit, OnDestroy {
             count: 1000,
             search: searchModel.search,
           };
-          this.data = data;
-          // {
-          //   data: data,
-          //   options: {
-          //     ...this.searchOptions,
-          //     search: searchModel.search,
-          //     filteredSize: data.data.length,
-          //   },
-          // };
+          this.data = {
+            data: data.data,
+            options: {
+              ...this.searchOptions,
+              search: searchModel.search,
+              filteredSize: data.data.length,
+            },
+          };
           this.spinner.hide('table-spinner');
         },
         error: (error) => {

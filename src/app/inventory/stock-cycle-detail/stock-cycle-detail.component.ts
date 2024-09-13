@@ -15,6 +15,8 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
+import { ReportService } from '../../report/service/report.service';
+import { downloadFile } from '../../core/utils/file.utils';
 
 @Component({
   selector: 'gpa-stock-cycle-detail',
@@ -45,7 +47,8 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
     private confirmService: ConfirmModalService,
     private toast: ToastService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private reportService: ReportService
   ) {}
 
   ngOnDestroy(): void {
@@ -164,6 +167,24 @@ export class StockCycleDetailComponent implements OnInit, OnDestroy {
         detail: this.transformCycleDetail(data.stockCycleDetails),
       };
       this.cycleId = data?.id;
+    }
+  }
+
+  downloadStocyCycleDetailsReport() {
+    if (this.stockCycle?.cycle.id) {
+      this.spinner.show('fullscreen');
+      const sub = this.reportService
+        .stockCycleReport(this.stockCycle?.cycle.id)
+        .subscribe({
+          next: (data) => {
+            downloadFile(data, 'stock-cycle-details.pdf');
+            this.spinner.hide('fullscreen');
+          },
+          error: () => {
+            this.spinner.hide('fullscreen');
+          },
+        });
+      this.subscriptions$.push(sub);
     }
   }
 

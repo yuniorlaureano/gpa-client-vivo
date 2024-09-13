@@ -30,6 +30,8 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { FormBuilder } from '@angular/forms';
 import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
 import { processError } from '../../core/utils/error.utils';
+import { downloadFile } from '../../core/utils/file.utils';
+import { ReportService } from '../../report/service/report.service';
 
 @Component({
   selector: 'gpa-sale-list-table',
@@ -80,7 +82,8 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
     private store: Store,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private reportService: ReportService
   ) {}
   ngOnDestroy(): void {
     this.subscriptions$.forEach((sub) => sub.unsubscribe());
@@ -248,6 +251,22 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
   resetSearchFilter() {
     this.filterForm.reset();
     this.handleSearch();
+  }
+
+  downloadSaleReport() {
+    this.spinner.show('fullscreen');
+    let searchModel = new FilterModel();
+    searchModel.search = this.searchOptions.search;
+    const sub = this.reportService.saleReport(searchModel).subscribe({
+      next: (data) => {
+        downloadFile(data, 'stock-cycle-details.pdf');
+        this.spinner.hide('fullscreen');
+      },
+      error: () => {
+        this.spinner.hide('fullscreen');
+      },
+    });
+    this.subscriptions$.push(sub);
   }
 
   getPyamentStatusDescription(status: PaymentStatusEnum) {

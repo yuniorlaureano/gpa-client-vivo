@@ -28,6 +28,8 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FormBuilder } from '@angular/forms';
 import { processError } from '../../core/utils/error.utils';
+import { ReportService } from '../../report/service/report.service';
+import { downloadFile } from '../../core/utils/file.utils';
 
 @Component({
   selector: 'gpa-existence-list-table',
@@ -72,7 +74,8 @@ export class ExistenceListTableComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
     private store: Store,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private reportService: ReportService
   ) {}
 
   ngOnDestroy(): void {
@@ -160,6 +163,22 @@ export class ExistenceListTableComponent implements OnInit, OnDestroy {
   handleBackwardPage = (page: number): void => {
     this.pageOptionsSubject.next({ ...this.searchOptions, page: page });
   };
+
+  downloadExistenceAsExcel() {
+    this.spinner.show('fullscreen');
+    let searchModel = new FilterModel();
+    searchModel.search = this.searchOptions.search;
+    const sub = this.reportService.existenceReport(searchModel).subscribe({
+      next: (data) => {
+        downloadFile(data, 'reporte_existencias.xlsx');
+        this.spinner.hide('fullscreen');
+      },
+      error: () => {
+        this.spinner.hide('fullscreen');
+      },
+    });
+    this.subscriptions$.push(sub);
+  }
 
   loadExistence() {
     let searchModel = new FilterModel();
