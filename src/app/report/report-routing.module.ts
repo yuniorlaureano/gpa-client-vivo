@@ -1,15 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminTemplateComponent } from '../core/admin-template/admin-template.component';
-import { ExistenceReportComponent } from './existence-report/existence-report.component';
 
-const routes: Routes = [
-  {
-    path: '',
-    component: AdminTemplateComponent,
-    children: [{ path: 'existence', component: ExistenceReportComponent }],
-  },
-];
+const routes: Routes = [];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
