@@ -135,6 +135,7 @@ export class MapGoogleComponent implements OnInit, OnDestroy {
   close() {
     if (this.selectedLocation) {
       this.onLocationChange.emit(this.selectedLocation);
+      this.selectedLocation = null;
     }
     this.onClose.emit();
   }

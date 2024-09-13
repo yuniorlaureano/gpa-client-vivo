@@ -51,7 +51,11 @@
     <map-marker
       *ngFor="let client of transformLocations()"
       [position]="client.position"
-      [label]="client.name"
+      [label]="{
+        text: client.name,
+        color: '#0000FF',
+        fontSize: '16px',
+      }"
       [title]="client.name"
       [icon]="markerIcon1"
     />
