@@ -93,40 +93,68 @@
                   </div>
                   <!--  -->
                   <div class="col-sm-6 col-12">
-                    <div class="mb-3">
-                      <label class="form-label"
-                        >Documento<span class="text-red">*</span></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        formControlName="companyDocument"
-                      />
-                      <gpa-validator-message
-                        [control]="printInformationForm.get('companyDocument')"
-                        [touched]="printInformationForm.touched"
-                        validation="required"
-                        message="Campo requerido"
-                      />
+                    <div class="input-group">
+                      <div class="mb-3" style="width: 20%">
+                        <label class="form-label"
+                          >Prefijo<span class="text-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="companyDocumentPrefix"
+                        />
+                      </div>
+
+                      <div class="mb-3" style="width: 80%">
+                        <label class="form-label"
+                          >Documento<span class="text-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="companyDocument"
+                        />
+                        <gpa-validator-message
+                          [control]="
+                            printInformationForm.get('companyDocument')
+                          "
+                          [touched]="printInformationForm.touched"
+                          validation="required"
+                          message="Campo requerido"
+                        />
+                      </div>
                     </div>
                   </div>
                   <!--  -->
                   <div class="col-sm-6 col-12">
-                    <div class="mb-3">
-                      <label class="form-label"
-                        >Teléfono<span class="text-red">*</span></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        formControlName="companyPhone"
-                      />
-                      <gpa-validator-message
-                        [control]="printInformationForm.get('companyPhone')"
-                        [touched]="printInformationForm.touched"
-                        validation="required"
-                        message="Campo requerido"
-                      />
+                    <div class="input-group">
+                      <div class="mb-3" style="width: 20%">
+                        <label class="form-label"
+                          >Prefijo<span class="text-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="companyPhonePrefix"
+                        />
+                      </div>
+
+                      <div class="mb-3" style="width: 80%">
+                        <label class="form-label"
+                          >Teléfono<span class="text-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="companyPhone"
+                        />
+                        <gpa-validator-message
+                          [control]="printInformationForm.get('companyPhone')"
+                          [touched]="printInformationForm.touched"
+                          validation="required"
+                          message="Campo requerido"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div class="col-sm-6 col-12">

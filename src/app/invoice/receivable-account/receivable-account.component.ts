@@ -161,6 +161,30 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
     }
   }
 
+  printProofOfPayment(id: string) {
+    this.spinner.show('fullscreen');
+    if (id) {
+      this.receivableAccountService
+        .printReceivableAccountProofOfPayment(id)
+        .subscribe({
+          next: (pdfBlob: Blob) => {
+            const url = window.URL.createObjectURL(pdfBlob);
+            const printWindow = window.open(url);
+            if (printWindow) {
+              printWindow.onload = () => {
+                printWindow.focus();
+                printWindow.print();
+              };
+            }
+            this.spinner.hide('fullscreen');
+          },
+          error: () => {
+            this.spinner.hide('fullscreen');
+          },
+        });
+    }
+  }
+
   getStatusDescription(status: InvoiceStatusEnum | undefined) {
     switch (status) {
       case InvoiceStatusEnum.Saved:

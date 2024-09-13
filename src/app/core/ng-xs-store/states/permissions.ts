@@ -314,6 +314,10 @@ function receivabelAccountPermission(): RequiredPermissionType {
       expected: PermissionConstants.Permission.Read,
       valid: false,
     },
+    [PermissionConstants.Permission.Print]: {
+      expected: PermissionConstants.Permission.Print,
+      valid: false,
+    },
   };
 }
 

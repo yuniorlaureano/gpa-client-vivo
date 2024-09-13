@@ -22,7 +22,7 @@ export class AwsBlobComponent implements OnChanges {
     accessKeyId: ['', Validators.required],
     secretAccessKey: ['', Validators.required],
     publicBucket: ['', Validators.required],
-    privatgeBucket: ['', Validators.required],
+    privateBucket: ['', Validators.required],
     region: ['', Validators.required],
   });
 

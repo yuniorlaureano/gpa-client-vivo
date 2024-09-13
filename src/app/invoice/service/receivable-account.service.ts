@@ -52,4 +52,15 @@ export class ReceivableAccountService {
   cancelReceivableAccount(id: string): Observable<void> {
     return this.http.put<void>(`${this.url}/cancel/${id}`, { id: id });
   }
+
+  printReceivableAccountProofOfPayment(
+    receivableAccountId: string
+  ): Observable<Blob> {
+    return this.http.get(
+      `${this.url}/payments/${receivableAccountId}/proof-of-payment/print`,
+      {
+        responseType: 'blob',
+      }
+    );
+  }
 }

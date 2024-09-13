@@ -244,31 +244,6 @@
             </ul>
           </div>
         </li>
-        <li class="sidebar-dropdown" [class.active]="menu == 'report'">
-          <a (click)="handleMenuSelected('report')">
-            <i class="bi bi-file-earmark-bar-graph"></i>
-            <span class="menu-text">Reportes</span>
-          </a>
-          <div
-            class="sidebar-submenu"
-            [style.display]="menu == 'report' ? 'block' : 'none'"
-          >
-            <ul>
-              <li routerLinkActive="active">
-                <a
-                  routerLink="/report/existence"
-                  routerLinkActive="current-page"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  class="menu-item-list"
-                  (click)="handleSubMenuSelected('Reporte de existencia')"
-                >
-                  <i class="fa-regular fa-file-excel"></i>Reporte de
-                  existencia</a
-                >
-              </li>
-            </ul>
-          </div>
-        </li>
         <li class="sidebar-dropdown" [class.active]="menu == 'configuration'">
           <a (click)="handleMenuSelected('configuration')">
             <i class="bi bi-gear"></i>
