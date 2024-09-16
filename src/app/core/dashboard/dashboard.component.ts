@@ -130,6 +130,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
       },
       error: (error) => {
+        this.processInputVsOutputVsExistence([]);
         processError(
           error.error || error,
           'Error obteniendo las transacciones por mes'
@@ -202,6 +203,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.spinner.hide('transaction-spinner');
         },
         error: (error) => {
+          this.setMonthlyChartOptions([]);
           processError(
             error.error || error,
             'Error obteniendo las transacciones por mes'
@@ -222,6 +224,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.spinner.hide('client-spinner');
       },
       error: (error) => {
+        this.clientsCount = 0;
         this.spinner.hide('client-spinner');
         processError(
           error.error || error,
@@ -248,6 +251,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.spinner.hide('revenue-spinner');
         },
         error: (error) => {
+          this.revenues = 0.0;
           this.spinner.hide('revenue-spinner');
           processError(
             error.error || error,

@@ -4,7 +4,10 @@ import { CommonModule } from '@angular/common';
 import { GeneralRoutingModule } from './general-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataTableComponent } from '../core/datatable/data-table.component';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDatepickerModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { DynamicSelectComponent } from '../core/dynamic-search/dynamic-search.component';
 import { CoreModule } from '../core/core.module';
 import { EmailProviderComponent } from './email-provider/email-provider.component';
@@ -56,6 +59,7 @@ import { UnitListTableComponent } from './unit-list/unit-list-table.component';
     DataTableComponent,
     NgbDatepickerModule,
     DynamicSelectComponent,
+    NgbTooltipModule,
   ],
 })
 export class GeneralModule {}
