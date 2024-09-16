@@ -73,7 +73,7 @@ export class SignUpComponent {
           }, 500);
         },
         error: (error) => {
-          processError(error.error, 'Error agregando usuario').forEach(
+          processError(error.error || error, 'Error agregando usuario').forEach(
             (err) => {
               this.toastService.showError(err);
             }

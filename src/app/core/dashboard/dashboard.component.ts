@@ -131,7 +131,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         processError(
-          error.error,
+          error.error || error,
           'Error obteniendo las transacciones por mes'
         ).forEach((error) => {
           this.toastService.showError(error);
@@ -203,7 +203,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           processError(
-            error.error,
+            error.error || error,
             'Error obteniendo las transacciones por mes'
           ).forEach((error) => {
             this.toastService.showError(error);
@@ -224,7 +224,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       error: (error) => {
         this.spinner.hide('client-spinner');
         processError(
-          error.error,
+          error.error || error,
           'Error obteniendo el conteo de clientes'
         ).forEach((error) => {
           this.toastService.showError(error);
@@ -250,7 +250,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.spinner.hide('revenue-spinner');
           processError(
-            error.error,
+            error.error || error,
             'Error obteniendo el las ganancias por mes'
           ).forEach((error) => {
             this.toastService.showError(error);

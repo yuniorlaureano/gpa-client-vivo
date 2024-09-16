@@ -153,7 +153,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.spinner.hide('fullscreen');
           processError(
-            error.error,
+            error.error || error,
             'Error cargando información de impresión'
           ).forEach((err) => {
             this.toastService.showError(err);
@@ -185,7 +185,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.spinner.hide('fullscreen');
           processError(
-            error.error,
+            error.error || error,
             'Error actualizando información de impresión'
           ).forEach((err) => {
             this.toastService.showError(err);
@@ -305,7 +305,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.spinner.hide('fullscreen');
           processError(
-            error.error,
+            error.error || error,
             'Error cargando información de impresión'
           ).forEach((err) => {
             this.toastService.showError(err);

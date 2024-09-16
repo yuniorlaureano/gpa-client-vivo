@@ -135,9 +135,11 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
         });
       },
       error: (error) => {
-        processError(error.error, 'Error agregando usuario').forEach((err) => {
-          this.toastService.showError(err);
-        });
+        processError(error.error || error, 'Error agregando usuario').forEach(
+          (err) => {
+            this.toastService.showError(err);
+          }
+        );
         this.spinner.hide('fullscreen');
       },
     });
@@ -156,11 +158,12 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
       },
       error: (error) => {
-        processError(error.error, 'Error actualizando usuario').forEach(
-          (err) => {
-            this.toastService.showError(err);
-          }
-        );
+        processError(
+          error.error || error,
+          'Error actualizando usuario'
+        ).forEach((err) => {
+          this.toastService.showError(err);
+        });
         this.spinner.hide('fullscreen');
       },
     });
@@ -261,9 +264,11 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          processError(error.error, 'Error cargando usuario').forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error || error, 'Error cargando usuario').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);

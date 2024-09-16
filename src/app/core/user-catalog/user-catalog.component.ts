@@ -112,7 +112,7 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
           };
         },
         error: (error) => {
-          processError(error.error, 'Error cargando usuarios').forEach(
+          processError(error.error || error, 'Error cargando usuarios').forEach(
             (err) => {
               this.toastService.showError(err);
             }

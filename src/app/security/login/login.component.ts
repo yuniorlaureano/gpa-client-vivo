@@ -53,7 +53,10 @@ export class LoginComponent implements OnDestroy {
             this.router.navigate(['']);
           },
           error: ({ error }) => {
-            var errors = processError(error.error, 'Error creando usuario');
+            var errors = processError(
+              error.error || error,
+              'Error authenticando usuario'
+            );
             errors.forEach((err) => {
               this.toastService.showError(err);
             });

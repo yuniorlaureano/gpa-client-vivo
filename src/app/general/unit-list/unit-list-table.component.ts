@@ -161,7 +161,7 @@ export class UnitListTableComponent implements OnInit, OnDestroy {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
-          processError(error.error, 'Error cargando unidades').forEach(
+          processError(error.error || error, 'Error cargando unidades').forEach(
             (err) => {
               this.toastService.showError(err);
             }

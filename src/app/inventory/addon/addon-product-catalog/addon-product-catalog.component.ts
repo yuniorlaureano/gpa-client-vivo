@@ -125,11 +125,12 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
           this.spinner.hide('product-catalog-spinner');
         },
         error: (error) => {
-          processError(error.error, 'Error cargando productos').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
-          );
+          processError(
+            error.error || error,
+            'Error cargando productos'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('product-catalog-spinner');
         },
       });
@@ -147,11 +148,12 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
             this.spinner.hide('product-catalog-spinner');
           },
           error: (error) => {
-            processError(error.error, 'Error asignado agregado').forEach(
-              (err) => {
-                this.toastService.showError(err);
-              }
-            );
+            processError(
+              error.error || error,
+              'Error asignado agregado'
+            ).forEach((err) => {
+              this.toastService.showError(err);
+            });
             this.spinner.hide('product-catalog-spinner');
           },
         });
@@ -167,11 +169,12 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
             this.searchTerms.next(JSON.stringify(this.searchParams));
           },
           error: (error) => {
-            processError(error.error, 'Error removiendo agregado').forEach(
-              (err) => {
-                this.toastService.showError(err);
-              }
-            );
+            processError(
+              error.error || error,
+              'Error removiendo agregado'
+            ).forEach((err) => {
+              this.toastService.showError(err);
+            });
             this.spinner.hide('product-catalog-spinner');
             this.searchTerms.next(JSON.stringify(this.searchParams));
           },
@@ -192,7 +195,7 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           processError(
-            error.error,
+            error.error || error,
             'Error asignando usuarios a agregado'
           ).forEach((err) => {
             this.toastService.showError(err);
@@ -215,11 +218,12 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
           this.searchTerms.next(JSON.stringify(this.searchParams));
         },
         error: (error) => {
-          processError(error.error, 'Error removiendo agregados').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
-          );
+          processError(
+            error.error || error,
+            'Error removiendo agregados'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('product-catalog-spinner');
           this.searchTerms.next(JSON.stringify(this.searchParams));
         },

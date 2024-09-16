@@ -137,9 +137,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error agregando perfil').forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error || error, 'Error agregando perfil').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);
@@ -162,11 +164,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error actualizando perfil').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
-          );
+          processError(
+            error.error || error,
+            'Error actualizando perfil'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
@@ -206,11 +209,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            processError(error.error, 'Error eliminando perfil').forEach(
-              (err) => {
-                this.toastService.showError(err);
-              }
-            );
+            processError(
+              error.error || error,
+              'Error eliminando perfil'
+            ).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
         this.subscriptions$.push(sub);
@@ -253,11 +257,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              processError(error.error, 'Error asignando error').forEach(
-                (err) => {
-                  this.toastService.showError(err);
-                }
-              );
+              processError(
+                error.error || error,
+                'Error asignando error'
+              ).forEach((err) => {
+                this.toastService.showError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);
@@ -293,11 +298,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              processError(error.error, 'Error removiendo usuario').forEach(
-                (err) => {
-                  this.toastService.showError(err);
-                }
-              );
+              processError(
+                error.error || error,
+                'Error removiendo usuario'
+              ).forEach((err) => {
+                this.toastService.showError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);

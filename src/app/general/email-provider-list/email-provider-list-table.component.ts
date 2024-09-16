@@ -136,7 +136,7 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           processError(
-            error.error,
+            error.error || error,
             'Error cargando proveedores de email'
           ).forEach((err) => {
             this.toastService.showError(err);

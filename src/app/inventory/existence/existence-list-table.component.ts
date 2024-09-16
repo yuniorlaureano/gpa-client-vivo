@@ -211,11 +211,12 @@ export class ExistenceListTableComponent implements OnInit, OnDestroy {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
-          processError(error.error, 'Error cargando existencias').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
-          );
+          processError(
+            error.error || error,
+            'Error cargando existencias'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('table-spinner');
         },
       });

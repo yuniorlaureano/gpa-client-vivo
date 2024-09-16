@@ -149,9 +149,11 @@ export class ClientComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error, 'Error creando cliente').forEach((err) => {
-          this.toastService.showError(err);
-        });
+        processError(error.error || error, 'Error creando cliente').forEach(
+          (err) => {
+            this.toastService.showError(err);
+          }
+        );
       },
     });
     this.subscriptions$.push(sub);
@@ -185,11 +187,12 @@ export class ClientComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error actualizando cliente').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
-          );
+          processError(
+            error.error || error,
+            'Error actualizando cliente'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
@@ -291,9 +294,11 @@ export class ClientComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error cargando cliente').forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error || error, 'Error cargando cliente').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);

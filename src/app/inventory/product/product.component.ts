@@ -180,9 +180,11 @@ export class ProductComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error creando producto').forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error || error, 'Error creando producto').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);
@@ -206,11 +208,12 @@ export class ProductComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error actualizando producto').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
-          );
+          processError(
+            error.error || error,
+            'Error actualizando producto'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
@@ -359,11 +362,12 @@ export class ProductComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (data) => this.mapAddon(data.data),
           error: (error) => {
-            processError(error.error, 'Error cargando agregado').forEach(
-              (err) => {
-                this.toastService.showError(err);
-              }
-            );
+            processError(
+              error.error || error,
+              'Error cargando agregado'
+            ).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
       this.subscriptions$.push(sub);
@@ -400,7 +404,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error cargando producto').forEach(
+          processError(error.error || error, 'Error cargando producto').forEach(
             (err) => {
               this.toastService.showError(err);
             }

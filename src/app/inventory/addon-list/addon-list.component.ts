@@ -44,11 +44,12 @@ export class AddonListComponent {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            processError(error.error, 'Error eliminado agregado').forEach(
-              (err) => {
-                this.toastService.showError(err);
-              }
-            );
+            processError(
+              error.error || error,
+              'Error eliminado agregado'
+            ).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
         this.subscriptions$.push(sub);

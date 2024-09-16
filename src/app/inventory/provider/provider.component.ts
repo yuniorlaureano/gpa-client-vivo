@@ -150,7 +150,7 @@ export class ProviderComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error creando porveedor').forEach(
+          processError(error.error || error, 'Error creando porveedor').forEach(
             (err) => {
               this.toastService.showError(err);
             }
@@ -189,11 +189,12 @@ export class ProviderComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error actualizando proveedor').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
-          );
+          processError(
+            error.error || error,
+            'Error actualizando proveedor'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);
@@ -277,11 +278,12 @@ export class ProviderComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error cargando proveedor').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
-          );
+          processError(
+            error.error || error,
+            'Error cargando proveedor'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

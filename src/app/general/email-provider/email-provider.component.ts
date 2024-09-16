@@ -194,7 +194,7 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.spinner.hide('fullscreen');
           processError(
-            error.error,
+            error.error || error,
             'Error cargando proveedores de emails'
           ).forEach((err) => {
             this.toastService.showError(err);

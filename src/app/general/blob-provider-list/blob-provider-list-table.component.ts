@@ -136,7 +136,7 @@ export class BlobProviderListTableComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           processError(
-            error.error,
+            error.error || error,
             'Error cargando proveedores de archivos'
           ).forEach((err) => {
             this.toastService.showError(err);

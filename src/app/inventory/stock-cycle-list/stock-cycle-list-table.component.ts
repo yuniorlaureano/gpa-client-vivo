@@ -191,7 +191,7 @@ export class StockCycleListTableComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           processError(
-            error.error,
+            error.error || error,
             'Error cargando ciclos de inventario'
           ).forEach((err) => {
             this.toastService.showError(err);

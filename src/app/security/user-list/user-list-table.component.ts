@@ -130,7 +130,7 @@ export class UserListTableComponent implements OnInit, OnDestroy {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
-          processError(error.error, 'Error cargando usuarios').forEach(
+          processError(error.error || error, 'Error cargando usuarios').forEach(
             (err) => {
               this.toastService.showError(err);
             }

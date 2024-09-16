@@ -157,11 +157,12 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error, 'Error actualizando usuario').forEach(
-          (err) => {
-            this.toastService.showError(err);
-          }
-        );
+        processError(
+          error.error || error,
+          'Error actualizando usuario'
+        ).forEach((err) => {
+          this.toastService.showError(err);
+        });
       },
     });
     this.subscriptions$.push(sub);
@@ -217,9 +218,11 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error cargando usuario').forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error || error, 'Error cargando usuario').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);

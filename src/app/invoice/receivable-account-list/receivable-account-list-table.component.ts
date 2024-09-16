@@ -209,7 +209,7 @@ export class ReceivableAccountListTableComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           processError(
-            error.error,
+            error.error || error,
             'Error cargando cuentas por cobrar'
           ).forEach((err) => {
             this.toastService.showError(err);

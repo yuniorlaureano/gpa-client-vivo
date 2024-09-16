@@ -214,11 +214,12 @@ export class ProviderListTableComponent implements OnInit, OnDestroy {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
-          processError(error.error, 'Error cargando proveedores').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
-          );
+          processError(
+            error.error || error,
+            'Error cargando proveedores'
+          ).forEach((err) => {
+            this.toastService.showError(err);
+          });
           this.spinner.hide('table-spinner');
         },
       });

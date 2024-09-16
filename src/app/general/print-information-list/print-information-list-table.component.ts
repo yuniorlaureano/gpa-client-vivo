@@ -150,7 +150,7 @@ export class PrintInformationListTableComponent {
         },
         error: (error) => {
           processError(
-            error.error,
+            error.error || error,
             'Error cargando información de impresión'
           ).forEach((err) => {
             this.toastService.showError(err);

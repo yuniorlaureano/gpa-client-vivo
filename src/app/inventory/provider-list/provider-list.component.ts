@@ -50,11 +50,12 @@ export class ProviderListComponent {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              processError(error.error, 'Error eliminando proveedor').forEach(
-                (err) => {
-                  this.toastService.showError(err);
-                }
-              );
+              processError(
+                error.error || error,
+                'Error eliminando proveedor'
+              ).forEach((err) => {
+                this.toastService.showError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);

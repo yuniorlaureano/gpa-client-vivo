@@ -102,7 +102,7 @@ export class UnitComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error, 'Error modificando unidad').forEach(
+        processError(error.error || error, 'Error modificando unidad').forEach(
           (error) => {
             this.toastService.showError(error);
           }
@@ -124,9 +124,11 @@ export class UnitComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error, 'Error creando unidad').forEach((error) => {
-          this.toastService.showError(error);
-        });
+        processError(error.error || error, 'Error creando unidad').forEach(
+          (error) => {
+            this.toastService.showError(error);
+          }
+        );
       },
     });
     this.subscriptions$.push(sub);
@@ -175,9 +177,11 @@ export class UnitComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error cargando unidad').forEach((err) => {
-            this.toastService.showError(err);
-          });
+          processError(error.error || error, 'Error cargando unidad').forEach(
+            (err) => {
+              this.toastService.showError(err);
+            }
+          );
         },
       });
     this.subscriptions$.push(sub);

@@ -176,7 +176,7 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
           this.spinner.hide('profile-spinner');
         },
         error: (error) => {
-          processError(error.error, 'Error cargando perfiles').forEach(
+          processError(error.error || error, 'Error cargando perfiles').forEach(
             (err) => {
               this.toastService.showError(err);
             }

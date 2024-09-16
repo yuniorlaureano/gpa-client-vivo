@@ -237,7 +237,7 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
           this.spinner.hide('table-spinner');
         },
         error: (error) => {
-          processError(error.error, 'Error cargando facturas').forEach(
+          processError(error.error || error, 'Error cargando facturas').forEach(
             (err) => {
               this.toastService.showError(err);
             }

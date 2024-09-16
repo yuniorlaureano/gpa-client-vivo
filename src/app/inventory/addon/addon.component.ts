@@ -97,9 +97,11 @@ export class AddonComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error, 'Error agregando agregado').forEach((err) => {
-          this.toastService.showError(err);
-        });
+        processError(error.error || error, 'Error agregando agregado').forEach(
+          (err) => {
+            this.toastService.showError(err);
+          }
+        );
       },
     });
     this.subscriptions$.push(sub);
@@ -116,11 +118,12 @@ export class AddonComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.spinner.hide('fullscreen');
-        processError(error.error, 'Error actualizando agregado').forEach(
-          (err) => {
-            this.toastService.showError(err);
-          }
-        );
+        processError(
+          error.error || error,
+          'Error actualizando agregado'
+        ).forEach((err) => {
+          this.toastService.showError(err);
+        });
       },
     });
     this.subscriptions$.push(sub);
@@ -163,7 +166,7 @@ export class AddonComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          processError(error.error, 'Error cargando agregado').forEach(
+          processError(error.error || error, 'Error cargando agregado').forEach(
             (err) => {
               this.toastService.showError(err);
             }

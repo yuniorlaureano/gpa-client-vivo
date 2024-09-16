@@ -45,11 +45,12 @@ export class UserListComponent {
           },
           error: (error) => {
             this.spinner.hide('fullscreen');
-            processError(error.error, 'Error eliminando perfil').forEach(
-              (err) => {
-                this.toastService.showError(err);
-              }
-            );
+            processError(
+              error.error || error,
+              'Error eliminando perfil'
+            ).forEach((err) => {
+              this.toastService.showError(err);
+            });
           },
         });
         this.subscriptions$.push(sub);
