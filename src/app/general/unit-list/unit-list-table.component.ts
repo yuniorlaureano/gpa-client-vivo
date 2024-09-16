@@ -19,7 +19,6 @@ import {
 } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
@@ -27,6 +26,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { processError } from '../../core/utils/error.utils';
 import { UnitModel } from '../model/unit.model';
 import { UnitService } from '../service/unit.service';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-unit-list-table',
@@ -67,7 +67,7 @@ export class UnitListTableComponent implements OnInit, OnDestroy {
   constructor(
     private unitService: UnitService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
+    private errorService: ErrorService,
     private store: Store
   ) {}
 
@@ -163,7 +163,7 @@ export class UnitListTableComponent implements OnInit, OnDestroy {
         error: (error) => {
           processError(error.error || error, 'Error cargando unidades').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
           this.spinner.hide('table-spinner');

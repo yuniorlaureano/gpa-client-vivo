@@ -27,6 +27,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FilterModel } from '../../core/models/filter.model';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-product',
@@ -77,7 +78,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     private addonService: AddonService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -182,7 +184,7 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error creando producto').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },
@@ -212,7 +214,7 @@ export class ProductComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error actualizando producto'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });
@@ -366,7 +368,7 @@ export class ProductComponent implements OnInit, OnDestroy {
               error.error || error,
               'Error cargando agregado'
             ).forEach((err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             });
           },
         });
@@ -406,7 +408,7 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error cargando producto').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },

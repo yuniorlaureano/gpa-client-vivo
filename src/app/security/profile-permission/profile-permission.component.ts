@@ -20,6 +20,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-profile-permission',
@@ -48,7 +49,8 @@ export class ProfilePermissionComponent
     private toastService: ToastService,
     private profileService: ProfileService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -125,7 +127,7 @@ export class ProfilePermissionComponent
             error.error || error,
             'Error actualizando perfil'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });
@@ -157,7 +159,7 @@ export class ProfilePermissionComponent
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error cargando permiso').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },

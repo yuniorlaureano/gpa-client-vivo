@@ -15,6 +15,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-receivable-account',
@@ -48,7 +49,8 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private confirmService: ConfirmModalService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -152,7 +154,7 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
             this.spinner.hide('fullscreen');
             processError(error.error || error, 'Error realizando pago').forEach(
               (err) => {
-                this.toastService.showError(err);
+                this.errorService.addGeneralError(err);
               }
             );
           },
@@ -243,7 +245,7 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando cuenta por cobrar'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });

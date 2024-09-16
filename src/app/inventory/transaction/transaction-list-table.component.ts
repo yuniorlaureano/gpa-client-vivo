@@ -22,7 +22,6 @@ import { StockService } from '../service/stock.service';
 import { StockModel } from '../models/stock.model';
 import { StockStatusEnum } from '../../core/models/stock-status.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
@@ -32,6 +31,7 @@ import { ReasonEnum } from '../../core/models/reason.enum';
 import { processError } from '../../core/utils/error.utils';
 import { downloadFile } from '../../core/utils/file.utils';
 import { ReportService } from '../../report/service/report.service';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-transaction-list-table',
@@ -78,10 +78,10 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
   constructor(
     private stockService: StockService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
     private store: Store,
     private fb: FormBuilder,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -263,7 +263,7 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando transacciones'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('table-spinner');
         },

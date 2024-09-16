@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, Subscription, switchMap } from 'rxjs';
 import { ToastService } from '../../core/service/toast.service';
@@ -12,6 +12,7 @@ import { LocationWithNameModel } from '../../core/models/location-with-name.mode
 import { processError } from '../../core/utils/error.utils';
 import { ProviderModel } from '../models/provider.model';
 import { ProviderService } from '../service/provider.service';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-provider',
@@ -40,7 +41,8 @@ export class ProviderComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -152,7 +154,7 @@ export class ProviderComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error creando porveedor').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },
@@ -193,7 +195,7 @@ export class ProviderComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error actualizando proveedor'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });
@@ -282,7 +284,7 @@ export class ProviderComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando proveedor'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });

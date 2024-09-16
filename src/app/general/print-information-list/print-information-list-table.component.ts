@@ -11,7 +11,6 @@ import { FilterModel } from '../../core/models/filter.model';
 import { BehaviorSubject, debounceTime, Subject, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
@@ -20,6 +19,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import { PrintInformationModel } from '../model/print-information.model';
 import { PrintInformationService } from '../service/print-information.service';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-print-information-list-table',
@@ -59,7 +59,7 @@ export class PrintInformationListTableComponent {
   constructor(
     private printInformationService: PrintInformationService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
+    private errorService: ErrorService,
     private store: Store
   ) {}
 
@@ -153,7 +153,7 @@ export class PrintInformationListTableComponent {
             error.error || error,
             'Error cargando información de impresión'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('table-spinner');
         },

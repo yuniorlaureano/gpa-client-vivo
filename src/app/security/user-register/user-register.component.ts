@@ -12,6 +12,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-user-register',
@@ -50,7 +51,8 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private store: Store,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -137,7 +139,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
       error: (error) => {
         processError(error.error || error, 'Error agregando usuario').forEach(
           (err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           }
         );
         this.spinner.hide('fullscreen');
@@ -162,7 +164,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
           error.error || error,
           'Error actualizando usuario'
         ).forEach((err) => {
-          this.toastService.showError(err);
+          this.errorService.addGeneralError(err);
         });
         this.spinner.hide('fullscreen');
       },
@@ -216,8 +218,13 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
         next: () => {
           func(false);
         },
-        error: () => {
+        error: (error) => {
           func(true);
+          processError(error.error || error, 'Error subiendo foto').forEach(
+            (err) => {
+              this.errorService.addGeneralError(err);
+            }
+          );
         },
       });
       this.subscriptions$.push(sub);
@@ -266,7 +273,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
         error: (error) => {
           processError(error.error || error, 'Error cargando usuario').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },

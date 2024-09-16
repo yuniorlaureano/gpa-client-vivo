@@ -23,6 +23,7 @@ import { ProfileModel } from '../../model/profile.model';
 import { ToastService } from '../../../core/service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { processError } from '../../../core/utils/error.utils';
+import { ErrorService } from '../../../core/service/error.service';
 
 @Component({
   selector: 'gpa-profile-user-catalog',
@@ -61,8 +62,8 @@ export class ProfileUserCatalogComponent
 
   constructor(
     private profileService: ProfileService,
-    private toastService: ToastService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -163,7 +164,7 @@ export class ProfileUserCatalogComponent
         error: (error) => {
           processError(error.error || error, 'Error cargando usuarios').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
           this.spinner.hide('table-spinner');

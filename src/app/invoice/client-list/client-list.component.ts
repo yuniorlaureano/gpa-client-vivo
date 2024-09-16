@@ -7,6 +7,7 @@ import { ClientService } from '../service/client.service';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { Subscription } from 'rxjs';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-client-list',
@@ -22,7 +23,8 @@ export class ClientListComponent {
     private confirmService: ConfirmModalService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private errorService: ErrorService
   ) {}
 
   handleEdit(client: ClientModel) {
@@ -52,7 +54,7 @@ export class ClientListComponent {
               error.error || error,
               'Error eliminando cliente'
             ).forEach((err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             });
           },
         });

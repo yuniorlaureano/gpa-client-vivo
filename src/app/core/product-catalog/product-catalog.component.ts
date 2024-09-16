@@ -19,9 +19,9 @@ import { ProductService } from '../../inventory/service/product.service';
 import { ProductModel } from '../../inventory/models/product.model';
 import { getProductTypeDescription } from '../utils/product.util';
 import { ProductType } from '../models/product-type.enum';
-import { ToastService } from '../service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { processError } from '../utils/error.utils';
+import { ErrorService } from '../service/error.service';
 
 @Component({
   selector: 'gpa-product-catalog',
@@ -51,7 +51,7 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
-    private toastService: ToastService,
+    private errorService: ErrorService,
     private spinner: NgxSpinnerService
   ) {}
 
@@ -139,7 +139,7 @@ export class ProductCatalogComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando productos'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('product-catalog-spinner');
         },

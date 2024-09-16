@@ -13,7 +13,6 @@ import { FilterModel } from '../../core/models/filter.model';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
@@ -21,6 +20,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { EmailConfigurationModel } from '../model/email-configuration.model';
 import { EmailProviderService } from '../service/email-provider.service';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-email-provider-list-table',
@@ -59,7 +59,7 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
   constructor(
     private emailProviderService: EmailProviderService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
+    private errorService: ErrorService,
     private store: Store
   ) {}
 
@@ -139,7 +139,7 @@ export class EmailProviderListTableComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando proveedores de email'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('table-spinner');
         },

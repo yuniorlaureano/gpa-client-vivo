@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { PrintInformationService } from '../service/print-information.service';
 import { PrintInformationModel } from '../model/print-information.model';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-print-information-list',
@@ -19,7 +20,8 @@ export class PrintInformationListComponent implements OnDestroy {
     private confirmService: ConfirmModalService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private printInformationService: PrintInformationService
+    private printInformationService: PrintInformationService,
+    private errorService: ErrorService
   ) {}
 
   subscriptions$: Subscription[] = [];
@@ -59,7 +61,7 @@ export class PrintInformationListComponent implements OnDestroy {
                 error,
                 'Error eleminando información de impresión'
               ).forEach((err) => {
-                this.toastService.showError(err);
+                this.errorService.addGeneralError(err);
               });
             },
           });

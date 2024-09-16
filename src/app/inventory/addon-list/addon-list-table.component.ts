@@ -21,13 +21,13 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { AddonModel } from '../models/addon.model';
 import { AddonService } from '../service/addon.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FormBuilder } from '@angular/forms';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-addon-list-table',
@@ -72,9 +72,9 @@ export class AddonListTableComponent implements OnInit, OnDestroy {
   constructor(
     private addonService: AddonService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
     private store: Store,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -186,7 +186,7 @@ export class AddonListTableComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando agregados'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('table-spinner');
         },

@@ -27,6 +27,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-user-list-table',
@@ -68,8 +69,8 @@ export class UserListTableComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -132,7 +133,7 @@ export class UserListTableComponent implements OnInit, OnDestroy {
         error: (error) => {
           processError(error.error || error, 'Error cargando usuarios').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
           this.spinner.hide('table-spinner');

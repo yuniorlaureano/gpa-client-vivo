@@ -11,6 +11,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { processError } from '../../core/utils/error.utils';
 import { UnitService } from '../service/unit.service';
 import { UnitModel } from '../model/unit.model';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-unit',
@@ -42,7 +43,8 @@ export class UnitComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -104,7 +106,7 @@ export class UnitComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
         processError(error.error || error, 'Error modificando unidad').forEach(
           (error) => {
-            this.toastService.showError(error);
+            this.errorService.addGeneralError(error);
           }
         );
       },
@@ -126,7 +128,7 @@ export class UnitComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
         processError(error.error || error, 'Error creando unidad').forEach(
           (error) => {
-            this.toastService.showError(error);
+            this.errorService.addGeneralError(error);
           }
         );
       },
@@ -179,7 +181,7 @@ export class UnitComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error cargando unidad').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },

@@ -15,11 +15,11 @@ import {
 } from 'rxjs';
 import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
-import { ToastService } from '../service/toast.service';
 import { ProviderModel } from '../../inventory/models/provider.model';
 import { ProviderService } from '../../inventory/service/provider.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { processError } from '../utils/error.utils';
+import { ErrorService } from '../service/error.service';
 
 @Component({
   selector: 'gpa-provider-catalog',
@@ -49,8 +49,8 @@ export class ProviderCatalogComponent implements OnInit, OnDestroy {
 
   constructor(
     private providerService: ProviderService,
-    private toastService: ToastService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -136,7 +136,7 @@ export class ProviderCatalogComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando proveedores'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('provider-catalog-spinner');
         },

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   BehaviorSubject,
   combineLatest,
@@ -17,6 +17,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { PrintInformationModel } from '../model/print-information.model';
 import { PrintInformationService } from '../service/print-information.service';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-product',
@@ -59,7 +60,8 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
     private store: Store,
-    private router: Router
+    private router: Router,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -156,7 +158,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando información de impresión'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });
@@ -188,7 +190,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error actualizando información de impresión'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });
@@ -308,7 +310,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando información de impresión'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });

@@ -4,10 +4,10 @@ import { ProviderModel } from '../models/provider.model';
 import { ProviderService } from '../service/provider.service';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { FilterModel } from '../../core/models/filter.model';
-import { ToastService } from '../../core/service/toast.service';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { DEFAULT_SEARCH_PARAMS } from '../../core/models/util.constants';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-provider-dynamic-search',
@@ -24,7 +24,7 @@ export class ProviderDynamicSearchComponent implements OnInit {
 
   constructor(
     private providerService: ProviderService,
-    private toastService: ToastService
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -86,7 +86,7 @@ export class ProviderDynamicSearchComponent implements OnInit {
             error.error || error,
             'Error cargando proveedores'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });

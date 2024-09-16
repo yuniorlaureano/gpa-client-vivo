@@ -14,4 +14,8 @@ export class ErrorService {
       }
     }
   }
+
+  addGeneralError(error: string) {
+    this.store.dispatch(new AddError(error));
+  }
 }

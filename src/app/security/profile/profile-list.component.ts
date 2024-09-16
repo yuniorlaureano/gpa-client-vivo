@@ -21,9 +21,9 @@ import {
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ProfileModel } from '../model/profile.model';
 import { ProfileService } from '../service/profile.service';
-import { ToastService } from '../../core/service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-profile-list',
@@ -66,8 +66,8 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private profileService: ProfileService,
-    private toastService: ToastService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -178,7 +178,7 @@ export class ProfileListComponent implements OnInit, OnChanges, OnDestroy {
         error: (error) => {
           processError(error.error || error, 'Error cargando perfiles').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
           this.spinner.hide('profile-spinner');

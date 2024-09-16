@@ -17,9 +17,9 @@ import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { StockService } from '../../inventory/service/stock.service';
 import { ProductCatalogModel } from '../../inventory/models/product-catalog.model';
-import { ToastService } from '../service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { processError } from '../utils/error.utils';
+import { ErrorService } from '../service/error.service';
 
 @Component({
   selector: 'gpa-stock-product-catalog',
@@ -49,7 +49,7 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
 
   constructor(
     private stockService: StockService,
-    private toastService: ToastService,
+    private errorService: ErrorService,
     private spinner: NgxSpinnerService
   ) {}
 
@@ -137,7 +137,7 @@ export class StockProductCatalogComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando productos'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('stock-product-catalog-spinner');
         },

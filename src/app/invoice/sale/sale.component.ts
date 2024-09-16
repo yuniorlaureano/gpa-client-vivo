@@ -32,6 +32,7 @@ import { downloadFile } from '../../core/utils/file.utils';
 import { InvoiceAttachModel } from '../model/invoice-attachment';
 import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-sale',
@@ -101,7 +102,8 @@ export class SaleComponent implements OnInit, OnDestroy {
     private confirmService: ConfirmModalService,
     private clientService: ClientService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -300,8 +302,6 @@ export class SaleComponent implements OnInit, OnDestroy {
             this.toastService.showSucess('Adjuntos agregados');
           }
           this.toastService.showSucess('Venta realizada');
-          // this.calculateSelectedProductCatalogAggregate();
-          // this.spinner.hide('fullscreen');
           this.router.navigate(['/invoice/sale/edit/' + data.id]);
         });
       },
@@ -309,7 +309,7 @@ export class SaleComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
         processError(error.error || error, 'Error realizando venta').forEach(
           (err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           }
         );
       },
@@ -330,7 +330,7 @@ export class SaleComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
         processError(error.error || error, 'Error editando venta').forEach(
           (err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           }
         );
       },
@@ -386,7 +386,7 @@ export class SaleComponent implements OnInit, OnDestroy {
           error.error || error,
           'Error realizando devolución'
         ).forEach((err) => {
-          this.toastService.showError(err);
+          this.errorService.addGeneralError(err);
         });
       },
     });
@@ -456,7 +456,7 @@ export class SaleComponent implements OnInit, OnDestroy {
       error: (error) => {
         processError(error.error || error, 'Error cargando cliente').forEach(
           (err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           }
         );
         this.spinner.hide('fullscreen');
@@ -509,7 +509,7 @@ export class SaleComponent implements OnInit, OnDestroy {
         error: (error) => {
           processError(error.error || error, 'Error cargando factura').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
           this.spinner.hide('fullscreen');

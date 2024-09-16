@@ -36,6 +36,7 @@ import { processError } from '../../core/utils/error.utils';
 import { FilterModel } from '../../core/models/filter.model';
 import { StockAttachModel } from '../models/stock-attachment';
 import { downloadFile } from '../../core/utils/file.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-stock-entry',
@@ -96,7 +97,8 @@ export class StockEntryComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private confirmService: ConfirmModalService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -263,7 +265,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error modificando entrada'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });
@@ -290,7 +292,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error creando entrada').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },
@@ -337,7 +339,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cancelando entrada'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('fullscreen');
         },
@@ -419,7 +421,7 @@ export class StockEntryComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error cargando entrada').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },

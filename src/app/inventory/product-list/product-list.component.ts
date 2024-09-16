@@ -7,6 +7,7 @@ import { ToastService } from '../../core/service/toast.service';
 import { ProductService } from '../service/product.service';
 import { Subscription } from 'rxjs';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-product-list',
@@ -19,7 +20,8 @@ export class ProductListComponent implements OnDestroy {
     private confirmService: ConfirmModalService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private productService: ProductService
+    private productService: ProductService,
+    private errorService: ErrorService
   ) {}
 
   subscriptions$: Subscription[] = [];
@@ -52,7 +54,7 @@ export class ProductListComponent implements OnDestroy {
               error.error || error,
               'Error eliminando producto'
             ).forEach((err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             });
           },
         });

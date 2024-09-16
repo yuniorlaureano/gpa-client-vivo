@@ -7,6 +7,7 @@ import { ToastService } from '../../core/service/toast.service';
 import { CategoryService } from '../service/category.service';
 import { Subscription } from 'rxjs';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-category-list',
@@ -21,7 +22,8 @@ export class CategoryListComponent {
     private confirmService: ConfirmModalService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private errorService: ErrorService
   ) {}
 
   handleEdit(category: CategoryModel) {
@@ -47,7 +49,7 @@ export class CategoryListComponent {
             error: (error) => {
               this.spinner.hide('fullscreen');
               processError(error, 'Error eliminando categoría').forEach((x) =>
-                this.toastService.showError(x)
+                this.errorService.addGeneralError(x)
               );
             },
           });

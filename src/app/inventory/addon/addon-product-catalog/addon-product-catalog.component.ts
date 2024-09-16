@@ -9,11 +9,11 @@ import {
 import { FilterModel } from '../../../core/models/filter.model';
 import { SearchOptionsModel } from '../../../core/models/search-options.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ProductModel } from '../../models/product.model';
 import { ToastService } from '../../../core/service/toast.service';
 import { AddonService } from '../../service/addon.service';
 import { ProductByAddonModel } from '../../models/product-by-addon.model';
 import { processError } from '../../../core/utils/error.utils';
+import { ErrorService } from '../../../core/service/error.service';
 
 @Component({
   selector: 'gpa-addon-product-catalog',
@@ -45,7 +45,8 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
   constructor(
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    private addonService: AddonService
+    private addonService: AddonService,
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -129,7 +130,7 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando productos'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('product-catalog-spinner');
         },
@@ -152,7 +153,7 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
               error.error || error,
               'Error asignado agregado'
             ).forEach((err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             });
             this.spinner.hide('product-catalog-spinner');
           },
@@ -173,7 +174,7 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
               error.error || error,
               'Error removiendo agregado'
             ).forEach((err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             });
             this.spinner.hide('product-catalog-spinner');
             this.searchTerms.next(JSON.stringify(this.searchParams));
@@ -198,7 +199,7 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error asignando usuarios a agregado'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('product-catalog-spinner');
           this.searchTerms.next(JSON.stringify(this.searchParams));
@@ -222,7 +223,7 @@ export class AddonProductCatalogComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error removiendo agregados'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('product-catalog-spinner');
           this.searchTerms.next(JSON.stringify(this.searchParams));

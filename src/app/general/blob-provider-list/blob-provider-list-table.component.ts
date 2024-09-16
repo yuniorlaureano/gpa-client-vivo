@@ -13,7 +13,6 @@ import { FilterModel } from '../../core/models/filter.model';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
@@ -21,6 +20,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { BlobStorageConfigurationModel } from '../model/blob-storage-configuration.model';
 import { BlobStorageProviderService } from '../service/blob-storage-provider.service';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-blob-provider-list-table',
@@ -59,7 +59,7 @@ export class BlobProviderListTableComponent implements OnInit, OnDestroy {
   constructor(
     private blobStorageProviderService: BlobStorageProviderService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
+    private errorService: ErrorService,
     private store: Store
   ) {}
 
@@ -139,7 +139,7 @@ export class BlobProviderListTableComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando proveedores de archivos'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('table-spinner');
         },

@@ -13,6 +13,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
 import { RefreshCredentials } from '../../core/ng-xs-store/actions/app.actions';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-user-profile-edit',
@@ -33,7 +34,8 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private authService: AuthService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   //subscriptions
@@ -161,7 +163,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
           error.error || error,
           'Error actualizando usuario'
         ).forEach((err) => {
-          this.toastService.showError(err);
+          this.errorService.addGeneralError(err);
         });
       },
     });
@@ -220,7 +222,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error cargando usuario').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },

@@ -6,6 +6,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastService } from '../../core/service/toast.service';
 import { Subscription } from 'rxjs';
 import { StockCycleService } from '../service/cycle.service';
+import { ErrorService } from '../../core/service/error.service';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-stock-list',
@@ -21,7 +23,8 @@ export class StockCycleListComponent implements OnDestroy {
     private confirmService: ConfirmModalService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private stockCycleService: StockCycleService
+    private stockCycleService: StockCycleService,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -50,9 +53,10 @@ export class StockCycleListComponent implements OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              this.toastService.showError(
+              processError(
+                error.error || error,
                 'Error elimiando ciclo de inventario'
-              );
+              ).forEach((x) => this.errorService.addGeneralError(x));
             },
           });
         this.subscriptions$.push(sub);

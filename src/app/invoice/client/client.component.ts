@@ -13,6 +13,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { LocationWithNameModel } from '../../core/models/location-with-name.model';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-client',
@@ -41,7 +42,8 @@ export class ClientComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -151,7 +153,7 @@ export class ClientComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
         processError(error.error || error, 'Error creando cliente').forEach(
           (err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           }
         );
       },
@@ -191,7 +193,7 @@ export class ClientComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error actualizando cliente'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });
@@ -296,7 +298,7 @@ export class ClientComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error cargando cliente').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },

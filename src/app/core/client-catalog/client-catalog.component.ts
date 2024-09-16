@@ -10,9 +10,9 @@ import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { ClientService } from '../../invoice/service/client.service';
 import { ClientModel } from '../../invoice/model/client.model';
-import { ToastService } from '../service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { processError } from '../utils/error.utils';
+import { ErrorService } from '../service/error.service';
 
 @Component({
   selector: 'gpa-client-catalog',
@@ -42,8 +42,8 @@ export class ClientCatalogComponent {
 
   constructor(
     private clientService: ClientService,
-    private toastService: ToastService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -104,9 +104,7 @@ export class ClientCatalogComponent {
         },
         error: (error) => {
           processError(error.error || error, 'Error cargando clientes').forEach(
-            (err) => {
-              this.toastService.showError(err);
-            }
+            (err) => this.errorService.addGeneralError(err)
           );
           this.spinner.hide('client-catalog-spinner');
         },

@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ConfirmModalService } from '../../core/service/confirm-modal.service';
 import { Subscription } from 'rxjs';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-user-list',
@@ -22,7 +23,8 @@ export class UserListComponent {
     private userService: UserService,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    private confirmService: ConfirmModalService
+    private confirmService: ConfirmModalService,
+    private errorService: ErrorService
   ) {}
 
   handleEdit(user: UserModel) {
@@ -49,7 +51,7 @@ export class UserListComponent {
               error.error || error,
               'Error eliminando perfil'
             ).forEach((err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             });
           },
         });

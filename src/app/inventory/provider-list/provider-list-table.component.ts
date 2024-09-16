@@ -19,7 +19,6 @@ import {
 } from 'rxjs';
 import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
@@ -28,6 +27,7 @@ import { FormBuilder } from '@angular/forms';
 import { processError } from '../../core/utils/error.utils';
 import { ProviderModel } from '../models/provider.model';
 import { ProviderService } from '../service/provider.service';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-provider-list-table',
@@ -72,9 +72,9 @@ export class ProviderListTableComponent implements OnInit, OnDestroy {
   constructor(
     private providerService: ProviderService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
     private store: Store,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -218,7 +218,7 @@ export class ProviderListTableComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando proveedores'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('table-spinner');
         },

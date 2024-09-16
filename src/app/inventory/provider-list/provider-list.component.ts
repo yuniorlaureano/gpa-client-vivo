@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { processError } from '../../core/utils/error.utils';
 import { ProviderService } from '../service/provider.service';
 import { ProviderModel } from '../models/provider.model';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-provider-list',
@@ -22,7 +23,8 @@ export class ProviderListComponent {
     private confirmService: ConfirmModalService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private providerService: ProviderService
+    private providerService: ProviderService,
+    private errorService: ErrorService
   ) {}
 
   handleEdit(provider: ProviderModel) {
@@ -54,7 +56,7 @@ export class ProviderListComponent {
                 error.error || error,
                 'Error eliminando proveedor'
               ).forEach((err) => {
-                this.toastService.showError(err);
+                this.errorService.addGeneralError(err);
               });
             },
           });

@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { processError } from '../../core/utils/error.utils';
 import { UnitModel } from '../model/unit.model';
 import { UnitService } from '../service/unit.service';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-unit-list',
@@ -21,7 +22,8 @@ export class UnitListComponent {
     private confirmService: ConfirmModalService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
-    private unitService: UnitService
+    private unitService: UnitService,
+    private errorService: ErrorService
   ) {}
 
   handleEdit(unit: UnitModel) {
@@ -42,7 +44,7 @@ export class UnitListComponent {
           error: (error) => {
             this.spinner.hide('fullscreen');
             processError(error, 'Error eliminando unidad').forEach((x) =>
-              this.toastService.showError(x)
+              this.errorService.addGeneralError(x)
             );
           },
         });

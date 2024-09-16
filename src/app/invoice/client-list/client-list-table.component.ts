@@ -21,13 +21,13 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { ClientModel } from '../model/client.model';
 import { ClientService } from '../service/client.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FormBuilder } from '@angular/forms';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-client-list-table',
@@ -72,9 +72,9 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
   constructor(
     private clientService: ClientService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
     private store: Store,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -216,7 +216,7 @@ export class ClientListTableComponent implements OnInit, OnDestroy {
         error: (error) => {
           processError(error.error || error, 'Error cargando clientes').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
           this.spinner.hide('table-spinner');

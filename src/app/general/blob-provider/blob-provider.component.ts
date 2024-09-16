@@ -11,6 +11,8 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { BlobStorageConstant } from '../../core/models/blob-storage.constants';
 import { BlobStorageProviderService } from '../service/blob-storage-provider.service';
 import { BlobStorageConfigurationModel } from '../model/blob-storage-configuration.model';
+import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-blob-storage-provider',
@@ -52,7 +54,8 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -129,9 +132,12 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              this.toastService.showError(
-                'Error al modificar el proveedor de archivo'
-              );
+              processError(
+                error.error || error,
+                'Error modificando proveedor'
+              ).forEach((err) => {
+                this.errorService.addGeneralError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);
@@ -148,9 +154,12 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              this.toastService.showError(
+              processError(
+                error.error || error,
                 'Error al crear el proveedor de archivo'
-              );
+              ).forEach((err) => {
+                this.errorService.addGeneralError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);
@@ -193,9 +202,12 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.spinner.hide('fullscreen');
-          this.toastService.showError(
-            'Error al cargar el proveedor de archivo'
-          );
+          processError(
+            error.error || error,
+            'Error cargando proveedor'
+          ).forEach((err) => {
+            this.errorService.addGeneralError(err);
+          });
         },
       });
     this.subscriptions$.push(sub);

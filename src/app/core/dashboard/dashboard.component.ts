@@ -10,7 +10,6 @@ import {
 import { ProductType } from '../models/product-type.enum';
 import { ReasonEnum } from '../models/reason.enum';
 import { processError } from '../utils/error.utils';
-import { ToastService } from '../service/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, of, Subscription, switchMap } from 'rxjs';
 import { ClientModel } from '../../invoice/model/client.model';
@@ -18,6 +17,7 @@ import { RequiredPermissionType } from '../models/required-permission.type';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
+import { ErrorService } from '../service/error.service';
 
 export type InputVsOutputVsExistenceType = {
   input: number;
@@ -78,9 +78,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private dashboardService: DashboardService,
-    private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -133,8 +133,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         processError(
           error.error || error,
           'Error obteniendo las transacciones por mes'
-        ).forEach((error) => {
-          this.toastService.showError(error);
+        ).forEach((err) => {
+          this.errorService.addGeneralError(err);
         });
         this.spinner.hide('fullscreen');
       },
@@ -205,8 +205,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           processError(
             error.error || error,
             'Error obteniendo las transacciones por mes'
-          ).forEach((error) => {
-            this.toastService.showError(error);
+          ).forEach((err) => {
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('transaction-spinner');
         },
@@ -226,8 +226,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         processError(
           error.error || error,
           'Error obteniendo el conteo de clientes'
-        ).forEach((error) => {
-          this.toastService.showError(error);
+        ).forEach((err) => {
+          this.errorService.addGeneralError(err);
         });
       },
     });
@@ -252,8 +252,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           processError(
             error.error || error,
             'Error obteniendo el las ganancias por mes'
-          ).forEach((error) => {
-            this.toastService.showError(error);
+          ).forEach((err) => {
+            this.errorService.addGeneralError(err);
           });
         },
       });

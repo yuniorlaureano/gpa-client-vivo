@@ -21,12 +21,12 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { CategoryModel } from '../models/category.model';
 import { CategoryService } from '../service/category.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-category-list-table',
@@ -67,7 +67,7 @@ export class CategoryListTableComponent implements OnInit, OnDestroy {
   constructor(
     private categoryService: CategoryService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
+    private errorService: ErrorService,
     private store: Store
   ) {}
 
@@ -165,7 +165,7 @@ export class CategoryListTableComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando categorías'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('table-spinner');
         },

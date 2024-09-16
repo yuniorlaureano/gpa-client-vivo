@@ -25,6 +25,8 @@ import {
 } from '../ng-xs-store/actions/app.actions';
 import { AppState } from '../ng-xs-store/states/app.state';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ErrorService } from '../service/error.service';
+import { processError } from '../utils/error.utils';
 
 @Component({
   selector: 'gpa-admin-page-header',
@@ -47,7 +49,8 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private store: Store,
     private spinner: NgxSpinnerService,
-    private action$: Actions
+    private action$: Actions,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -93,7 +96,13 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
         this.spinner.hide('fullscreen');
       },
       error: (error) => {
-        this.toastService.showError(`Error al cambiar de perfil`);
+        const errors = processError(
+          error.error || error,
+          'Error al cambiar de perfil'
+        );
+        errors.forEach((err) => {
+          this.errorService.addGeneralError(err);
+        });
         this.spinner.hide('fullscreen');
       },
     });
@@ -139,7 +148,11 @@ export class AdminPageHeaderComponent implements OnInit, OnDestroy {
         }
       }),
       catchError((error) => {
-        this.toastService.showError(`Error cargando permisos`);
+        processError(error.error || error, 'Error cargando perfiles').forEach(
+          (err) => {
+            this.errorService.addGeneralError(err);
+          }
+        );
         return of([] as ProfileModel[]);
       })
     );

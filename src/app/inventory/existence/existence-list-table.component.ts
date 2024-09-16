@@ -21,7 +21,6 @@ import { SearchOptionsModel } from '../../core/models/search-options.model';
 import { StockService } from '../service/stock.service';
 import { ExistenceModel } from '../models/existence.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
@@ -30,6 +29,7 @@ import { FormBuilder } from '@angular/forms';
 import { processError } from '../../core/utils/error.utils';
 import { ReportService } from '../../report/service/report.service';
 import { downloadFile } from '../../core/utils/file.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-existence-list-table',
@@ -72,10 +72,10 @@ export class ExistenceListTableComponent implements OnInit, OnDestroy {
   constructor(
     private stockService: StockService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
     private store: Store,
     private fb: FormBuilder,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -215,7 +215,7 @@ export class ExistenceListTableComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando existencias'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('table-spinner');
         },

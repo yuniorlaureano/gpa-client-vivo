@@ -14,6 +14,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { Subscription } from 'rxjs';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-profile',
@@ -51,7 +52,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private spinner: NgxSpinnerService,
     private confirmService: ConfirmModalService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -139,7 +141,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error agregando perfil').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },
@@ -168,7 +170,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error actualizando perfil'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });
@@ -213,7 +215,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
               error.error || error,
               'Error eliminando perfil'
             ).forEach((err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             });
           },
         });
@@ -261,7 +263,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 error.error || error,
                 'Error asignando error'
               ).forEach((err) => {
-                this.toastService.showError(err);
+                this.errorService.addGeneralError(err);
               });
             },
           });
@@ -302,7 +304,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 error.error || error,
                 'Error removiendo usuario'
               ).forEach((err) => {
-                this.toastService.showError(err);
+                this.errorService.addGeneralError(err);
               });
             },
           });

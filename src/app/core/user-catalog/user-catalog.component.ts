@@ -13,8 +13,8 @@ import { FilterModel } from '../models/filter.model';
 import { SearchOptionsModel } from '../models/search-options.model';
 import { UserModel } from '../../security/model/user.model';
 import { UserService } from '../../security/service/user.service';
-import { ToastService } from '../service/toast.service';
 import { processError } from '../utils/error.utils';
+import { ErrorService } from '../service/error.service';
 
 @Component({
   selector: 'gpa-user-catalog',
@@ -44,7 +44,7 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private userService: UserService,
-    private toastService: ToastService
+    private errorService: ErrorService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -114,7 +114,7 @@ export class UserCatalogComponent implements OnInit, OnDestroy, OnChanges {
         error: (error) => {
           processError(error.error || error, 'Error cargando usuarios').forEach(
             (err) => {
-              this.toastService.showError(err);
+              this.errorService.addGeneralError(err);
             }
           );
         },

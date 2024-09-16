@@ -12,6 +12,7 @@ import { EmailProviderService } from '../service/email-provider.service';
 import { EmailConfigurationModel } from '../model/email-configuration.model';
 import { EmailConstant } from '../../core/models/email.constants';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-email-provider',
@@ -52,7 +53,8 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -129,9 +131,12 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              this.toastService.showError(
+              processError(
+                error.error || error,
                 'Error al modificar el proveedor de email'
-              );
+              ).forEach((err) => {
+                this.errorService.addGeneralError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);
@@ -148,9 +153,12 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
-              this.toastService.showError(
+              processError(
+                error.error || error,
                 'Error al crear el proveedor de email'
-              );
+              ).forEach((err) => {
+                this.errorService.addGeneralError(err);
+              });
             },
           });
         this.subscriptions$.push(sub);
@@ -197,7 +205,7 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando proveedores de emails'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });

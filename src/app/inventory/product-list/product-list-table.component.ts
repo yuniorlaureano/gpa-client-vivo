@@ -14,13 +14,13 @@ import { ProductModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
 import { ProductType } from '../../core/models/product-type.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastService } from '../../core/service/toast.service';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import * as ProfileUtils from '../../core/utils/profile.utils';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-product-list-table',
@@ -60,8 +60,8 @@ export class ProductListTableComponent {
   constructor(
     private productService: ProductService,
     private spinner: NgxSpinnerService,
-    private toastService: ToastService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -154,7 +154,7 @@ export class ProductListTableComponent {
             error.error || error,
             'Error cargando productos'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
           this.spinner.hide('table-spinner');
         },

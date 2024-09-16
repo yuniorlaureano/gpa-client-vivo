@@ -11,6 +11,7 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
+import { ErrorService } from '../../core/service/error.service';
 
 @Component({
   selector: 'gpa-category',
@@ -41,7 +42,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private errorService: ErrorService
   ) {}
 
   ngOnDestroy(): void {
@@ -105,8 +107,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
           processError(
             error.error || error,
             'Error modificando categoría'
-          ).forEach((error) => {
-            this.toastService.showError(error);
+          ).forEach((err) => {
+            this.errorService.addGeneralError(err);
           });
         },
       });
@@ -128,7 +130,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
           this.spinner.hide('fullscreen');
           processError(error.error || error, 'Error creando categoría').forEach(
             (error) => {
-              this.toastService.showError(error);
+              this.errorService.addGeneralError(error);
             }
           );
         },
@@ -182,7 +184,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
             error.error || error,
             'Error cargando categoría'
           ).forEach((err) => {
-            this.toastService.showError(err);
+            this.errorService.addGeneralError(err);
           });
         },
       });
