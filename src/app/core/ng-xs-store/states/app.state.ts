@@ -10,6 +10,7 @@ import {
   SetCurrentSubMenu,
   SetProfiles,
   RefreshCredentials,
+  MapLoaded,
 } from '../actions/app.actions';
 import { PermissionType } from '../../models/permission.type';
 import { Injectable } from '@angular/core';
@@ -28,6 +29,7 @@ export interface AppStateModel {
   blobProvider?: BlobStorageConfigurationModel;
   menu: string;
   submenu: string;
+  mapLoaded: boolean;
 }
 
 const ZOO_STATE_TOKEN = new StateToken<AppStateModel>('app');
@@ -42,6 +44,7 @@ const ZOO_STATE_TOKEN = new StateToken<AppStateModel>('app');
     blobProvider: {} as BlobStorageConfigurationModel,
     menu: '',
     submenu: '',
+    mapLoaded: false,
   },
 })
 @Injectable()
@@ -59,6 +62,11 @@ export class AppState {
   @Selector()
   static getProfiles(state: AppStateModel): ProfileModel[] {
     return state.profiles;
+  }
+
+  @Selector()
+  static getMapLoaded(state: AppStateModel): boolean {
+    return state.mapLoaded;
   }
 
   @Action(AddError)
@@ -176,6 +184,14 @@ export class AppState {
   ) {
     ctx.setState({
       ...ctx.getState(),
+    });
+  }
+
+  @Action(MapLoaded)
+  setMapLoaded(ctx: StateContext<AppStateModel>) {
+    ctx.setState({
+      ...ctx.getState(),
+      mapLoaded: true,
     });
   }
 }

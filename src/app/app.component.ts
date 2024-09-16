@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import {
+  MapLoaded,
   SetCurrentMenu,
   SetCurrentSubMenu,
 } from './core/ng-xs-store/actions/app.actions';
@@ -12,7 +13,11 @@ import {
 export class AppComponent implements OnInit {
   title = 'gpa-client';
 
-  constructor(private store: Store) {}
+  constructor(private store: Store) {
+    (window as any)['initMap'] = () => {
+      store.dispatch(new MapLoaded());
+    };
+  }
 
   ngOnInit(): void {
     const menu = sessionStorage.getItem('menu');

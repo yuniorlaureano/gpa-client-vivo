@@ -1,10 +1,10 @@
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
   NgZone,
   OnDestroy,
-  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -12,12 +12,14 @@ import { Subscription } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GoogleMap } from '@angular/google-maps';
 import { LocationModel } from '../../models/location.model';
+import { Store } from '@ngxs/store';
+import { AppState } from '../../ng-xs-store/states/app.state';
 
 @Component({
   selector: 'gpa-dashboard-client-map',
   templateUrl: './dashboard-client-map.component.html',
 })
-export class DashboardClientMapComponent implements OnInit, OnDestroy {
+export class DashboardClientMapComponent implements OnDestroy, AfterViewInit {
   subscriptions$: Subscription[] = [];
   center: google.maps.LatLngLiteral = {
     lat: 18.931924080755334,
@@ -32,6 +34,8 @@ export class DashboardClientMapComponent implements OnInit, OnDestroy {
   @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
   @Input() locations: google.maps.LatLng[] = [];
   @Output() onSearchClient = new EventEmitter<void>();
+  @Input() searchId: string = '';
+  @Input() mapId: string = '';
   @Input() clientMarkers: {
     [index: string]: {
       name: string;
@@ -43,8 +47,21 @@ export class DashboardClientMapComponent implements OnInit, OnDestroy {
     url: 'assets/images/botellon-icon.png',
     scaledSize: new google.maps.Size(60, 60),
   };
+  mapLoaded$ = this.store.select(AppState.getMapLoaded);
 
-  constructor(private spinner: NgxSpinnerService, private ngZone: NgZone) {}
+  constructor(
+    private spinner: NgxSpinnerService,
+    private ngZone: NgZone,
+    private store: Store
+  ) {}
+  ngAfterViewInit(): void {
+    this.mapLoaded$.subscribe((mapLoaded) => {
+      if (mapLoaded) {
+        this.initializePlaceSearch();
+        this.initializePlacesService();
+      }
+    });
+  }
 
   clientsAsArray() {
     let clients: {
@@ -69,11 +86,6 @@ export class DashboardClientMapComponent implements OnInit, OnDestroy {
     return clients;
   }
 
-  ngOnInit(): void {
-    this.initializePlaceSearch();
-    this.initializePlacesService();
-  }
-
   ngOnDestroy(): void {
     this.subscriptions$.forEach((s) => s.unsubscribe());
     if (this.placeChangedListener) {
@@ -88,7 +100,6 @@ export class DashboardClientMapComponent implements OnInit, OnDestroy {
       this.center = event.latLng.toJSON();
       this.getPlaceDetails(event.latLng, (placeName, formattedAddress) => {
         this.ngZone.run(() => {
-          console.log('Map clicked', loc);
           this.spinner.hide('map-google-spinner');
         });
       });
@@ -98,7 +109,7 @@ export class DashboardClientMapComponent implements OnInit, OnDestroy {
   }
 
   initializePlaceSearch() {
-    const input = document.getElementById('place-search') as HTMLInputElement;
+    const input = document.getElementById(this.searchId) as HTMLInputElement;
     if (input) {
       const autocomplete = new google.maps.places.Autocomplete(input);
       this.placeChangedListener = autocomplete.addListener(
@@ -118,7 +129,6 @@ export class DashboardClientMapComponent implements OnInit, OnDestroy {
                 placeName: place.name ?? null,
                 formattedAddress: place.formatted_address ?? null,
               };
-              console.log('Place changed', selected);
             });
           }
         }

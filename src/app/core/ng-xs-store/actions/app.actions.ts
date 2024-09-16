@@ -51,3 +51,8 @@ export class RefreshCredentials {
   static readonly type = '[App] RefreshCredentials';
   constructor() {}
 }
+
+export class MapLoaded {
+  static readonly type = '[App] MapLoaded';
+  constructor() {}
+}

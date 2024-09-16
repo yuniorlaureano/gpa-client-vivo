@@ -17,7 +17,7 @@
     </div>
     <div class="search-holder col-12 col-sm-12 mb-2">
       <input
-        id="place-search"
+        [id]="searchId"
         type="text"
         class="form-control"
         placeholder="Buscar lugares"
@@ -29,7 +29,7 @@
     height="600px"
     [center]="center"
     [zoom]="zoom"
-    mapId="map-google"
+    [mapId]="mapId"
     (mapClick)="mapClick($event)"
   >
     <map-marker

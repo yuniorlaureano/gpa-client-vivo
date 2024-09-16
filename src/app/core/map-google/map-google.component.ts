@@ -1,10 +1,10 @@
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
   NgZone,
   OnDestroy,
-  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -13,13 +13,15 @@ import { LocationModel } from '../models/location.model';
 import { LocationWithNameModel } from '../models/location-with-name.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GoogleMap } from '@angular/google-maps';
+import { Store } from '@ngxs/store';
+import { AppState } from '../ng-xs-store/states/app.state';
 
 @Component({
   selector: 'gpa-map-google',
   templateUrl: './map-google.component.html',
   styleUrl: './map-google.component.css',
 })
-export class MapGoogleComponent implements OnInit, OnDestroy {
+export class MapGoogleComponent implements OnDestroy, AfterViewInit {
   @Input() visible: boolean = false;
   @Output() onLocationChange = new EventEmitter<LocationWithNameModel>();
   @Output() onClose = new EventEmitter();
@@ -36,16 +38,27 @@ export class MapGoogleComponent implements OnInit, OnDestroy {
   placesService!: google.maps.places.PlacesService;
   @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
   @Input() locations: { lat: number; lng: number; name: string }[] = [];
+  @Input() searchId: string = '';
+  @Input() mapId: string = '';
   markerIcon1: google.maps.Icon = {
     url: 'assets/images/botellon-icon.png',
     scaledSize: new google.maps.Size(60, 60),
   };
+  mapLoaded$ = this.store.select(AppState.getMapLoaded);
 
-  constructor(private spinner: NgxSpinnerService, private ngZone: NgZone) {}
+  constructor(
+    private spinner: NgxSpinnerService,
+    private ngZone: NgZone,
+    private store: Store
+  ) {}
 
-  ngOnInit(): void {
-    this.initializePlaceSearch();
-    this.initializePlacesService();
+  ngAfterViewInit(): void {
+    this.mapLoaded$.subscribe((mapLoaded) => {
+      if (mapLoaded) {
+        this.initializePlaceSearch();
+        this.initializePlacesService();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -76,7 +89,7 @@ export class MapGoogleComponent implements OnInit, OnDestroy {
   }
 
   initializePlaceSearch() {
-    const input = document.getElementById('place-search') as HTMLInputElement;
+    const input = document.getElementById(this.searchId) as HTMLInputElement;
     if (input) {
       const autocomplete = new google.maps.places.Autocomplete(input);
       this.placeChangedListener = autocomplete.addListener(

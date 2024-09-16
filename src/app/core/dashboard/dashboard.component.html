@@ -193,6 +193,8 @@
         <gpa-dashboard-client-map
           (onSearchClient)="showClientCatalog()"
           [clientMarkers]="selectedClientesData"
+          searchId="dasboard-client-map-search"
+          mapId="dasboard-client-map"
         />
         <gpa-client-catalog
           [(visible)]="isClientCatalogVisible"
