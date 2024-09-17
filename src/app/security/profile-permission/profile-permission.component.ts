@@ -21,6 +21,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
+import { PermissionTranslate } from '../../core/models/profile.constants';
 
 @Component({
   selector: 'gpa-profile-permission',
@@ -35,6 +36,7 @@ export class ProfilePermissionComponent
   profileUI: any = null;
   @ViewChild('profilecontainer') profilecontainer!: ElementRef;
   masterProfile$!: Observable<MasterProfileModel[]>;
+  permissionTranslate = PermissionTranslate;
 
   //subscriptions
   subscriptions$: Subscription[] = [];

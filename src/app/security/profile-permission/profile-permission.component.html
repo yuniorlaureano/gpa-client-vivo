@@ -34,15 +34,15 @@
         <form class="row">
           <ul #profilecontainer>
             <li *ngFor="let app of masterProfile$ | async">
-              <h3>{{ app.app }}</h3>
+              <h3>{{ permissionTranslate[app.app] }}</h3>
               <ol style="margin-left: 20px">
                 <li *ngFor="let md of app.modules">
-                  <h4>{{ md.id }}</h4>
+                  <h4>{{ permissionTranslate[md.id] }}</h4>
                   <ul
                     *ngFor="let cp of md.components"
                     style="margin-left: 30px"
                   >
-                    <h5>{{ cp.id }}</h5>
+                    <h5>{{ permissionTranslate[cp.id] }}</h5>
                     <ul>
                       <li *ngFor="let pm of cp.permissions">
                         <div class="form-check">
@@ -58,7 +58,7 @@
                             [for]="
                               app.app + '-' + md.id + '-' + cp.id + '-' + pm
                             "
-                            >{{ pm }}</label
+                            >{{ permissionTranslate[pm] }}</label
                           >
                         </div>
                       </li>

@@ -24,6 +24,7 @@ export class Permission {
   public static StockCycleReport = 'stock-cycle-report';
   public static TransactionReport = 'transaction-report';
   public static SaleReport = 'sale-report';
+  public static Send = 'send';
 }
 
 export class Apps {
@@ -60,3 +61,58 @@ export class Components {
   public static Dashboard = 'dashboard';
   public static Report = 'report';
 }
+
+export const PermissionTranslate = {
+  [Permission.Create]: 'Crear',
+  [Permission.Update]: 'Actualizar',
+  [Permission.Delete]: 'Eliminar',
+  [Permission.Read]: 'Leer',
+  [Permission.ReadProducts]: 'Leer productos',
+  [Permission.ReadExistence]: 'Leer existencia',
+  [Permission.RegisterInput]: 'Agregar entrada',
+  [Permission.RegisterOutput]: 'Agregar salida',
+  [Permission.UpdateInput]: 'Actualizar entrada',
+  [Permission.UpdateOutput]: 'Actualizar salida',
+  [Permission.Open]: 'Abrir',
+  [Permission.Close]: 'Cerrar',
+  [Permission.Cancel]: 'Cancelar',
+  [Permission.AssignProfile]: 'Asignar perfil',
+  [Permission.UnAssignProfile]: 'Desasignar perfil',
+  [Permission.UpdateUserProfile]: 'Actualizar perfil de usuario',
+  [Permission.ReadTransactions]: 'Leer transacciones',
+  [Permission.Return]: 'Devolver',
+  [Permission.Upload]: 'Subir archivo',
+  [Permission.Download]: 'Descargar',
+  [Permission.Print]: 'Imprimir',
+  [Permission.ExistenceReport]: 'Reporte de existencia',
+  [Permission.StockCycleReport]: 'Reporte de ciclos de inventario',
+  [Permission.TransactionReport]: 'Reporte de transacciones',
+  [Permission.SaleReport]: 'Reporte de ventas',
+  [Permission.Send]: 'Enviar mensajes',
+  [Apps.GPA]: 'Sistema GPA',
+  [Modules.Inventory]: 'Inventario',
+  [Modules.Invoice]: 'Facturación',
+  [Modules.Security]: 'Seguridad',
+  [Modules.Reporting]: 'Reportes',
+  [Modules.General]: 'General',
+  [Components.Addon]: 'Agregado',
+  [Components.Category]: 'Categoria',
+  [Components.ProductLocation]: 'Ubicación de producto',
+  [Components.Product]: 'Producto',
+  [Components.Provider]: 'Proveedor',
+  [Components.Reason]: 'Razón',
+  [Components.StockCycle]: 'Ciclo de inventario',
+  [Components.Stock]: 'Inventario',
+  [Components.Client]: 'Cliente',
+  [Components.Invoicing]: 'Facturación',
+  [Components.ReceivableAccount]: 'Cuentas por cobrar',
+  [Components.User]: 'Usuario',
+  [Components.Profile]: 'Perfil',
+  [Components.Auth]: 'Authenticación',
+  [Components.Email]: 'Correo',
+  [Components.Blob]: 'Blob',
+  [Components.PrintInformation]: 'Información de impresión',
+  [Components.Unit]: 'unit',
+  [Components.Dashboard]: 'Dashboard',
+  [Components.Report]: 'Reporte',
+};
