@@ -119,6 +119,7 @@
   <h3 class="card-title" caption></h3>
   <tr header>
     <th>Estado</th>
+    <th>Código</th>
     <th>Tipo</th>
     <th>Fecha</th>
     <th>Nota</th>
@@ -135,6 +136,7 @@
       >
         {{ getStatusDescription(invoice.status) }}
       </td>
+      <td>{{ invoice.code }}</td>
       <td>{{ invoice.type == 1 ? "Al contado" : "A crédito" }}</td>
       <td>{{ invoice.date | date }}</td>
       <td>{{ invoice.note }}</td>

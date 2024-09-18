@@ -28,6 +28,7 @@
     <th>Email</th>
     <th>Teléfono</th>
     <th>Firmanten</th>
+    <th>Por defecto</th>
     <!-- <th></th> -->
   </tr>
   <tbody body>
@@ -36,6 +37,7 @@
       <td>{{ information.companyEmail }}</td>
       <td>{{ information.companyPhone }}</td>
       <td>{{ information.signer }}</td>
+      <td>{{ information.current ? "Sí" : "No" }}</td>
       <td style="width: 100px">
         <button
           class="btn btn-outline-danger btn-icon"

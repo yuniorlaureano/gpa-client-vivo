@@ -54,7 +54,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   //form
   productForm = this.fb.group({
     id: [''],
-    code: ['', Validators.required],
+    code: [''],
     name: ['', Validators.required],
     price: [0.0, [Validators.required]],
     description: ['', Validators.required],
@@ -87,6 +87,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.productForm.get('code')?.disable();
     this.handlePermissionsLoad(() => {
       this.loadProduct();
       this.loadUnits();

@@ -344,6 +344,7 @@ export class SaleComponent implements OnInit, OnDestroy {
       storeId: null,
       client: null,
       date: '',
+      code: '',
       type: this.saleType,
       payment: this.getPayment(),
       paymentStatus: PaymentStatusEnum.Paid,

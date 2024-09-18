@@ -9,6 +9,7 @@ export interface InvoiceWithReceivableAccountModel {
   saleType: SaleType;
   date: string;
   invoiceNote: string | null;
+  invoiceCode: string | null;
   paymentStatus: PaymentStatusEnum;
   payment: number;
   clientId: string;

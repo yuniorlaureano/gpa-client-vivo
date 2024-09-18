@@ -8,6 +8,7 @@ export interface InvoiceModel {
   id: string | null;
   status: InvoiceStatusEnum;
   type: SaleType;
+  code: string;
   date: string;
   note: string | null;
   payment: number;

@@ -44,6 +44,15 @@
               {{ invoice?.saleType == 0 ? "A crédito" : "Al contado" }}
             </li>
             <li>
+              <span class="client-profile">Tipo:</span>
+              <a
+                style="color: rgba(13, 110, 253)"
+                [routerLink]="'/invoice/sale/edit/' + invoice?.invoiceId"
+              >
+                {{ invoice?.invoiceCode }}
+              </a>
+            </li>
+            <li>
               <span class="client-profile">Fecha:</span>
               {{ invoice?.date | date }}
             </li>
