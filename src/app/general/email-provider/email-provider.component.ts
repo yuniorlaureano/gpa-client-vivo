@@ -127,7 +127,7 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
               this.clearForm();
               this.toastService.showSucess('Proveedor de email modificado');
               this.spinner.hide('fullscreen');
-              this.router.navigate(['/general/emails']);
+              this.router.navigate(['/general/emails/list']);
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
@@ -150,6 +150,7 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
               this.clearForm();
               this.toastService.showSucess('Proveedor de email creado');
               this.spinner.hide('fullscreen');
+              this.router.navigate(['/general/emails/list']);
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
@@ -214,7 +215,7 @@ export class EmailProviderComponent implements OnInit, OnDestroy {
 
   handleCancel() {
     this.clearForm();
-    this.router.navigate(['/general/emails']);
+    this.router.navigate(['/general/emails/list']);
   }
 
   clearForm() {

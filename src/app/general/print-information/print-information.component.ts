@@ -228,26 +228,33 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
   uploadFIleOnUpdate() {
     if (this.isEdit && this.printInformationForm.get('id')?.value) {
       this.spinner.show('fullscreen');
-      this.uploadFile(this.printInformationForm.get('id')?.value!, () => {
+      this.uploadFile(this.printInformationForm.get('id')?.value!, (sucess) => {
         this.clearForm();
-        this.toastService.showSucess('Foto actualizada');
         this.spinner.hide('fullscreen');
         this.triggerLoad$.next(true);
+        if (sucess) {
+          this.toastService.showSucess('Foto actualizada');
+        }
       });
     }
   }
 
-  uploadFile(productId: string, func: () => void) {
+  uploadFile(productId: string, func: (sucess: boolean) => void) {
     if (this.photo) {
       const formData = new FormData();
       formData.append('PrintInformationId', productId);
       formData.append('Photo', this.photo);
       const sub = this.printInformationService.uploadFile(formData).subscribe({
         next: () => {
-          func();
+          func(true);
         },
-        error: () => {
-          func();
+        error: (error) => {
+          processError(error.error || error, 'Error subieno la foto').forEach(
+            (err) => {
+              this.errorService.addGeneralError(err);
+            }
+          );
+          func(false);
         },
       });
       this.subscriptions$.push(sub);

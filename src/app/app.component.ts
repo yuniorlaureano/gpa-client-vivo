@@ -5,6 +5,8 @@ import {
   SetCurrentMenu,
   SetCurrentSubMenu,
 } from './core/ng-xs-store/actions/app.actions';
+import { AppState } from './core/ng-xs-store/states/app.state';
+import { ToastService } from './core/service/toast.service';
 @Component({
   selector: 'gpa-root',
   templateUrl: './app.component.html',
@@ -12,8 +14,9 @@ import {
 })
 export class AppComponent implements OnInit {
   title = 'gpa-client';
+  mapLoaded$ = this.store.select(AppState.getErrors);
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private toastService: ToastService) {
     (window as any)['initMap'] = () => {
       store.dispatch(new MapLoaded());
     };
@@ -28,5 +31,13 @@ export class AppComponent implements OnInit {
     if (subMenu) {
       this.store.dispatch(new SetCurrentSubMenu(subMenu));
     }
+
+    this.mapLoaded$.subscribe((errors) => {
+      if (errors.length) {
+        errors.forEach((error) => {
+          this.toastService.showError(error);
+        });
+      }
+    });
   }
 }

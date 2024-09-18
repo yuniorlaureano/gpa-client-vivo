@@ -82,6 +82,7 @@ import { DashboardClientMapComponent } from './dashboard/dashboard-client-map/da
     NoPermissionAlertComponent,
     ProviderCatalogComponent,
     MapGoogleComponent,
+    NgbToastModule,
   ],
 })
 export class CoreModule {}

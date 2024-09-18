@@ -128,7 +128,7 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
               this.clearForm();
               this.toastService.showSucess('Proveedor de archivo modificado');
               this.spinner.hide('fullscreen');
-              this.router.navigate(['/general/blobs']);
+              this.router.navigate(['/general/blobs/list']);
             },
             error: (error) => {
               this.spinner.hide('fullscreen');
@@ -215,7 +215,7 @@ export class BlobProviderComponent implements OnInit, OnDestroy {
 
   handleCancel() {
     this.clearForm();
-    this.router.navigate(['/general/blobs']);
+    this.router.navigate(['/general/blobs/list']);
   }
 
   clearForm() {
