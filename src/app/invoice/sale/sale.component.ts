@@ -249,11 +249,7 @@ export class SaleComponent implements OnInit, OnDestroy {
       productId: [product.productId, Validators.required],
       quantity: [
         1,
-        [
-          Validators.required,
-          Validators.min(1),
-          // Validators.max(product.stock)
-        ],
+        [Validators.required, Validators.min(1), Validators.max(2147483647)],
       ],
     });
   }
@@ -646,7 +642,7 @@ export class SaleComponent implements OnInit, OnDestroy {
               [
                 Validators.required,
                 Validators.min(1),
-                // Validators.max(product.stockProduct.stock),
+                Validators.max(2147483647),
               ],
             ],
           })

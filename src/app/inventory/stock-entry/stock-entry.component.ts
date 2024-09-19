@@ -389,7 +389,10 @@ export class StockEntryComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       productId: [product.id, Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]],
+      quantity: [
+        1,
+        [Validators.required, Validators.min(1), Validators.max(2147483647)],
+      ],
     });
   }
 
