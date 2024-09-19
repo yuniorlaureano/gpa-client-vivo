@@ -201,6 +201,7 @@
           [clientMarkers]="selectedClientesData"
           searchId="dasboard-client-map-search"
           mapId="dasboard-client-map"
+          *ngIf="mapLoaded"
         />
         <gpa-client-catalog
           [(visible)]="isClientCatalogVisible"

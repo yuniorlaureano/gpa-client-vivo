@@ -14,6 +14,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { LocationWithNameModel } from '../../core/models/location-with-name.model';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
+import { AppState } from '../../core/ng-xs-store/states/app.state';
 
 @Component({
   selector: 'gpa-client',
@@ -25,6 +26,8 @@ export class ClientComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
   mapIsVisible: boolean = false;
   locations: { lat: number; lng: number; name: string }[] = [];
+  mapLoaded$ = this.store.select(AppState.getMapLoaded);
+  mapLoaded: boolean = false;
 
   //subscriptions
   subscriptions$: Subscription[] = [];
@@ -56,6 +59,9 @@ export class ClientComponent implements OnInit, OnDestroy {
     });
     this.clientForm.get('latitude')?.disable();
     this.clientForm.get('longitude')?.disable();
+    this.mapLoaded$.subscribe((mapLoaded) => {
+      this.mapLoaded = mapLoaded;
+    });
   }
 
   clientForm = this.fb.group({

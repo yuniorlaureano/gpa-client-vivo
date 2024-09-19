@@ -13,6 +13,7 @@ import { processError } from '../../core/utils/error.utils';
 import { ProviderModel } from '../models/provider.model';
 import { ProviderService } from '../service/provider.service';
 import { ErrorService } from '../../core/service/error.service';
+import { AppState } from '../../core/ng-xs-store/states/app.state';
 
 @Component({
   selector: 'gpa-provider',
@@ -24,7 +25,8 @@ export class ProviderComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
   mapIsVisible: boolean = false;
   locations: { lat: number; lng: number; name: string }[] = [];
-
+  mapLoaded$ = this.store.select(AppState.getMapLoaded);
+  mapLoaded: boolean = false;
   //subscriptions
   subscriptions$: Subscription[] = [];
 
@@ -55,6 +57,9 @@ export class ProviderComponent implements OnInit, OnDestroy {
     });
     this.providerForm.get('latitude')?.disable();
     this.providerForm.get('longitude')?.disable();
+    this.mapLoaded$.subscribe((mapLoaded) => {
+      this.mapLoaded = mapLoaded;
+    });
   }
 
   providerForm = this.fb.group({

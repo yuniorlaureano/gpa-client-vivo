@@ -18,6 +18,7 @@ import * as ProfileUtils from '../../core/utils/profile.utils';
 import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { ErrorService } from '../service/error.service';
+import { AppState } from '../ng-xs-store/states/app.state';
 
 export type InputVsOutputVsExistenceType = {
   input: number;
@@ -71,7 +72,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       longitude: number | null;
     };
   } = {};
-
+  mapLoaded$ = this.store.select(AppState.getMapLoaded);
+  mapLoaded: boolean = false;
   subscriptions$: Subscription[] = [];
   //permissions
   canRead: boolean = false;
@@ -95,6 +97,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.loadClienteCount();
       this.loadRenueCount();
       this.loadInputVsOutputVsExistence();
+    });
+
+    this.mapLoaded$.subscribe((mapLoaded) => {
+      this.mapLoaded = mapLoaded;
     });
   }
 
