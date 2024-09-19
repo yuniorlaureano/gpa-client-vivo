@@ -1,0 +1,33 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver la información
+</gpa-no-permission-alert>
+<!-- <div class="row">
+  
+</div> -->
+<gpa-data-table>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Nombre</th>
+    <th>Ancho</th>
+    <th>Alto</th>
+    <!-- <th></th> -->
+  </tr>
+  <tbody body>
+    <tr *ngFor="let information of data">
+      <td>{{ getTemplateDescription(information.code) }}</td>
+      <td>{{ information.width }}</td>
+      <td>{{ information.height }}</td>
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(information)"
+          [disabled]="!canEdit"
+          placement="top"
+          ngbTooltip="Editar"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

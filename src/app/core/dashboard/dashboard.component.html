@@ -13,7 +13,8 @@
           <a
             routerLink="/inventory/product/list"
             routerLinkActive="router-link-active"
-            >Productos terminado</a
+            class="gpa-link"
+            ><i class="fa-solid fa-link"></i> Productos terminado</a
           >
         </h5>
         <h3 class="text-blue">{{ finishedProductCount }}</h3>
@@ -31,7 +32,8 @@
           <a
             routerLink="/inventory/product/list"
             routerLinkActive="router-link-active"
-            >Materia prima</a
+            class="gpa-link"
+            ><i class="fa-solid fa-link"></i> Materia prima</a
           >
         </h5>
         <h3 class="text-blue">{{ rawProductCount }}</h3>
@@ -55,7 +57,9 @@
           <a
             routerLink="/invoice/client/list"
             routerLinkActive="router-link-active"
-            >Clientes</a
+            class="gpa-link"
+          >
+            <i class="fa-solid fa-link"></i> Clientes</a
           >
         </h5>
         <h3 class="text-green">{{ clientsCount }}</h3>
@@ -80,7 +84,8 @@
           <a
             routerLink="/invoice/sale/list"
             routerLinkActive="router-link-active"
-            >Ventas</a
+            class="gpa-link"
+            ><i class="fa-solid fa-link"></i> Ventas</a
           >
         </h5>
         <h3 class="text-blue">{{ revenues | currency }}</h3>
@@ -158,7 +163,8 @@
           <a
             routerLink="/inventory/existence/list"
             routerLinkActive="router-link-active"
-            >Entrada vs Salida vs Existencia</a
+            class="gpa-link"
+            ><i class="fa-solid fa-link"></i> Entrada vs Salida vs Existencia</a
           >
         </div>
       </div>

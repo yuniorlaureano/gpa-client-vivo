@@ -297,49 +297,52 @@
               </table>
             </div>
 
-            <div
-              class="col-sm-12"
-              style="display: flex; flex-direction: column; align-items: end"
-            >
-              <p>
-                Total a pagar bruto:
-                {{ productCatalogAggregate.grossTotalPrice | currency }}
-              </p>
-              <p>____________________________</p>
-              <p
-                [class.debit]="concept.isDiscount"
-                [class.credit]="!concept.isDiscount"
-                *ngFor="let concept of concepts"
+            <div class="payment-container">
+              <div
+                style="border-right: solid 1px lightgray; padding-right: 5px"
               >
-                {{ concept.concept }}: {{ concept.total | currency }}
-              </p>
-              <p>____________________________</p>
-              <p>
-                Total a pagar neto:
-                {{ productCatalogAggregate.netTotalPrice | currency }}
-              </p>
-              <input
-                type="number"
-                name="payment"
-                [value]="paymentValue.toFixed(2)"
-                (input)="handlePayment($event)"
-                class="form-control"
-                style="max-width: 200px; text-align: right"
-                [disabled]="disableForm"
-              />
-              <p
-                style="color: red"
-                *ngIf="productCatalogAggregate.netTotalPrice - payment >= 0"
-              >
-                Adeuda:
-                {{
-                  (productCatalogAggregate.netTotalPrice - payment).toFixed(2)
-                    | currency
-                }}
-              </p>
-              <p style="color: green">
-                Devuelta: {{ productCatalogAggregate.return | currency }}
-              </p>
+                <p>
+                  Total a pagar bruto:
+                  {{ productCatalogAggregate.grossTotalPrice | currency }}
+                </p>
+                <p>____________________________</p>
+                <p
+                  [class.debit]="concept.isDiscount"
+                  [class.credit]="!concept.isDiscount"
+                  *ngFor="let concept of concepts"
+                >
+                  {{ concept.concept }}: {{ concept.total | currency }}
+                </p>
+                <p>____________________________</p>
+              </div>
+              <div>
+                <p>
+                  Total a pagar neto:
+                  {{ productCatalogAggregate.netTotalPrice | currency }}
+                </p>
+                <input
+                  type="number"
+                  name="payment"
+                  [value]="paymentValue.toFixed(2)"
+                  (input)="handlePayment($event)"
+                  class="form-control"
+                  style="max-width: 200px; text-align: right"
+                  [disabled]="disableForm"
+                />
+                <p
+                  style="color: red"
+                  *ngIf="productCatalogAggregate.netTotalPrice - payment >= 0"
+                >
+                  Adeuda:
+                  {{
+                    (productCatalogAggregate.netTotalPrice - payment).toFixed(2)
+                      | currency
+                  }}
+                </p>
+                <p style="color: green">
+                  Devuelta: {{ productCatalogAggregate.return | currency }}
+                </p>
+              </div>
             </div>
           </div>
         </form>

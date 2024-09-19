@@ -1,0 +1,125 @@
+<div class="right-button">
+  <a
+    routerLink="/general/report-template/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Listado de templates
+  </a>
+  <button
+    *ngIf="isEdit"
+    type="button"
+    class="btn btn-outline-warning btn-rounded"
+    style="margin-right: 5px"
+    (click)="onSubmit()"
+    [disabled]="!canEdit"
+  >
+    <i class="bi bi-pencil-square"></i>
+    Actualizar
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-dark btn-rounded"
+    (click)="handleCancel()"
+    placement="left"
+    ngbTooltip="Limpiar campos"
+  >
+    <i class="bi bi-arrow-clockwise"></i>
+  </button>
+</div>
+<div style="margin-top: 50px" class="card-content-container">
+  <div class="col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header"></div>
+
+      <!--  -->
+      <div class="card-body">
+        <!-- Comienza row de sergundo nivel! -->
+        <gpa-no-permission-alert [visible]="!canCreate">
+          No tiene permisos para crear productos
+        </gpa-no-permission-alert>
+        <gpa-no-permission-alert [visible]="isEdit && !canEdit">
+          No tiene permisos para modificar productos
+        </gpa-no-permission-alert>
+        <div class="info-container">
+          <!-- Primer grupo del formlario -->
+          <div class="card-border">
+            <div class="card-border-title mb-1">Información General</div>
+            <div class="card-border-body">
+              <form [formGroup]="reportTemplateForm" class="row">
+                <!--  -->
+                <div class="row">
+                  <!--  -->
+                  <div class="col-sm-3 col-12">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Nombre<span class="text-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        [value]="
+                          getTemplateDescription(
+                            reportTemplateForm.get('code')?.value ?? ''
+                          )
+                        "
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-3 col-12" *ngIf="showSizeControls()">
+                    <div class="mb-3">
+                      <label class="form-label">Ancho en milimetro</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        formControlName="width"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-3 col-12" *ngIf="showSizeControls()">
+                    <div class="mb-3">
+                      <label class="form-label">Alto en milimetro</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        formControlName="height"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-12">
+                    <div class="mb-2">
+                      <label class="form-label"
+                        >Plantilla<span class="text-red">*</span></label
+                      >
+                      <textarea
+                        rows="20"
+                        class="form-control"
+                        formControlName="template"
+                      ></textarea>
+                      <gpa-validator-message
+                        [control]="reportTemplateForm.get('template')"
+                        [touched]="reportTemplateForm.touched"
+                        validation="required"
+                        message="Campo requerido"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <h4>Vista previa de plantilla</h4>
+                <iframe
+                  [srcdoc]="getTemplate()"
+                  class="resizable-container"
+                  [style.width]="computeWidth()"
+                  [style.height]="computeHeight()"
+                ></iframe>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

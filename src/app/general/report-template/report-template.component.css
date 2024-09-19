@@ -1,0 +1,9 @@
+.resizable-container {
+  width: 100%;
+  height: 400px;
+  resize: both;
+  overflow: auto;
+  border: 1px solid #ccc;
+  padding: 0;
+  margin: 0;
+}

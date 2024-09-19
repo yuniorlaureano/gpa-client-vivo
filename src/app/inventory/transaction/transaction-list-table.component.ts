@@ -13,6 +13,7 @@ import { FilterModel } from '../../core/models/filter.model';
 import {
   BehaviorSubject,
   debounceTime,
+  Observable,
   Subject,
   Subscription,
   switchMap,
@@ -27,11 +28,12 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { FormBuilder } from '@angular/forms';
-import { ReasonEnum } from '../../core/models/reason.enum';
 import { processError } from '../../core/utils/error.utils';
 import { downloadFile } from '../../core/utils/file.utils';
 import { ReportService } from '../../report/service/report.service';
 import { ErrorService } from '../../core/service/error.service';
+import { ReasonModel } from '../models/reason.model';
+import { AppState } from '../../core/ng-xs-store/states/app.state';
 
 @Component({
   selector: 'gpa-transaction-list-table',
@@ -62,7 +64,7 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
 
   //subscriptions
   subscriptions$: Subscription[] = [];
-  reasons: any[] = [];
+  reasons$!: Observable<ReasonModel[]>;
   //permissions
   canReadTransactions: boolean = false;
   searchTerms = new Subject<string>();
@@ -91,7 +93,7 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad(() => {
       this.loadTransactions();
-      this.reasons = this.getReasons();
+      this.loadReasons();
     });
     this.initSearch();
   }
@@ -196,15 +198,8 @@ export class TransactionListTableComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
-  getReasons() {
-    let reasons = [];
-    var keys = Object.keys(ReasonEnum);
-    for (var k of keys) {
-      if (!isNaN(Number(k))) {
-        reasons.push({ value: k, text: ReasonEnum[parseInt(k)] });
-      }
-    }
-    return reasons;
+  loadReasons() {
+    this.reasons$ = this.store.select(AppState.getReasons);
   }
 
   resetSearchFilter() {

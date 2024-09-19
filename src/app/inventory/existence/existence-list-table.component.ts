@@ -164,13 +164,13 @@ export class ExistenceListTableComponent implements OnInit, OnDestroy {
     this.pageOptionsSubject.next({ ...this.searchOptions, page: page });
   };
 
-  downloadExistenceAsExcel() {
+  downloadExistenceAsPdf() {
     this.spinner.show('fullscreen');
     let searchModel = new FilterModel();
     searchModel.search = this.searchOptions.search;
     const sub = this.reportService.existenceReport(searchModel).subscribe({
       next: (data) => {
-        downloadFile(data, 'reporte_existencias.xlsx');
+        downloadFile(data, 'reporte_existencias.pdf');
         this.spinner.hide('fullscreen');
       },
       error: () => {

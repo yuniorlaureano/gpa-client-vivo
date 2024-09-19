@@ -28,3 +28,14 @@ div.card {
 .credit {
   color: green;
 }
+
+.payment-container {
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+}
+
+.payment-container p,
+input {
+  font-size: 17px !important;
+}

@@ -1,4 +1,5 @@
 import { BlobStorageConfigurationModel } from '../../../general/model/blob-storage-configuration.model';
+import { ReasonModel } from '../../../inventory/models/reason.model';
 import { ProfileModel } from '../../../security/model/profile.model';
 import { PermissionType } from '../../models/permission.type';
 
@@ -55,4 +56,9 @@ export class RefreshCredentials {
 export class MapLoaded {
   static readonly type = '[App] MapLoaded';
   constructor() {}
+}
+
+export class LoadReasons {
+  static readonly type = '[App] LoadReasons';
+  constructor(public reasons: ReasonModel[]) {}
 }

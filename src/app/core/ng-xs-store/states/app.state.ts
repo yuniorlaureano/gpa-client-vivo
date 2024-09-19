@@ -11,6 +11,7 @@ import {
   SetProfiles,
   RefreshCredentials,
   MapLoaded,
+  LoadReasons,
 } from '../actions/app.actions';
 import { PermissionType } from '../../models/permission.type';
 import { Injectable } from '@angular/core';
@@ -20,6 +21,7 @@ import * as ProfileUtils from '../../utils/profile.utils';
 import { ProfileModel } from '../../../security/model/profile.model';
 import { getRequiredPermissions } from './permissions';
 import { BlobStorageConfigurationModel } from '../../../general/model/blob-storage-configuration.model';
+import { ReasonModel } from '../../../inventory/models/reason.model';
 
 export interface AppStateModel {
   errors: string[];
@@ -30,6 +32,7 @@ export interface AppStateModel {
   menu: string;
   submenu: string;
   mapLoaded: boolean;
+  reasons: ReasonModel[];
 }
 
 const ZOO_STATE_TOKEN = new StateToken<AppStateModel>('app');
@@ -45,6 +48,7 @@ const ZOO_STATE_TOKEN = new StateToken<AppStateModel>('app');
     menu: '',
     submenu: '',
     mapLoaded: false,
+    reasons: [],
   },
 })
 @Injectable()
@@ -67,6 +71,11 @@ export class AppState {
   @Selector()
   static getMapLoaded(state: AppStateModel): boolean {
     return state.mapLoaded;
+  }
+
+  @Selector()
+  static getReasons(state: AppStateModel): ReasonModel[] {
+    return state.reasons;
   }
 
   @Action(AddError)
@@ -192,6 +201,16 @@ export class AppState {
     ctx.setState({
       ...ctx.getState(),
       mapLoaded: true,
+    });
+  }
+
+  @Action(LoadReasons)
+  setReasons(
+    { patchState }: StateContext<AppStateModel>,
+    payload: LoadReasons
+  ) {
+    patchState({
+      reasons: payload.reasons,
     });
   }
 }

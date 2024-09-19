@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map, Observable, of, Subscription, switchMap } from 'rxjs';
 import { StockService } from '../service/stock.service';
 import { ReasonModel } from '../models/reason.model';
-import { ReasonService } from '../service/reason.service';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ReasonEnum } from '../../core/models/reason.enum';
 import { TransactionType } from '../../core/models/transaction-type.enum';
@@ -20,6 +19,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
+import { AppState } from '../../core/ng-xs-store/states/app.state';
 
 @Component({
   selector: 'gpa-stock-output',
@@ -57,7 +57,6 @@ export class StockOutputComponent implements OnInit, OnDestroy {
 
   constructor(
     private stockService: StockService,
-    private reasonService: ReasonService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
@@ -398,11 +397,11 @@ export class StockOutputComponent implements OnInit, OnDestroy {
   }
 
   loadReasons() {
-    this.reasons$ = this.reasonService
-      .getReasons()
+    this.reasons$ = this.store
+      .select(AppState.getReasons)
       .pipe(
         map((data) =>
-          data.data.filter(
+          data.filter(
             (reason) =>
               ![
                 ReasonEnum.Purchase,

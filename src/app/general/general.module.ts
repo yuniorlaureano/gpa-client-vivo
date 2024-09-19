@@ -28,6 +28,9 @@ import { PrintInformationComponent } from './print-information/print-information
 import { UnitComponent } from './unit/unit.component';
 import { UnitListComponent } from './unit-list/unit-list.component';
 import { UnitListTableComponent } from './unit-list/unit-list-table.component';
+import { ReporteTemplateListComponent } from './report-template-list/report-template-list.component';
+import { ReporteTemplateComponent } from './report-template/report-template.component';
+import { ReporteTemplateListTableComponent } from './report-template-list/report-template-list-table.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +52,9 @@ import { UnitListTableComponent } from './unit-list/unit-list-table.component';
     UnitComponent,
     UnitListComponent,
     UnitListTableComponent,
+    ReporteTemplateListComponent,
+    ReporteTemplateComponent,
+    ReporteTemplateListTableComponent,
   ],
   imports: [
     CoreModule,

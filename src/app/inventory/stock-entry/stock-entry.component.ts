@@ -15,7 +15,6 @@ import {
 } from 'rxjs';
 import { StockService } from '../service/stock.service';
 import { ReasonModel } from '../models/reason.model';
-import { ReasonService } from '../service/reason.service';
 import { ProviderModel } from '../models/provider.model';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ReasonEnum } from '../../core/models/reason.enum';
@@ -33,10 +32,10 @@ import * as PermissionConstants from '../../core/models/profile.constants';
 import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
-import { FilterModel } from '../../core/models/filter.model';
 import { StockAttachModel } from '../models/stock-attachment';
 import { downloadFile } from '../../core/utils/file.utils';
 import { ErrorService } from '../../core/service/error.service';
+import { AppState } from '../../core/ng-xs-store/states/app.state';
 
 @Component({
   selector: 'gpa-stock-entry',
@@ -90,7 +89,6 @@ export class StockEntryComponent implements OnInit, OnDestroy {
 
   constructor(
     private stockService: StockService,
-    private reasonService: ReasonService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
@@ -166,13 +164,11 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   }
 
   loadReasons() {
-    const filter = new FilterModel();
-    filter.pageSize = 100;
-    this.reasons$ = this.reasonService
-      .getReasons(filter)
+    this.reasons$ = this.store
+      .select(AppState.getReasons)
       .pipe(
-        map((data) =>
-          data.data.filter(
+        map((reasons) =>
+          reasons.filter(
             (reason) =>
               ![
                 ReasonEnum.Sale,

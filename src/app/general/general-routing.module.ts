@@ -10,6 +10,8 @@ import { PrintInformationComponent } from './print-information/print-information
 import { PrintInformationListComponent } from './print-information-list/print-information-list.component';
 import { UnitComponent } from './unit/unit.component';
 import { UnitListComponent } from './unit-list/unit-list.component';
+import { ReporteTemplateComponent } from './report-template/report-template.component';
+import { ReporteTemplateListComponent } from './report-template-list/report-template-list.component';
 
 const routes: Routes = [
   {
@@ -55,6 +57,11 @@ const routes: Routes = [
         component: UnitListComponent,
       },
       { path: 'unit/:id', component: UnitComponent },
+      {
+        path: 'report-template/list',
+        component: ReporteTemplateListComponent,
+      },
+      { path: 'report-template/:id', component: ReporteTemplateComponent },
     ],
   },
 ];

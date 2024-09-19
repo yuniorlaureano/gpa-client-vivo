@@ -323,6 +323,20 @@
                   unidades</a
                 >
               </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/report-template/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="
+                    handleSubMenuSelected('Lista deTemplates de reportes')
+                  "
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-regular fa-file-code"></i> Lista deTemplates de
+                  reportes</a
+                >
+              </li>
             </ul>
           </div>
         </li>
