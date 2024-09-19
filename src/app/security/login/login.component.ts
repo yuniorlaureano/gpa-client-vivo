@@ -52,7 +52,7 @@ export class LoginComponent implements OnDestroy {
             this.spinner.hide('fullscreen');
             this.router.navigate(['']);
           },
-          error: ({ error }) => {
+          error: (error) => {
             var errors = processError(
               error.error || error,
               'Error authenticando usuario'

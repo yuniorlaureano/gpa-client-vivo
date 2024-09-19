@@ -2,6 +2,9 @@ export function processError(
   error: any,
   defaultError: string = 'Error desconocido'
 ) {
+  if (error?.status == 401 && error?.error == null) {
+    return ['Debe autenticarse'];
+  }
   if (!error) {
     return [defaultError];
   }
@@ -56,7 +59,8 @@ function iterateErrorObject(error: any, errors: string[] = [], cumulative = 0) {
       strErr != null &&
       strErr != undefined &&
       strErr != '0' &&
-      strErr.length > 15
+      strErr.length > 15 &&
+      typeof error === 'string'
     ) {
       errors.push(error);
     }

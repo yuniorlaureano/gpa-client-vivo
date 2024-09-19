@@ -20,7 +20,7 @@ import { ErrorService } from './core/service/error.service';
 })
 export class AppComponent implements OnInit {
   title = 'gpa-client';
-  mapLoaded$ = this.store.select(AppState.getErrors);
+  errorsLoaded$ = this.store.select(AppState.getErrors);
   subscriptions$: Subscription[] = [];
 
   constructor(
@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
   }
 
   mapLoad() {
-    const sub = this.mapLoaded$.subscribe((errors) => {
+    const sub = this.errorsLoaded$.subscribe((errors) => {
       if (errors.length) {
         errors.forEach((error) => {
           this.toastService.showError(error);

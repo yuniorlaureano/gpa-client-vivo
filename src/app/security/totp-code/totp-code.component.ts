@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Store } from '@ngxs/store';
 import { ReplaceMessages } from '../../core/ng-xs-store/actions/auth.actions';
+import { ToastService } from '../../core/service/toast.service';
+import { processError } from '../../core/utils/error.utils';
 
 @Component({
   selector: 'gpa-reset-password',
@@ -24,7 +26,8 @@ export class TOTPCodeComponent implements OnDestroy {
     private authService: AuthService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private toastService: ToastService
   ) {}
 
   ngOnDestroy(): void {
@@ -50,19 +53,17 @@ export class TOTPCodeComponent implements OnDestroy {
             );
             this.router.navigate(['/auth/reset-password']);
           },
-          error: ({ error }) => {
+          error: (error) => {
             this.spinner.hide('fullscreen');
-            let errors = [];
-            if (typeof error === 'string') {
-              errors.push(error);
-            } else {
-              errors = Object.keys(error).map((err) => error[err]);
-            }
-            let concatenatedErrors: string[] = [];
-            for (let err of errors) {
-              concatenatedErrors = concatenatedErrors.concat(err);
-            }
-            this.errors = concatenatedErrors;
+            var errors = processError(
+              error.error || error,
+              'Error enviando código de verificación'
+            );
+            errors.forEach((err) => {
+              this.toastService.showError(err);
+            });
+            this.errors = errors;
+            this.spinner.hide('fullscreen');
           },
         });
     }

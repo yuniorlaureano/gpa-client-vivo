@@ -11,11 +11,10 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ResetPasswordModel } from '../model/reset-password.model';
 import { Store } from '@ngxs/store';
-import {
-  AddMessages,
-  ReplaceMessages,
-} from '../../core/ng-xs-store/actions/auth.actions';
+import { ReplaceMessages } from '../../core/ng-xs-store/actions/auth.actions';
 import { AuthState } from '../../core/ng-xs-store/states/auth.state';
+import { processError } from '../../core/utils/error.utils';
+import { ToastService } from '../../core/service/toast.service';
 
 @Component({
   selector: 'gpa-reset-password',
@@ -45,7 +44,8 @@ export class ResetPasswordComponent implements OnDestroy {
     private authService: AuthService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private store: Store
+    private store: Store,
+    private toastService: ToastService
   ) {}
 
   ngOnDestroy(): void {
@@ -93,19 +93,17 @@ export class ResetPasswordComponent implements OnDestroy {
             );
             this.router.navigate(['/auth/login']);
           },
-          error: ({ error }) => {
+          error: (error) => {
             this.spinner.hide('fullscreen');
-            let errors = [];
-            if (typeof error === 'string') {
-              errors.push(error);
-            } else {
-              errors = Object.keys(error).map((err) => error[err]);
-            }
-            let concatenatedErrors: string[] = [];
-            for (let err of errors) {
-              concatenatedErrors = concatenatedErrors.concat(err);
-            }
-            this.errors = concatenatedErrors;
+            var errors = processError(
+              error.error || error,
+              'Error reestableciendo contraseña'
+            );
+            errors.forEach((err) => {
+              this.toastService.showError(err);
+            });
+            this.errors = errors;
+            this.spinner.hide('fullscreen');
           },
         });
     }
