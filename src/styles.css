@@ -354,3 +354,7 @@ ul li.active a.current-page {
   font-size: 15px !important;
 }
 /*--------------------------menu items*/
+
+.gpa-link {
+  color: rgba(13, 110, 253);
+}
