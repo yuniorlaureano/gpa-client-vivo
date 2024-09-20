@@ -113,6 +113,8 @@ export class ReporteTemplateListTableComponent {
         return 'Plantilla de invitación de usuario';
       case 'PASSWORD_RESET_TEMPLATE':
         return 'Plantilla de restablecimiento de contraseña';
+      case 'USER_INVITATION_REDEMPTION_TEMPLATE':
+        return 'Plantilla de redención de invitación de usuario';
       default:
         return 'Desconocido';
     }

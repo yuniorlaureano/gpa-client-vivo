@@ -1,0 +1,85 @@
+<form [formGroup]="resetForm" (ngSubmit)="setPasswords()">
+  <div class="login-box">
+    <div class="login-form">
+      <a href="index.html" class="login-logo">
+        <!-- <img src="assets/images/logo.svg" alt="Vico Admin" /> -->
+        <h1>GPA</h1>
+      </a>
+      <div class="login-welcome">Proceso de redimir invitación</div>
+      <div class="alert alert-danger" role="alert" *ngIf="errors.length">
+        <ul>
+          <li *ngFor="let error of errors">{{ error }}</li>
+        </ul>
+      </div>
+      <div *ngIf="messages$ | async as messages">
+        <div class="alert alert-success" role="alert" *ngIf="messages.length">
+          <ul>
+            <li *ngFor="let mgs of messages">{{ mgs }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Código OTP</label>
+        <input type="text" class="form-control" formControlName="code" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="password"
+        />
+        <gpa-validator-message
+          [control]="resetForm.get('password')"
+          [touched]="resetForm.touched"
+          validation="required"
+          message="La Contraseña es requerida"
+        />
+        <gpa-validator-message
+          [control]="resetForm.get('password')"
+          [touched]="resetForm.touched"
+          validation="maxlength"
+          message="Ha excedido el límite de 128 caracteres"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Confirmar contraseña</label>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="confirmPassword"
+        />
+        <gpa-validator-message
+          [control]="resetForm.get('confirmPassword')"
+          [touched]="resetForm.touched"
+          validation="required"
+          message="Confirmar contraseña es requerida"
+        />
+        <gpa-validator-message
+          [control]="resetForm.get('confirmPassword')"
+          [touched]="resetForm.touched"
+          validation="bothPasswordAreInvalid"
+          message="Las contraseñas no coinciden"
+        />
+        <gpa-validator-message
+          [control]="resetForm.get('confirmPassword')"
+          [touched]="resetForm.touched"
+          validation="maxlength"
+          message="Ha excedido el límite de 128 caracteres"
+        />
+      </div>
+      <div class="login-form-actions">
+        <button type="submit" class="btn btn-default">
+          <i class="fa-solid fa-envelope-circle-check"></i>
+          Aceptar
+        </button>
+      </div>
+      <div class="login-form-footer">
+        <div class="additional-link">
+          Ya tiene una cuenta? <a routerLink="/auth/login"> ENTRAR</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

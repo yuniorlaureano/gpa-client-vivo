@@ -10,6 +10,7 @@ import { ProfilePermissionComponent } from './profile-permission/profile-permiss
 import { UserProfileEditComponent } from './user-profile-edit/user-profile-edit.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { TOTPCodeComponent } from './totp-code/totp-code.component';
+import { InvitationRedentionComponent } from './invitation-redime/invitation-redime.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'totp-code', component: TOTPCodeComponent },
+      {
+        path: 'invitation-redemption/:token',
+        component: InvitationRedentionComponent,
+      },
       { path: 'reset-password', component: ResetPasswordComponent },
     ],
   },

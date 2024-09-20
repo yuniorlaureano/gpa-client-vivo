@@ -8,6 +8,7 @@ import { TokenService } from '../../core/service/token.service';
 import { UserModel } from '../model/user.model';
 import { SignUpModel } from '../model/sign-up.model';
 import { ResetPasswordModel } from '../model/reset-password.model';
+import { ResetPasswordInvitationModel } from '../model/reset-password-invitation.model';
 
 @Injectable()
 export class AuthService {
@@ -84,5 +85,20 @@ export class AuthService {
           },
         })
       );
+  }
+
+  sendRemptionCode(redimeToken: string): Observable<UserModel> {
+    return this.http.get<UserModel>(
+      `${this.url}/totp-invitation/${redimeToken}/send`
+    );
+  }
+
+  resetPasswordInvitation(
+    passwordReset: ResetPasswordInvitationModel
+  ): Observable<void> {
+    return this.http.post<void>(
+      `${this.url}/reset-password-for-invitation`,
+      passwordReset
+    );
   }
 }

@@ -9,4 +9,6 @@ export interface UserModel {
   userName: string;
   profiles: ProfileModel[];
   deleted: boolean;
+  invited: boolean;
+  emailConfirmed: boolean;
 }

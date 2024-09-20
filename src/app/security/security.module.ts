@@ -19,6 +19,7 @@ import { UserProfileEditComponent } from './user-profile-edit/user-profile-edit.
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { TOTPCodeComponent } from './totp-code/totp-code.component';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { InvitationRedentionComponent } from './invitation-redime/invitation-redime.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
     UserProfileEditComponent,
     ResetPasswordComponent,
     TOTPCodeComponent,
+    InvitationRedentionComponent,
   ],
   imports: [
     CommonModule,

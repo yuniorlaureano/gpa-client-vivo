@@ -13,6 +13,9 @@ import { Store } from '@ngxs/store';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
+import { ProfileService } from '../service/profile.service';
+import { ResponseModel } from '../../core/models/response.model';
+import { FilterModel } from '../../core/models/filter.model';
 
 @Component({
   selector: 'gpa-user-register',
@@ -27,6 +30,9 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
   photo: File | null = null;
   //subscriptions
   subscriptions$: Subscription[] = [];
+  profilesForInvitation: ResponseModel<ProfileModel> | null = null;
+  invited: boolean = true;
+  disabled: boolean = true;
 
   //permissions
   canRead: boolean = false;
@@ -52,7 +58,8 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private store: Store,
     private spinner: NgxSpinnerService,
-    private errorService: ErrorService
+    private errorService: ErrorService,
+    private profileService: ProfileService
   ) {}
 
   ngOnDestroy(): void {
@@ -62,6 +69,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handlePermissionsLoad(() => {
       this.loadUser();
+      this.loadProfilesForInvitation();
     });
   }
 
@@ -103,6 +111,27 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
       requiredPermissions,
       PermissionConstants.Permission.Upload
     );
+  }
+
+  loadProfilesForInvitation() {
+    if (this.isEdit) {
+      const flterModel = new FilterModel();
+      flterModel.pageSize = 100;
+      const sub = this.profileService.getProfiles(flterModel).subscribe({
+        next: (profiles) => {
+          this.profilesForInvitation = profiles;
+        },
+        error: (error) => {
+          processError(
+            error.error || error,
+            'Error cargando perfiles para invitación'
+          ).forEach((err) => {
+            this.errorService.addGeneralError(err);
+          });
+        },
+      });
+      this.subscriptions$.push(sub);
+    }
   }
 
   onSubmit() {
@@ -172,17 +201,18 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
-  inviteUser() {
+  inviteUser(profileId: string) {
     let userId = this.userForm.get('id')?.value;
-    if (!userId) {
+    if (!userId && !this.isEdit && !this.disabled) {
       return;
     }
 
     this.spinner.show('fullscreen');
-    const sub = this.userService.inviteUser(userId!).subscribe({
+    const sub = this.userService.inviteUser(userId!, profileId).subscribe({
       next: () => {
         this.toastService.showSucess('Invitación enviada');
         this.spinner.hide('fullscreen');
+        this.router.navigate(['/auth/users/users/list']);
       },
       error: (error) => {
         processError(error.error || error, 'Error enviando invitación').forEach(
@@ -290,6 +320,8 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
               email: user.email,
               userName: user.userName,
             });
+            this.disabled = user.deleted;
+            this.invited = user.invited;
             this.profiles = user.profiles;
             this.setPhoto(user.photo);
           }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth.service';
 import { LoginModel } from '../model/login.model';
@@ -16,9 +16,9 @@ import { ToastService } from '../../core/service/toast.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent implements OnDestroy, OnInit {
   errors: string[] = [];
-  loginSubscription!: Subscription;
+  subscriptions$: Subscription[] = [];
   messages$ = this.store.select(AuthState.getMessages);
   loginForm = this.formBuilder.group({
     userName: ['', Validators.required],
@@ -36,16 +36,23 @@ export class LoginComponent implements OnDestroy {
     this.spinner.hide('fullscreen');
   }
 
+  ngOnInit(): void {
+    const sub = this.store
+      .select(AuthState.getUserName)
+      .subscribe((userName) => {
+        this.loginForm.patchValue({ userName: userName });
+      });
+    this.subscriptions$.push(sub);
+  }
+
   ngOnDestroy(): void {
-    if (this.loginSubscription) {
-      this.loginSubscription!.unsubscribe();
-    }
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
   }
 
   login() {
     if (this.loginForm.valid) {
       this.spinner.show('fullscreen');
-      this.loginSubscription = this.authService
+      const sub = this.authService
         .login(this.loginForm.value as LoginModel)
         .subscribe({
           next: () => {
@@ -66,6 +73,7 @@ export class LoginComponent implements OnDestroy {
             this.spinner.hide('fullscreen');
           },
         });
+      this.subscriptions$.push(sub);
     }
   }
 }

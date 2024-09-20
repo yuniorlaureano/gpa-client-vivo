@@ -18,18 +18,7 @@
   >
     <i class="fa-solid fa-floppy-disk"></i>Guardar
   </button>
-  <button
-    type="button"
-    class="btn btn-outline-success btn-rounded"
-    style="margin-right: 5px"
-    (click)="inviteUser()"
-    *ngIf="isEdit"
-    [disabled]="!canEdit"
-    placement="top"
-    ngbTooltip="Enviar invitación al usuario"
-  >
-    <i class="fa-solid fa-envelope-open-text"></i> Invitar
-  </button>
+
   <button
     *ngIf="isEdit"
     type="button"
@@ -64,6 +53,24 @@
         <gpa-no-permission-alert [visible]="isEdit && !canEdit">
           No tiene permisos para modificar usuarios
         </gpa-no-permission-alert>
+        <ngb-alert
+          [dismissible]="false"
+          type="danger"
+          class="alert"
+          *ngIf="!invited"
+          style="margin-top: 5px"
+        >
+          El usuario no ha sido invitado.
+        </ngb-alert>
+        <ngb-alert
+          [dismissible]="false"
+          type="danger"
+          class="alert"
+          *ngIf="disabled"
+          style="margin-top: 5px"
+        >
+          El usuario ha sido deshabilitado.
+        </ngb-alert>
         <form [formGroup]="userForm" class="row">
           <div class="col-sm-2 col-12">
             <gpa-no-permission-alert [visible]="!uploadPhoto">
@@ -83,6 +90,7 @@
             />
           </div>
           <!--  -->
+
           <div class="col-sm-10">
             <div class="row">
               <div class="col-sm-12">
@@ -146,6 +154,39 @@
           <ol>
             <li *ngFor="let profile of profiles">{{ profile.name }}</li>
           </ol>
+        </div>
+      </div>
+      <hr />
+      <div class="row" *ngIf="!disabled && !invited">
+        <div class="col-sm-12">
+          <h4>Invitar usuario como</h4>
+          <ul>
+            <li *ngFor="let profile of profilesForInvitation?.data">
+              <div>
+                <span
+                  style="
+                    margin-right: 5px;
+                    display: inline-block;
+                    border: solid 1px lightgray;
+                    padding: 8px;
+                    text-transform: capitalize;
+                  "
+                  >{{ profile.name }}</span
+                ><button
+                  type="button"
+                  class="btn btn-outline-dark"
+                  style="margin-right: 5px"
+                  (click)="inviteUser(profile.id!)"
+                  *ngIf="isEdit"
+                  [disabled]="!canEdit"
+                  placement="top"
+                  ngbTooltip="Enviar invitación al usuario"
+                >
+                  <i class="fa-solid fa-envelope-open-text"></i> Invitar
+                </button>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

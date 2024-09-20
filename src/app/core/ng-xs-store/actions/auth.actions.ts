@@ -23,6 +23,11 @@ export class AddMessages {
   constructor(public payload: string[]) {}
 }
 
+export class AddUserName {
+  static readonly type = '[Auth] AddUserName';
+  constructor(public payload: string) {}
+}
+
 export class ReplaceMessages {
   static readonly type = '[Auth] ReplaceMessages';
   constructor(public payload: string[]) {}

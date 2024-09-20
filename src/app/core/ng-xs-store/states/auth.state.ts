@@ -2,6 +2,7 @@ import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import {
   AddErrors,
   AddMessages,
+  AddUserName,
   ClearErrors,
   ClearMessages,
   ReplaceMessages,
@@ -11,6 +12,7 @@ import { Injectable } from '@angular/core';
 export interface AuthStateModel {
   errors: string[];
   messages: string[];
+  userName: string;
 }
 
 const ZOO_STATE_TOKEN = new StateToken<AuthStateModel>('auth');
@@ -20,6 +22,7 @@ const ZOO_STATE_TOKEN = new StateToken<AuthStateModel>('auth');
   defaults: {
     errors: [],
     messages: [],
+    userName: '',
   },
 })
 @Injectable()
@@ -27,6 +30,11 @@ export class AuthState {
   @Selector()
   static getMessages(state: AuthStateModel): string[] {
     return state.messages;
+  }
+
+  @Selector()
+  static getUserName(state: AuthStateModel): string {
+    return state.userName;
   }
 
   @Action(AddErrors)
@@ -75,6 +83,16 @@ export class AuthState {
   removeMessages({ patchState }: StateContext<AuthStateModel>) {
     patchState({
       messages: [],
+    });
+  }
+
+  @Action(AddUserName)
+  addUserName(
+    { patchState }: StateContext<AuthStateModel>,
+    { payload }: AddUserName
+  ) {
+    patchState({
+      userName: payload,
     });
   }
 }
