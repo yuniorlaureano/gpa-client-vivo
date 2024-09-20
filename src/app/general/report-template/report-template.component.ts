@@ -80,6 +80,10 @@ export class ReporteTemplateComponent implements OnInit, OnDestroy {
         return 'Plantilla de comprobante de pago de cuentas por cobrar';
       case 'EXISTENCE_TEMPLATE':
         return 'Plantilla de existencia';
+      case 'USER_INVITATION_TEMPLATE':
+        return 'Plantilla de invitación de usuario';
+      case 'PASSWORD_RESET_TEMPLATE':
+        return 'Plantilla de restablecimiento de contraseña';
       default:
         return 'Desconocido';
     }
