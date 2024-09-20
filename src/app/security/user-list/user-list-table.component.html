@@ -37,9 +37,20 @@
           (click)="handleDelete(user)"
           [disabled]="!canDelete"
           placement="top"
-          ngbTooltip="Eliminar"
+          ngbTooltip="Desactivar"
+          *ngIf="!user.deleted"
         >
-          <i class="bi bi-trash"></i>
+          <i class="fa-solid fa-user-xmark"></i>
+        </button>
+        <button
+          class="btn btn-outline-success btn-icon"
+          (click)="handleEnable(user)"
+          [disabled]="!canDelete"
+          placement="top"
+          ngbTooltip="Activar"
+          *ngIf="user.deleted"
+        >
+          <i class="fa-solid fa-user-check"></i>
         </button>
         <button
           class="btn btn-outline-warning btn-icon"

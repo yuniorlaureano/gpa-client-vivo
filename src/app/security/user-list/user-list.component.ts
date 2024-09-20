@@ -34,14 +34,14 @@ export class UserListComponent {
   handleDelete(user: UserModel) {
     this.confirmService
       .confirm(
-        'Perfil',
+        'Usuario',
         'Está seguro de eliminar el usuario:\n ' + user.userName
       )
       .then(() => {
         this.spinner.show('fullscreen');
         const sub = this.userService.removeUser(user.id!).subscribe({
           next: () => {
-            this.toastService.showSucess('Perfil eliminado');
+            this.toastService.showSucess('Usuario eliminado');
             this.reloadTable = this.reloadTable * -1;
             this.spinner.hide('fullscreen');
           },
@@ -49,7 +49,36 @@ export class UserListComponent {
             this.spinner.hide('fullscreen');
             processError(
               error.error || error,
-              'Error eliminando perfil'
+              'Error eliminando usuario'
+            ).forEach((err) => {
+              this.errorService.addGeneralError(err);
+            });
+          },
+        });
+        this.subscriptions$.push(sub);
+      })
+      .catch(() => {});
+  }
+
+  handleEnable(user: UserModel) {
+    this.confirmService
+      .confirm(
+        'Usuario',
+        'Está seguro de activar el usuario:\n ' + user.userName
+      )
+      .then(() => {
+        this.spinner.show('fullscreen');
+        const sub = this.userService.enableUser(user.id!).subscribe({
+          next: () => {
+            this.toastService.showSucess('Usuario activado');
+            this.reloadTable = this.reloadTable * -1;
+            this.spinner.hide('fullscreen');
+          },
+          error: (error) => {
+            this.spinner.hide('fullscreen');
+            processError(
+              error.error || error,
+              'Error activando usuario'
             ).forEach((err) => {
               this.errorService.addGeneralError(err);
             });

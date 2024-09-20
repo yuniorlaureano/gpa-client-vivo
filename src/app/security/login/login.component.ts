@@ -32,7 +32,9 @@ export class LoginComponent implements OnDestroy {
     private spinner: NgxSpinnerService,
     private store: Store,
     private toastService: ToastService
-  ) {}
+  ) {
+    this.spinner.hide('fullscreen');
+  }
 
   ngOnDestroy(): void {
     if (this.loginSubscription) {

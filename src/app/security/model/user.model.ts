@@ -8,4 +8,5 @@ export interface UserModel {
   photo: string | null;
   userName: string;
   profiles: ProfileModel[];
+  deleted: boolean;
 }

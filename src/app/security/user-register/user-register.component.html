@@ -3,6 +3,8 @@
     routerLink="/auth/users/list"
     class="btn btn-outline-info btn-rounded"
     style="margin-right: 5px"
+    placement="top"
+    ngbTooltip="Lista de usuarios"
   >
     <i class="bi bi-card-list"></i> Usuarios
   </a>
@@ -15,6 +17,18 @@
     [disabled]="!canCreate"
   >
     <i class="fa-solid fa-floppy-disk"></i>Guardar
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-success btn-rounded"
+    style="margin-right: 5px"
+    (click)="inviteUser()"
+    *ngIf="isEdit"
+    [disabled]="!canEdit"
+    placement="top"
+    ngbTooltip="Enviar invitación al usuario"
+  >
+    <i class="fa-solid fa-envelope-open-text"></i> Invitar
   </button>
   <button
     *ngIf="isEdit"

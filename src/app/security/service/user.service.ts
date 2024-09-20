@@ -35,6 +35,14 @@ export class UserService {
     return this.http.delete<void>(`${this.url}/${userId}`);
   }
 
+  enableUser(userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${userId}/enable`);
+  }
+
+  inviteUser(userId: string): Observable<void> {
+    return this.http.get<void>(`${this.url}/${userId}/invite`);
+  }
+
   uploadPhoto(userId: string, model: FormData): Observable<void> {
     return this.http.post<void>(`${this.url}/${userId}/photo/upload`, model);
   }

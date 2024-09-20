@@ -172,6 +172,30 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     this.subscriptions$.push(sub);
   }
 
+  inviteUser() {
+    let userId = this.userForm.get('id')?.value;
+    if (!userId) {
+      return;
+    }
+
+    this.spinner.show('fullscreen');
+    const sub = this.userService.inviteUser(userId!).subscribe({
+      next: () => {
+        this.toastService.showSucess('Invitación enviada');
+        this.spinner.hide('fullscreen');
+      },
+      error: (error) => {
+        processError(error.error || error, 'Error enviando invitación').forEach(
+          (err) => {
+            this.errorService.addGeneralError(err);
+          }
+        );
+        this.spinner.hide('fullscreen');
+      },
+    });
+    this.subscriptions$.push(sub);
+  }
+
   handleCancel() {
     this.clearForm();
     this.router.navigate(['/auth/users/register']);

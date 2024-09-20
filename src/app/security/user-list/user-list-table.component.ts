@@ -36,6 +36,7 @@ import { ErrorService } from '../../core/service/error.service';
 })
 export class UserListTableComponent implements OnInit, OnDestroy {
   @Output() onDelete = new EventEmitter<UserModel>();
+  @Output() onEnable = new EventEmitter<UserModel>();
   @Output() onEdit = new EventEmitter<UserModel>();
   @Input() reloadTable: number = 1;
 
@@ -184,6 +185,10 @@ export class UserListTableComponent implements OnInit, OnDestroy {
 
   handleDelete(model: UserModel) {
     this.onDelete.emit(model);
+  }
+
+  handleEnable(model: UserModel) {
+    this.onEnable.emit(model);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Actions, ofActionDispatched, Store } from '@ngxs/store';
 import {
+  AddError,
   MapLoaded,
   SetCurrentMenu,
   SetCurrentSubMenu,
 } from './core/ng-xs-store/actions/app.actions';
-import { AppState } from './core/ng-xs-store/states/app.state';
 import { ToastService } from './core/service/toast.service';
 import { Subscription } from 'rxjs';
 
@@ -16,10 +16,13 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'gpa-client';
-  errorsLoaded$ = this.store.select(AppState.getErrors);
   subscriptions$: Subscription[] = [];
 
-  constructor(private store: Store, private toastService: ToastService) {
+  constructor(
+    private store: Store,
+    private toastService: ToastService,
+    private action$: Actions
+  ) {
     (window as any)['initMap'] = () => {
       store.dispatch(new MapLoaded());
     };
@@ -43,13 +46,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   mapLoad() {
-    const sub = this.errorsLoaded$.subscribe((errors) => {
-      if (errors.length) {
-        errors.forEach((error) => {
-          this.toastService.showError(error);
-        });
-      }
-    });
+    const sub = this.action$
+      .pipe(ofActionDispatched(AddError))
+      .subscribe((data) => {
+        this.toastService.showError(data.payload);
+      });
     this.subscriptions$.push(sub);
   }
 }
