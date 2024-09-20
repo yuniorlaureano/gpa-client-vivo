@@ -8,14 +8,18 @@ export class ErrorService {
 
   addError(error: any, callback?: () => void) {
     if (error.status === 403) {
-      this.store.dispatch(new AddError(error.error.message));
-      if (callback) {
-        callback();
+      if (typeof error.error === 'string') {
+        this.store.dispatch(new AddError(error.error));
+        if (callback) {
+          callback();
+        }
       }
     }
   }
 
   addGeneralError(error: string) {
-    this.store.dispatch(new AddError(error));
+    if (error.length > 5) {
+      this.store.dispatch(new AddError(error));
+    }
   }
 }

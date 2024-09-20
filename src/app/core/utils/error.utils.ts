@@ -1,3 +1,6 @@
+import { of } from 'rxjs';
+import { ErrorService } from '../service/error.service';
+
 export function processError(
   error: any,
   defaultError: string = 'Error desconocido'
@@ -67,4 +70,19 @@ function iterateErrorObject(error: any, errors: string[] = [], cumulative = 0) {
 
     return;
   }
+}
+
+export function errorCatch<Returns>(
+  defaultMessage: string,
+  errorService: ErrorService,
+  data: Returns,
+  func: () => void
+) {
+  return (error: any) => {
+    processError(error.error || error, defaultMessage).forEach((err) => {
+      errorService.addGeneralError(err);
+    });
+    func();
+    return of(data);
+  };
 }

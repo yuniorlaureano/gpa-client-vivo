@@ -21,7 +21,10 @@ export class ToastService {
       message,
       delay,
     };
-    this.toasts$.next([...this.toasts$.value, sucess]);
+    var value = this.toasts$.value.find((x) => x.message == message);
+    if (!value) {
+      this.toasts$.next([...this.toasts$.value, sucess]);
+    }
   }
 
   showError(message: string, delay: number = 5000) {
@@ -30,7 +33,10 @@ export class ToastService {
       delay,
       message,
     };
-    this.toasts$.next([...this.toasts$.value, sucess]);
+    var value = this.toasts$.value.find((x) => x.message == message);
+    if (!value) {
+      this.toasts$.next([...this.toasts$.value, sucess]);
+    }
   }
 
   showStandard(message: string, delay: number = 5000) {
@@ -38,6 +44,10 @@ export class ToastService {
       delay,
       message,
     };
-    this.toasts$.next([...this.toasts$.value, sucess]);
+
+    var value = this.toasts$.value.find((x) => x.message == message);
+    if (!value) {
+      this.toasts$.next([...this.toasts$.value, sucess]);
+    }
   }
 }
