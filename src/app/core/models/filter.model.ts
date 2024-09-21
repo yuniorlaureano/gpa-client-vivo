@@ -13,11 +13,10 @@ export class FilterModel {
     this.search = search;
   }
   asQueryString(): string {
+    let search = '';
     if (this.search) {
-      this.search = btoa(this.search);
-    } else {
-      this.search = '';
+      search = btoa(this.search);
     }
-    return `?page=${this.page}&pageSize=${this.pageSize}&search=${this.search}`;
+    return `?page=${this.page}&pageSize=${this.pageSize}&search=${search}`;
   }
 }

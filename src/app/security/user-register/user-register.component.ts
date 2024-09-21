@@ -4,7 +4,7 @@ import { UserService } from '../service/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../core/service/toast.service';
 import { UserModel } from '../model/user.model';
-import { of, Subscription, switchMap } from 'rxjs';
+import { Observable, of, Subscription, switchMap } from 'rxjs';
 import { ProfileModel } from '../model/profile.model';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import * as ProfileUtils from '../../core/utils/profile.utils';
@@ -16,6 +16,7 @@ import { ErrorService } from '../../core/service/error.service';
 import { ProfileService } from '../service/profile.service';
 import { ResponseModel } from '../../core/models/response.model';
 import { FilterModel } from '../../core/models/filter.model';
+import { InvitationTokenModel } from '../model/invitation-token.model';
 
 @Component({
   selector: 'gpa-user-register',
@@ -31,6 +32,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
   //subscriptions
   subscriptions$: Subscription[] = [];
   profilesForInvitation: ResponseModel<ProfileModel> | null = null;
+  invitations$: Observable<InvitationTokenModel[]> | null = null;
   invited: boolean = true;
   disabled: boolean = true;
 
@@ -212,7 +214,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
       next: () => {
         this.toastService.showSucess('Invitación enviada');
         this.spinner.hide('fullscreen');
-        this.router.navigate(['/auth/users/users/list']);
+        this.router.navigate(['/auth/users/list']);
       },
       error: (error) => {
         processError(error.error || error, 'Error enviando invitación').forEach(
@@ -324,6 +326,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
             this.invited = user.invited;
             this.profiles = user.profiles;
             this.setPhoto(user.photo);
+            this.invitations$ = this.userService.getInvitations(user.id!);
           }
         },
         error: (error) => {

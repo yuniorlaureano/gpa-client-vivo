@@ -5,6 +5,7 @@ import { ResponseModel } from '../../core/models/response.model';
 import { FilterModel } from '../../core/models/filter.model';
 import { environment } from '../../../environments/environment';
 import { UserModel } from '../model/user.model';
+import { InvitationTokenModel } from '../model/invitation-token.model';
 
 @Injectable()
 export class UserService {
@@ -47,5 +48,17 @@ export class UserService {
 
   uploadPhoto(userId: string, model: FormData): Observable<void> {
     return this.http.post<void>(`${this.url}/${userId}/photo/upload`, model);
+  }
+
+  getInvitations(userId: string): Observable<InvitationTokenModel[]> {
+    return this.http.get<InvitationTokenModel[]>(
+      `${this.url}/${userId}/invitations`
+    );
+  }
+
+  revokeInvitation(invitationId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.url}/invitations/${invitationId}/revoke`
+    );
   }
 }

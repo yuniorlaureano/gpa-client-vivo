@@ -39,7 +39,11 @@ export class UserListTableComponent implements OnInit, OnDestroy {
   @Output() onEnable = new EventEmitter<UserModel>();
   @Output() onEdit = new EventEmitter<UserModel>();
   @Input() reloadTable: number = 1;
-
+  searchString = {
+    term: '',
+    confirm: -1,
+    invited: -1,
+  };
   pageOptionsSubject = new BehaviorSubject<SearchOptionsModel>({
     count: 0,
     page: 1,
@@ -85,9 +89,17 @@ export class UserListTableComponent implements OnInit, OnDestroy {
     this.initSearch();
   }
 
-  handleSearch(search: any) {
+  handleSearch(search: any, type: string) {
+    if (type === 'confirm') {
+      this.searchString.confirm = Number(search.target.value);
+    } else if (type === 'invited') {
+      this.searchString.invited = Number(search.target.value);
+    } else {
+      this.searchString.term = search.target.value;
+    }
+
     this.spinner.show('table-spinner');
-    this.searchTerms.next(search.target.value);
+    this.searchTerms.next(JSON.stringify(this.searchString));
   }
 
   initSearch() {

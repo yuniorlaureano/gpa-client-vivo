@@ -57,7 +57,7 @@
           [dismissible]="false"
           type="danger"
           class="alert"
-          *ngIf="!invited"
+          *ngIf="!invited && isEdit"
           style="margin-top: 5px"
         >
           El usuario no ha sido invitado.
@@ -66,7 +66,7 @@
           [dismissible]="false"
           type="danger"
           class="alert"
-          *ngIf="disabled"
+          *ngIf="disabled && isEdit"
           style="margin-top: 5px"
         >
           El usuario ha sido deshabilitado.
@@ -187,6 +187,39 @@
               </div>
             </li>
           </ul>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="invitations$ | async as invitations">
+        <div class="col-sm-12">
+          <h4>Invitaciones</h4>
+          <table class="table">
+            <tr>
+              <th>Redimida</th>
+              <th>Revocada</th>
+              <th>Expiración</th>
+              <th>Enviada por</th>
+              <th></th>
+            </tr>
+            <tr *ngFor="let item of invitations">
+              <td>{{ item.redeemed }}</td>
+              <td>{{ item.revoked }}</td>
+              <td>{{ item.expiration | date }}</td>
+              <td>{{ item.createdByName }}</td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-outline-dark"
+                  (click)="inviteUser(item.id)"
+                  *ngIf="!item.revoked && !item.redeemed"
+                  placement="top"
+                  ngbTooltip="Revocar invitación"
+                >
+                  Revocar
+                </button>
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>

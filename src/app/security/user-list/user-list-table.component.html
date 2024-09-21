@@ -8,15 +8,30 @@
   [onBackwardPage]="handleBackwardPage"
 >
   <div search>
-    <div class="input-group">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Buscar por Nombre, Email o Usuario"
-        style="margin-right: 20px; width: 300px"
-        (input)="handleSearch($event)"
-      />
+    <div class="row">
+      <div class="col-4 col-sm-4">
+        <select class="form-control" (change)="handleSearch($event, 'invited')">
+          <option value="-1">Por invitación</option>
+          <option value="1">Invitado</option>
+          <option value="0">No invitado</option>
+        </select>
+      </div>
+      <div class="col-4 col-sm-4">
+        <select class="form-control" (change)="handleSearch($event, 'confirm')">
+          <option value="-1">Por confirmado</option>
+          <option value="1">Confirmado</option>
+          <option value="0">No confirmado</option>
+        </select>
+      </div>
+      <div class="col-4 col-sm-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar por Nombre, Email o Usuario"
+          style="width: 300px"
+          (input)="handleSearch($event, 'term')"
+        />
+      </div>
     </div>
   </div>
   <h3 class="card-title" caption></h3>
@@ -35,7 +50,7 @@
       <td>{{ user.userName }}</td>
       <td>{{ user.invited ? "Sí" : "No" }}</td>
       <td>{{ user.emailConfirmed ? "Sí" : "No" }}</td>
-      <td style="width: 100px">
+      <td style="width: 110px">
         <button
           class="btn btn-outline-danger btn-icon"
           (click)="handleDelete(user)"
