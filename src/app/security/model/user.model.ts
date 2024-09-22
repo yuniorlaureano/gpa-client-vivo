@@ -11,4 +11,5 @@ export interface UserModel {
   deleted: boolean;
   invited: boolean;
   emailConfirmed: boolean;
+  currentUser: boolean;
 }

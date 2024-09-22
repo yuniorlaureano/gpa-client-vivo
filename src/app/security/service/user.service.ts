@@ -57,7 +57,7 @@ export class UserService {
   }
 
   revokeInvitation(invitationId: string): Observable<void> {
-    return this.http.delete<void>(
+    return this.http.get<void>(
       `${this.url}/invitations/${invitationId}/revoke`
     );
   }

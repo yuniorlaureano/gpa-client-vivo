@@ -4,7 +4,16 @@ import { UserService } from '../service/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../core/service/toast.service';
 import { UserModel } from '../model/user.model';
-import { Observable, of, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+  of,
+  Subject,
+  Subscription,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { ProfileModel } from '../model/profile.model';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import * as ProfileUtils from '../../core/utils/profile.utils';
@@ -35,6 +44,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
   invitations$: Observable<InvitationTokenModel[]> | null = null;
   invited: boolean = true;
   disabled: boolean = true;
+  confirmed: boolean = true;
 
   //permissions
   canRead: boolean = false;
@@ -42,6 +52,8 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
   canDelete: boolean = false;
   canEdit: boolean = false;
   uploadPhoto: boolean = true;
+  reload$ = new BehaviorSubject<boolean>(true);
+  reloadInvitations$ = new Subject<string>();
 
   //form
   userForm = this.fb.group({
@@ -73,6 +85,19 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
       this.loadUser();
       this.loadProfilesForInvitation();
     });
+    this.loadInitations();
+  }
+
+  loadInitations() {
+    this.invitations$ = this.reloadInvitations$.pipe(
+      switchMap((id) => {
+        this.spinner.hide('fullscreen');
+        return this.userService.getInvitations(id);
+      }),
+      tap(() => {
+        this.spinner.hide('fullscreen');
+      })
+    );
   }
 
   handlePermissionsLoad(onPermissionLoad: () => void) {
@@ -119,19 +144,25 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     if (this.isEdit) {
       const flterModel = new FilterModel();
       flterModel.pageSize = 100;
-      const sub = this.profileService.getProfiles(flterModel).subscribe({
-        next: (profiles) => {
-          this.profilesForInvitation = profiles;
-        },
-        error: (error) => {
-          processError(
-            error.error || error,
-            'Error cargando perfiles para invitación'
-          ).forEach((err) => {
-            this.errorService.addGeneralError(err);
-          });
-        },
-      });
+      const sub = this.reload$
+        .pipe(
+          switchMap(() => {
+            return this.profileService.getProfiles(flterModel);
+          })
+        )
+        .subscribe({
+          next: (profiles) => {
+            this.profilesForInvitation = profiles;
+          },
+          error: (error) => {
+            processError(
+              error.error || error,
+              'Error cargando perfiles para invitación'
+            ).forEach((err) => {
+              this.errorService.addGeneralError(err);
+            });
+          },
+        });
       this.subscriptions$.push(sub);
     }
   }
@@ -164,7 +195,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
           }
           this.toastService.showSucess('Usuario agregado');
           this.spinner.hide('fullscreen');
-          this.clearForm();
+          this.router.navigate(['/auth/users/edit', user.id]);
         });
       },
       error: (error) => {
@@ -189,6 +220,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
         this.clearForm();
         this.toastService.showSucess('Usuario actualizado');
         this.spinner.hide('fullscreen');
+        this.reload$.next(true);
       },
       error: (error) => {
         processError(
@@ -214,7 +246,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
       next: () => {
         this.toastService.showSucess('Invitación enviada');
         this.spinner.hide('fullscreen');
-        this.router.navigate(['/auth/users/list']);
+        this.reload$.next(true);
       },
       error: (error) => {
         processError(error.error || error, 'Error enviando invitación').forEach(
@@ -222,6 +254,27 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
             this.errorService.addGeneralError(err);
           }
         );
+        this.spinner.hide('fullscreen');
+      },
+    });
+    this.subscriptions$.push(sub);
+  }
+
+  revokeUser(id: string) {
+    this.spinner.show('fullscreen');
+    const sub = this.userService.revokeInvitation(id).subscribe({
+      next: () => {
+        this.toastService.showSucess('Invitación revocada');
+        this.spinner.hide('fullscreen');
+        this.reload$.next(true);
+      },
+      error: (error) => {
+        processError(
+          error.error || error,
+          'Error revocando invitación'
+        ).forEach((err) => {
+          this.errorService.addGeneralError(err);
+        });
         this.spinner.hide('fullscreen');
       },
     });
@@ -299,9 +352,9 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
   }
 
   loadUser() {
-    const sub = this.route.paramMap
+    const sub = combineLatest([this.route.paramMap, this.reload$])
       .pipe(
-        switchMap((params) => {
+        switchMap(([params, _]) => {
           const id = params.get('id');
           if (id) {
             this.isEdit = true;
@@ -324,9 +377,10 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
             });
             this.disabled = user.deleted;
             this.invited = user.invited;
+            this.confirmed = user.emailConfirmed;
             this.profiles = user.profiles;
             this.setPhoto(user.photo);
-            this.invitations$ = this.userService.getInvitations(user.id!);
+            this.reloadInvitations$.next(user.id!);
           }
         },
         error: (error) => {

@@ -99,7 +99,7 @@ export class InvitationRedentionComponent implements OnDestroy, OnInit {
           this.store.dispatch(
             new ReplaceMessages([
               'Acaba de recibir un correo con su códio de redención.',
-              'Completar los campos y porceder.',
+              'Completar los campos y proceder.',
               'Nombre de usuario: ' + this.userName,
             ])
           );

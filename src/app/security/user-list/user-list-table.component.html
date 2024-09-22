@@ -44,12 +44,12 @@
     <th></th>
   </tr>
   <tbody body *ngIf="canRead">
-    <tr *ngFor="let user of data.data">
+    <tr *ngFor="let user of data.data" [class.bg-info]="user.currentUser">
       <td>{{ user.firstName + " " + user.lastName }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.userName }}</td>
-      <td>{{ user.invited ? "Sí" : "No" }}</td>
-      <td>{{ user.emailConfirmed ? "Sí" : "No" }}</td>
+      <td>{{ user.invited ? "&#x2705;" : "-" }}</td>
+      <td>{{ user.emailConfirmed ? "&#x2705;" : "-" }}</td>
       <td style="width: 110px">
         <button
           class="btn btn-outline-danger btn-icon"
@@ -57,7 +57,7 @@
           [disabled]="!canDelete"
           placement="top"
           ngbTooltip="Desactivar"
-          *ngIf="!user.deleted"
+          *ngIf="!user.deleted && !user.currentUser"
         >
           <i class="fa-solid fa-user-xmark"></i>
         </button>
@@ -67,7 +67,7 @@
           [disabled]="!canDelete"
           placement="top"
           ngbTooltip="Activar"
-          *ngIf="user.deleted"
+          *ngIf="user.deleted && !user.currentUser"
         >
           <i class="fa-solid fa-user-check"></i>
         </button>
@@ -77,6 +77,7 @@
           [disabled]="!canEdit"
           placement="top"
           ngbTooltip="Editar"
+          *ngIf="!user.currentUser"
         >
           <i class="bi bi-pencil"></i>
         </button>

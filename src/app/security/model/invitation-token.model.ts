@@ -7,4 +7,6 @@ export interface InvitationTokenModel {
   redeemed: boolean;
   createdBy: string;
   createdAt: string;
+  revokedByName: string;
+  revokedAt: string;
 }

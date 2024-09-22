@@ -157,7 +157,7 @@
         </div>
       </div>
       <hr />
-      <div class="row" *ngIf="!disabled && !invited">
+      <div class="row" *ngIf="!disabled && !confirmed">
         <div class="col-sm-12">
           <h4>Invitar usuario como</h4>
           <ul>
@@ -199,18 +199,22 @@
               <th>Revocada</th>
               <th>Expiración</th>
               <th>Enviada por</th>
+              <th>Revocada por</th>
+              <th>Fecha revocación</th>
               <th></th>
             </tr>
             <tr *ngFor="let item of invitations">
-              <td>{{ item.redeemed }}</td>
-              <td>{{ item.revoked }}</td>
+              <td>{{ item.redeemed ? "&#x2705;" : "-" }}</td>
+              <td>{{ item.revoked ? "&#x2705;" : "-" }}</td>
               <td>{{ item.expiration | date }}</td>
               <td>{{ item.createdByName }}</td>
+              <td>{{ item.revokedByName }}</td>
+              <td>{{ item.revokedAt | date }}</td>
               <td>
                 <button
                   type="button"
                   class="btn btn-outline-dark"
-                  (click)="inviteUser(item.id)"
+                  (click)="revokeUser(item.id!)"
                   *ngIf="!item.revoked && !item.redeemed"
                   placement="top"
                   ngbTooltip="Revocar invitación"
