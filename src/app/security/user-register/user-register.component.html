@@ -102,6 +102,26 @@
                     type="text"
                     class="form-control"
                     formControlName="email"
+                    [inputMask]="emailInputMask"
+                    placeholder="_@_._"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('email')"
+                    [touched]="userForm.touched"
+                    validation="required"
+                    message="Requerido"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('email')"
+                    [touched]="userForm.touched"
+                    validation="email"
+                    message="Email inválido"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('email')"
+                    [touched]="userForm.touched"
+                    validation="maxlength"
+                    message="Tamaño máximo 254"
                   />
                 </div>
               </div>
@@ -115,6 +135,18 @@
                     type="text"
                     class="form-control"
                     formControlName="userName"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('userName')"
+                    [touched]="userForm.touched"
+                    validation="required"
+                    message="Requerido"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('userName')"
+                    [touched]="userForm.touched"
+                    validation="maxlength"
+                    message="Tamaño máximo 30"
                   />
                 </div>
               </div>
@@ -130,6 +162,18 @@
                 class="form-control"
                 formControlName="firstName"
               />
+              <gpa-validator-message
+                [control]="userForm.get('firstName')"
+                [touched]="userForm.touched"
+                validation="required"
+                message="Requerido"
+              />
+              <gpa-validator-message
+                [control]="userForm.get('firstName')"
+                [touched]="userForm.touched"
+                validation="maxlength"
+                message="Tamaño máximo 100"
+              />
             </div>
           </div>
           <!--  -->
@@ -142,6 +186,18 @@
                 type="text"
                 class="form-control"
                 formControlName="lastName"
+              />
+              <gpa-validator-message
+                [control]="userForm.get('lastName')"
+                [touched]="userForm.touched"
+                validation="required"
+                message="Requerido"
+              />
+              <gpa-validator-message
+                [control]="userForm.get('lastName')"
+                [touched]="userForm.touched"
+                validation="maxlength"
+                message="Tamaño máximo 100"
               />
             </div>
           </div>

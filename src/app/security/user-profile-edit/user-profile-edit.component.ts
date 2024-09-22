@@ -14,6 +14,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { processError } from '../../core/utils/error.utils';
 import { RefreshCredentials } from '../../core/ng-xs-store/actions/app.actions';
 import { ErrorService } from '../../core/service/error.service';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-user-profile-edit',
@@ -25,6 +26,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
   imageUrl: string | ArrayBuffer | null =
     'assets/images/default-placeholder.png';
   photo: File | null = null;
+  emailInputMask = createMask({ alias: 'email' });
 
   constructor(
     private fb: FormBuilder,
@@ -48,10 +50,13 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
   //form
   userForm = this.fb.group({
     id: [''],
-    firstName: ['', Validators.required],
-    lastName: ['', [Validators.required]],
-    email: ['', Validators.required],
-    userName: ['', Validators.required],
+    firstName: ['', [Validators.required, Validators.maxLength(100)]],
+    lastName: ['', [Validators.required, Validators.maxLength(100)]],
+    email: [
+      '',
+      [Validators.required, Validators.email, Validators.maxLength(256)],
+    ],
+    userName: ['', [Validators.required, Validators.maxLength(30)]],
   });
 
   ngOnDestroy(): void {

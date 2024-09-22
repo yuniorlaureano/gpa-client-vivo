@@ -42,7 +42,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   //form
   profileForm = this.fb.group({
     id: [''],
-    name: ['', Validators.required],
+    name: ['', [Validators.required, Validators.maxLength(100)]],
   });
 
   constructor(

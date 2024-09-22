@@ -26,6 +26,7 @@ import { ProfileService } from '../service/profile.service';
 import { ResponseModel } from '../../core/models/response.model';
 import { FilterModel } from '../../core/models/filter.model';
 import { InvitationTokenModel } from '../model/invitation-token.model';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-user-register',
@@ -54,14 +55,18 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
   uploadPhoto: boolean = true;
   reload$ = new BehaviorSubject<boolean>(true);
   reloadInvitations$ = new Subject<string>();
+  emailInputMask = createMask({ alias: 'email' });
 
   //form
   userForm = this.fb.group({
     id: [''],
-    firstName: ['', Validators.required],
-    lastName: ['', [Validators.required]],
-    email: ['', Validators.required],
-    userName: ['', Validators.required],
+    firstName: ['', [Validators.required, Validators.maxLength(100)]],
+    lastName: ['', [Validators.required, Validators.maxLength(100)]],
+    email: [
+      '',
+      [Validators.required, Validators.email, Validators.maxLength(256)],
+    ],
+    userName: ['', [Validators.required, Validators.maxLength(30)]],
   });
 
   constructor(

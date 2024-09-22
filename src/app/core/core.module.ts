@@ -28,6 +28,7 @@ import { MapGoogleComponent } from './map-google/map-google.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DashboardClientMapComponent } from './dashboard/dashboard-client-map/dashboard-client-map.component';
+import { InputMaskModule } from '@ngneat/input-mask';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { DashboardClientMapComponent } from './dashboard/dashboard-client-map/da
     NgbAlertModule,
     GoogleMapsModule,
     NgApexchartsModule,
+    InputMaskModule,
   ],
   providers: [
     LayoutService,
@@ -83,6 +85,7 @@ import { DashboardClientMapComponent } from './dashboard/dashboard-client-map/da
     ProviderCatalogComponent,
     MapGoogleComponent,
     NgbToastModule,
+    InputMaskModule,
   ],
 })
 export class CoreModule {}

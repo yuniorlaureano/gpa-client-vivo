@@ -35,6 +35,18 @@
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
             </div>
+            <gpa-validator-message
+              [control]="profileForm.get('name')"
+              [touched]="profileForm.touched"
+              validation="required"
+              message="Requerido"
+            />
+            <gpa-validator-message
+              [control]="profileForm.get('name')"
+              [touched]="profileForm.touched"
+              validation="maxlength"
+              message="Tamaño máximo 100"
+            />
           </div>
         </form>
       </div>

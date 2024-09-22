@@ -20,6 +20,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { TOTPCodeComponent } from './totp-code/totp-code.component';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { InvitationRedentionComponent } from './invitation-redime/invitation-redime.component';
+import { InputMaskModule } from '@ngneat/input-mask';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { InvitationRedentionComponent } from './invitation-redime/invitation-red
     DataTableComponent,
     CoreModule,
     NgbTooltipModule,
+    InputMaskModule,
   ],
 })
 export class SecurityModule {}

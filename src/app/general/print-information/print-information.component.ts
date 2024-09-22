@@ -18,6 +18,7 @@ import { PrintInformationModel } from '../model/print-information.model';
 import { PrintInformationService } from '../service/print-information.service';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-product',
@@ -31,6 +32,7 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
     'assets/images/default-placeholder.png';
   subscriptions$: Subscription[] = [];
   triggerLoad$ = new BehaviorSubject<boolean>(true);
+  emailInputMask = createMask({ alias: 'email' });
 
   //permissions
   canRead: boolean = false;
@@ -40,15 +42,18 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
   //form
   printInformationForm = this.fb.group({
     id: [''],
-    companyName: ['', [Validators.required]],
-    companyDocument: ['', [Validators.required]],
+    companyName: ['', [Validators.required, Validators.maxLength(254)]],
+    companyDocument: ['', [Validators.required, Validators.maxLength(30)]],
     companyDocumentPrefix: [''],
-    companyAddress: ['', [Validators.required]],
-    companyPhone: ['', [Validators.required]],
+    companyAddress: ['', [Validators.required, Validators.maxLength(254)]],
+    companyPhone: ['', [Validators.required, Validators.maxLength(30)]],
     companyPhonePrefix: [''],
-    companyEmail: ['', [Validators.required]],
-    companyWebsite: ['', [Validators.required]],
-    signer: ['', [Validators.required]],
+    companyEmail: [
+      '',
+      [Validators.required, Validators.email, Validators.maxLength(254)],
+    ],
+    companyWebsite: ['', [Validators.required, Validators.maxLength(254)]],
+    signer: ['', [Validators.required, Validators.maxLength(100)]],
     current: [true],
     storeId: [''],
   });
