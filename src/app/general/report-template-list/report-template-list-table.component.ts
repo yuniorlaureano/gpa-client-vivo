@@ -68,6 +68,7 @@ export class ReporteTemplateListTableComponent {
   }
 
   loadReportTemplate() {
+    this.spinner.show('table-spinner');
     let searchModel = new FilterModel();
     const sub = this.printInformationService
       .getReportTemplates(searchModel)

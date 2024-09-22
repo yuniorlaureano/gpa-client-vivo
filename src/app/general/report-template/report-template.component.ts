@@ -223,6 +223,7 @@ export class ReporteTemplateComponent implements OnInit, OnDestroy {
     const sub = this.route.paramMap
       .pipe(
         switchMap((params) => {
+          this.spinner.show('fullscreen');
           const id = params.get('id');
           if (id) {
             this.isEdit = true;
