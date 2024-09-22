@@ -65,6 +65,7 @@ export class SaleComponent implements OnInit, OnDestroy {
     return: 0,
     outOfCredit: false,
   };
+  invoiceId: string | null = null;
 
   attachments: InvoiceAttachModel[] = [];
   attachmentsSubject$ = new BehaviorSubject<string | null>(null);
@@ -479,6 +480,7 @@ export class SaleComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (invoice) => {
           if (invoice) {
+            this.invoiceId = invoice.id;
             this.saleForm.setValue({
               id: invoice.id,
               note: <any>invoice.note,

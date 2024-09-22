@@ -120,7 +120,10 @@
                 </p>
                 <h5>Cuentas por cobrar</h5>
                 <ol>
-                  <li *ngFor="let cl of client.debits">
+                  <li
+                    *ngFor="let cl of client.debits"
+                    style="border-bottom: solid 1px lightgray; max-width: 400px"
+                  >
                     <a
                       style="color: rgba(13, 110, 253)"
                       routerLink="{{
@@ -128,6 +131,13 @@
                       }}"
                       ><i class="bi bi-link"></i> Cuenta por cobrar</a
                     >
+                    |
+                    <span style="margin-left: 5px">{{
+                      cl.pendingPayment | currency
+                    }}</span>
+                    <span style="margin-left: 5px">{{
+                      cl.invoiceId != invoiceId ? " | De otra factura" : ""
+                    }}</span>
                   </li>
                 </ol>
               </div>
