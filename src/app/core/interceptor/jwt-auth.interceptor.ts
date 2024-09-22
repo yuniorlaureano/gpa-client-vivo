@@ -16,6 +16,7 @@ export const JwtAuthInterceptor: HttpInterceptorFn = (req, next) => {
     !req.url.endsWith('/security/auth/signup') &&
     !req.url.endsWith('/security/auth/reset-password') &&
     !req.url.includes('/security/auth/totp-invitation') &&
+    !req.url.includes('/security/auth/reset-password-for-invitation') &&
     !req.url.includes('/security/auth/totp/send/')
   ) {
     if (!token) {
