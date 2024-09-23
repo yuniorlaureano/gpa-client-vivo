@@ -129,6 +129,7 @@ export class SaleComponent implements OnInit, OnDestroy {
       this.getInvoice();
       this.loadAttachments();
     });
+    this.spinner.hide('fullscreen');
   }
 
   handlePermissionsLoad(onPermissionLoad: () => void) {

@@ -111,12 +111,12 @@
               </p>
               <p>
                 <span style="font-weight: 700">Crédito:</span>
-                {{ this.clientFees.credit | currency }}
+                {{ clientFees.credit | currency }}
               </p>
-              <div *ngIf="this.clientFees.debit">
+              <div *ngIf="clientFees.debit">
                 <p>
                   <span style="font-weight: 700">Débito:</span>
-                  {{ this.clientFees.debit | currency }}
+                  {{ clientFees.debit | currency }}
                 </p>
                 <h5>Cuentas por cobrar</h5>
                 <ol>

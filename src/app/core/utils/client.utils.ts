@@ -6,7 +6,7 @@ export const getTotalClientFees = (client: ClientModel | null) => {
   let credit = getCredit(client?.credits);
   let debit = getDebit(client?.debits);
   return {
-    credit: credit - debit <= 0 ? 0 : credit,
+    credit: credit - debit,
     debit: debit,
   };
 };
