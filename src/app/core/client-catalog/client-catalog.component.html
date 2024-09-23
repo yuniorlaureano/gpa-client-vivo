@@ -28,6 +28,7 @@
             <tr>
               <td>Nombre</td>
               <td>Documento de identidad</td>
+              <th>Geolocalizado</th>
             </tr>
           </thead>
           <tbody>
@@ -38,6 +39,7 @@
             >
               <td>{{ client.name + " " + client.lastName }}</td>
               <td>{{ client.identification }}</td>
+              <td>{{ client.latitude ? "&#x2705;" : "-" }}</td>
             </tr>
           </tbody>
         </table>

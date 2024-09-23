@@ -32,8 +32,8 @@
     <th>Nombre</th>
     <th>Correo</th>
     <th>Teléfono</th>
-    <th>Tipo de identificación</th>
     <th>Identificación</th>
+    <th>Geolocalizado</th>
     <th></th>
   </tr>
   <tbody body>
@@ -41,8 +41,11 @@
       <td>{{ client.name + " " + client.lastName }}</td>
       <td>{{ client.email }}</td>
       <td>{{ client.phone }}</td>
-      <td>{{ getIdentificationType(client.identificationType) }}</td>
-      <td>{{ client.identification }}</td>
+      <td>
+        {{ getIdentificationType(client.identificationType) }}
+        {{ client.identification }}
+      </td>
+      <td>{{ client.latitude ? "&#x2705;" : "-" }}</td>
       <td style="width: 100px">
         <button
           class="btn btn-outline-danger btn-icon"

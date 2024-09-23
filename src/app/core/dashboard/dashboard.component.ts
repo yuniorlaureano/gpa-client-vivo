@@ -342,6 +342,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   handleSelectedClient(client: ClientModel) {
+    if (!(client.latitude && client.longitude)) {
+      return;
+    }
     if (this.selectedClientes[client.id]) {
       delete this.selectedClientes[client.id];
       delete this.tempSelectedClientesData[client.id];

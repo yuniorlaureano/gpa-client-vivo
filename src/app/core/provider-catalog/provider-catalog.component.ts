@@ -91,6 +91,19 @@ export class ProviderCatalogComponent implements OnInit, OnDestroy {
     }
   }
 
+  getIdentificationType(type: number | null): string {
+    switch (type) {
+      case 1:
+        return 'Cédula';
+      case 2:
+        return 'RNC';
+      case 3:
+        return 'Pasaporte';
+      default:
+        return '';
+    }
+  }
+
   handleSelectedProviderFromCatalog(provider: ProviderModel) {
     this.onSelectedProvider.emit(provider);
   }

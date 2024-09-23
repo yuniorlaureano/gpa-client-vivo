@@ -41,11 +41,8 @@
       <td>{{ provider.email }}</td>
       <td>{{ provider.phone }}</td>
       <td>
-        {{
-          getIdentificationType(provider.identificationType!) +
-            "" +
-            provider.identification
-        }}
+        {{ getIdentificationType(provider.identificationType!) }}
+        {{ provider.identification }}
       </td>
       <td style="width: 100px">
         <button

@@ -45,7 +45,10 @@
             >
               <td>{{ provider.name }}</td>
               <td>{{ provider.lastName }}</td>
-              <td>$ {{ provider.identification }}</td>
+              <td>
+                {{ getIdentificationType(provider.identificationType) }}
+                {{ provider.identification }}
+              </td>
             </tr>
           </tbody>
         </table>

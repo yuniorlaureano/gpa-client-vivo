@@ -179,7 +179,7 @@ export class ProviderListTableComponent implements OnInit, OnDestroy {
       case 3:
         return 'Pasaporte';
       default:
-        return 'Otro';
+        return '';
     }
   }
 
