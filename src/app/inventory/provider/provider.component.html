@@ -75,7 +75,13 @@
                           [control]="providerForm.get('name')"
                           [touched]="providerForm.touched"
                           validation="required"
-                          message="El nombre es requerido"
+                          message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('name')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 100 caracteres"
                         />
                       </div>
                     </div>
@@ -87,6 +93,12 @@
                           type="text"
                           class="form-control"
                           formControlName="lastName"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('lastName')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 100 caracteres"
                         />
                       </div>
                     </div>
@@ -109,7 +121,7 @@
                           [control]="providerForm.get('identificationType')"
                           [touched]="providerForm.touched"
                           validation="required"
-                          message="El tipo es requerido"
+                          message="Requerido"
                         />
                       </div>
                     </div>
@@ -124,12 +136,20 @@
                           type="text"
                           class="form-control"
                           formControlName="identification"
+                          [inputMask]="getInputMaskByType()"
+                          [placeholder]="getInputMaskPlaceHolderByType()"
                         />
                         <gpa-validator-message
                           [control]="providerForm.get('identification')"
                           [touched]="providerForm.touched"
                           validation="required"
-                          message="La identificación es requerida"
+                          message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('identification')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 15 caracteres"
                         />
                       </div>
                     </div>
@@ -143,12 +163,19 @@
                           type="text"
                           class="form-control"
                           formControlName="phone"
+                          [inputMask]="phoneMask"
                         />
                         <gpa-validator-message
                           [control]="providerForm.get('phone')"
                           [touched]="providerForm.touched"
                           validation="required"
-                          message="El teléfono es requerido"
+                          message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('phone')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 15 caracteres"
                         />
                       </div>
                     </div>
@@ -162,12 +189,26 @@
                           type="text"
                           class="form-control"
                           formControlName="email"
+                          [inputMask]="emailInputMask"
+                          placeholder="_@_._"
                         />
                         <gpa-validator-message
                           [control]="providerForm.get('email')"
                           [touched]="providerForm.touched"
                           validation="required"
-                          message="El teléfono es requerido"
+                          message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('email')"
+                          [touched]="providerForm.touched"
+                          validation="email"
+                          message="Email inválido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('email')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 256 caracteres"
                         />
                       </div>
                     </div>
@@ -193,6 +234,12 @@
                           type="text"
                           class="form-control"
                           formControlName="formattedAddress"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('formattedAddress')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 256 caracteres"
                         />
                       </div>
                     </div>
@@ -227,6 +274,12 @@
                           class="form-control"
                           formControlName="street"
                         />
+                        <gpa-validator-message
+                          [control]="providerForm.get('street')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 100 caracteres"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-3 col-3">
@@ -236,6 +289,12 @@
                           type="text"
                           class="form-control"
                           formControlName="buildingNumber"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('buildingNumber')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 10 caracteres"
                         />
                       </div>
                     </div>
@@ -247,6 +306,12 @@
                           class="form-control"
                           formControlName="city"
                         />
+                        <gpa-validator-message
+                          [control]="providerForm.get('city')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 50 caracteres"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-3 col-3">
@@ -257,6 +322,12 @@
                           class="form-control"
                           formControlName="country"
                         />
+                        <gpa-validator-message
+                          [control]="providerForm.get('country')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 50 caracteres"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-3 col-3">
@@ -266,6 +337,12 @@
                           type="text"
                           class="form-control"
                           formControlName="postalCode"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('postalCode')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 50 caracteres"
                         />
                       </div>
                     </div>

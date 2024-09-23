@@ -28,6 +28,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { FilterModel } from '../../core/models/filter.model';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-product',
@@ -45,7 +46,27 @@ export class ProductComponent implements OnInit, OnDestroy {
   triggerLoadAddons$ = new BehaviorSubject<boolean>(false);
 
   subscriptions$: Subscription[] = [];
+  currencyInputMask = createMask({
+    alias: 'numeric',
+    groupSeparator: ',',
+    digits: 2,
+    digitsOptional: false,
+    prefix: '$ ',
+    placeholder: '0',
+    parser: (value: string) => {
+      return Number(value.replace(/[^0-9.]/g, ''));
+    },
+  });
 
+  unitQuanity = createMask({
+    alias: 'numeric',
+    groupSeparator: ',',
+    digitsOptional: true,
+    placeholder: '0',
+    parser: (value: string) => {
+      return Number(value.replace(/[^0-9.]/g, ''));
+    },
+  });
   //permissions
   canRead: boolean = false;
   canCreate: boolean = false;
@@ -55,9 +76,9 @@ export class ProductComponent implements OnInit, OnDestroy {
   productForm = this.fb.group({
     id: [''],
     code: [''],
-    name: ['', Validators.required],
+    name: ['', [Validators.required, Validators.maxLength(200)]],
     price: [0.0, [Validators.required]],
-    description: ['', Validators.required],
+    description: ['', [Validators.required, Validators.maxLength(300)]],
     unitId: ['', Validators.required],
     unitValue: [1, Validators.required],
     categoryId: ['', Validators.required],

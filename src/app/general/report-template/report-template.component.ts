@@ -211,7 +211,6 @@ export class ReporteTemplateComponent implements OnInit, OnDestroy {
 
   computeHeight() {
     let heitht = this.reportTemplateForm.get('height')?.value;
-    console.log(heitht);
     if (heitht) {
       return heitht + 'mm';
     } else {

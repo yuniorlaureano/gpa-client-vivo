@@ -37,7 +37,7 @@
   </tr>
   <tbody body>
     <tr *ngFor="let provider of data.data">
-      <td>{{ provider.name + " " + provider.lastName }}</td>
+      <td>{{ provider.name + " " + (provider.lastName ?? "") }}</td>
       <td>{{ provider.email }}</td>
       <td>{{ provider.phone }}</td>
       <td>

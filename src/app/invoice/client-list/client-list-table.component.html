@@ -38,7 +38,7 @@
   </tr>
   <tbody body>
     <tr *ngFor="let client of data.data">
-      <td>{{ client.name + " " + client.lastName }}</td>
+      <td>{{ client.name + " " + (client.lastName ?? "") }}</td>
       <td>{{ client.email }}</td>
       <td>{{ client.phone }}</td>
       <td>

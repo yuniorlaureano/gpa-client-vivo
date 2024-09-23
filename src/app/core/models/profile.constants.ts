@@ -20,10 +20,10 @@ export class Permission {
   public static Upload: string = 'upload';
   public static Download: string = 'download';
   public static Print = 'print';
-  public static ExistenceReport = 'existence-report';
-  public static StockCycleReport = 'stock-cycle-report';
-  public static TransactionReport = 'transaction-report';
-  public static SaleReport = 'sale-report';
+  public static ExistenceReport = 'existence_report';
+  public static StockCycleReport = 'stock_cycle_report';
+  public static TransactionReport = 'transaction_report';
+  public static SaleReport = 'sale_report';
   public static Send = 'send';
 }
 
@@ -110,9 +110,9 @@ export const PermissionTranslate = {
   [Components.Profile]: 'Perfil',
   [Components.Auth]: 'Authenticación',
   [Components.Email]: 'Correo',
-  [Components.Blob]: 'Blob',
+  [Components.Blob]: 'Archivos',
   [Components.PrintInformation]: 'Información de impresión',
-  [Components.Unit]: 'unit',
+  [Components.Unit]: 'unidad',
   [Components.Dashboard]: 'Dashboard',
   [Components.Report]: 'Reporte',
 };

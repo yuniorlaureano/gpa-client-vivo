@@ -16,6 +16,7 @@ import { Store } from '@ngxs/store';
 import { RequiredPermissionType } from '../../core/models/required-permission.type';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-receivable-account',
@@ -31,6 +32,17 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
     payment: [0.0, [Validators.required, Validators.min(1)]],
     note: [null],
     invoiceId: ['', Validators.required],
+  });
+  currencyInputMask = createMask({
+    alias: 'numeric',
+    groupSeparator: ',',
+    digits: 2,
+    digitsOptional: false,
+    prefix: '$ ',
+    placeholder: '0',
+    parser: (value: string) => {
+      return Number(value.replace(/[^0-9.]/g, ''));
+    },
   });
 
   //subscriptions

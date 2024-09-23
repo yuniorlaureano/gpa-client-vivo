@@ -15,6 +15,7 @@ import { LocationWithNameModel } from '../../core/models/location-with-name.mode
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
 import { AppState } from '../../core/ng-xs-store/states/app.state';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-client',
@@ -28,6 +29,33 @@ export class ClientComponent implements OnInit, OnDestroy {
   locations: { lat: number; lng: number; name: string }[] = [];
   mapLoaded$ = this.store.select(AppState.getMapLoaded);
   mapLoaded: boolean = false;
+  emailInputMask = createMask({ alias: 'email' });
+  rncMask = createMask('999999999');
+  cedulaMask = createMask({
+    mask: '999-9999999-9',
+    parser: (value: string) => {
+      return value.replace(/[^0-9a-zA-Z]/g, '');
+    },
+  });
+  passportMask = createMask('********');
+  phoneMask = createMask({
+    mask: '9{1,15}',
+    greedy: false,
+    parser: (value: string) => {
+      return String(value.replace(/[^0-9a-zA-Z]/g, ''));
+    },
+  });
+  currencyInputMask = createMask({
+    alias: 'numeric',
+    groupSeparator: ',',
+    digits: 2,
+    digitsOptional: false,
+    prefix: '$ ',
+    placeholder: '0',
+    parser: (value: string) => {
+      return Number(value.replace(/[^0-9.]/g, ''));
+    },
+  });
 
   //subscriptions
   subscriptions$: Subscription[] = [];
@@ -66,17 +94,20 @@ export class ClientComponent implements OnInit, OnDestroy {
 
   clientForm = this.fb.group({
     id: [''],
-    name: ['', Validators.required],
-    lastName: [''],
-    identification: ['', Validators.required],
+    name: ['', [Validators.required, Validators.maxLength(100)]],
+    lastName: ['', Validators.maxLength(100)],
+    identification: ['', [Validators.required, Validators.maxLength(15)]],
     identificationType: [1, Validators.required],
-    phone: ['', Validators.required],
-    email: ['', Validators.required],
-    buildingNumber: [''],
-    city: [''],
-    street: [''],
-    country: [''],
-    postalCode: [''],
+    phone: ['', [Validators.required, Validators.maxLength(15)]],
+    email: [
+      '',
+      [Validators.required, Validators.email, Validators.maxLength(254)],
+    ],
+    buildingNumber: ['', Validators.maxLength(10)],
+    city: ['', Validators.maxLength(50)],
+    street: ['', Validators.maxLength(100)],
+    country: ['', Validators.maxLength(50)],
+    postalCode: ['', Validators.maxLength(50)],
     latitude: [''],
     longitude: [''],
     formattedAddress: [''],
@@ -117,6 +148,30 @@ export class ClientComponent implements OnInit, OnDestroy {
       requiredPermissions,
       PermissionConstants.Permission.Update
     );
+  }
+
+  getInputMaskByType() {
+    const identificationType = this.clientForm.get('identificationType')?.value;
+    if (identificationType == 1) {
+      return this.cedulaMask;
+    } else if (identificationType == 2) {
+      return this.rncMask;
+    } else if (identificationType == 3) {
+      return this.passportMask;
+    }
+    return null;
+  }
+
+  getInputMaskPlaceHolderByType() {
+    const identificationType = this.clientForm.get('identificationType')?.value;
+    if (identificationType == 1) {
+      return '__-_______-_';
+    } else if (identificationType == 2) {
+      return '________';
+    } else if (identificationType == 3) {
+      return '________';
+    }
+    return '';
   }
 
   showMap() {

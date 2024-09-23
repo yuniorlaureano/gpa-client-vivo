@@ -327,14 +327,26 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         for (let module of app.modules) {
           ulModule.push('<ol style="list-style-type: disclosure-open">');
-          ulModule.push('<li><h4>' + module.id + '</h4></li>');
+          ulModule.push(
+            '<li><h4>' +
+              PermissionConstants.PermissionTranslate[module.id] +
+              '</h4></li>'
+          );
 
           for (let component of module.components) {
             ulComponent.push('<ol style="list-style-type: disclosure-open">');
-            ulComponent.push('<li><h5>' + component.id + '</h5></li>');
+            ulComponent.push(
+              '<li><h5>' +
+                PermissionConstants.PermissionTranslate[component.id] +
+                '</h5></li>'
+            );
             ulComponent.push('<ol style="list-style-type: circle">');
             for (let permission of component.permissions) {
-              ulComponent.push('<li>' + permission + '</li>');
+              ulComponent.push(
+                '<li>' +
+                  PermissionConstants.PermissionTranslate[permission] +
+                  '</li>'
+              );
             }
             ulComponent.push('</ol>');
             ulComponent.push('</ol>');

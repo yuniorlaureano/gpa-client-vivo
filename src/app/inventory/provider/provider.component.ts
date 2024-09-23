@@ -14,6 +14,7 @@ import { ProviderModel } from '../models/provider.model';
 import { ProviderService } from '../service/provider.service';
 import { ErrorService } from '../../core/service/error.service';
 import { AppState } from '../../core/ng-xs-store/states/app.state';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-provider',
@@ -29,6 +30,22 @@ export class ProviderComponent implements OnInit, OnDestroy {
   mapLoaded: boolean = false;
   //subscriptions
   subscriptions$: Subscription[] = [];
+  emailInputMask = createMask({ alias: 'email' });
+  rncMask = createMask('99999999');
+  cedulaMask = createMask({
+    mask: '999-9999999-9',
+    parser: (value: string) => {
+      return value.replace(/[^0-9a-zA-Z]/g, '');
+    },
+  });
+  passportMask = createMask('********');
+  phoneMask = createMask({
+    mask: '9{1,15}',
+    greedy: false,
+    parser: (value: string) => {
+      return String(value.replace(/[^0-9a-zA-Z]/g, ''));
+    },
+  });
 
   //permissions
   canRead: boolean = false;
@@ -64,17 +81,20 @@ export class ProviderComponent implements OnInit, OnDestroy {
 
   providerForm = this.fb.group({
     id: [''],
-    name: ['', Validators.required],
-    lastName: [''],
-    identification: ['', Validators.required],
+    name: ['', [Validators.required, Validators.maxLength(100)]],
+    lastName: ['', Validators.maxLength(100)],
+    identification: ['', [Validators.required, Validators.maxLength(15)]],
     identificationType: [1, Validators.required],
-    phone: ['', Validators.required],
-    email: ['', Validators.required],
-    buildingNumber: [''],
-    city: [''],
-    street: [''],
-    country: [''],
-    postalCode: [''],
+    phone: ['', [Validators.required, Validators.maxLength(15)]],
+    email: [
+      '',
+      [Validators.required, Validators.email, Validators.maxLength(254)],
+    ],
+    buildingNumber: ['', Validators.maxLength(10)],
+    city: ['', Validators.maxLength(50)],
+    street: ['', Validators.maxLength(100)],
+    country: ['', Validators.maxLength(50)],
+    postalCode: ['', Validators.maxLength(50)],
     latitude: [''],
     longitude: [''],
     formattedAddress: [''],
@@ -114,6 +134,32 @@ export class ProviderComponent implements OnInit, OnDestroy {
       requiredPermissions,
       PermissionConstants.Permission.Update
     );
+  }
+
+  getInputMaskByType() {
+    const identificationType =
+      this.providerForm.get('identificationType')?.value;
+    if (identificationType == 1) {
+      return this.cedulaMask;
+    } else if (identificationType == 2) {
+      return this.rncMask;
+    } else if (identificationType == 3) {
+      return this.passportMask;
+    }
+    return null;
+  }
+
+  getInputMaskPlaceHolderByType() {
+    const identificationType =
+      this.providerForm.get('identificationType')?.value;
+    if (identificationType == 1) {
+      return '__-_______-_';
+    } else if (identificationType == 2) {
+      return '________';
+    } else if (identificationType == 3) {
+      return '________';
+    }
+    return '';
   }
 
   showMap() {

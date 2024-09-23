@@ -163,7 +163,7 @@
                   <td>{{ formProduct.get("productName")?.value }}</td>
                   <td>
                     <input
-                      type="number"
+                      type="text"
                       class="form-control"
                       (input)="handleQuantityChange()"
                       formControlName="quantity"
@@ -171,6 +171,7 @@
                       [class.quantity-error]="
                         !formProduct.get('quantity')?.valid
                       "
+                      [inputMask]="quantityMask"
                     />
                   </td>
                   <td>

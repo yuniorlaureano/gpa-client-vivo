@@ -33,6 +33,7 @@ import { InvoiceAttachModel } from '../model/invoice-attachment';
 import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-sale',
@@ -66,6 +67,18 @@ export class SaleComponent implements OnInit, OnDestroy {
     outOfCredit: false,
   };
   invoiceId: string | null = null;
+  currencyInputMask = createMask({
+    alias: 'numeric',
+    groupSeparator: ',',
+    digits: 2,
+    digitsOptional: false,
+    prefix: '$ ',
+    placeholder: '0',
+    parser: (value: string) => {
+      return Number(value.replace(/[^0-9.]/g, ''));
+    },
+  });
+  quantityMask = createMask({ mask: '9{1,9}' });
 
   attachments: InvoiceAttachModel[] = [];
   attachmentsSubject$ = new BehaviorSubject<string | null>(null);
@@ -392,7 +405,9 @@ export class SaleComponent implements OnInit, OnDestroy {
   }
 
   handlePayment(event: any) {
-    this.payment = Number(event.target.value);
+    if (typeof event.target.value === 'string') {
+      this.payment = Number(event.target.value.replace(/[^0-9.]/g, ''));
+    }
     if (this.payment < this.productCatalogAggregate.netTotalPrice) {
       this.saleType = SaleType.Credit;
       this.productCatalogAggregate.return = 0;

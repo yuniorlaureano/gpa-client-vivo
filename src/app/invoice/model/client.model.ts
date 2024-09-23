@@ -5,7 +5,7 @@ import { ClientDebitModel } from './client-debit.model';
 export interface ClientModel {
   id: string;
   name: string;
-  lastName: string;
+  lastName: string | null;
   email: string;
   identification: string;
   phone: string;

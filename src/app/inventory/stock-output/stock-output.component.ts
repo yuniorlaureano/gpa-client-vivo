@@ -20,6 +20,7 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
 import { AppState } from '../../core/ng-xs-store/states/app.state';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-stock-output',
@@ -36,6 +37,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
   } = { totalQuantity: 0 };
 
   reasons$!: Observable<ReasonModel[]>;
+  quantityMask = createMask({ mask: '9{1,9}' });
 
   stockForm = this.formBuilder.group({
     id: [''],

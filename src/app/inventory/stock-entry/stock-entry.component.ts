@@ -36,6 +36,7 @@ import { StockAttachModel } from '../models/stock-attachment';
 import { downloadFile } from '../../core/utils/file.utils';
 import { ErrorService } from '../../core/service/error.service';
 import { AppState } from '../../core/ng-xs-store/states/app.state';
+import { createMask } from '@ngneat/input-mask';
 
 @Component({
   selector: 'gpa-stock-entry',
@@ -61,6 +62,18 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   reasons$!: Observable<ReasonModel[]>;
   attachmentsSubject$ = new BehaviorSubject<string | null>(null);
   @ViewChild('stockInputFile') stockFileInput!: ElementRef;
+  quantityMask = createMask({ mask: '9{1,9}' });
+  currencyInputMask = createMask({
+    alias: 'numeric',
+    groupSeparator: ',',
+    digits: 2,
+    digitsOptional: false,
+    prefix: '$ ',
+    placeholder: '0',
+    parser: (value: string) => {
+      return Number(value.replace(/[^0-9.]/g, ''));
+    },
+  });
 
   stockForm = this.formBuilder.group({
     id: [''],

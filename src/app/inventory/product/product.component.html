@@ -110,6 +110,12 @@
                       validation="required"
                       message="Requerido"
                     />
+                    <gpa-validator-message
+                      [control]="productForm.get('name')"
+                      [touched]="productForm.touched"
+                      validation="maxlength"
+                      message="200 caracteres maximo"
+                    />
                   </div>
                 </div>
                 <!--  -->
@@ -145,10 +151,11 @@
                       >Precio<span class="text-red">*</span></label
                     >
                     <input
-                      type="number"
+                      type="text"
                       class="form-control"
                       formControlName="price"
-                      placeholder="Ingrese el precio del producto"
+                      placeholder="$ 0.00"
+                      [inputMask]="currencyInputMask"
                     />
                     <gpa-validator-message
                       [control]="productForm.get('price')"
@@ -169,6 +176,7 @@
                         type="text"
                         class="form-control"
                         formControlName="unitValue"
+                        [inputMask]="unitQuanity"
                       />
                     </div>
 
@@ -235,6 +243,12 @@
                       [touched]="productForm.touched"
                       validation="required"
                       message="Requerido"
+                    />
+                    <gpa-validator-message
+                      [control]="productForm.get('description')"
+                      [touched]="productForm.touched"
+                      validation="maxlength"
+                      message="300 caracteres maximo"
                     />
                   </div>
                 </div>

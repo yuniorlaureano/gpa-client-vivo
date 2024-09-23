@@ -271,7 +271,7 @@
                     </td>
                     <td>
                       <input
-                        type="number"
+                        type="text"
                         class="form-control"
                         (input)="handleQuantityChange()"
                         formControlName="quantity"
@@ -279,6 +279,7 @@
                         [class.quantity-error]="
                           !formProduct.get('quantity')?.valid
                         "
+                        [inputMask]="quantityMask"
                       />
                     </td>
                     <td>{{ formProduct.get("price")?.value | currency }}</td>
@@ -331,13 +332,15 @@
                   {{ productCatalogAggregate.netTotalPrice | currency }}
                 </p>
                 <input
-                  type="number"
+                  type="text"
                   name="payment"
                   [value]="paymentValue.toFixed(2)"
                   (input)="handlePayment($event)"
                   class="form-control"
                   style="max-width: 200px; text-align: right"
                   [disabled]="disableForm"
+                  [inputMask]="currencyInputMask"
+                  placeholder="$ 0.00"
                 />
                 <p
                   style="color: red"

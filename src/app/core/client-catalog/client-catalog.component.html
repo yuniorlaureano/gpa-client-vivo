@@ -37,7 +37,7 @@
               (click)="handleSelectedClientFromCatalog(client)"
               [class.selected-client]="selectedClientes[client.id]"
             >
-              <td>{{ client.name + " " + client.lastName }}</td>
+              <td>{{ client.name + " " + (client.lastName ?? "") }}</td>
               <td>{{ client.identification }}</td>
               <td>{{ client.latitude ? "&#x2705;" : "-" }}</td>
             </tr>
@@ -50,9 +50,7 @@
                 class="btn btn-outline-info"
                 (click)="handleBackwardPage()"
               >
-                <span aria-hidden="true">
-                  <i class="bi bi-arrow-left"></i>
-                </span>
+                <i class="bi bi-arrow-left"></i>
               </button>
             </li>
             <li class="page-item">
@@ -60,9 +58,7 @@
                 class="btn btn-outline-info"
                 (click)="handleForwardPage()"
               >
-                <span aria-hidden="true">
-                  <i class="bi bi-arrow-right"></i>
-                </span>
+                <i class="bi bi-arrow-right"></i>
               </button>
             </li>
           </ul>

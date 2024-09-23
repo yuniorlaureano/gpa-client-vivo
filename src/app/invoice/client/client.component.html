@@ -77,6 +77,12 @@
                           validation="required"
                           message="Requerido"
                         />
+                        <gpa-validator-message
+                          [control]="clientForm.get('name')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 100 caracteres"
+                        />
                       </div>
                     </div>
                     <!--  -->
@@ -87,6 +93,12 @@
                           type="text"
                           class="form-control"
                           formControlName="lastName"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('lastName')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 100 caracteres"
                         />
                       </div>
                     </div>
@@ -124,12 +136,20 @@
                           type="text"
                           class="form-control"
                           formControlName="identification"
+                          [inputMask]="getInputMaskByType()"
+                          [placeholder]="getInputMaskPlaceHolderByType()"
                         />
                         <gpa-validator-message
                           [control]="clientForm.get('identification')"
                           [touched]="clientForm.touched"
                           validation="required"
                           message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('identification')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 15 caracteres"
                         />
                       </div>
                     </div>
@@ -143,12 +163,19 @@
                           type="text"
                           class="form-control"
                           formControlName="phone"
+                          [inputMask]="phoneMask"
                         />
                         <gpa-validator-message
                           [control]="clientForm.get('phone')"
                           [touched]="clientForm.touched"
                           validation="required"
                           message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('phone')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 15 caracteres"
                         />
                       </div>
                     </div>
@@ -162,12 +189,26 @@
                           type="text"
                           class="form-control"
                           formControlName="email"
+                          [inputMask]="emailInputMask"
+                          placeholder="_@_._"
                         />
                         <gpa-validator-message
                           [control]="clientForm.get('email')"
                           [touched]="clientForm.touched"
                           validation="required"
                           message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('email')"
+                          [touched]="clientForm.touched"
+                          validation="email"
+                          message="Email inválido"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('email')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 256 caracteres"
                         />
                       </div>
                     </div>
@@ -193,6 +234,12 @@
                           type="text"
                           class="form-control"
                           formControlName="formattedAddress"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('formattedAddress')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 256 caracteres"
                         />
                       </div>
                     </div>
@@ -227,6 +274,12 @@
                           class="form-control"
                           formControlName="street"
                         />
+                        <gpa-validator-message
+                          [control]="clientForm.get('street')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 100 caracteres"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-3 col-3">
@@ -236,6 +289,12 @@
                           type="text"
                           class="form-control"
                           formControlName="buildingNumber"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('buildingNumber')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 10 caracteres"
                         />
                       </div>
                     </div>
@@ -247,6 +306,12 @@
                           class="form-control"
                           formControlName="city"
                         />
+                        <gpa-validator-message
+                          [control]="clientForm.get('city')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 50 caracteres"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-3 col-3">
@@ -257,6 +322,12 @@
                           class="form-control"
                           formControlName="country"
                         />
+                        <gpa-validator-message
+                          [control]="clientForm.get('city')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 50 caracteres"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-3 col-3">
@@ -266,6 +337,12 @@
                           type="text"
                           class="form-control"
                           formControlName="postalCode"
+                        />
+                        <gpa-validator-message
+                          [control]="clientForm.get('postalCode')"
+                          [touched]="clientForm.touched"
+                          validation="maxlength"
+                          message="máximo 50 caracteres"
                         />
                       </div>
                     </div>
@@ -304,9 +381,11 @@
                                 formControlName="concept"
                               />
                               <input
-                                type="number"
+                                type="text"
                                 class="form-control"
                                 formControlName="credit"
+                                [inputMask]="currencyInputMask"
+                                placeholder="$ 0.00"
                               />
                               <button
                                 class="btn btn-light"

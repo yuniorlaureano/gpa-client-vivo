@@ -240,21 +240,24 @@
                   <td>{{ formProduct.get("productName")?.value }}</td>
                   <td>
                     <input
-                      type="number"
+                      type="text"
                       class="form-control"
                       formControlName="purchasePrice"
                       style="width: 130px"
+                      placeholder="$ 0.00"
+                      [inputMask]="currencyInputMask"
                     />
                   </td>
                   <td>
                     <input
-                      type="number"
+                      type="text"
                       class="form-control"
                       formControlName="quantity"
                       style="width: 130px"
                       [class.quantity-error]="
                         !formProduct.get('quantity')?.valid
                       "
+                      [inputMask]="quantityMask"
                     />
                   </td>
                   <td>{{ formProduct.get("price")?.value | currency }}</td>
