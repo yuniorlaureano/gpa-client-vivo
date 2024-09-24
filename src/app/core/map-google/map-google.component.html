@@ -49,7 +49,7 @@
     (mapClick)="mapClick($event)"
   >
     <map-marker
-      *ngFor="let client of transformLocations()"
+      *ngFor="let client of transformedMarkers"
       [position]="client.position"
       [label]="{
         text: client.name,

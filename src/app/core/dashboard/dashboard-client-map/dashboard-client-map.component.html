@@ -33,7 +33,7 @@
     (mapClick)="mapClick($event)"
   >
     <map-marker
-      *ngFor="let client of clientsAsArray()"
+      *ngFor="let client of transformedMarkers"
       [position]="client.position"
       [label]="{
         text: client.name,

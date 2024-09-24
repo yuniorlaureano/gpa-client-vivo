@@ -4,8 +4,10 @@ import {
   EventEmitter,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -14,12 +16,15 @@ import { GoogleMap } from '@angular/google-maps';
 import { LocationModel } from '../../models/location.model';
 import { Store } from '@ngxs/store';
 import { AppState } from '../../ng-xs-store/states/app.state';
+import { TransformedMarkerModel } from '../../models/transformed-merker.mode';
 
 @Component({
   selector: 'gpa-dashboard-client-map',
   templateUrl: './dashboard-client-map.component.html',
 })
-export class DashboardClientMapComponent implements OnDestroy, AfterViewInit {
+export class DashboardClientMapComponent
+  implements OnDestroy, AfterViewInit, OnChanges
+{
   subscriptions$: Subscription[] = [];
   center: google.maps.LatLngLiteral = {
     lat: 18.931924080755334,
@@ -43,6 +48,7 @@ export class DashboardClientMapComponent implements OnDestroy, AfterViewInit {
       longitude: number | null;
     };
   } = {};
+  transformedMarkers: TransformedMarkerModel[] = [];
   markerIcon1: google.maps.Icon = {
     url: 'assets/images/botellon-icon.png',
     scaledSize: new google.maps.Size(60, 60),
@@ -54,6 +60,25 @@ export class DashboardClientMapComponent implements OnDestroy, AfterViewInit {
     private ngZone: NgZone,
     private store: Store
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['clientMarkers'] && !changes['clientMarkers'].firstChange) {
+      this.transformedMarkers = this.clientsAsArray();
+
+      if (this.transformedMarkers.length) {
+        this.center = {
+          lat: this.transformedMarkers[0].position.lat!,
+          lng: this.transformedMarkers[0].position.lng!,
+        };
+      } else {
+        this.center = {
+          lat: 18.931924080755334,
+          lng: -70.40929224394681,
+        };
+      }
+    }
+  }
+
   ngAfterViewInit(): void {
     this.mapLoaded$.subscribe((mapLoaded) => {
       if (mapLoaded) {
@@ -64,13 +89,7 @@ export class DashboardClientMapComponent implements OnDestroy, AfterViewInit {
   }
 
   clientsAsArray() {
-    let clients: {
-      name: string;
-      position: {
-        lat: number;
-        lng: number;
-      };
-    }[] = [];
+    let clients: TransformedMarkerModel[] = [];
     for (let key in this.clientMarkers) {
       let client = this.clientMarkers[key];
       if (client.latitude != null && client.longitude != null) {

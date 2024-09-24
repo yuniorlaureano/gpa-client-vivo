@@ -4,8 +4,10 @@ import {
   EventEmitter,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -15,13 +17,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { GoogleMap } from '@angular/google-maps';
 import { Store } from '@ngxs/store';
 import { AppState } from '../ng-xs-store/states/app.state';
+import { TransformedMarkerModel } from '../models/transformed-merker.mode';
 
 @Component({
   selector: 'gpa-map-google',
   templateUrl: './map-google.component.html',
   styleUrl: './map-google.component.css',
 })
-export class MapGoogleComponent implements OnDestroy, AfterViewInit {
+export class MapGoogleComponent implements OnDestroy, AfterViewInit, OnChanges {
   @Input() visible: boolean = false;
   @Output() onLocationChange = new EventEmitter<LocationWithNameModel>();
   @Output() onClose = new EventEmitter();
@@ -45,12 +48,31 @@ export class MapGoogleComponent implements OnDestroy, AfterViewInit {
     scaledSize: new google.maps.Size(60, 60),
   };
   mapLoaded$ = this.store.select(AppState.getMapLoaded);
+  transformedMarkers: TransformedMarkerModel[] = [];
 
   constructor(
     private spinner: NgxSpinnerService,
     private ngZone: NgZone,
     private store: Store
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['locations'] && !changes['locations'].firstChange) {
+      this.transformedMarkers = this.transformLocations();
+
+      if (this.transformedMarkers.length) {
+        this.center = {
+          lat: this.transformedMarkers[0].position.lat!,
+          lng: this.transformedMarkers[0].position.lng!,
+        };
+      } else {
+        this.center = {
+          lat: 18.931924080755334,
+          lng: -70.40929224394681,
+        };
+      }
+    }
+  }
 
   ngAfterViewInit(): void {
     this.mapLoaded$.subscribe((mapLoaded) => {
@@ -154,13 +176,7 @@ export class MapGoogleComponent implements OnDestroy, AfterViewInit {
   }
 
   transformLocations() {
-    let locations: {
-      name: string;
-      position: {
-        lat: number;
-        lng: number;
-      };
-    }[] = [];
+    let locations: TransformedMarkerModel[] = [];
     this.locations.forEach((location) => {
       locations.push({
         name: location.name,
