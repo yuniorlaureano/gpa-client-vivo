@@ -15,6 +15,8 @@ export interface StockModel {
   reasonName: string;
   invoiceId: string;
   stockDetails: StockDetailsModel[];
+  createdByName: string;
+  updatedByName: string;
 }
 
 export interface StockDetailsModel {

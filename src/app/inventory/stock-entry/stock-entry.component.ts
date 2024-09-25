@@ -37,6 +37,7 @@ import { downloadFile } from '../../core/utils/file.utils';
 import { ErrorService } from '../../core/service/error.service';
 import { AppState } from '../../core/ng-xs-store/states/app.state';
 import { createMask } from '@ngneat/input-mask';
+import { validateFiles } from '../../core/utils/image.utils';
 
 @Component({
   selector: 'gpa-stock-entry',
@@ -74,6 +75,8 @@ export class StockEntryComponent implements OnInit, OnDestroy {
       return Number(value.replace(/[^0-9.]/g, ''));
     },
   });
+  createdByName: string = '';
+  updatedByName: string = '';
 
   stockForm = this.formBuilder.group({
     id: [''],
@@ -443,6 +446,8 @@ export class StockEntryComponent implements OnInit, OnDestroy {
 
   mapStockEntryToForm(stock: StockModel | null) {
     if (stock) {
+      this.createdByName = stock.createdByName;
+      this.updatedByName = stock.updatedByName;
       this.stockForm.setValue({
         id: stock.id,
         description: stock.description,
@@ -527,8 +532,16 @@ export class StockEntryComponent implements OnInit, OnDestroy {
   processFileUpload(event: Event) {
     const fileElement = event.currentTarget as HTMLInputElement;
     this.files = fileElement.files;
-    //automaticaly upload the file if the product is being edited
-    this.uploadFIleOnUpdate();
+    if (this.files && this.files.length > 0) {
+      var resultError = validateFiles(this.files);
+      if (resultError) {
+        this.toastService.showError(resultError);
+        this.files = null;
+      } else {
+        //automaticaly upload the file if the product is being edited
+        this.uploadFIleOnUpdate();
+      }
+    }
   }
 
   uploadFIleOnUpdate() {
@@ -557,7 +570,13 @@ export class StockEntryComponent implements OnInit, OnDestroy {
               this.attachmentsSubject$.next(stockId);
             }
           },
-          error: () => {
+          error: (error) => {
+            processError(
+              error.error || error,
+              'Error adjuntando archivos'
+            ).forEach((err) => {
+              this.errorService.addGeneralError(err);
+            });
             func(false);
           },
         });

@@ -38,6 +38,8 @@ export class StockOutputComponent implements OnInit, OnDestroy {
 
   reasons$!: Observable<ReasonModel[]>;
   quantityMask = createMask({ mask: '9{1,9}' });
+  createdByName: string = '';
+  updatedByName: string = '';
 
   stockForm = this.formBuilder.group({
     id: [''],
@@ -337,6 +339,8 @@ export class StockOutputComponent implements OnInit, OnDestroy {
 
   mapValues(stock: StockModel | null) {
     if (stock) {
+      this.createdByName = stock.createdByName;
+      this.updatedByName = stock.updatedByName;
       this.stockForm.setValue({
         id: stock.id,
         description: stock.description,

@@ -34,6 +34,7 @@ import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
 import { createMask } from '@ngneat/input-mask';
+import { validateFiles } from '../../core/utils/image.utils';
 
 @Component({
   selector: 'gpa-sale',
@@ -79,6 +80,8 @@ export class SaleComponent implements OnInit, OnDestroy {
     },
   });
   quantityMask = createMask({ mask: '9{1,9}' });
+  createdByName: string = '';
+  updatedByName: string = '';
 
   attachments: InvoiceAttachModel[] = [];
   attachmentsSubject$ = new BehaviorSubject<string | null>(null);
@@ -129,7 +132,6 @@ export class SaleComponent implements OnInit, OnDestroy {
       this.getInvoice();
       this.loadAttachments();
     });
-    this.spinner.hide('fullscreen');
   }
 
   handlePermissionsLoad(onPermissionLoad: () => void) {
@@ -359,6 +361,8 @@ export class SaleComponent implements OnInit, OnDestroy {
       type: this.saleType,
       payment: this.getPayment(),
       paymentStatus: PaymentStatusEnum.Paid,
+      createdByName: '',
+      updatedByName: '',
       invoiceDetails: this.invoiceDetails.value.map((product: any) => ({
         id: product.id,
         productId: product.productId,
@@ -496,6 +500,8 @@ export class SaleComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (invoice) => {
           if (invoice) {
+            this.createdByName = invoice.createdByName;
+            this.updatedByName = invoice.updatedByName;
             this.invoiceId = invoice.id;
             this.saleForm.setValue({
               id: invoice.id,
@@ -550,8 +556,16 @@ export class SaleComponent implements OnInit, OnDestroy {
   processFileUpload(event: Event) {
     const fileElement = event.currentTarget as HTMLInputElement;
     this.files = fileElement.files;
-    //automaticaly upload the file if the product is being edited
-    this.uploadFIleOnUpdate();
+    if (this.files && this.files.length > 0) {
+      var resultError = validateFiles(this.files);
+      if (resultError) {
+        this.toastService.showError(resultError);
+        this.files = null;
+      } else {
+        //automaticaly upload the file if the product is being edited
+        this.uploadFIleOnUpdate();
+      }
+    }
   }
 
   uploadFIleOnUpdate() {
@@ -580,7 +594,13 @@ export class SaleComponent implements OnInit, OnDestroy {
               this.attachmentsSubject$.next(invoiceId);
             }
           },
-          error: () => {
+          error: (error) => {
+            processError(
+              error.error || error,
+              'Error adjuntando archivos'
+            ).forEach((err) => {
+              this.errorService.addGeneralError(err);
+            });
             func(false);
           },
         });

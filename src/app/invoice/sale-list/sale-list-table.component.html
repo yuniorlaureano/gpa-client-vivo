@@ -125,6 +125,8 @@
     <th>Nota</th>
     <th>Cliente</th>
     <th>Estado de pago</th>
+    <th>Realizada por</th>
+    <th>Actualizada por</th>
     <th></th>
   </tr>
   <tbody body>
@@ -156,6 +158,8 @@
           {{ getPyamentStatusDescription(invoice.paymentStatus) }}</a
         >
       </td>
+      <td>{{ invoice.createdByName }}</td>
+      <td>{{ invoice.updatedByName }}</td>
       <td style="width: 100px">
         <button
           class="btn btn-outline-warning btn-icon"

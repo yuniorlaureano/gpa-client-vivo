@@ -137,6 +137,8 @@
     <th>Proveedor</th>
     <th>Motivo</th>
     <th>Descripción</th>
+    <th>Realizada por</th>
+    <th>Actualizada por</th>
     <th></th>
   </tr>
   <tbody body>
@@ -157,6 +159,8 @@
       <td>{{ stock.providerName }}</td>
       <td>{{ stock.reasonName }}</td>
       <td>{{ stock.description }}</td>
+      <td>{{ stock.createdByName }}</td>
+      <td>{{ stock.updatedByName }}</td>
       <td style="width: 100px">
         <!-- <button class="btn btn-danger btn-icon" (click)="handleDelete(stock)">
           <i class="bi bi-trash"></i>

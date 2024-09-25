@@ -29,6 +29,7 @@ import { FilterModel } from '../../core/models/filter.model';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
 import { createMask } from '@ngneat/input-mask';
+import { validateImage } from '../../core/utils/image.utils';
 
 @Component({
   selector: 'gpa-product',
@@ -282,36 +283,47 @@ export class ProductComponent implements OnInit, OnDestroy {
       this.imageUrl = reader.result;
     };
     if (this.photo) {
-      reader.readAsDataURL(this.photo);
+      const resultError = validateImage(this.photo);
+      if (resultError) {
+        this.toastService.showError(resultError);
+      } else {
+        reader.readAsDataURL(this.photo);
+        //automaticaly upload the file if the product is being edited
+        this.uploadFIleOnUpdate();
+      }
     } else {
       this.imageUrl = 'assets/images/default-placeholder.png';
     }
-
-    //automaticaly upload the file if the product is being edited
-    this.uploadFIleOnUpdate();
   }
 
   uploadFIleOnUpdate() {
     if (this.isEdit && this.productForm.get('id')?.value) {
       this.spinner.show('fullscreen');
-      this.uploadFile(this.productForm.get('id')?.value!, () => {
-        this.toastService.showSucess('Foto actualizada');
+      this.uploadFile(this.productForm.get('id')?.value!, (success) => {
+        if (success) {
+          this.toastService.showSucess('Foto actualizada');
+        }
         this.spinner.hide('fullscreen');
       });
     }
   }
 
-  uploadFile(productId: string, func: () => void) {
+  uploadFile(productId: string, func: (success: boolean) => void) {
     if (this.photo) {
       const formData = new FormData();
       formData.append('ProductId', productId);
       formData.append('Photo', this.photo);
       const sub = this.productService.uploadFile(formData).subscribe({
         next: () => {
-          func();
+          func(true);
         },
-        error: () => {
-          func();
+        error: (error) => {
+          processError(error.error || error, 'Error subiendo foto').forEach(
+            (err) => {
+              this.errorService.addGeneralError(err);
+            }
+          );
+          func(false);
         },
       });
       this.subscriptions$.push(sub);

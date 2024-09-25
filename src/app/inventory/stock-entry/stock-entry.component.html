@@ -153,15 +153,23 @@
             </ul>
           </div>
         </div>
-        <div class="col-sm-6" *ngIf="isEdit">
-          <label for="status" class="form-label">Estado</label>
-          <div class="input-group">
-            <input
-              class="form-control"
-              disabled
-              [value]="getStatusDescription()"
-            />
-          </div>
+        <div class="col-sm-12" *ngIf="isEdit">
+          <label for="status" class="form-label" style="font-weight: bold"
+            >Estado:
+          </label>
+          {{ getStatusDescription() }}
+        </div>
+        <div class="col-sm-12" *ngIf="this.createdByName">
+          <label for="status" class="form-label" style="font-weight: bold"
+            >Realizada por:
+          </label>
+          {{ this.createdByName }}
+        </div>
+        <div class="col-sm-12" *ngIf="this.updatedByName">
+          <label for="status" class="form-label" style="font-weight: bold"
+            >Actualizada por:
+          </label>
+          {{ this.updatedByName }}
         </div>
         <div class="col-sm-12 col-12 mt-3">
           <div class="mb-3">

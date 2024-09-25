@@ -14,6 +14,8 @@ export interface InvoiceModel {
   payment: number;
   paymentStatus: PaymentStatusEnum;
   clientId: string;
+  createdByName: string;
+  updatedByName: string;
   invoiceDetails: InvoiceDetailModel[];
   client: ClientModel | null;
 }

@@ -19,6 +19,7 @@ import { PrintInformationService } from '../service/print-information.service';
 import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
 import { createMask } from '@ngneat/input-mask';
+import { validateImage } from '../../core/utils/image.utils';
 
 @Component({
   selector: 'gpa-product',
@@ -221,13 +222,17 @@ export class PrintInformationComponent implements OnInit, OnDestroy {
       this.imageUrl = reader.result;
     };
     if (this.photo) {
-      reader.readAsDataURL(this.photo);
+      const resultError = validateImage(this.photo);
+      if (resultError) {
+        this.toastService.showError(resultError);
+      } else {
+        reader.readAsDataURL(this.photo);
+        //automaticaly upload the file if the product is being edited
+        this.uploadFIleOnUpdate();
+      }
     } else {
       this.imageUrl = 'assets/images/default-placeholder.png';
     }
-
-    //automaticaly upload the file if the product is being edited
-    this.uploadFIleOnUpdate();
   }
 
   uploadFIleOnUpdate() {
