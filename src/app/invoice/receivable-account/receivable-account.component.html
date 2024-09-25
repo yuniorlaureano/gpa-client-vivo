@@ -4,7 +4,7 @@
     class="btn btn-outline-info btn-rounded"
     style="margin-right: 5px"
   >
-    <i class="bi bi-cash-coin"></i> Cuentas por cobrar Cuenta por cobrar
+    <i class="bi bi-cash-coin"></i> Cuentas por cobrar
   </a>
   <a
     routerLink="/invoice/sale/list"
@@ -19,6 +19,7 @@
     style="margin-right: 5px"
     (click)="handleSave()"
     [disabled]="!canEdit"
+    *ngIf="invoice?.paymentStatus == 1"
   >
     <i class="fa-solid fa-floppy-disk"></i>Guardar
   </button>
@@ -100,7 +101,11 @@
         </div>
       </div>
       <div class="col-12 col-sm-12">
-        <form class="row row-cols-sm-auto" [formGroup]="receivableForm">
+        <form
+          class="row row-cols-sm-auto"
+          [formGroup]="receivableForm"
+          *ngIf="invoice?.paymentStatus == 1"
+        >
           <div class="col-sm-3">
             <div class="mb-3">
               <label for="date" class="form-label"
