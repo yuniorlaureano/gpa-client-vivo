@@ -649,12 +649,12 @@ export class SaleComponent implements OnInit, OnDestroy {
               product.stockProduct.productCode,
               Validators.required,
             ],
-            price: [product.stockProduct.price, Validators.required],
+            price: [product.price, Validators.required],
             productName: [
               product.stockProduct.productName,
               Validators.required,
             ],
-            productId: [product.stockProduct.productId, Validators.required],
+            productId: [product.productId, Validators.required],
             quantity: [
               product.quantity,
               [
