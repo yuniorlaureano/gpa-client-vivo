@@ -49,3 +49,17 @@ docker-compose up
 ### Exit
 
 docker-compose down
+
+#
+
+# Copy backup data
+
+After yuou have you compose running, you can restore the backup with the fallowing commands
+
+```
+docker run --rm -v gpa-client_sqlserverdata:/volume -v ${pwd}:/backup busybox tar cvf /backup/sqlserverdata.tar /volume
+```
+
+```
+docker run --rm -v gpa-client_sqlserverdata:/volume -v ${pwd}:/backup busybox tar xvf /backup/sqlserverdata.tar -C /
+```
