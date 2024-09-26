@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - "8082:1433"
+    environment:
+      SA_PASSWORD: "Oam-admin-123*Test"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+  gpa-backend:
+    image: oamroinuy/gpa-backend:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - ConnectionStrings__Default=Server=sql-server;Database=gpa;User Id=sa;Password=Oam-admin-123*Test;MultipleActiveResultSets=true;TrustServerCertificate=True
+      - AllowedOriging=http://localhost:3000,http://gpa-frontend:3000
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  gpa-frontend:
+    image: oamroinuy/gpa-frontend:latest
+    ports:
+      - "3000:80"
+    depends_on:
+      - gpa-backend
+
+volumes:
+  sqlserverdata:

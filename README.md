@@ -1,27 +1,51 @@
-# GpaClient
+# Running docker
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.5.
+### Backend process
 
-## Development server
+Get project from [client project](https://github.com/yuniorlaureano/GPA.git)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Clone the project from the above repository
+- Navigate to the root folder
+- Build the image. You can skip this process if you are planning to use the image hosted at repo: oamroinuy, if not just replace [repo] with your own repo
 
-## Code scaffolding
+```
+docker build -t [repo]/gpa-backend:latest .
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Push the command to your repo
 
-## Build
+```
+docker login
+docker push [repo]/gpa-backend:latest
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- With this you end up with an image in your dockerhub repo
 
-## Running unit tests
+### Front end process
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Get project from [server project](https://github.com/yuniorlaureano/gpa-client-vivo.git)
 
-## Running end-to-end tests
+- Clone the project from the above repository
+- Navigate to the root folder
+- Build the image. You can skip this process if you are planning to use the image hosted at repo: oamroinuy, if not just replace [repo] with your own repo
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```
+docker build -t [repo]/gpa-frontend:latest .
+```
 
-## Further help
+- Push the command to your repo
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```
+docker login
+docker push [repo]/gpa-frontend:latest
+```
+
+- With this you end up with an image in your dockerhub repo
+
+### Runnig docker compose
+
+docker-compose up
+
+### Exit
+
+docker-compose down
