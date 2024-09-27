@@ -33,6 +33,7 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
     note: [null],
     invoiceId: ['', Validators.required],
   });
+  return: number = 0.0;
   currencyInputMask = createMask({
     alias: 'numeric',
     groupSeparator: ',',
@@ -118,6 +119,16 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
     );
   }
 
+  calculateReturn() {
+    const payment = parseFloat(
+      String(this.receivableForm.get('payment')?.value || 0)
+    );
+    const pendingPayment = this.invoice?.pendingPayment?.pendingPayment ?? 0;
+    if (payment >= pendingPayment) {
+      this.return = payment - pendingPayment;
+    }
+  }
+
   handleSave() {
     const payment = parseFloat(
       String(this.receivableForm.get('payment')?.value || 0)
@@ -152,7 +163,6 @@ export class ReceivableAccountComponent implements OnInit, OnDestroy {
         pendingPayment: 0.0,
         invoiceId: this.receivableForm.get('invoiceId')?.value ?? '',
       };
-
       const sub = this.receivableAccountService
         .updateReceivableAccount(value)
         .subscribe({

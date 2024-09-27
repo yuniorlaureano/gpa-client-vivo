@@ -136,6 +136,7 @@
                   formControlName="payment"
                   [inputMask]="currencyInputMask"
                   placeholder="$ 0.00"
+                  (input)="calculateReturn()"
                 />
               </div>
               <gpa-validator-message
@@ -150,6 +151,12 @@
                 validation="min"
                 message="El pago debe ser mayor a 0"
               />
+            </div>
+          </div>
+          <div class="col-sm-1">
+            <div class="mb-3">
+              <label for="payment" class="form-label">Devuelta</label>
+              <p>{{ return | currency }}</p>
             </div>
           </div>
           <div class="col-12 col-sm-12">
