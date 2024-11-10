@@ -89,7 +89,7 @@ export class AuthService {
 
   sendRemptionCode(redimeToken: string): Observable<UserModel> {
     return this.http.get<UserModel>(
-      `${this.url}/totp-invitation/${redimeToken}/send`
+      `${this.url}/totp-invitation/send?token=${redimeToken}`
     );
   }
 

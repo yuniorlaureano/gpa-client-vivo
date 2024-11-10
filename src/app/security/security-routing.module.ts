@@ -20,7 +20,7 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'totp-code', component: TOTPCodeComponent },
       {
-        path: 'invitation-redemption/:token',
+        path: 'invitation-redemption',
         component: InvitationRedentionComponent,
       },
       { path: 'reset-password', component: ResetPasswordComponent },

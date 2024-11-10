@@ -75,7 +75,7 @@ export class InvitationRedentionComponent implements OnDestroy, OnInit {
   }
 
   sendCode() {
-    const sub = this.route.paramMap
+    const sub = this.route.queryParamMap
       .pipe(
         switchMap((params) => {
           this.spinner.show('fullscreen');

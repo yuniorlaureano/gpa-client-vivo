@@ -1,4 +1,4 @@
 export const environment = {
-  api_url: 'http://localhost:8080',
+  api_url: 'http://sgpa.unad.edu.do:8081',
   development: false,
 };
