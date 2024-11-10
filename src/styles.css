@@ -14,25 +14,12 @@
 .right-button {
   display: flex;
   justify-content: flex-end;
-  top: 90px;
-  position: fixed;
-  right: 0px;
-  z-index: 100;
 }
 
 @media screen and (max-width: 1024px) {
   .right-button {
     display: flex;
     justify-content: flex-end;
-    position: fixed !important;
-    top: 100px !important;
-    right: 0px !important;
-    z-index: 100 !important;
-    overflow: scroll;
-  }
-
-  .card-content-container {
-    margin-top: 100px !important;
   }
 }
 
