@@ -277,6 +277,16 @@ export class SaleComponent implements OnInit, OnDestroy {
       this.toastService.showError('No tiene crédito suficiente. Verificar');
       return;
     }
+
+    if (!this.saleForm.valid || this.invoiceDetails.length == 0) {
+      this.confirmService.alert(
+        'Venta',
+        'Debe completar todos los campos, y agregar al menos un producto'
+      );
+      this.saleForm.markAllAsTouched();
+      return;
+    }
+
     this.confirmService
       .confirm('Venta', 'Está seguro de realizar la venta?')
       .then(() => {
