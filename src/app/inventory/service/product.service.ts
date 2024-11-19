@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { ProductModel } from '../models/product.model';
+import { ProductModel, ProductReadModel } from '../models/product.model';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../../core/models/response.model';
 import { FilterModel } from '../../core/models/filter.model';
@@ -19,8 +19,8 @@ export class ProductService {
     );
   }
 
-  getProductById(id: string): Observable<ProductModel> {
-    return this.http.get<ProductModel>(`${this.url}/${id}`);
+  getProductById(id: string): Observable<ProductReadModel> {
+    return this.http.get<ProductReadModel>(`${this.url}/${id}`);
   }
 
   addProduct(model: ProductModel): Observable<ProductModel> {

@@ -40,6 +40,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
   quantityMask = createMask({ mask: '9{1,9}' });
   createdByName: string = '';
   updatedByName: string = '';
+  invoiceId: string | null = null;
 
   stockForm = this.formBuilder.group({
     id: [''],
@@ -261,6 +262,10 @@ export class StockOutputComponent implements OnInit, OnDestroy {
   }
 
   showCancel() {
+    if (this.isEdit && this.invoiceId) {
+      return false;
+    }
+
     const status = this.stockForm.get('status')?.value;
     const reason = Number(this.stockForm.get('reasonId')?.value);
     return (
@@ -339,6 +344,7 @@ export class StockOutputComponent implements OnInit, OnDestroy {
 
   mapValues(stock: StockModel | null) {
     if (stock) {
+      this.invoiceId = stock.invoiceId;
       this.createdByName = stock.createdByName;
       this.updatedByName = stock.updatedByName;
       this.stockForm.setValue({

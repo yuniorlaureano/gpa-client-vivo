@@ -40,7 +40,7 @@
     class="btn btn-outline-dark btn-rounded"
     (click)="handleCancel()"
   >
-    <i class="bi bi-arrow-clockwise"></i> Limpiar campos
+    <i class="bi bi-plus-lg"></i> Nuevo producto
   </button>
 </div>
 <div style="margin-top: 5px">
@@ -282,11 +282,82 @@
                     </div>
                   </div>
                 </div>
+                <hr />
+                <div class="col-sm-12 col-12">
+                  <div class="mb-2">
+                    <button
+                      class="btn btn-outline-primary"
+                      type="button"
+                      (click)="handleShowProductCatalog(true)"
+                    >
+                      <i class="bi bi-plus-lg"></i> Agregar materia prima
+                    </button>
+                  </div>
+                </div>
+
+                <div class="col-12 col-sm-12">
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th>Código</th>
+                          <th>Producto</th>
+                          <th>Cantidad</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody formArrayName="relatedProducts">
+                        <tr
+                          *ngFor="
+                            let formProduct of formRelatedProducts.controls;
+                            let i = index
+                          "
+                          [formGroupName]="i"
+                        >
+                          <td>{{ formProduct.get("productCode")?.value }}</td>
+                          <td>{{ formProduct.get("productName")?.value }}</td>
+                          <td>
+                            <input
+                              type="text"
+                              class="form-control"
+                              formControlName="quantity"
+                              style="width: 130px"
+                              [class.quantity-error]="
+                                !formProduct.get('quantity')?.valid
+                              "
+                              [inputMask]="quantityMask"
+                            />
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              class="btn btn-outline-danger btn-rounded"
+                              (click)="
+                                removeProductFromCatalog(
+                                  i,
+                                  formProduct.get('id')?.value
+                                )
+                              "
+                            >
+                              <i class="bi bi-trash-fill"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
         </div>
       </div>
+
+      <gpa-product-catalog
+        [(visible)]="isProductCatalogVisible"
+        [selectedProducts]="selectedProducts"
+        (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
+      ></gpa-product-catalog>
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
-import { ProductModel } from '../models/product.model';
+import { ProductModel, ProductReadModel } from '../models/product.model';
 import { ProductService } from '../service/product.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {
@@ -30,6 +30,7 @@ import { processError } from '../../core/utils/error.utils';
 import { ErrorService } from '../../core/service/error.service';
 import { createMask } from '@ngneat/input-mask';
 import { validateImage } from '../../core/utils/image.utils';
+import { RawRelatedProductReadModel } from '../models/raw-related-product-read.model';
 
 @Component({
   selector: 'gpa-product',
@@ -45,6 +46,8 @@ export class ProductComponent implements OnInit, OnDestroy {
   imageUrl: string | ArrayBuffer | null =
     'assets/images/default-placeholder.png';
   triggerLoadAddons$ = new BehaviorSubject<boolean>(false);
+  isProductCatalogVisible: boolean = false;
+  selectedProducts: { [key: string]: boolean } = {};
 
   subscriptions$: Subscription[] = [];
   currencyInputMask = createMask({
@@ -68,6 +71,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       return Number(value.replace(/[^0-9.]/g, ''));
     },
   });
+  quantityMask = createMask({ mask: '9{1,9}' });
   //permissions
   canRead: boolean = false;
   canCreate: boolean = false;
@@ -88,6 +92,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       [Validators.required, Validators.min(1), Validators.max(2)],
     ],
     addons: this.fb.array([]),
+    relatedProducts: this.fb.array([]),
   });
 
   constructor(
@@ -175,6 +180,10 @@ export class ProductComponent implements OnInit, OnDestroy {
       addons: this.addonsForm.value
         .filter((creadit: any) => creadit.selected)
         .map((credit: any) => credit.id),
+      relatedProducts: this.formRelatedProducts.value.map((product: any) => ({
+        productId: product.productId,
+        quantity: product.quantity,
+      })),
     };
   }
 
@@ -339,7 +348,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  setProduct(product: ProductModel | null, addons: AddonModel[] | null) {
+  setProduct(product: ProductReadModel | null, addons: AddonModel[] | null) {
     if (product == null) return;
 
     this.setFormValues(product);
@@ -354,7 +363,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.mapAddon(addons!, (id) => (selectedAddon[id] ? true : false));
   }
 
-  setFormValues(product: ProductModel) {
+  setFormValues(product: ProductReadModel) {
+    this.formRelatedProducts.clear();
     this.productForm.setValue({
       id: product.id,
       code: product.code,
@@ -366,6 +376,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       categoryId: product.categoryId,
       type: product.type,
       addons: [],
+      relatedProducts: [],
     });
   }
 
@@ -435,6 +446,7 @@ export class ProductComponent implements OnInit, OnDestroy {
           if (product) {
             this.setPhoto(product.photo);
             this.setProduct(product, addons);
+            this.mapRelatedProductsToForm(product.relatedProducts);
           }
           this.spinner.hide('fullscreen');
         },
@@ -448,5 +460,62 @@ export class ProductComponent implements OnInit, OnDestroy {
         },
       });
     this.subscriptions$.push(sub);
+  }
+
+  get formRelatedProducts() {
+    return this.productForm.get('relatedProducts') as FormArray;
+  }
+
+  handleSelectedProductFromCatalog(product: ProductModel) {
+    if (!this.selectedProducts[product.id!]) {
+      this.selectedProducts[product.id!] = true;
+      this.formRelatedProducts?.push(this.newProduct(product));
+    }
+  }
+
+  newProduct(product: ProductModel) {
+    return this.fb.group({
+      id: [product.id],
+      productCode: [product.code, Validators.required],
+      productName: [product.name, Validators.required],
+      productId: [product.id, Validators.required],
+      quantity: [
+        1,
+        [Validators.required, Validators.min(1), Validators.max(2147483647)],
+      ],
+    });
+  }
+
+  removeProductFromCatalog(index: number, productId: string) {
+    this.formRelatedProducts.removeAt(index);
+    delete this.selectedProducts[productId];
+  }
+
+  handleShowProductCatalog(visible: boolean) {
+    this.isProductCatalogVisible = visible;
+  }
+
+  mapRelatedProductsToForm(relatedProducts: RawRelatedProductReadModel[]) {
+    if (!relatedProducts) return;
+
+    this.formRelatedProducts.clear();
+    for (let relatedProduct of relatedProducts) {
+      this.selectedProducts[relatedProduct.relatedProductId!] = true;
+      this.formRelatedProducts.push(
+        this.fb.group({
+          productCode: [relatedProduct.code, Validators.required],
+          productName: [relatedProduct.name, Validators.required],
+          productId: [relatedProduct.relatedProductId, Validators.required],
+          quantity: [
+            relatedProduct.quantity,
+            [
+              Validators.required,
+              Validators.min(1),
+              Validators.max(2147483647),
+            ],
+          ],
+        })
+      );
+    }
   }
 }
