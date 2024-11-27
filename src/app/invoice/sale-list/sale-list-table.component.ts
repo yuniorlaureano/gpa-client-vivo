@@ -32,6 +32,8 @@ import { processError } from '../../core/utils/error.utils';
 import { downloadFile } from '../../core/utils/file.utils';
 import { ReportService } from '../../report/service/report.service';
 import { ErrorService } from '../../core/service/error.service';
+import { getPaymentMethodLabel } from '../../core/utils/invoice.utils';
+import { PaymentMethodEnum } from '../../core/models/payment-method.enum';
 
 @Component({
   selector: 'gpa-sale-list-table',
@@ -278,5 +280,9 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
       default:
         return '';
     }
+  }
+
+  paymentMethodLabel(paymentMethod: PaymentMethodEnum) {
+    return getPaymentMethodLabel(paymentMethod);
   }
 }

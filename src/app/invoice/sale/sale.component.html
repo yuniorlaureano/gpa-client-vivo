@@ -201,6 +201,75 @@
               </ul>
             </div>
           </div>
+          <div class="col-xl-12 col-sm-12 col-12">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="paymentMethod"
+                id="radio-Cashed"
+                [value]="1"
+                formControlName="paymentMethod"
+              />
+              <label class="form-check-label" for="radio-Cashed"
+                >Efectivo</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="paymentMethod"
+                id="radio-BankTransfer"
+                [value]="2"
+                formControlName="paymentMethod"
+              />
+              <label class="form-check-label" for="radio-BankTransfer"
+                >Transferencia</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="paymentMethod"
+                id="radio-CreditCard"
+                [value]="3"
+                formControlName="paymentMethod"
+              />
+              <label class="form-check-label" for="radio-CreditCard"
+                >Tarjeta</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="paymentMethod"
+                id="radio-Check"
+                [value]="4"
+                formControlName="paymentMethod"
+              />
+              <label class="form-check-label" for="radio-Check">Cheque</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="paymentMethod"
+                id="radio-Other"
+                [value]="5"
+                formControlName="paymentMethod"
+              />
+              <label class="form-check-label" for="radio-Other">Otro</label>
+            </div>
+            <gpa-validator-message
+              [control]="saleForm.get('paymentMethod')"
+              [touched]="saleForm.touched"
+              validation="required"
+              message="El método de pago es requerido"
+            />
+          </div>
           <div class="col-12 col-sm-12">
             <div class="mb-3">
               <label for="note" class="form-label">Nota</label>

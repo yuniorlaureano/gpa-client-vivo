@@ -122,7 +122,7 @@
     <th>Código</th>
     <th>Tipo</th>
     <th>Fecha</th>
-    <th>Nota</th>
+    <th>Método de pago</th>
     <th>Cliente</th>
     <th>Estado de pago</th>
     <th>Realizada por</th>
@@ -141,7 +141,7 @@
       <td>{{ invoice.code }}</td>
       <td>{{ invoice.type == 1 ? "Al contado" : "A crédito" }}</td>
       <td>{{ invoice.date | date }}</td>
-      <td>{{ invoice.note }}</td>
+      <td>{{ paymentMethodLabel(invoice.paymentMethod) }}</td>
       <td>
         <a
           style="color: rgba(13, 110, 253)"

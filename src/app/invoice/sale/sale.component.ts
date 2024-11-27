@@ -96,6 +96,7 @@ export class SaleComponent implements OnInit, OnDestroy {
     clientId: ['', Validators.required],
     storeId: [''],
     invoiceDetails: this.formBuilder.array([]),
+    paymentMethod: [1, Validators.required],
   });
 
   isEdit = false;
@@ -522,6 +523,7 @@ export class SaleComponent implements OnInit, OnDestroy {
               clientId: invoice.clientId,
               storeId: null,
               invoiceDetails: [],
+              paymentMethod: invoice.paymentMethod,
             });
             this.payment = invoice.payment;
             this.paymentValue = invoice.payment;
