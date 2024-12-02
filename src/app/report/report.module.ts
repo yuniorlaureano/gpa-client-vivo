@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerComponent } from 'ngx-spinner';
 import { ReportGroupComponent } from './report-group/report-group.component';
 import { SaleReportComponent } from './report-group/sale-report/sale-report.component';
+import { CoreModule } from '../core/core.module';
 
 @NgModule({
   declarations: [ReportGroupComponent, SaleReportComponent],
@@ -21,6 +22,7 @@ import { SaleReportComponent } from './report-group/sale-report/sale-report.comp
     FormsModule,
     ReactiveFormsModule,
     NgxSpinnerComponent,
+    CoreModule,
   ],
 })
 export class ReportModule {}

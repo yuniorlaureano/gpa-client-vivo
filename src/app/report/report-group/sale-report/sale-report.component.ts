@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Subject, Subscription, switchMap } from 'rxjs';
+import { of, Subject, Subscription, switchMap } from 'rxjs';
 import { FilterModel } from '../../../core/models/filter.model';
 import { ReportService } from '../../service/report.service';
 import { downloadFile } from '../../../core/utils/file.utils';
@@ -27,8 +27,8 @@ export class SaleReportComponent implements OnDestroy, OnInit {
     term: [''],
     status: ['-1'],
     saleType: ['-1'],
-    from: [null],
-    to: [null],
+    from: [null, Validators.required],
+    to: [null, Validators.required],
   });
 
   constructor(
@@ -47,6 +47,7 @@ export class SaleReportComponent implements OnDestroy, OnInit {
   }
 
   handleSearch() {
+    this.filterForm.markAllAsTouched();
     if (
       (this.filterForm.get('from')?.value &&
         !this.filterForm.get('to')?.value) ||
@@ -71,14 +72,21 @@ export class SaleReportComponent implements OnDestroy, OnInit {
     const sub = this.$download
       .pipe(
         switchMap(() => {
+          this.filterForm.markAllAsTouched();
           this.spinner.show('table-spinner');
           let searchModel = new FilterModel();
           searchModel.search = this.search;
-          return this.reportService.saleReport(searchModel);
+          return this.filterForm.valid
+            ? this.reportService.saleReport(searchModel)
+            : of(null);
         })
       )
       .subscribe({
         next: (data) => {
+          if (!data) {
+            this.spinner.hide('table-spinner');
+            return;
+          }
           downloadFile(data, 'ventas.pdf');
           this.spinner.hide('table-spinner');
         },
@@ -94,14 +102,21 @@ export class SaleReportComponent implements OnDestroy, OnInit {
     const sub = this.$sales
       .pipe(
         switchMap(() => {
+          this.filterForm.markAllAsTouched();
           this.spinner.show('table-spinner');
           let searchModel = new FilterModel();
           searchModel.search = this.search;
-          return this.reportService.getSale(searchModel);
+          return this.filterForm.valid
+            ? this.reportService.getSale(searchModel)
+            : of(null);
         })
       )
       .subscribe({
         next: (data) => {
+          if (!data) {
+            this.spinner.hide('table-spinner');
+            return;
+          }
           this.data = data;
           this.spinner.hide('table-spinner');
         },

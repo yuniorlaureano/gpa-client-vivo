@@ -67,6 +67,12 @@
               type="button"
             ></button>
           </div>
+          <gpa-validator-message
+            [control]="filterForm.get('from')"
+            [touched]="filterForm.touched"
+            validation="required"
+            message="Requerido"
+          />
         </div>
       </div>
       <div class="col-sm-3 col-4">
@@ -87,6 +93,12 @@
               type="button"
             ></button>
           </div>
+          <gpa-validator-message
+            [control]="filterForm.get('to')"
+            [touched]="filterForm.touched"
+            validation="required"
+            message="Requerido"
+          />
         </div>
       </div>
       <div class="col-sm-1 col-1 mt-4" style="padding-top: 3px">
