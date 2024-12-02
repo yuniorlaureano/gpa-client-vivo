@@ -1,0 +1,49 @@
+<!-- Row start -->
+<div class="row">
+  <div class="col-sm-12 col-12">
+    <!-- Card start -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"></div>
+      </div>
+      <div class="card-body">
+        <!-- Row start -->
+        <div class="row">
+          <div class="col-xl-3 col-sm-4 col-12">
+            <div class="mb-3">
+              <label for="report-type-select" class="form-label"
+                >Reportes</label
+              >
+              <select
+                class="form-select"
+                id="report-type-select"
+                (change)="handleSelectReportType($event)"
+              >
+                <option value="None" selected>Seleccionar reporte</option>
+                <option *ngFor="let report of reports" [value]="report">
+                  {{ reports.toString() }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Card end -->
+  </div>
+  <div class="col-sm-12 col-12">
+    <!-- Card start -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fa-solid fa-file-lines"></i>
+      </div>
+      <div class="card-body">
+        <gpa-sale-report
+          *ngIf="selectedReport == reportType.Sale"
+        ></gpa-sale-report>
+      </div>
+    </div>
+    <!-- Card end -->
+  </div>
+</div>
+<!-- Row end -->

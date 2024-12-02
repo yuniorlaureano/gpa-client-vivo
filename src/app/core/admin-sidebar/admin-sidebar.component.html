@@ -380,6 +380,28 @@
             </ul>
           </div>
         </li>
+        <li class="sidebar-dropdown" [class.active]="menu == 'report'">
+          <a (click)="handleMenuSelected('report')">
+            <i class="fa-regular fa-file-excel"></i>
+            <span class="menu-text">Reportes</span>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'report' ? 'block' : 'none'"
+          >
+            <ul>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/report/report-group"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Reportes')"
+                  ><i class="fa-solid fa-user-lock"></i>Grupo de reportes</a
+                >
+              </li>
+            </ul>
+          </div>
+        </li>
       </ul>
     </div>
   </div>

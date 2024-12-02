@@ -1,0 +1,186 @@
+<!-- Row start -->
+<ngx-spinner
+  name="table-spinner"
+  [fullScreen]="false"
+  type="timer"
+  size="medium"
+></ngx-spinner>
+<div search style="width: 100%">
+  <form [formGroup]="filterForm">
+    <div class="row">
+      <div class="col-sm-3 col-6">
+        <label class="form-label" style="margin-bottom: 23px"></label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar por cliente"
+            formControlName="term"
+            (input)="handleSearch()"
+            style="margin-right: 2px; width: 100px"
+          />
+        </div>
+      </div>
+      <div class="col-sm-2 col-6">
+        <label class="form-label">Estado</label>
+        <select
+          class="form-control"
+          (change)="handleSearch()"
+          formControlName="status"
+        >
+          <option value="-1">Todos</option>
+          <option value="0">Borrador</option>
+          <option value="1">Guardado</option>
+          <option value="2">Cancelado</option>
+        </select>
+      </div>
+      <div class="col-sm-2 col-12">
+        <label class="form-label">Tipo</label>
+        <select
+          class="form-control"
+          (change)="handleSearch()"
+          formControlName="saleType"
+        >
+          <option value="-1">Todos</option>
+          <option value="0">A crédigo</option>
+          <option value="1">Al contado</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3 col-4">
+        <div class="mb-3">
+          <label class="form-label">Desde</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              ngbDatepicker
+              #fromDate="ngbDatepicker"
+              formControlName="from"
+              (dateSelect)="handleSearch()"
+            />
+            <button
+              class="btn btn-outline-secondary bi bi-calendar3"
+              (click)="fromDate.toggle()"
+              type="button"
+            ></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-4">
+        <div class="mb-3">
+          <label class="form-label">Hasta</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              ngbDatepicker
+              #toDate="ngbDatepicker"
+              formControlName="to"
+              (dateSelect)="handleSearch()"
+            />
+            <button
+              class="btn btn-outline-secondary bi bi-calendar3"
+              (click)="toDate.toggle()"
+              type="button"
+            ></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-1 col-1 mt-4" style="padding-top: 3px">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="resetSearchFilter()"
+          placement="top"
+          ngbTooltip="Limpiar campos"
+        >
+          <i class="bi bi-arrow-clockwise"></i>
+        </button>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: right">
+      <button
+        type="button"
+        class="btn btn-outline-info mb-1"
+        (click)="$download.next()"
+        placement="top"
+        ngbTooltip="Exportar a PDF"
+        style="margin-right: 4px"
+      >
+        <i class="fa-regular fa-file-pdf"></i>
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-warning mb-1"
+        (click)="$sales.next()"
+        placement="top"
+        ngbTooltip="Buscar"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+  </form>
+</div>
+<!-- Row end -->
+
+<hr />
+
+<div class="row">
+  <div class="col-xl-12 col-sm-12 col-12">
+    <table class="table table-bordered table-striped m-0">
+      <thead>
+        <tr>
+          <!-- <th>Estado</th> -->
+          <th>Código</th>
+          <!-- <th>Tipo</th> -->
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Método de pago</th>
+          <th>Monto</th>
+          <!-- <th>Estado de pago</th> -->
+          <!-- <th>Realizada por</th>
+          <th>Actualizada por</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of data">
+          <!-- <td
+            [class.draft]="invoice.status == 0"
+            [class.saved]="invoice.status == 1"
+            [class.cancel]="invoice.status == 2"
+          >
+            {{ getStatusDescription(invoice.status) }}
+          </td> -->
+          <td>{{ invoice.code }}</td>
+          <!-- <td>{{ invoice.type == 1 ? "Al contado" : "A crédito" }}</td> -->
+          <td>{{ invoice.date | date }}</td>
+          <td>
+            <a
+              style="color: rgba(13, 110, 253)"
+              routerLink="{{ '/invoice/client/edit/' + invoice.clientId }}"
+              ><i class="bi bi-person"></i>
+              {{ invoice.clientName + " " + invoice.clientLastName }}</a
+            >
+          </td>
+          <td>{{ paymentMethodLabel(invoice.paymentMethod) }}</td>
+          <td>{{ invoice.toPay | currency }}</td>
+          <!-- <td>
+            <a
+              style="color: rgba(13, 110, 253)"
+              routerLink="{{
+                '/invoice/receivable-account/invoice/' + invoice.id
+              }}"
+              ><i class="bi bi-receipt"></i>
+              {{ getPyamentStatusDescription(invoice.paymentStatus) }}</a
+            >
+          </td> -->
+          <!-- <td>{{ invoice.createdByName }}</td>
+          <td>{{ invoice.updatedByName }}</td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

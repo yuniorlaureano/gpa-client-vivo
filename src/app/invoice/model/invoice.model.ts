@@ -13,6 +13,7 @@ export interface InvoiceModel {
   date: string;
   note: string | null;
   payment: number;
+  toPay: number;
   paymentStatus: PaymentStatusEnum;
   clientId: string;
   createdByName: string;

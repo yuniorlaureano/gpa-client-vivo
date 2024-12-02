@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FilterModel } from '../../core/models/filter.model';
 import { environment } from '../../../environments/environment';
+import { RawAllInvoice } from '../models/raw-all-invoice';
 
 @Injectable()
 export class ReportService {
@@ -39,6 +40,12 @@ export class ReportService {
       {
         responseType: 'blob',
       }
+    );
+  }
+
+  getSale(search: FilterModel | null = null): Observable<RawAllInvoice[]> {
+    return this.http.get<RawAllInvoice[]>(
+      `${this.url}/sales/${search ? search.asQueryString() : ''}`
     );
   }
 }

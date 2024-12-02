@@ -2,14 +2,20 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ReportRoutingModule } from './report-routing.module';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDatepickerModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerComponent } from 'ngx-spinner';
+import { ReportGroupComponent } from './report-group/report-group.component';
+import { SaleReportComponent } from './report-group/sale-report/sale-report.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [ReportGroupComponent, SaleReportComponent],
   imports: [
     CommonModule,
+    NgbDatepickerModule,
     ReportRoutingModule,
     NgbTooltipModule,
     FormsModule,
