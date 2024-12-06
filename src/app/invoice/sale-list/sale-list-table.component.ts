@@ -29,8 +29,6 @@ import { RequiredPermissionType } from '../../core/models/required-permission.ty
 import { FormBuilder } from '@angular/forms';
 import { PaymentStatusEnum } from '../../core/models/payment-status.enum';
 import { processError } from '../../core/utils/error.utils';
-import { downloadFile } from '../../core/utils/file.utils';
-import { ReportService } from '../../report/service/report.service';
 import { ErrorService } from '../../core/service/error.service';
 import { getPaymentMethodLabel } from '../../core/utils/invoice.utils';
 import { PaymentMethodEnum } from '../../core/models/payment-method.enum';
@@ -84,7 +82,6 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private store: Store,
     private fb: FormBuilder,
-    private reportService: ReportService,
     private errorService: ErrorService
   ) {}
   ngOnDestroy(): void {
@@ -253,22 +250,6 @@ export class SaleListTableComponent implements OnInit, OnDestroy {
   resetSearchFilter() {
     this.filterForm.reset();
     this.handleSearch();
-  }
-
-  downloadSaleReport() {
-    this.spinner.show('fullscreen');
-    let searchModel = new FilterModel();
-    searchModel.search = this.searchOptions.search;
-    const sub = this.reportService.saleReport(searchModel).subscribe({
-      next: (data) => {
-        downloadFile(data, 'stock-cycle-details.pdf');
-        this.spinner.hide('fullscreen');
-      },
-      error: () => {
-        this.spinner.hide('fullscreen');
-      },
-    });
-    this.subscriptions$.push(sub);
   }
 
   getPyamentStatusDescription(status: PaymentStatusEnum) {

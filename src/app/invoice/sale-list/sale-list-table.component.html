@@ -103,17 +103,6 @@
           </button>
         </div>
       </div>
-      <div style="display: flex; justify-content: right">
-        <button
-          type="button"
-          class="btn btn-outline-info mb-1"
-          (click)="downloadSaleReport()"
-          placement="top"
-          ngbTooltip="Exportar a PDF"
-        >
-          <i class="fa-regular fa-file-pdf"></i>
-        </button>
-      </div>
     </form>
   </div>
   <h3 class="card-title" caption></h3>
@@ -123,6 +112,7 @@
     <th>Tipo</th>
     <th>Fecha</th>
     <th>Método de pago</th>
+    <th>Monto</th>
     <th>Cliente</th>
     <th>Estado de pago</th>
     <th>Realizada por</th>
@@ -142,6 +132,7 @@
       <td>{{ invoice.type == 1 ? "Al contado" : "A crédito" }}</td>
       <td>{{ invoice.date | date }}</td>
       <td>{{ paymentMethodLabel(invoice.paymentMethod) }}</td>
+      <td>{{ invoice.toPay | currency }}</td>
       <td>
         <a
           style="color: rgba(13, 110, 253)"
